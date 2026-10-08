@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/migration-map.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "change": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "new": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "old": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "old",
+          "new",
+          "change",
+          "note"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "from": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "package",
+            "brownfield"
+          ]
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "semver_bump": {
+      "enum": [
+        "major",
+        "minor",
+        "patch"
+      ]
+    },
+    "to_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "tokens": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "change": {
+            "enum": [
+              "added",
+              "renamed",
+              "value",
+              "deprecated",
+              "removed",
+              "keep",
+              "merge",
+              "drop",
+              "violation"
+            ]
+          },
+          "new": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "old": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rule": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "old",
+          "new",
+          "change",
+          "note"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "from",
+    "to_version",
+    "tokens",
+    "components",
+    "semver_bump"
+  ],
+  "title": "migration-map",
+  "type": "object"
+}

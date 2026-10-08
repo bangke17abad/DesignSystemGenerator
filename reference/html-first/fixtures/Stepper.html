@@ -1,0 +1,127 @@
+<!-- Stepper fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases.
+     nav[aria-label] > ol > li[data-status]: visitable steps are links, the current and (linear) upcoming steps are text.
+     Non-colour markers: number in an outline (upcoming), filled + separated ring (current, aria-current="step"), check (complete),
+     critical glyph (error); hidden "Step n of N: … , status" text on every step. Vertical below bp-tablet; > 5 steps on phone use the
+     details/summary compact summary. Stepper.js (live demos): step navigation stand-in with focus to the step heading. -->
+<section class="ds-demo" data-ds-demo="variants/linear (live: open a completed step → focus to its heading)">
+  <nav class="ds-stepper" aria-label="Progress" data-controls="st1-region" data-ds-module="stepper">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st1-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 4: </span><span data-name>Account</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">rina@rainbowhills.id</span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 4: </span><span data-name>Address</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 4: </span><span data-name>Payment</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 4: </span><span data-name>Review</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav>
+  <div id="st1-region"><h2 class="ds-stepper__heading">Address</h2><p class="ds-text-secondary">Data already entered in each step is kept when you go back.</p></div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/non-linear (every step visitable; one blocked with reason)">
+  <nav class="ds-stepper" aria-label="Setup progress" data-controls="st2-region" data-ds-module="stepper">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st2-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 4: </span><span data-name>Profile</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">Saved</span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 4: </span><span data-name>Notifications</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><a class="ds-stepper__target" href="#st2-s3"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 4: </span><span data-name>Integrations</span><span class="ds-vh" data-status-text>, not started</span></span><span class="ds-stepper__desc">Optional</span></span></a></li>
+      <li class="ds-stepper__step" data-status="upcoming"><a class="ds-stepper__target" role="link" tabindex="0" aria-disabled="true" aria-describedby="st2-r4"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 4: </span><span data-name>Billing</span><span class="ds-vh" data-status-text>, not started</span></span><span class="ds-stepper__desc" id="st2-r4">Complete Profile and Integrations first</span></span></a></li>
+    </ol>
+  </nav>
+  <div id="st2-region"><h2 class="ds-stepper__heading">Notifications</h2></div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/display + read-only (stages run by someone else; not interactive)">
+  <div class="ds-stepper" role="group" aria-label="Order progress">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 4: </span><span data-name>Placed</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">10 Oct, 09:12</span></span></span></li>
+      <li class="ds-stepper__step" data-status="complete" data-done><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 4: </span><span data-name>Packed</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">10 Oct, 14:40</span></span></span></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 4: </span><span data-name>Shipped</span><span class="ds-vh" data-status-text>, current step</span></span><span class="ds-stepper__desc">With courier</span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 4: </span><span data-name>Delivered</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (hover · pressed · focus) · selected+focus">
+  <nav class="ds-stepper" aria-label="Progress (states)">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st4-s1" data-force="hover"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 5: </span><span data-name>Hover</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st4-s2" data-force="pressed"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 5: </span><span data-name>Pressed</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st4-s3" data-force="focus"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 5: </span><span data-name>Focus</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step" data-force="focus" tabindex="-1"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 5: </span><span data-name>Current + focus</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">5</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 5 of 5: </span><span data-name>Upcoming</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="error+focus (after the final submit failed)">
+  <nav class="ds-stepper" aria-label="Progress (error)">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st5-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 4: </span><span data-name>Account</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st5-s2"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 4: </span><span data-name>Address</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="error"><a class="ds-stepper__target" href="#st5-s3" data-force="focus"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 4: </span><span data-name>Payment</span><span class="ds-vh" data-status-text>, has errors</span></span><span class="ds-stepper__desc">2 fields need attention</span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 4: </span><span data-name>Review</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+    </ol>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="loading (server validation on Next: the Stepper does not change; loading+pressed is prevented)">
+  <nav class="ds-stepper" aria-label="Progress (validating)">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st6-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 3: </span><span data-name>Guests</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 3: </span><span data-name>Booking slot</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 3: </span><span data-name>Confirm</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav>
+  <div class="ds-stepper__actions"><button type="button" class="ds-button">Back</button><button type="button" class="ds-button" data-variant="primary" aria-busy="true"><span>Next</span><span class="ds-button__spinner" aria-hidden="true"></span></button></div>
+</section>
+<section class="ds-demo" data-ds-demo="6 steps: phone uses the compact summary + bar (opens the vertical list)">
+  <nav class="ds-stepper" aria-label="Venue setup progress" data-compact data-controls="st7-region" data-ds-module="stepper">
+    <details class="ds-stepper__compact"><summary><span data-summary-text>Step 2 of 6 · Venue</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg><span class="ds-stepper__progress" aria-hidden="true" style="--ds-progress: 33%"><span></span></span></summary></details>
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st7-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 6: </span><span data-name>Club</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 6: </span><span data-name>Venue</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 6: </span><span data-name>Halls</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 6: </span><span data-name>Booking slots</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">5</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 5 of 6: </span><span data-name>Pricing</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">6</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 6 of 6: </span><span data-name>Review</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav>
+  <div id="st7-region"><h2 class="ds-stepper__heading">Venue</h2></div>
+</section>
+<section class="ds-demo" data-ds-demo="vertical (long flows in an inline-start column; always on phone)">
+  <nav class="ds-stepper" aria-label="Checkout progress" data-orientation="vertical">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st8-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 4: </span><span data-name>Account</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">rina@rainbowhills.id</span></span></a></li>
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st8-s2"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 4: </span><span data-name>Delivery</span><span class="ds-vh" data-status-text>, completed</span></span><span class="ds-stepper__desc">Standard delivery</span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 4: </span><span data-name>Payment</span><span class="ds-vh" data-status-text>, current step</span></span><span class="ds-stepper__desc">Card or bank transfer</span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 4 of 4: </span><span data-name>Review</span><span class="ds-vh" data-status-text>, not started</span></span><span class="ds-stepper__desc">Optional</span></span></span></li>
+    </ol>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm in Modal/ContextPanel · lg for touch)">
+  <div class="ds-stack" data-gap="6"><nav class="ds-stepper" aria-label="Progress (sm)" data-size="sm">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st9a-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 3: </span><span data-name>Guests</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 3: </span><span data-name>Booking slot</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 3: </span><span data-name>Confirm</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav><nav class="ds-stepper" aria-label="Progress (lg)" data-size="lg">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st9b-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 3: </span><span data-name>Guests</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 3: </span><span data-name>Booking slot</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 3: </span><span data-name>Confirm</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav></div>
+</section>
+<section class="ds-demo" data-ds-demo="label +40% (wraps under the marker; vertical when it no longer fits)" lang="id">
+  <nav class="ds-stepper" aria-label="Kemajuan">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st10-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Langkah 1 dari 4: </span><span data-name>Data akun pemain</span><span class="ds-vh" data-status-text>, selesai</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Langkah 2 dari 4: </span><span data-name>Alamat pengiriman lengkap</span><span class="ds-vh" data-status-text>, langkah saat ini</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Langkah 3 dari 4: </span><span data-name>Metode pembayaran</span><span class="ds-vh" data-status-text>, belum dimulai</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">4</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Langkah 4 dari 4: </span><span data-name>Tinjauan pesanan</span><span class="ds-vh" data-status-text>, belum dimulai</span></span><span class="ds-stepper__desc">Opsional</span></span></span></li>
+    </ol>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (flows from inline-start; check not mirrored; locale digits)" dir="rtl" lang="ar">
+  <nav class="ds-stepper" aria-label="التقدم">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#st11-s1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">الخطوة 1 من 4: </span><span data-name>الحساب</span><span class="ds-vh" data-status-text>, مكتملة</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">٢</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">الخطوة 2 من 4: </span><span data-name>العنوان</span><span class="ds-vh" data-status-text>, الخطوة الحالية</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">٣</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">الخطوة 3 من 4: </span><span data-name>الدفع</span><span class="ds-vh" data-status-text>, لم تبدأ</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">٤</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">الخطوة 4 من 4: </span><span data-name>المراجعة</span><span class="ds-vh" data-status-text>, لم تبدأ</span></span></span></span></li>
+    </ol>
+  </nav>
+</section>

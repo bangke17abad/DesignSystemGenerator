@@ -1,0 +1,694 @@
+{
+  "accessibility": {
+    "attributes": [
+      "input type=\"text\" dengan inputmode=\"text\" (butuh huruf AM/PM dan tanda baca) atau \"numeric\" bila locale 24 jam tanpa penanda",
+      "aria-describedby ke helper (format + contoh), timezone, dan error-text; aria-invalid; aria-required",
+      "combobox: aria-expanded, aria-controls, aria-activedescendant; opsi dengan aria-selected",
+      "elemen time dengan datetime=\"HH:mm\" untuk tampilan read-only",
+      "aria-disabled + reason saat diblokir; aria-readonly saat read-only",
+      "slot tidak tersedia ditampilkan aria-disabled dengan alasan (\"Fully booked\") bila konteksnya penting, selain itu disembunyikan",
+      "autocomplete=\"off\""
+    ],
+    "focus_order": "label → input → trigger (input-with-list, tidak menjadi tab stop terpisah bila ↓ membuka daftar; tetap fokusabel untuk sentuh/switch) → elemen berikutnya",
+    "native": {
+      "compose": "TimeInput(state = rememberTimePickerState(initialHour, initialMinute, is24Hour = DateFormat.is24HourFormat(context))) di dalam TimePickerDialog sebagai jalur ketik utama; TimePicker (dial) sebagai alternatif lewat toggle mode; OutlinedTextField + pengurai untuk field inline",
+      "flutter": "TextField dengan pengurai waktu untuk jalur ketik; showTimePicker(context, initialTime, initialEntryMode: TimePickerEntryMode.input) sebagai pelengkap (mode dial bisa dialihkan); format dari MediaQuery.alwaysUse24HourFormat dan MaterialLocalizations.formatTimeOfDay",
+      "swiftui": "DatePicker(\"Start time\", selection: $date, displayedComponents: .hourAndMinute) .datePickerStyle(.compact) (iOS/iPadOS mendukung ketik dengan keyboard; macOS .field); format mengikuti Locale/pengaturan 24 jam pengguna; .accessibilityHint untuk batas waktu"
+    },
+    "politeness": "polite",
+    "role": "varian input: textbox; varian input-with-list: combobox + listbox (pola Combobox); picker sistem memakai semantik platform",
+    "sr_label": "\"{label}, edit text, {waktu terformat}, {zona waktu}\"; slot dibaca sebagai waktu lisan locale (\"2:30 PM\", \"pukul 14.30\")",
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.5.3",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat (\"Start time\")",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "bidang field; lebar cukup untuk waktu terformat terpanjang locale + ikon",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "teks waktu yang bisa diketik; angka tabular",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "trigger",
+      "role": "IconButton jam \"Choose time\" di inline-end untuk varian input-with-list; area klik ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "listbox",
+      "role": "daftar slot waktu per minuteStep di portal z-popover (phone: Sheet); digulir ke slot terdekat dengan nilai saat ini",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-1"
+      ]
+    },
+    {
+      "part": "option",
+      "role": "slot waktu; terpilih dengan centang; slot di luar batas tidak ditampilkan atau aria-disabled dengan alasan",
+      "tokens": [
+        "layout-row-height",
+        "type-body-size",
+        "color-structure-text-primary",
+        "color-structure-selection",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "timezone",
+      "role": "zona waktu yang berlaku (\"WIB, UTC+7\") di helper atau sebagai affix bila pengguna lintas zona",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "format yang diterima (\"e.g. 2:30 PM\" atau \"contoh 14.30\") dan batas waktu",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string | null",
+        "when": "nilai valid berubah (blur/Enter setelah mengetik, atau slot dipilih)"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"arrow\" | \"input\" | \"escape\" | \"outside\" | \"select\" }",
+        "when": "daftar slot dibuka/ditutup"
+      }
+    ],
+    "parts": [
+      "TimePicker.Label",
+      "TimePicker.Input",
+      "TimePicker.Trigger",
+      "TimePicker.Content",
+      "TimePicker.Option"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "input",
+        "description": "Dengan atau tanpa daftar slot.",
+        "name": "variant",
+        "required": false,
+        "type": "\"input\" | \"input-with-list\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: \"HH:mm\" (ISO 8601, 24 jam).",
+        "name": "value",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "description": "Uncontrolled: nilai awal \"HH:mm\".",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "description": "Controlled: daftar slot terbuka (input-with-list).",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal daftar.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Waktu paling awal \"HH:mm\".",
+        "name": "min",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Waktu paling akhir \"HH:mm\".",
+        "name": "max",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "15",
+        "description": "Jarak slot di daftar; ketikan di luar langkah diterima kecuali enforceStep.",
+        "name": "minuteStep",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Menolak waktu yang bukan kelipatan minuteStep.",
+        "name": "enforceStep",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Menimpa siklus jam locale hanya bila brief mewajibkan.",
+        "name": "hourCycle",
+        "required": false,
+        "type": "\"h12\" | \"h23\""
+      },
+      {
+        "description": "IANA time zone yang ditampilkan di helper.",
+        "name": "timeZone",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Mengembalikan alasan bila slot tidak tersedia.",
+        "name": "isTimeUnavailable",
+        "required": false,
+        "type": "(time: string) => string | false"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Error dari luar; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bila kosong, dibangkitkan dari contoh format locale dan min/max.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Slot sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Nilai terlihat tanpa kontrol.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field Form; yang dikirim \"HH:mm\".",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "teks bebas diterima; diurai saat blur/Enter dengan aturan locale (12/24 jam, pemisah \":\" atau \".\", penanda AM/PM lokal) dan bentuk singkat (\"9\", \"930\", \"9.30p\"); hasil dinormalkan ke tampilan locale",
+      "trigger": "mengetik"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka daftar dan memindah slot aktif (aria-activedescendant); Enter memilih; Esc menutup dan memulihkan teks",
+      "trigger": "↓ / ↑ (input-with-list)"
+    },
+    {
+      "input": "keyboard",
+      "result": "nilai diurai dan diformat; tidak valid → error dengan teks dipertahankan; tidak ada perubahan konteks",
+      "trigger": "Tab / blur"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka daftar; slot dipilih pada pelepasan dan daftar menutup; fokus kembali ke input",
+      "trigger": "klik trigger atau slot"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual dengan angka dan tanda baca terbuka untuk mengetik; trigger membuka Sheet berisi daftar slot ≥ target-min-touch atau picker sistem (wheel/dial) — field ketik tetap tersedia",
+      "trigger": "tap field (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "hanya sebagai pelengkap; nilai dari picker mengisi field yang sama dan dapat diedit dengan mengetik",
+      "trigger": "picker sistem dial/wheel"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Start time",
+        "e.g. 2:30 PM",
+        "Choose time",
+        "Choose a time between 8:00 AM and 5:00 PM",
+        "Times shown in Western Indonesia Time (UTC+7)",
+        "Fully booked",
+        "Loading available times…"
+      ],
+      "id-ID": [
+        "Waktu mulai",
+        "contoh 14.30",
+        "Pilih waktu",
+        "Pilih waktu antara 08.00 dan 17.00",
+        "Waktu ditampilkan dalam WIB (UTC+7)",
+        "Sudah penuh",
+        "Memuat waktu yang tersedia…"
+      ]
+    },
+    "rules": [
+      "Format tampilan dan pemisah dari B1 formats (mis. en-US \"2:30 PM\", id-ID \"14.30\"); helper memberi contoh dalam format itu.",
+      "Zona waktu ditampilkan bila pengguna atau lokasi bisa berbeda zona; nama zona dari glosarium/CLDR, bukan singkatan rekaan.",
+      "Error menyebut rentang yang diterima dengan waktu terformat: \"Choose a time between 8:00 AM and 5:00 PM\".",
+      "Tengah malam dan tengah hari ditulis tanpa ambigu menurut locale (\"12:00 AM (midnight)\" bila 12 jam).",
+      "Nilai yang dikirim selalu HH:mm (24 jam, ISO 8601) terlepas dari tampilan."
+    ]
+  },
+  "depends_on": [
+    "Popover",
+    "Sheet",
+    "IconButton",
+    "Spinner"
+  ],
+  "do": [
+    "Selalu sediakan input ketik, termasuk di phone dan di picker sistem.",
+    "Urai format longgar dan normalkan ke format locale saat blur.",
+    "Tampilkan zona waktu bila ada kemungkinan beda zona.",
+    "Kirim HH:mm netral; format hanya untuk tampilan."
+  ],
+  "dont": [
+    {
+      "ref": "UB7",
+      "text": "Dial atau wheel sebagai satu-satunya cara memasukkan waktu (drag tanpa alternatif)."
+    },
+    {
+      "text": "Format jam dari selera desain, bukan B1 formats."
+    },
+    {
+      "ref": "UB10",
+      "text": "Format hanya di placeholder."
+    },
+    {
+      "ref": "UB2",
+      "text": "Slot yang tidak tersedia hanya diredam warnanya tanpa alasan."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label dan helper membungkus; lebar field dari waktu terformat terpanjang locale (mis. penanda AM/PM panjang)",
+      "case": "label dan helper +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "field dan slot tumbuh; daftar yang tidak muat beralih ke Sheet",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "nilai null; required kosong = \"Enter a start time\"",
+      "case": "kosong"
+    },
+    {
+      "behaviour": "\"24:00\" ditolak atau dinormalkan ke 00:00 hari berikut hanya bila brief mengizinkan (`A-nn`); \"12\" pada locale 12 jam tanpa penanda ditafsir sebagai 12 PM dan ditampilkan eksplisit",
+      "case": "batas nilai: 00:00, 23:59, 24:00, tengah hari"
+    },
+    {
+      "behaviour": "loading menampilkan status-row di daftar; gagal muat menampilkan \"Couldn't load available times\" + Retry; offline: ketik tetap diterima dan divalidasi saat online, slot tidak diklaim tersedia sebelum server mengonfirmasi (I6)",
+      "case": "daftar slot asinkron atau offline"
+    },
+    {
+      "behaviour": "\"14:30\", \"2:30 pm\", \"2.30PM\", \"14h30\" dinormalkan; teks waktu dengan zona (\"14:30 UTC\") dikonversi ke zona field dengan catatan di helper bila brief mengizinkan",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "waktu diisolasi bdi dan tetap urutan jam:menit LTR; penanda waktu lokal (mis. ص/م) ditempatkan sesuai pola CLDR locale; ikon jam tidak dicerminkan, trigger di inline-end",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "waktu yang tidak ada (lompat maju) atau ganda (mundur) dijelaskan di error/helper dengan offset eksplisit bila field dipasangkan dengan DatePicker",
+      "case": "perubahan DST pada tanggal yang diketahui"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Opsional: disertakan bila journey atau entitas di brief memuat jam (jadwal, slot, jam operasional, pengingat); alasan dicatat. Format 12/24 jam dan pemisah dari B1 formats.",
+  "lint": [
+    "TimePicker tanpa input ketik ditolak (§6.5)",
+    "format waktu hard-coded di komponen ditolak (harus dari B1 formats)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "TimePicker",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "12 jam en-US vs 24 jam id-ID",
+      "Sheet phone",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "open",
+      "selected",
+      "error",
+      "disabled-with-reason",
+      "read-only",
+      "loading"
+    ],
+    "variants": [
+      "input",
+      "input-with-list"
+    ]
+  },
+  "purpose": {
+    "purpose": "Field untuk memasukkan satu waktu dalam sehari yang selalu bisa diketik dalam format jam locale (B1), dengan daftar slot opsional, batas waktu yang dijelaskan, dan nilai terkirim dalam format netral (HH:mm).",
+    "when_not_to_use": [
+      "Untuk tanggal + waktu sebagai satu titik waktu: komposisikan DatePicker + TimePicker berdampingan dalam fieldset, bukan satu field gabungan.",
+      "Untuk durasi (\"1 jam 30 menit\"): pakai NumberInput untuk jam dan menit atau Select durasi tetap.",
+      "Untuk memilih dari sedikit slot tetap yang semuanya perlu terlihat (≤ 6): pakai RadioGroup atau SegmentedControl berlabel jam.",
+      "Untuk rentang jam (mulai-selesai): dua TimePicker berlabel dalam satu fieldset dengan validasi urutan."
+    ]
+  },
+  "related": [
+    "DatePicker",
+    "DateRangePicker",
+    "Combobox",
+    "TextField"
+  ],
+  "responsive": [
+    {
+      "behaviour": "size lg; field ketik tetap; trigger membuka Sheet berisi daftar slot atau picker sistem dengan mode input sebagai default",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "size md/lg; popover daftar menempel field; ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size sm/md; popover daftar maks. ±8 slot terlihat, digulir ke slot terdekat",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengubah waktu"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat waktu terformat + zona waktu"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "waktu terkunci (mis. jadwal sudah dikonfirmasi pihak lain); reason di helper"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu jadwal"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon jam tidak dicerminkan (§12.4); trigger di inline-end. Waktu diisolasi dan urutan jam:menit tetap; posisi penanda AM/PM mengikuti pola locale."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); trigger ≥ target-min-pointer, diperluas ke target-min-touch di mode sentuh",
+      "name": "sm",
+      "notes": "Tabel dan filter padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); opsi ≥ target-current",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada); opsi Sheet ≥ target-min-touch",
+      "name": "lg",
+      "notes": "Surface sentuh.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "slot terpilih + hover di daftar",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "slot terpilih sekaligus aktif: centang + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring fokus",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "nilai tetap terlihat saat field diblokir",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "baris loading tidak bisa dipilih",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "nilai bisa disalin",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "input": "color-structure-text-placeholder"
+      },
+      "treatment": "kosong; placeholder boleh menampilkan bentuk format locale, helper tetap menyebut contoh"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-border"
+      },
+      "treatment": "border ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px; daftar tidak terbuka otomatis saat fokus"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "trigger": "color-structure-text-primary"
+      },
+      "treatment": "varian input-with-list: daftar slot tampil, aria-expanded=\"true\", slot terdekat aktif"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "option": "color-structure-selection"
+      },
+      "treatment": "slot yang sama dengan nilai: centang + aria-selected"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "tidak bisa diurai, di luar min/max, atau bukan kelipatan langkah yang diwajibkan: border critical + ikon + teks; teks ketikan dipertahankan"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "input": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; latar surface-sunken; reason di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "container": "color-structure-surface-base",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "aria-readonly; waktu terformat berteks penuh + zona waktu, tanpa border aktif dan trigger"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "listbox": "color-structure-surface-overlay"
+      },
+      "treatment": "slot ketersediaan dimuat dari server: status-row Spinner + \"Loading available times…\" di daftar, aria-busy; field tetap bisa diketik"
+    }
+  ],
+  "target_hints": {
+    "compose": "OutlinedTextField + TimeInput di TimePickerDialog dibungkus {Ns}TimePicker",
+    "flutter": "TextField + showTimePicker(input mode) dibungkus {ns}_time_picker.dart",
+    "html": {
+      "element": "input[type=text]",
+      "notes": "tanpa JS: field teks + helper format, diurai server; <input type=\"time\"> hanya bila brief menerima format bawaan browser (`A-nn`); modul data-{ns}-module=\"time-picker\" menambah penguraian longgar dan daftar slot (pola combobox)"
+    },
+    "swiftui": "DatePicker(.hourAndMinute) dibungkus {Ns}TimePicker"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Satu field ketik dengan penguraian longgar (\"230p\", \"14.30\", \"1430\") yang dinormalkan ke format locale saat blur.",
+      "name": "input"
+    },
+    {
+      "description": "Field ketik yang sama sebagai combobox: mengetik menyaring slot, ↓ atau trigger membuka daftar slot per minuteStep; untuk penjadwalan dengan slot baku.",
+      "name": "input-with-list"
+    }
+  ]
+}

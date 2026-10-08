@@ -1,0 +1,528 @@
+{
+  "accessibility": {
+    "attributes": [
+      "nama aksesibel target utama = judul kartu (bukan seluruh isi kartu)",
+      "aria-labelledby container ke judul bila role region/article",
+      "aria-describedby opsional ke meta penting (status, waktu)",
+      "aria-busy=\"true\" saat loading",
+      "aria-disabled + aria-describedby ke reason pada kartu selectable diblokir"
+    ],
+    "focus_order": "title-link → aksi footer, dalam urutan DOM; media tidak fokusabel",
+    "native": {
+      "compose": "Card(onClick) / OutlinedCard / ElevatedCard dengan Modifier.semantics(mergeDescendants = true) { contentDescription = judul }; aksi sekunder di luar area klik atau lewat customActions",
+      "flutter": "Card + InkWell(onTap) dengan Semantics(container: true, button/link: true, label: judul); MergeSemantics hanya untuk header; aksi footer tetap node terpisah",
+      "swiftui": "NavigationLink/Button berisi konten kartu dengan .accessibilityElement(children: .combine) dan .accessibilityLabel(judul); aksi sekunder lewat .accessibilityActions atau tombol terpisah di luar link"
+    },
+    "politeness": "polite",
+    "role": "article (objek mandiri) atau li dalam ul (koleksi); judul heading; target utama a/button di judul; selectable: Checkbox di dalam kartu atau button[aria-pressed]",
+    "sr_label": "judul sebagai nama; status, harga, dan waktu dibaca sebagai teks biasa dalam urutan DOM; tidak membungkus seluruh kartu dalam satu tautan yang membuat pembaca layar membaca semuanya",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.1",
+      "1.4.11",
+      "2.1.1",
+      "2.4.4",
+      "2.4.7",
+      "2.5.3",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "article/section/li berbatas; perlakuan (border, bayangan, atau tonal) dari L6/L7; padding dari space-*",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-0",
+        "elevation-1",
+        "space-4"
+      ]
+    },
+    {
+      "part": "media",
+      "role": "Image opsional di block-start dengan rasio token; bukan pembawa teks penting",
+      "tokens": [
+        "aspect-video",
+        "aspect-photo",
+        "aspect-square",
+        "radius-md"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "judul (heading level sesuai konteks) + Avatar/ikon opsional + meta",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "title-link",
+      "role": "tautan/tombol di judul yang menjadi target utama; area klik diperluas ke seluruh kartu lewat pseudo-elemen (stretched link)",
+      "tokens": [
+        "color-structure-text-primary",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "teks ringkas, DescriptionList, atau InlineMetrics (maks 3)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-3"
+      ]
+    },
+    {
+      "part": "status",
+      "role": "StatusLabel di header atau footer bila objek punya status; tidak dipotong",
+      "tokens": [
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "footer-actions",
+      "role": "maksimal dua aksi terlihat (Button/IconButton); lebih dari itu ke Menu; target sendiri di atas stretched link",
+      "tokens": [
+        "space-2",
+        "space-3",
+        "control-height-md",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "selection-marker",
+      "role": "Checkbox atau centang di sudut inline-start untuk kartu yang dapat dipilih; penanda non-warna",
+      "tokens": [
+        "icon-sm",
+        "color-interaction-default",
+        "color-structure-selection",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px mengelilingi seluruh kartu saat title-link difokus (:focus-within pada stretched link)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "title-link variant interactive tanpa href diaktifkan"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "boolean",
+        "when": "kartu selectable dipilih atau dilepas"
+      }
+    ],
+    "parts": [
+      "Card.Media",
+      "Card.Header",
+      "Card.Title",
+      "Card.Meta",
+      "Card.Body",
+      "Card.Footer",
+      "Card.Actions"
+    ],
+    "props": [
+      {
+        "default": "static",
+        "description": "Model interaksi kartu.",
+        "name": "variant",
+        "required": false,
+        "type": "\"static\" | \"interactive\" | \"selectable\""
+      },
+      {
+        "description": "Tujuan title-link untuk variant interactive (navigasi).",
+        "name": "href",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "3",
+        "description": "Level heading judul sesuai struktur halaman.",
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4 | 5 | 6"
+      },
+      {
+        "description": "Controlled: kartu terpilih (variant selectable).",
+        "name": "selected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: seleksi awal.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila kartu tidak relevan; selain itu pakai reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan seleksi atau aksi diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan Skeleton berbentuk kartu.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "varian interactive: satu tab stop di title-link lalu aksi footer; varian static: hanya kontrol di dalamnya",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka objek; Space mengubah seleksi dan mengumumkan \"Selected\" polite",
+      "trigger": "Enter pada title-link; Space pada kartu selectable"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka objek lewat stretched link; klik pada footer-actions tidak memicu kartu; teks tetap bisa diseleksi lewat klik-seret di body",
+      "trigger": "klik di area kartu (interactive)"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka di tab baru karena target utama adalah tautan nyata",
+      "trigger": "klik tengah atau Ctrl/Cmd+klik"
+    },
+    {
+      "input": "touch",
+      "result": "membuka objek; aksi footer punya area ≥ target-min-touch dan jarak ≥ 8 dari tepi target kartu",
+      "trigger": "tap kartu"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Quarterly summary",
+        "Updated 2 hours ago",
+        "Open report",
+        "Couldn't load this card. Retry"
+      ],
+      "id-ID": [
+        "Ringkasan kuartal",
+        "Diperbarui 2 jam lalu",
+        "Buka laporan",
+        "Kartu ini gagal dimuat. Coba lagi"
+      ]
+    },
+    "rules": [
+      "Judul = nama objek, maksimal dua baris; heading level mengikuti struktur halaman.",
+      "Body maksimal tiga baris atau satu DescriptionList pendek; detail lain di halaman objek.",
+      "Aksi footer = kata kerja spesifik; tidak ada \"Read more\" tanpa objek (\"Open report\").",
+      "Angka di kartu memakai tabular-nums dan format locale."
+    ]
+  },
+  "depends_on": [
+    "Image",
+    "StatusLabel",
+    "Button",
+    "IconButton",
+    "Menu",
+    "Checkbox",
+    "Skeleton"
+  ],
+  "do": [
+    "Gunakan stretched link pada judul agar satu target, satu nama.",
+    "Samakan tinggi struktur kartu dalam satu baris Grid tanpa memotong teks.",
+    "Pakai kartu hanya ketika L6 mengizinkan dan objek berdiri sendiri."
+  ],
+  "dont": [
+    {
+      "text": "Kartu di dalam kartu atau kartu sebagai pembungkus setiap seksi form."
+    },
+    {
+      "text": "Membungkus seluruh kartu termasuk tombol di dalam satu elemen a."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memberi warna semantik pada latar atau rail kartu untuk menandai severity."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai kartu terpilih hanya dengan warna border."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "membungkus dua baris lalu ellipsis dengan judul lengkap di nama aksesibel dan halaman objek; aksi footer membungkus ke baris baru",
+      "case": "judul +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "kartu tumbuh tinggi; Grid mengurangi kolom berdasarkan lebar tersedia; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik menggantikan Grid",
+      "case": "0 kartu di koleksi"
+    },
+    {
+      "behaviour": "paginasi atau Load more dengan fokus terjaga; tidak ada gulir tak berujung otomatis",
+      "case": "ratusan kartu"
+    },
+    {
+      "behaviour": "fallback Image dengan alt terlihat; rasio tetap sehingga layout tidak bergeser",
+      "case": "media gagal dimuat"
+    },
+    {
+      "behaviour": "kartu tersimpan tampil dengan \"Last updated\"; aksi yang butuh server aria-disabled dengan reason",
+      "case": "offline"
+    },
+    {
+      "behaviour": "selection-marker dan media di inline-start (kanan); angka diisolasi bidi",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; hanya dipakai bila aturan wadah L6 mengizinkan kartu (bahasa tanpa kartu memakai seksi berjudul + Divider).",
+  "lint": [
+    "Card bersarang di dalam Card ditolak",
+    "a yang membungkus elemen interaktif lain ditolak",
+    "Kartu interaktif tanpa judul sebagai nama aksesibel ditolak",
+    "Pemakaian Card pada konteks yang tidak diizinkan L6 (manual-review)"
+  ],
+  "name": "Card",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "kartu dengan aksi footer di atas stretched link",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "selected",
+      "disabled-with-reason",
+      "loading",
+      "error"
+    ],
+    "variants": [
+      "static",
+      "interactive",
+      "selectable"
+    ]
+  },
+  "purpose": {
+    "purpose": "Wadah berbatas untuk satu objek atau satu ringkasan yang berdiri sendiri (judul, media opsional, isi singkat, aksi), dipakai dalam koleksi yang dipindai atau sebagai pengganti baris Table di layar sempit.",
+    "when_not_to_use": [
+      "Untuk mengelompokkan bagian halaman atau form: pakai seksi berjudul dengan Stack dan Divider; kartu di dalam kartu dilarang.",
+      "Untuk record yang dibandingkan per atribut di layar lebar: pakai Table.",
+      "Untuk daftar homogen yang dibaca berurutan: pakai List.",
+      "Untuk menyorot status atau peringatan: pakai InlineAlert atau Banner, bukan kartu berwarna.",
+      "Bila L6 tidak mengizinkan kartu untuk konteks ini."
+    ]
+  },
+  "related": [
+    "Table",
+    "List",
+    "Grid",
+    "DescriptionList",
+    "InlineMetrics",
+    "Image"
+  ],
+  "responsive": [
+    {
+      "behaviour": "satu kolom lebar penuh; media di atas; aksi footer lebar intrinsik dengan area ≥ target-min-touch; dipakai sebagai stacked-card pengganti baris Table",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "dua kolom Grid bila lebar kartu ≥ lebar minimum; media boleh di inline-start",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "Grid 3–4 kolom sesuai lebar kontainer (container query); hover memakai perlakuan L16",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "objek atau aksi yang tidak boleh diketahui role tidak dirender; grid menutup celah"
+    },
+    {
+      "pattern": "read-only",
+      "when": "kartu tetap dapat dibuka untuk dibaca; aksi mutasi di footer tidak dirender"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi footer atau seleksi kartu terlihat tetapi diblokir: ikon gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Padding, posisi media samping, dan selection-marker memakai properti logis; ikon berarah di aksi dicerminkan; media foto tidak dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran kartu mengikuti kolom Grid dan lebar tersedia; padding dari token space-* dan sumbu kepadatan, bukan prop size (§6.8)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "centang + border tetap; state-layer di atas",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + border + ring di luar",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "terpilih tetapi terkunci: centang diredam, reason terlihat",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada Retry; ring pada tombol, bukan kartu",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "kartu skeleton tidak bisa ditekan",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised"
+      },
+      "treatment": "perlakuan rest L6/L7 (border atau bayangan atau tonal)"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-structure-selection"
+      },
+      "treatment": "varian interactive/selectable di (hover: hover): state-layer hover atau naik ke elevation-1 sesuai L16; geometri tetap"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px mengelilingi kartu (lewat :focus-within dari title-link)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "container": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; state-press-transform hanya bila L16 mengizinkan dan none di reduced motion"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "container": "color-structure-selection",
+        "selection-marker": "color-interaction-default"
+      },
+      "treatment": "selection-marker tercentang + border-thick interaction + latar selection; aria-checked/aria-pressed atau Checkbox"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "header": "color-structure-text-disabled"
+      },
+      "treatment": "kartu selectable yang tidak boleh dipilih: aria-disabled, judul text-disabled, ikon gembok, reason terlihat di body"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "container": "color-structure-skeleton"
+      },
+      "treatment": "Skeleton meniru media, judul, dua baris body; aria-busy"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "body": "color-semantic-critical-strong"
+      },
+      "treatment": "isi kartu gagal dimuat: ikon kritis + teks + Retry di body; kartu tetap berukuran sama"
+    }
+  ],
+  "target_hints": {
+    "compose": "Card/OutlinedCard dibungkus {Ns}Card",
+    "flutter": "Card + InkWell dibungkus {ns}_card.dart",
+    "html": {
+      "element": "article atau li",
+      "notes": "judul h2–h6 berisi a dengan ::after inset 0 (stretched link); footer-actions position relative di atas pseudo-elemen; tanpa JS berfungsi penuh"
+    },
+    "swiftui": "View kustom + NavigationLink dibungkus {Ns}Card"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Tidak ada target utama; aksi hanya di footer-actions atau tautan di isi.",
+      "name": "static"
+    },
+    {
+      "description": "Seluruh kartu membuka objek lewat title-link yang diperluas; nama aksesibel = judul; aksi sekunder tetap target terpisah di atasnya.",
+      "name": "interactive"
+    },
+    {
+      "description": "Kartu dapat dipilih (pilihan paket, kumpulan item dengan aksi massal); selection-marker + border-thick + latar selection; tidak dicampur dengan interactive dalam satu kartu kecuali target dipisah jelas.",
+      "name": "selectable"
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+/* Avatar · engine 1.8.0 reference (catalog/components/Avatar.json). Tokens only (I3); logical properties only (§12.4).
+   Markup: span.ds-avatar[data-size][data-variant] > span.__initials (server-rendered fallback, always present) + img.__image
+   (alt="", stacked on top). A failed photo simply shows the initials underneath — no broken-image icon, no JS needed.
+   Named avatar: role="img" + aria-label on .ds-avatar; decorative (name shown beside it): aria-hidden="true".
+   Person = circle via --shape-circle (semantic circle, also in square languages); entity = rounded square (radius-sm), so
+   people and organisations differ by shape, not colour. Initials sit on a neutral token surface (never status or brand, UB12).
+   avatar-xl is not a size value: only PageHeader's profile header uses it (.ds-page-header .ds-avatar[data-size="xl"]). */
+.ds-avatar {
+  --_size: var(--avatar-md);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  aspect-ratio: var(--aspect-square);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--shape-circle);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  line-height: 1;
+  font-weight: var(--type-label-weight);
+  vertical-align: middle;
+  user-select: none;
+}
+/* initials: two letters must fit avatar-md, so sm/md use the caption step (the initials are a decorative abbreviation of a
+   name that is always present as text or as the accessible name — mark them data-ds-text="supporting"); lg uses label */
+.ds-avatar:not([data-size="lg"], [data-size="xl"]) { font-size: var(--type-caption-size); letter-spacing: 0; }
+.ds-avatar[data-size="sm"] { --_size: var(--avatar-sm); }
+.ds-avatar[data-size="lg"] { --_size: var(--avatar-lg); }
+.ds-page-header .ds-avatar[data-size="xl"] { --_size: var(--avatar-xl); }
+.ds-avatar[data-variant="entity"] { border-radius: var(--radius-sm); }
+
+/* the clip lives on the children so the presence indicator can sit on the edge */
+.ds-avatar__initials,
+.ds-avatar__image,
+.ds-avatar > .ds-icon { grid-area: 1 / 1; }
+.ds-avatar__initials {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  white-space: nowrap;
+}
+.ds-avatar__image {
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+.ds-avatar__image[hidden] { display: none; }
+.ds-avatar > .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); color: var(--color-structure-text-secondary); }
+.ds-avatar[data-size="sm"] > .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-avatar[data-size="lg"] > .ds-icon { inline-size: var(--icon-lg); block-size: var(--icon-lg); }
+
+/* loading: skeleton circle of the same size, no layout shift */
+.ds-avatar[data-state="loading"] { border-color: transparent; background: var(--color-structure-skeleton); }
+.ds-avatar[data-state="loading"] > * { visibility: hidden; }
+/* inactive (deactivated / deleted account): generic icon in tertiary + "Deactivated" text beside the name, never opacity only */
+.ds-avatar[data-state="inactive"] > .ds-icon { color: var(--color-structure-text-tertiary); }
+
+/* presence: corner at block-end / inline-end, shape differs per state, ring in the surface colour; the state is also text */
+.ds-avatar__presence {
+  position: absolute;
+  inset-block-end: calc(-1 * var(--border-width-thick));
+  inset-inline-end: calc(-1 * var(--border-width-thick));
+  box-sizing: border-box;
+  inline-size: calc(var(--icon-sm) * 0.75);
+  block-size: calc(var(--icon-sm) * 0.75);
+  border: var(--border-width-thick) solid var(--color-structure-text-primary);
+  border-radius: var(--shape-circle);
+  background: var(--color-structure-text-primary);
+  box-shadow: 0 0 0 var(--border-width-thick) var(--color-structure-surface-base);
+  pointer-events: none;
+}
+.ds-avatar__presence[data-presence="offline"] { background: var(--color-structure-surface-base); }
+/* away: lower half filled; busy: bar across; offline: hollow ring; online: solid */
+.ds-avatar__presence:is([data-presence="away"], [data-presence="busy"]) { overflow: hidden; background: var(--color-structure-surface-base); }
+.ds-avatar__presence:is([data-presence="away"], [data-presence="busy"])::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 50%;
+  background: var(--color-structure-text-primary);
+}
+.ds-avatar__presence[data-presence="busy"]::before {
+  inset-block-end: auto;
+  inset-block-start: 50%;
+  block-size: var(--border-width-thick);
+  margin-block-start: calc(var(--border-width-thick) / -2);
+}
+
+/* person + name side by side (the usual pattern: the name is the accessible text, the avatar is decorative) */
+.ds-avatar-name { display: inline-flex; align-items: center; gap: var(--space-2); min-inline-size: 0; max-inline-size: 100%; vertical-align: middle; }
+.ds-avatar-name__text { display: flex; flex-direction: column; min-inline-size: 0; overflow-wrap: anywhere; }
+.ds-avatar-name__meta { color: var(--color-structure-text-secondary); }
+
+/* interactive avatar (opens a profile): a button whose hit area is max(avatar, target-current) */
+.ds-avatar-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding: 0;
+  border: 0;
+  border-radius: var(--shape-circle);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-avatar-button > .ds-avatar::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .ds-avatar-button:not([aria-disabled="true"]):hover > .ds-avatar::after { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-avatar-button[data-force~="hover"] > .ds-avatar::after { opacity: var(--state-layer-hover-opacity); }
+.ds-avatar-button:not([aria-disabled="true"]):active > .ds-avatar::after,
+.ds-avatar-button[data-force~="pressed"] > .ds-avatar::after { opacity: var(--state-layer-pressed-opacity); }
+.ds-avatar-button[aria-busy="true"] { cursor: progress; }
+/* selected in an assignment picker: check overlay + thick ring, not colour only */
+.ds-avatar-button[aria-pressed="true"] > .ds-avatar { box-shadow: 0 0 0 var(--border-width-thick) var(--color-structure-surface-base), 0 0 0 calc(2 * var(--border-width-thick)) var(--color-interaction-default); }
+.ds-avatar__check {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--border-width-thick));
+  inset-inline-end: calc(-1 * var(--border-width-thick));
+  display: none;
+  place-items: center;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  border-radius: var(--shape-circle);
+  background: var(--color-interaction-default);
+  color: var(--color-interaction-on-solid);
+  box-shadow: 0 0 0 var(--border-width-thin) var(--color-structure-surface-base);
+}
+.ds-avatar__check .ds-icon { inline-size: calc(var(--icon-sm) * 0.75); block-size: calc(var(--icon-sm) * 0.75); stroke-width: 3; }
+.ds-avatar-button[aria-pressed="true"] .ds-avatar__check { display: grid; }
+
+/* group: overlapping stack toward inline-end with a surface ring; +N overflow is a labelled button */
+.ds-avatar-group { display: inline-flex; align-items: center; flex-wrap: nowrap; padding-inline-start: var(--space-1); vertical-align: middle; }
+.ds-avatar-group > .ds-avatar { margin-inline-start: calc(-1 * var(--space-1)); }
+.ds-avatar-group > .ds-avatar { box-shadow: 0 0 0 var(--border-width-thick) var(--color-structure-surface-base); }
+.ds-avatar-group__more {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding: 0;
+  border: 0;
+  border-radius: var(--shape-circle);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-avatar-group__more > .ds-avatar { box-shadow: 0 0 0 var(--border-width-thick) var(--color-structure-surface-base); font-variant-numeric: tabular-nums; }
+@media (hover: hover) {
+  .ds-avatar-group__more:hover > .ds-avatar { border-color: var(--color-structure-border-strong); text-decoration: underline; }
+}
+.ds-avatar-group__more[data-force~="hover"] > .ds-avatar { border-color: var(--color-structure-border-strong); text-decoration: underline; }
+
+@media (forced-colors: active) {
+  .ds-avatar { border-color: CanvasText; }
+  .ds-avatar__presence { border-color: CanvasText; background: CanvasText; forced-color-adjust: none; }
+  .ds-avatar__presence[data-presence="offline"], .ds-avatar__presence[data-presence="busy"] { background: Canvas; }
+  .ds-avatar-button[aria-pressed="true"] > .ds-avatar { outline: var(--border-width-thick) solid Highlight; }
+}
+
+/* +N overflow as a native disclosure (works without JS): the full list of remaining names opens below the stack */
+.ds-avatar-group__details { position: relative; display: inline-block; margin-inline-start: calc(-1 * var(--space-1)); }
+.ds-avatar-group__details > summary { list-style: none; }
+.ds-avatar-group__details > summary::-webkit-details-marker { display: none; }
+.ds-avatar-group__details > .ds-avatar-group__more { margin-inline-start: 0; }
+.ds-avatar-group__list {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-1));
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  inline-size: max-content;
+  max-inline-size: min(var(--layout-modal-sm), calc(100vw - 2 * var(--space-4)));
+  margin: 0;
+  padding: var(--space-3);
+  list-style: none;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  box-shadow: var(--elevation-2);
+}
+.ds-avatar-group__details:not([open]) > .ds-avatar-group__list { display: none; }

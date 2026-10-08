@@ -1,0 +1,189 @@
+<!-- BottomNav fixture · variants, states, mandatory combinations (catalog preview) + edge cases.
+     The bar is phone only: below bp-tablet it sits sticky at the block-end edge of the AppShell (bottom-bar slot); from bp-tablet up the
+     same destinations render in PrimaryNav (rail / fixed). The demos below use data-static phone frames so they show at every width.
+     No-JS: every item is a plain link in Tab order; "More" links to the list of remaining destinations (#bn-more-fallback).
+     JS (data-ds-module="bottom-nav"): ←/→ Home/End, reselect = back to top (announced), blocked reason, "More" sheet. -->
+<section class="ds-demo" data-ds-demo="phone only">
+  <p class="ds-text-secondary">Phone: 3–5 top-level destinations at the bottom edge with the safe-area inset. Tablet and desktop: not rendered; the same destinations, in the same order, live in PrimaryNav.</p>
+</section>
+<section class="ds-demo" data-ds-demo="variants/labelled (live: arrows, reselect, More sheet)">
+  <div class="ds-bottom-nav-frame">
+    <div class="ds-bottom-nav-frame__screen"><p>Today’s booking board</p><p class="ds-text-secondary">Tap Home again to go back to the top.</p></div>
+    <nav class="ds-bottom-nav" aria-label="Main (labelled)" data-static data-ds-module="bottom-nav">
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn1-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn1-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn1-inbox"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-placement="corner" aria-hidden="true">3</span></span><span class="ds-bottom-nav__label">Inbox<span class="ds-vh">, 3 new</span></span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn1-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn-more-fallback" data-ds-opens="bn-more-sheet"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></span><span class="ds-bottom-nav__label">More</span></a></li>
+      </ul>
+    </nav>
+  </div>
+  <dialog class="ds-bottom-nav__sheet" id="bn-more-sheet" aria-labelledby="bn-more-sheet-title">
+    <div class="ds-bottom-nav__sheet-header"><h2 class="ds-bottom-nav__sheet-title" id="bn-more-sheet-title">More</h2><button type="button" class="ds-bottom-nav__sheet-close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+    <ul class="ds-bottom-nav__sheet-list">
+      <li><a class="ds-bottom-nav__sheet-item" href="#bn1-bookings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Bookings</a></li>
+      <li><a class="ds-bottom-nav__sheet-item" href="#bn1-reports"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg>Reports</a></li>
+      <li><a class="ds-bottom-nav__sheet-item" href="#bn1-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg>Settings</a></li>
+    </ul>
+  </dialog>
+</section>
+<section class="ds-demo" data-ds-demo="variants/translucent (content scrolls under the bar; solid under reduced transparency)">
+  <div class="ds-bottom-nav-frame" data-overlap>
+    <div class="ds-bottom-nav-frame__screen">
+      <p class="ds-bottom-nav-frame__stripe">07:40 · Group A · 4 guests</p>
+      <p class="ds-bottom-nav-frame__stripe">07:50 · Group B · 3 guests</p>
+      <p class="ds-bottom-nav-frame__stripe">08:00 · Group C · 4 guests</p>
+      <p class="ds-bottom-nav-frame__stripe">08:10 · Group D · 2 guests</p>
+    </div>
+    <nav class="ds-bottom-nav" data-variant="translucent" aria-label="Main (translucent)" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn2-home"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn2-book" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span><span class="ds-bottom-nav__label">Bookings</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn2-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default · hover · pressed · focus · current)">
+  <div class="ds-bottom-nav-frame">
+    <nav class="ds-bottom-nav" aria-label="Main (states)" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn3-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Current</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn3-a"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Default</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn3-b" data-force="hover"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></span><span class="ds-bottom-nav__label">Hover</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn3-c" data-force="pressed"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span><span class="ds-bottom-nav__label">Pressed</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn3-d" data-force="focus"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Focus</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="selected+pressed (reselect) · selected+focus · selected+hover">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-bottom-nav-frame">
+      <nav class="ds-bottom-nav" aria-label="Main (selected combinations 1)" data-static>
+        <ul class="ds-bottom-nav__list">
+          <li><a class="ds-bottom-nav__item" href="#bn4-home" aria-current="page" data-force="pressed"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn4-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn4-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="ds-bottom-nav-frame">
+      <nav class="ds-bottom-nav" aria-label="Main (selected combinations 2)" data-static>
+        <ul class="ds-bottom-nav__list">
+          <li><a class="ds-bottom-nav__item" href="#bn5-home"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn5-search" aria-current="page" data-force="focus"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn5-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="ds-bottom-nav-frame">
+      <nav class="ds-bottom-nav" aria-label="Main (selected combinations 3)" data-static>
+        <ul class="ds-bottom-nav__list">
+          <li><a class="ds-bottom-nav__item" href="#bn6-home"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn6-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+          <li><a class="ds-bottom-nav__item" href="#bn6-account" aria-current="page" data-force="hover"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="badge (count, 99+ with full number in the name, attention classes)">
+  <div class="ds-bottom-nav-frame">
+    <nav class="ds-bottom-nav" aria-label="Main (badges)" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn7-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn7-inbox"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-placement="corner" aria-hidden="true"><bdi>99+</bdi></span></span><span class="ds-bottom-nav__label">Inbox<span class="ds-vh">, 128 new</span></span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn7-tasks"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true">2</span></span><span class="ds-bottom-nav__label">Tasks<span class="ds-vh">, 2 overdue</span></span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn7-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason (focusable, lock, reason on tap) · disabled+selected is not supported">
+  <div class="ds-bottom-nav-frame">
+    <div class="ds-bottom-nav-frame__screen"><p class="ds-bottom-nav__reason" id="bn8-reason">Reports are unavailable during the nightly close (until 02:00).</p><p class="ds-text-secondary">The destination that is open is never blocked.</p></div>
+    <nav class="ds-bottom-nav" aria-label="Main (blocked item)" data-static data-ds-module="bottom-nav">
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn8-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" role="link" tabindex="0" aria-disabled="true" aria-describedby="bn8-reason"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><svg class="ds-icon ds-bottom-nav__lock" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg></span><span class="ds-bottom-nav__label">Reports</span></a></li>
+        <li><a class="ds-bottom-nav__item" role="link" tabindex="0" aria-disabled="true" aria-describedby="bn8-reason" data-force="focus"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><svg class="ds-icon ds-bottom-nav__lock" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg></span><span class="ds-bottom-nav__label">Payouts</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn8-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="5 items + longest locale (+40%): labels wrap, never truncate; 6+ = 4 + More" lang="id">
+  <div class="ds-bottom-nav-frame">
+    <nav class="ds-bottom-nav" aria-label="Utama" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn9-a" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Beranda</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn9-b"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span><span class="ds-bottom-nav__label">Pemesanan</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn9-c"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-placement="corner" aria-hidden="true">5</span></span><span class="ds-bottom-nav__label">Kotak masuk<span class="ds-vh">, 5 baru</span></span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn9-d"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Akun</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn-more-fallback"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></span><span class="ds-bottom-nav__label">Lainnya</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="More sheet open (remaining destinations; current inside marks More)" id="bn-more-fallback">
+  <div class="ds-bottom-nav-frame" data-sheet>
+    <div class="ds-bottom-nav__sheet" data-static role="group" aria-labelledby="bn10-title">
+      <div class="ds-bottom-nav__sheet-header"><h2 class="ds-bottom-nav__sheet-title" id="bn10-title">More</h2><button type="button" class="ds-bottom-nav__sheet-close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-bottom-nav__sheet-list">
+        <li><a class="ds-bottom-nav__sheet-item" href="#bn10-bookings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg>Bookings</a></li>
+        <li><a class="ds-bottom-nav__sheet-item" href="#bn10-reports" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg>Reports</a></li>
+        <li><a class="ds-bottom-nav__sheet-item" href="#bn10-settings" data-force="focus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg>Settings</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ds-bottom-nav-frame">
+    <nav class="ds-bottom-nav" aria-label="Main (More contains current)" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn11-home"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn11-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn11-inbox"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></span><span class="ds-bottom-nav__label">Inbox</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn-more-fallback" data-contains-current><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></span><span class="ds-bottom-nav__label">More<span class="ds-vh">, contains current page</span></span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="hidden-for-keyboard (virtual keyboard open: the bar steps aside)">
+  <div class="ds-bottom-nav-frame">
+    <div class="ds-bottom-nav-frame__screen">
+      <div class="ds-bottom-nav-frame__field"><label for="bn12-q">Search members</label><input id="bn12-q" type="search" value="Rina" data-force="focus"></div>
+    </div>
+    <div class="ds-bottom-nav-frame__keyboard" aria-hidden="true">On-screen keyboard</div>
+    <nav class="ds-bottom-nav" aria-label="Main (hidden while typing)" data-static data-state="hidden-for-keyboard">
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn12-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn12-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">Search</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn12-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% (bar grows; not sticky above a fifth of the viewport)">
+  <div class="ds-bottom-nav-frame" style="--type-label-size: 2em; --type-label-line: 1.3;">
+    <nav class="ds-bottom-nav" aria-label="Main (text 200%)" data-static>
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn13-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">Home</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn13-inbox"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></span><span class="ds-bottom-nav__label">Inbox</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn13-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">Account</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (first item at inline-start; badge at the icon's inline-end)" dir="rtl" lang="ar">
+  <div class="ds-bottom-nav-frame">
+    <nav class="ds-bottom-nav" aria-label="الرئيسية" data-static data-ds-module="bottom-nav">
+      <ul class="ds-bottom-nav__list">
+        <li><a class="ds-bottom-nav__item" href="#bn14-home" aria-current="page"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg></span><span class="ds-bottom-nav__label">الرئيسية</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn14-search"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></span><span class="ds-bottom-nav__label">بحث</span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn14-inbox"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-placement="corner" aria-hidden="true">٣</span></span><span class="ds-bottom-nav__label">الوارد<span class="ds-vh">، ٣ جديدة</span></span></a></li>
+        <li><a class="ds-bottom-nav__item" href="#bn14-account"><span class="ds-bottom-nav__icon"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></span><span class="ds-bottom-nav__label">الحساب</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>

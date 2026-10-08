@@ -1,0 +1,778 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    },
+    "component": {
+      "additionalProperties": false,
+      "properties": {
+        "accessibility": {
+          "additionalProperties": false,
+          "properties": {
+            "attributes": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "focus_order": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "politeness": {
+              "enum": [
+                "polite",
+                "assertive",
+                "both"
+              ]
+            },
+            "role": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "sr_label": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "wcag": {
+              "items": {
+                "pattern": "^\\d\\.\\d\\.\\d{1,2}$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "role",
+            "attributes",
+            "focus_order",
+            "sr_label",
+            "wcag"
+          ],
+          "type": "object"
+        },
+        "anatomy": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "part": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "tokens": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "part",
+              "tokens"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "api": {
+          "additionalProperties": false,
+          "properties": {
+            "events": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "pattern": "^on[A-Z][A-Za-z]*$",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "when": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "payload",
+                  "when"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "parts": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "props": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "default": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "name": {
+                    "pattern": "^[a-z][A-Za-z0-9]*$",
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "type": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "required",
+                  "description"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "props",
+            "events",
+            "parts"
+          ],
+          "type": "object"
+        },
+        "assumptions": {
+          "items": {
+            "pattern": "^A-\\d{2,}$",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "behaviour": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "input": {
+                "enum": [
+                  "keyboard",
+                  "pointer",
+                  "touch"
+                ]
+              },
+              "result": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "trigger": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "input",
+              "trigger",
+              "result"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "content": {
+          "additionalProperties": {
+            "additionalProperties": false,
+            "properties": {
+              "examples": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "rules": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "rules",
+              "examples"
+            ],
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "do": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "dont": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "text": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "type": "object"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "edge_cases": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "behaviour": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "case": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "case",
+              "behaviour"
+            ],
+            "type": "object"
+          },
+          "minItems": 5,
+          "type": "array"
+        },
+        "group": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "manual_notes": {
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "type": "string"
+        },
+        "pack": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "preview": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "states": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "variants": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "path",
+            "variants",
+            "states"
+          ],
+          "type": "object"
+        },
+        "purpose": {
+          "additionalProperties": false,
+          "properties": {
+            "purpose": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "when_not_to_use": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "purpose",
+            "when_not_to_use"
+          ],
+          "type": "object"
+        },
+        "responsive": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "behaviour": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "device_class": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "device_class",
+              "behaviour"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "roles": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "note": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "pattern": {
+                    "enum": [
+                      "hidden",
+                      "disabled-with-reason",
+                      "step-up",
+                      "read-only",
+                      "full"
+                    ]
+                  },
+                  "role": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "pattern",
+                  "note"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "rtl": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "mirrored_icons": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "notes": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mirrored_icons",
+                "notes"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "semantic_mapping": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "class": {
+                    "enum": [
+                      "C1",
+                      "C2",
+                      "C3",
+                      "C4",
+                      "C5",
+                      "C6"
+                    ]
+                  },
+                  "icon": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "state": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "token": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "treatment": {
+                    "enum": [
+                      "quiet",
+                      "outline",
+                      "tinted",
+                      "filled"
+                    ]
+                  }
+                },
+                "required": [
+                  "state",
+                  "class",
+                  "token",
+                  "icon",
+                  "treatment"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "sizes": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "hit_extended_px": {
+                    "type": "number"
+                  },
+                  "hit_pointer_px": {
+                    "type": "number"
+                  },
+                  "hit_touch_px": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "per_device": {
+                    "additionalProperties": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "visual_px": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "visual_px",
+                  "hit_pointer_px",
+                  "hit_touch_px",
+                  "per_device"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "state_combinations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "availability": {
+                "enum": [
+                  "enabled",
+                  "disabled",
+                  "loading",
+                  "read-only"
+                ]
+              },
+              "base": {
+                "enum": [
+                  "default",
+                  "selected",
+                  "error",
+                  "mixed",
+                  "open",
+                  "current",
+                  "complete"
+                ]
+              },
+              "focus": {
+                "type": "boolean"
+              },
+              "interaction": {
+                "enum": [
+                  "rest",
+                  "hover",
+                  "pressed",
+                  "dragged"
+                ]
+              },
+              "supported": {
+                "type": "boolean"
+              },
+              "tokens": {
+                "additionalProperties": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "base",
+              "interaction",
+              "focus",
+              "availability",
+              "supported",
+              "tokens"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "states": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "token_swaps": {
+                "additionalProperties": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "name",
+              "token_swaps"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "Draft",
+            "Reviewed",
+            "Stable"
+          ]
+        },
+        "target_mapping": {
+          "additionalProperties": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "props": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "state_strategy": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "widget": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "widget",
+              "path",
+              "props",
+              "state_strategy"
+            ],
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "tier": {
+          "enum": [
+            "R",
+            "S",
+            "O",
+            "domain",
+            "pack"
+          ]
+        },
+        "token_usage": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "part": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "token": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "part",
+                  "token"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "variants": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "name": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "tier",
+        "group",
+        "status",
+        "purpose",
+        "anatomy",
+        "variants",
+        "sizes",
+        "states",
+        "state_combinations",
+        "behaviour",
+        "accessibility",
+        "content",
+        "roles",
+        "responsive",
+        "semantic_mapping",
+        "do",
+        "dont",
+        "edge_cases",
+        "token_usage",
+        "api",
+        "rtl",
+        "target_mapping",
+        "preview",
+        "assumptions"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/components.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "items": {
+        "$ref": "#/$defs/component"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "components"
+  ],
+  "title": "components",
+  "type": "object"
+}

@@ -1,0 +1,89 @@
+/* CopyButton · engine 1.8.0 reference (catalog/components/CopyButton.json). Tokens only (I3); logical properties only (§12.4).
+   Composes Button (labeled), IconButton (icon) or sits at the inline-end of a read-only field / code block (inline).
+   CopyButton.js writes with the Clipboard API, announces the result politely (DS.announce) and, when the clipboard is denied or
+   unavailable, selects the source and shows the fallback hint with the OS shortcut. Width is locked to the longest of
+   "Copy …" / "… copied" by stacking both labels in one grid cell; the hidden one is visibility:hidden (not in the name). */
+.ds-copy-button { --_ok: var(--color-semantic-positive-strong); }
+.ds-copy-button__icon { display: inline-grid; flex: none; }
+.ds-copy-button__icon > .ds-icon, .ds-icon-button.ds-copy-button > .ds-icon { grid-area: 1 / 1; }
+.ds-copy-button .ds-icon[data-icon="check"] { visibility: hidden; color: var(--_ok); }
+.ds-copy-button__labels { display: inline-grid; text-align: center; }
+.ds-copy-button__labels > * { grid-area: 1 / 1; }
+.ds-copy-button__label[data-success] { visibility: hidden; }
+
+/* success: check icon (non-colour marker) + "… copied" for feedbackDuration; focus stays on the button */
+.ds-copy-button[data-state="success"] .ds-icon[data-icon="copy"] { visibility: hidden; }
+.ds-copy-button[data-state="success"] .ds-icon[data-icon="check"] { visibility: visible; }
+.ds-copy-button[data-state="success"] .ds-copy-button__label:not([data-success]) { visibility: hidden; }
+.ds-copy-button[data-state="success"] .ds-copy-button__label[data-success] { visibility: visible; }
+.ds-copy-button[data-state="success"][data-variant="primary"] .ds-icon[data-icon="check"] { color: inherit; }
+
+/* blocked with reason: the label is dimmed, the reason stays visible next to it */
+.ds-copy-button[aria-disabled="true"] .ds-icon { color: inherit; }
+.ds-copy-button__reason { display: block; margin-block-start: var(--space-1); color: var(--color-structure-text-secondary); }
+
+/* fallback hint (error): icon + what happened + the manual way, critical-strong text */
+.ds-copy-button__hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  color: var(--color-semantic-critical-strong);
+  max-inline-size: var(--layout-measure);
+}
+.ds-copy-button__hint[hidden] { display: none; }
+.ds-copy-button__hint > .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+
+/* inline: value and button read as one unit; the button is still its own element with its own name */
+.ds-copy-field { display: flex; flex-direction: column; gap: var(--space-1); max-inline-size: min(100%, var(--layout-modal-md)); }
+.ds-copy-field__label { font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+.ds-copy-field__group {
+  display: flex;
+  align-items: stretch;
+  min-inline-size: 0;
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background-readonly);
+}
+.ds-copy-field__value {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  margin: 0;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--control-value-color);
+  font-family: var(--type-code-family);
+  font-size: var(--type-code-size);
+  line-height: var(--type-code-line);
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+}
+.ds-copy-field__value:focus-visible { outline-offset: calc(-1 * var(--focus-ring-width)); }
+pre.ds-copy-field__value { white-space: pre-wrap; } /* code wraps instead of scrolling (text 200%, 320 px) */
+.ds-copy-field__group > .ds-copy-button {
+  flex: none;
+  align-self: stretch;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  border: 0;
+  border-inline-start: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: 0;
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  box-shadow: none;
+}
+.ds-copy-field__group:has(pre) { align-items: flex-start; }
+.ds-copy-field__group:has(pre) > .ds-copy-button { align-self: flex-start; border-inline-start: 0; border-end-end-radius: 0; }
+
+@media (--bp-tablet-down) {
+  /* phone: labels may take two lines; width lock still holds */
+  .ds-copy-button__labels { white-space: normal; }
+}
+@media (forced-colors: active) {
+  .ds-copy-field__group { border-color: CanvasText; }
+  .ds-copy-button .ds-icon[data-icon="check"] { color: CanvasText; }
+  .ds-copy-button__hint { color: CanvasText; }
+}

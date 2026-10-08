@@ -1,0 +1,156 @@
+/* DescriptionList · engine 1.8.0 reference (catalog/components/DescriptionList.json). Tokens only (I3); logical properties only (§12.4).
+   dl > div.group > dt + dd. Variants: stacked (default), columns (term ±1/3, description 2/3), grid (2–3 pairs per row).
+   The dl is a size container, so columns/grid fall back to stacked whenever the dl itself is narrow (phone, side panel,
+   text 200%), not only at a viewport breakpoint. Status, price and time are never truncated: they wrap. */
+.ds-description-list {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  color: var(--color-structure-text-primary);
+}
+.ds-description-list__heading {
+  margin: 0 0 var(--space-3);
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  color: var(--color-structure-text-primary);
+}
+.ds-description-list__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  transition: background-color var(--motion-slow-duration) var(--motion-easing-standard);
+}
+.ds-description-list__term {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  overflow-wrap: break-word; /* never truncated */
+}
+.ds-description-list__description {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere; /* long IDs and URLs wrap; status, price and time never get an ellipsis */
+}
+.ds-description-list__description > :is(bdi, time, data) { unicode-bidi: isolate; }
+.ds-description-list__value { min-inline-size: 0; }
+.ds-description-list__secondary { color: var(--color-structure-text-secondary); }
+
+/* dividers between pairs */
+.ds-description-list[data-dividers] { gap: 0; }
+.ds-description-list[data-dividers] > .ds-description-list__group { padding-block: var(--space-3); }
+.ds-description-list[data-dividers] > .ds-description-list__group + .ds-description-list__group { border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+
+/* columns: term at inline-start (±1/3), description beside it — only while the dl is wide enough */
+@container (min-width: 34em) {
+  .ds-description-list[data-variant="columns"] > .ds-description-list__group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+}
+/* grid: several short pairs per row (2 → 3 columns as the dl grows) */
+.ds-description-list[data-variant="grid"] { flex-flow: row wrap; column-gap: var(--space-6); }
+.ds-description-list[data-variant="grid"] > .ds-description-list__group { flex: 1 1 100%; }
+@container (min-width: 30em) {
+  .ds-description-list[data-variant="grid"] > .ds-description-list__group { flex-basis: calc(50% - var(--space-6)); }
+}
+@container (min-width: 52em) {
+  .ds-description-list[data-variant="grid"] > .ds-description-list__group { flex-basis: calc(33.333% - var(--space-6)); }
+}
+.ds-description-list[data-variant="grid"][data-dividers] > .ds-description-list__group + .ds-description-list__group { border-block-start: 0; }
+.ds-description-list[data-variant="grid"][data-dividers] > .ds-description-list__group { border-block-end: var(--border-width-thin) solid var(--color-structure-border); }
+
+/* empty value: visible dash (aria-hidden) + "No value" for screen readers; the row stays so the structure is consistent */
+.ds-description-list__empty { color: var(--color-structure-text-tertiary); }
+
+/* inline action (Copy, Edit) at inline-end: IconButton / Link with its own >= target-current hit area */
+.ds-description-list__action {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex: none;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin: 0;
+  margin-block: calc((var(--type-body-line) - var(--target-current)) / 2);
+  padding-block: 0;
+  padding-inline: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-interaction-default);
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration: none;
+  cursor: pointer;
+}
+.ds-description-list__action::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; }
+.ds-description-list__action .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) {
+  .ds-description-list__action:not([aria-disabled="true"]):hover { background: var(--button-tertiary-container-background-hover); }
+  .ds-description-list__action:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-description-list__action[data-force~="hover"] { background: var(--button-tertiary-container-background-hover); }
+.ds-description-list__action[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-description-list__action:not([aria-disabled="true"]):active,
+.ds-description-list__action[data-force~="pressed"] { background: var(--button-tertiary-container-background-pressed); }
+.ds-description-list__action[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-description-list__reason { flex-basis: 100%; color: var(--color-structure-text-secondary); }
+
+/* loading: term stays, description is a one-line Skeleton */
+.ds-description-list__skeleton {
+  display: block;
+  inline-size: 60%;
+  block-size: calc(var(--type-body-line) / 2);
+  margin-block: calc(var(--type-body-line) / 4);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+}
+
+/* error (one row only): critical icon + short text + Retry */
+.ds-description-list__error { display: inline-flex; align-items: flex-start; gap: var(--space-1); color: var(--color-semantic-critical-strong); }
+.ds-description-list__error .ds-icon { margin-block: calc((var(--type-body-line) - var(--icon-md)) / 2); }
+
+/* changed (live update): temporary highlight + hidden "Updated" announced once; no animation under reduced motion */
+.ds-description-list__group[data-changed] {
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-highlight);
+}
+
+/* pending-sync: clock icon + "Pending" (I6) */
+.ds-description-list__pending { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--color-structure-text-secondary); }
+.ds-description-list__pending .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-description-list__group { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-description-list__group[data-changed] { outline: var(--border-width-thin) solid CanvasText; }
+  .ds-description-list__skeleton { border: var(--border-width-thin) solid GrayText; }
+}

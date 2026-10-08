@@ -1,0 +1,109 @@
+{
+  "name": "Onboarding",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila brief menyebut pengguna baru atau aktivasi.",
+  "problem": {
+    "problem": "Pengguna baru memahami nilai produk dan mencapai aksi berarti pertamanya secepat mungkin, tanpa dipaksa membaca tur, tanpa diblokir dari aksi utama, dan dapat melihat pengenalan itu lagi kapan saja.",
+    "when": [
+      "Masuk pertama kali ke produk atau ke fitur besar baru yang mengubah cara kerja.",
+      "Aktivasi yang butuh beberapa aksi penyiapan (undang anggota, hubungkan sumber data) agar produk berguna."
+    ],
+    "when_not": [
+      "Penyiapan wajib berurutan dengan input yang diproses (data akun, verifikasi): pakai Wizard atau AuthAndSession.",
+      "Meminta izin perangkat (kamera, lokasi, notifikasi): pakai PermissionRequest pada saat izin dibutuhkan.",
+      "Menjelaskan kontrol yang membingungkan: perbaiki label dan helper, bukan menambah tur."
+    ]
+  },
+  "composition": [
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Body", "Modal.Footer", "Modal.Close"], "role_in_pattern": "pengenalan maks 3 layar di desktop/tablet; Esc dan Close = Lewati; bukan overlay kritis" },
+    { "component": "Sheet", "parts": ["Sheet.Header", "Sheet.Body", "Sheet.Footer", "Sheet.Close"], "role_in_pattern": "pengenalan maks 3 layar di phone (variant bottom tinggi large) yang dapat ditutup" },
+    { "component": "Image", "role_in_pattern": "ilustrasi per layar; dekoratif (alt kosong) bila teks sudah lengkap; tidak ada teks di dalam gambar" },
+    { "component": "Stepper", "parts": ["Stepper.Step"], "role_in_pattern": "variant display untuk posisi \"1 dari 3\"; tidak interaktif" },
+    { "component": "Button", "role_in_pattern": "Lanjut/Mulai (primer) dan Lewati (tertiary) di setiap layar; Kembali mulai layar 2" },
+    { "component": "EmptyState", "parts": ["EmptyState.Actions"], "role_in_pattern": "onboarding di tempat: variant first-use pada layar kosong yang menjelaskan nilai dan satu aksi pertama" },
+    { "component": "Card", "parts": ["Card.Header", "Card.Title", "Card.Body", "Card.Actions"], "role_in_pattern": "daftar penyiapan opsional (maks 5 tugas) di layar awal yang dapat ditutup" },
+    { "component": "List", "parts": ["List.Item", "List.Leading", "List.Title", "List.TrailingAction"], "role_in_pattern": "tugas penyiapan dengan penanda selesai (ikon + teks), tiap tugas menautkan ke tempat melakukannya" },
+    { "component": "ProgressBar", "role_in_pattern": "kemajuan daftar penyiapan \"2 dari 4 selesai\"" },
+    { "component": "Popover", "parts": ["Popover.Title", "Popover.Body", "Popover.Footer", "Popover.Close"], "role_in_pattern": "tip kontekstual non-modal yang menempel pada fitur saat pertama dipakai; satu tip per waktu" },
+    { "component": "Link", "role_in_pattern": "\"Ulangi pengenalan\" di Settings dan bantuan" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "posisi layar dan penyelesaian tugas penyiapan" }
+  ],
+  "flow": [
+    { "step": "Masuk pertama", "state_class": "C6", "transition": "pengenalan ditawarkan setelah layar utama dimuat, bukan sebelum; layar utama tetap ada di belakangnya dan dapat dipakai setelah Lewati" },
+    { "step": "Layar 1-3", "state_class": "C6", "transition": "satu gagasan per layar (nilai, cara kerja inti, aksi pertama); maju hanya lewat tombol atau geser dengan alternatif tombol; tidak berputar otomatis" },
+    { "step": "Lewati", "state_class": "C6", "transition": "Lewati/Esc/Close menutup pengenalan kapan saja; status \"dilihat\" disimpan per akun sehingga tidak muncul lagi di perangkat lain" },
+    { "step": "Aksi pertama", "state_class": "C6", "transition": "layar terakhir berakhir pada aksi utama nyata (\"Buat proyek pertama\") yang membawa ke FormFlow/EmptyState, bukan tombol \"Selesai\" kosong" },
+    { "step": "Selesaikan tugas penyiapan", "state_class": "C4", "transition": "tugas di daftar penyiapan tertandai selesai saat pengguna melakukannya di tempat aslinya; daftar hilang saat semua selesai atau ditutup, dan dapat dibuka lagi dari Settings" },
+    { "step": "Tip kontekstual", "state_class": "C6", "transition": "Popover muncul saat fitur pertama dipakai, sekali; ditutup dengan Esc/Close; tidak menutupi kontrol yang dijelaskan" },
+    { "step": "Ulangi dari Settings", "state_class": "C6", "transition": "\"Ulangi pengenalan\" membuka layar 1 tanpa mengubah data atau tugas yang sudah selesai" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "Sheet tinggi besar atau halaman penuh yang dapat ditutup; Lewati di header, Lanjut di zona jempol; geser horizontal antar layar dengan tombol sebagai alternatif; ilustrasi mengecil atau disembunyikan bila teks diperbesar" },
+    { "device_class": "tablet", "behaviour": "Modal center ukuran md; tip kontekstual sebagai Popover yang menempel pada fitur; daftar penyiapan sebagai Card di atas konten awal" },
+    { "device_class": "desktop", "behaviour": "Modal center ukuran md atau EmptyState first-use di tempat; daftar penyiapan sebagai Card yang dapat ditutup di layar awal; tip kontekstual Popover non-modal" }
+  ],
+  "states": {
+    "empty": "Ruang kerja tanpa data: EmptyState first-use pada setiap layar kosong menjelaskan nilai dan satu aksi pertama yang valid untuk role; inilah onboarding utama, pengenalan modal opsional.",
+    "loading": "Konten pengenalan dibundel lokal sehingga tidak menunggu jaringan; daftar penyiapan memuat status tugas dengan Skeleton list-items.",
+    "error": "Gagal memuat status penyiapan: daftar penyiapan menampilkan InlineAlert C1 kecil + Retry atau disembunyikan; pengenalan dan aksi utama tidak terpengaruh.",
+    "partial": "Sebagian tugas penyiapan selesai: ProgressBar \"2 dari 4 selesai\", tugas selesai bertanda centang + teks \"Selesai\"; tugas sisa tetap dapat ditunda.",
+    "success": "Semua tugas selesai: satu konfirmasi tenang \"Penyiapan selesai\" lalu daftar penyiapan hilang; tidak ada konfeti yang tidak bisa dimatikan atau melanggar reduced motion."
+  },
+  "accessibility": [
+    { "step": "Masuk pertama", "focus": "Modal/Sheet pengenalan memindah fokus ke judulnya; latar inert selama terbuka; menutup mengembalikan fokus ke h1 halaman utama", "announcement": "judul dan \"1 dari 3\" dibaca saat terbuka" },
+    { "step": "Layar 1-3", "focus": "fokus ke judul layar baru setiap kali maju/mundur; Lanjut tetap pada posisi yang sama", "announcement": "\"2 dari 3: {judul}\" diumumkan polite" },
+    { "step": "Lewati", "focus": "fokus ke h1 halaman utama (atau pemicu bila dibuka dari Settings)", "announcement": "tidak ada pengumuman tambahan" },
+    { "step": "Selesaikan tugas penyiapan", "focus": "fokus tetap di tempat tugas dikerjakan", "announcement": "\"Tugas penyiapan selesai: Undang anggota\" polite" },
+    { "step": "Tip kontekstual", "focus": "Popover tidak mencuri fokus kecuali dibuka pengguna; dapat dijangkau dengan Tab berikutnya dan ditutup Esc (SC 1.4.13)", "announcement": "judul tip diumumkan polite sekali" }
+  ],
+  "content": {
+    "rules": [
+      "Maksimal 3 layar; satu gagasan per layar dengan judul ≤ 8 kata dan isi ≤ 2 kalimat.",
+      "Layar menyebut manfaat bagi pengguna, bukan daftar fitur.",
+      "Tombol keluar selalu \"Lewati\" (bukan \"Nanti\" yang ambigu) dan terlihat di setiap layar.",
+      "Tombol layar terakhir memakai aksi nyata (\"Buat proyek pertama\"), bukan \"Selesai\".",
+      "Semua teks ada sebagai teks, tidak di dalam ilustrasi."
+    ],
+    "examples": {
+      "en-US": ["1 of 3", "Skip", "Continue", "Create your first project", "Set up your workspace", "2 of 4 done", "Replay introduction"],
+      "id-ID": ["1 dari 3", "Lewati", "Lanjut", "Buat proyek pertama", "Siapkan ruang kerja Anda", "2 dari 4 selesai", "Ulangi pengenalan"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "pengguna baru dengan akses penuh: pengenalan dan daftar penyiapan lengkap" },
+    { "pattern": "hidden", "when": "layar atau tugas penyiapan untuk aksi yang tidak diizinkan role (mis. undang anggota bagi non-admin) tidak dirender; jumlah layar dan tugas dihitung ulang" },
+    { "pattern": "disabled-with-reason", "when": "tugas penyiapan bergantung pada admin: tugas ditampilkan dengan reason \"Menunggu admin menghubungkan sumber data\"" }
+  ],
+  "do": [
+    "Utamakan onboarding di tempat lewat EmptyState first-use dan tip kontekstual; pengenalan modal bersifat opsional.",
+    "Simpan status dilihat/dilewati per akun, bukan hanya per perangkat.",
+    "Sediakan \"Ulangi pengenalan\" di Settings dan bantuan.",
+    "Minta izin perangkat hanya saat fitur yang membutuhkannya dipakai."
+  ],
+  "dont": [
+    { "text": "Pengenalan yang tidak bisa dilewati atau memblokir aksi utama sampai selesai.", "ref": "I9" },
+    { "text": "Carousel yang berganti otomatis tanpa jeda.", "ref": "SC 2.2.2" },
+    { "text": "Navigasi antar layar yang hanya lewat gestur geser.", "ref": "SC 2.5.1" },
+    { "text": "Teks penting di dalam ilustrasi atau hanya di animasi.", "ref": "UB9" },
+    { "text": "Meminta ulang data yang sudah diberikan saat mendaftar.", "ref": "SC 3.3.7" }
+  ],
+  "edge_cases": [
+    { "case": "offline saat masuk pertama", "behaviour": "pengenalan tetap tampil dari konten lokal; status dilihat disimpan lokal dan disinkronkan saat online; tugas penyiapan yang butuh server diblokir dengan alasan" },
+    { "case": "timeout memuat status penyiapan", "behaviour": "daftar penyiapan disembunyikan atau menampilkan Retry kecil; tidak menunda layar utama" },
+    { "case": "banyak tugas penyiapan atau banyak fitur baru (data sangat banyak)", "behaviour": "maks 5 tugas di daftar, sisanya di halaman bantuan; maks satu tip kontekstual per sesi; tidak menumpuk Popover" },
+    { "case": "akun belum punya data sama sekali", "behaviour": "EmptyState first-use per layar kosong menjadi jalur utama dengan satu CTA yang valid untuk role" },
+    { "case": "Lanjut atau Lewati ditekan ganda", "behaviour": "input diabaikan selama transisi; ketukan ganda tidak melompati layar atau menutup lalu membuka ulang" },
+    { "case": "judul dan isi +40% (locale terpanjang) atau teks 200%", "behaviour": "ilustrasi mengecil atau disembunyikan, teks membungkus dan menggulir di dalam dialog; tombol tetap terlihat dan tidak menutupi teks (SC 2.4.11)" },
+    { "case": "pengguna lama di perangkat baru atau setelah update", "behaviour": "pengenalan awal tidak muncul lagi; hanya fitur baru yang relevan diperkenalkan sekali lewat tip kontekstual" },
+    { "case": "reduced motion", "behaviour": "transisi antar layar menjadi fade satu frame; tidak ada animasi ilustrasi otomatis" }
+  ],
+  "wcag": ["1.1.1", "1.4.5", "1.4.13", "2.1.1", "2.2.2", "2.4.3", "2.4.11", "2.5.1", "3.3.7", "4.1.2", "4.1.3"],
+  "related_patterns": ["Settings", "PermissionRequest", "Wizard", "AuthAndSession", "SystemPages"],
+  "lint": [
+    "Onboarding maksimal 3 layar",
+    "Setiap layar Onboarding punya tombol Lewati yang terlihat",
+    "Pengenalan Onboarding tidak memakai Modal tanpa Close atau dengan Esc dinonaktifkan",
+    "Settings memuat tautan Ulangi pengenalan bila Onboarding disertakan"
+  ]
+}

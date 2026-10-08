@@ -1,0 +1,268 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    },
+    "group": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/token"
+          },
+          {
+            "$ref": "#/$defs/group"
+          }
+        ]
+      },
+      "type": "object"
+    },
+    "token": {
+      "additionalProperties": false,
+      "properties": {
+        "$description": {
+          "type": "string"
+        },
+        "$extensions": {
+          "additionalProperties": false,
+          "properties": {
+            "ds": {
+              "additionalProperties": false,
+              "properties": {
+                "deprecated": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "remove_in": {
+                      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+                      "type": "string"
+                    },
+                    "replaced_by": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "since": {
+                      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "since",
+                    "replaced_by",
+                    "remove_in"
+                  ],
+                  "type": "object"
+                },
+                "derivation": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "contrast": {
+                      "additionalProperties": {
+                        "type": "number"
+                      },
+                      "type": "object"
+                    },
+                    "ramp_step": {
+                      "type": "integer"
+                    },
+                    "seed": {
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "seed"
+                  ],
+                  "type": "object"
+                },
+                "modes": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "object",
+                      "array"
+                    ]
+                  },
+                  "type": "object"
+                },
+                "role": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "runtime": {
+                  "type": "boolean"
+                },
+                "source": {
+                  "enum": [
+                    "baseline",
+                    "invariant",
+                    "archetype",
+                    "brief",
+                    "derived",
+                    "org",
+                    "adr"
+                  ]
+                },
+                "text_class": {
+                  "enum": [
+                    "body",
+                    "supporting"
+                  ]
+                },
+                "trace": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "varies_by": {
+                  "items": {
+                    "enum": [
+                      "theme",
+                      "brand",
+                      "density"
+                    ]
+                  },
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "role",
+                "varies_by",
+                "source",
+                "trace"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "ds"
+          ],
+          "type": "object"
+        },
+        "$type": {
+          "enum": [
+            "color",
+            "dimension",
+            "duration",
+            "cubicBezier",
+            "fontFamily",
+            "fontWeight",
+            "number",
+            "shadow",
+            "strokeStyle",
+            "string"
+          ]
+        },
+        "$value": {
+          "type": [
+            "string",
+            "number",
+            "object",
+            "array"
+          ]
+        }
+      },
+      "required": [
+        "$type",
+        "$value",
+        "$extensions"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/tokens.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "$metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "axes": {
+          "additionalProperties": false,
+          "properties": {
+            "brand": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "density": {
+              "items": {
+                "enum": [
+                  "comfortable",
+                  "compact",
+                  "spacious"
+                ]
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "theme": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "theme",
+            "brand",
+            "density"
+          ],
+          "type": "object"
+        },
+        "dtcg_reference": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "engine_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+          "type": "string"
+        },
+        "package_version": {
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_version",
+        "package_version",
+        "dtcg_reference",
+        "axes"
+      ],
+      "type": "object"
+    },
+    "component": {
+      "$ref": "#/$defs/group"
+    },
+    "primitive": {
+      "$ref": "#/$defs/group"
+    },
+    "semantic": {
+      "$ref": "#/$defs/group"
+    }
+  },
+  "required": [
+    "$metadata",
+    "primitive",
+    "semantic",
+    "component"
+  ],
+  "title": "tokens",
+  "type": "object"
+}

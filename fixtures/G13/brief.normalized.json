@@ -1,0 +1,90 @@
+{
+  "brief_schema_version": "1.5",
+  "components": {
+    "pack_config": {
+      "P01": {
+        "approval_levels": 1,
+        "audit_required": true,
+        "keyboard_power_users": true
+      }
+    },
+    "packs": [
+      "P01-b2b-ops"
+    ]
+  },
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "PickList"
+      },
+      {
+        "name": "StockAdjustment"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "ink-graphite",
+    "brands": [
+      {
+        "id": "default"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "High-contrast"
+      }
+    ]
+  },
+  "namespace": "LBG",
+  "product_name": "Lumbung",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable",
+        "compact"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard"
+      ],
+      "name": "web-admin",
+      "os_runtime": "web",
+      "surface_type": "operational"
+    },
+    {
+      "connectivity": "offline-first",
+      "default_theme": "High-contrast",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel",
+      "input_modality": [
+        "touch",
+        "scanner",
+        "glove"
+      ],
+      "name": "handheld",
+      "os_runtime": "Android",
+      "surface_type": "operational"
+    }
+  ],
+  "targets": {
+    "primary_web_reference": "react",
+    "production_targets": [
+      "flutter"
+    ]
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

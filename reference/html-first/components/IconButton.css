@@ -1,0 +1,166 @@
+/* IconButton · engine 1.8.0 reference (catalog/components/IconButton.json). Tokens only (I3); logical properties only (§12.4).
+   button.ds-icon-button[type=button][aria-label] > svg.ds-icon. The label is the accessible name and the Tooltip text
+   (IconButton.js attaches a label Tooltip: hover after --timing-tooltip-delay, focus at once, long press on touch).
+   Square container; the box itself is the hit area (max(control-height, --target-current)), so it never drops under 44 on touch.
+   Toggle = aria-pressed + filled icon (non-colour marker). Blocked = aria-disabled + reason in a Popover opened on press. */
+.ds-icon-button {
+  --_size: var(--control-height-md);
+  --_glyph: var(--icon-md);
+  --_bg: transparent;
+  --_bg-hover: var(--button-tertiary-container-background-hover);
+  --_bg-pressed: var(--button-tertiary-container-background-pressed);
+  --_fg: var(--color-structure-text-primary);
+  --_border: transparent;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  min-inline-size: max(var(--_size), var(--target-current));
+  min-block-size: max(var(--_size), var(--target-current));
+  margin: 0;
+  padding: 0;
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* state layer (L16): opacity 0 in token-swap languages, so one CSS serves both strategies */
+.ds-icon-button::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-icon-button > .ds-icon { inline-size: var(--_glyph); block-size: var(--_glyph); }
+.ds-icon-button[data-size="sm"] { --_size: var(--control-height-sm); --_glyph: var(--icon-sm); }
+.ds-icon-button[data-size="lg"] { --_size: var(--control-height-lg); --_glyph: var(--icon-lg); }
+
+/* variants */
+.ds-icon-button[data-variant="secondary"] {
+  --_bg: var(--color-structure-surface-raised);
+  --_bg-hover: var(--button-secondary-container-background-hover);
+  --_bg-pressed: var(--button-secondary-container-background-pressed);
+  --_border: var(--color-structure-border-control);
+  box-shadow: var(--button-container-shadow);
+}
+.ds-icon-button[data-variant="primary"] {
+  --_bg: var(--button-primary-container-background);
+  --_bg-hover: var(--button-primary-container-background-hover);
+  --_bg-pressed: var(--button-primary-container-background-pressed);
+  --_fg: var(--button-primary-label-color);
+  --_border: var(--button-primary-container-background);
+  box-shadow: var(--button-container-shadow);
+}
+.ds-icon-button[data-variant="destructive"] {
+  --_fg: var(--color-semantic-critical-strong);
+  --_bg-hover: var(--color-semantic-critical-subtle);
+  --_bg-pressed: var(--color-semantic-critical-subtle);
+}
+
+/* interaction (hover only where hover exists, §6.9) */
+@media (hover: hover) {
+  .ds-icon-button:not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--_bg-hover); }
+  .ds-icon-button:not([aria-disabled="true"], [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-icon-button[data-force~="hover"] { background: var(--_bg-hover); }
+.ds-icon-button[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-icon-button:not([aria-disabled="true"], [aria-busy="true"]):active,
+.ds-icon-button[data-force~="pressed"] { background: var(--_bg-pressed); transform: var(--state-press-transform); }
+.ds-icon-button:not([aria-disabled="true"], [aria-busy="true"]):active::before,
+.ds-icon-button[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+/* open (Menu / Popover trigger): pressed background while its popup is shown */
+.ds-icon-button[aria-expanded="true"] { background: var(--_bg-pressed); }
+.ds-icon-button[aria-expanded="true"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* selected (toggle): filled icon + interaction-subtle; the label stays constant, aria-pressed carries the state */
+.ds-icon-button[aria-pressed="true"] {
+  --_bg: var(--color-interaction-subtle);
+  --_bg-hover: var(--color-interaction-subtle);
+  --_fg: var(--color-interaction-default);
+}
+.ds-icon-button[aria-pressed="true"]::before { opacity: var(--state-layer-selected-opacity); }
+.ds-icon-button[aria-pressed="true"] > .ds-icon { fill: currentColor; }
+.ds-icon-button[aria-pressed="true"][data-force~="hover"]::before { opacity: calc(var(--state-layer-selected-opacity) + var(--state-layer-hover-opacity)); }
+@media (hover: hover) {
+  .ds-icon-button[aria-pressed="true"]:not([aria-disabled="true"]):hover::before { opacity: calc(var(--state-layer-selected-opacity) + var(--state-layer-hover-opacity)); }
+}
+
+/* blocked with reason (UB10): stays focusable; pressing opens the reason Popover */
+.ds-icon-button[aria-disabled="true"] {
+  --_fg: var(--color-structure-text-disabled);
+  --_bg-hover: var(--_bg);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.ds-icon-button[aria-disabled="true"]:is([data-variant="secondary"], [data-variant="primary"]) {
+  --_bg: var(--color-structure-surface-sunken);
+  --_border: var(--color-structure-border);
+}
+.ds-icon-button[aria-disabled="true"][aria-pressed="true"] { --_bg: var(--color-structure-surface-sunken); }
+.ds-icon-button[aria-disabled="true"][aria-pressed="true"]::before { opacity: 0; }
+
+/* loading: spinner replaces the icon, size locked, presses ignored (IconButton.js) */
+.ds-icon-button[aria-busy="true"] { cursor: progress; }
+.ds-icon-button[aria-busy="true"] > :not(.ds-icon-button__spinner, .ds-badge) { opacity: 0; }
+.ds-icon-button__spinner {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--_glyph);
+  block-size: var(--_glyph);
+  margin-block-start: calc(var(--_glyph) / -2);
+  margin-inline-start: calc(var(--_glyph) / -2);
+  border: var(--border-width-thick) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--shape-circle);
+  animation: ds-icon-button-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+@keyframes ds-icon-button-spin { to { transform: rotate(360deg); } }
+
+/* Badge (count) at the block-start / inline-end corner; status comes from the Badge's attention class, never fixed here.
+   The separation ring follows the owner's surface. */
+.ds-icon-button > .ds-badge[data-placement="corner"] {
+  /* measured from the box edge (the box is exactly max(size, target)), so it starts at the icon centre and covers only its block-start/inline-end quarter */
+  inset-block-end: calc(max(var(--_size), var(--target-current)) / 2);
+  inset-inline-start: calc(max(var(--_size), var(--target-current)) / 2);
+}
+.ds-icon-button[data-variant="secondary"] > .ds-badge { --_ring: var(--color-structure-surface-raised); }
+.ds-icon-button[aria-pressed="true"] > .ds-badge { --_ring: var(--color-interaction-subtle); }
+
+[dir="rtl"] .ds-icon-button > .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* blocked reason line under a labelled group (the IconButton itself has no room for text) */
+.ds-icon-button__reason { display: block; margin-block-start: var(--space-1); color: var(--color-structure-text-secondary); }
+
+/* on surface-inverse or media: secondary with its own surface keeps the icon >= 3:1; ring uses focus-ring-inverse (base.css) */
+.ds-icon-button-demo-inverse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-inverse);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-icon-button__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; }
+}
+@media (forced-colors: active) {
+  .ds-icon-button { border-color: ButtonText; color: ButtonText; }
+  .ds-icon-button[data-variant="tertiary"], .ds-icon-button:not([data-variant]) { border-color: transparent; }
+  .ds-icon-button[aria-pressed="true"] { border-color: Highlight; color: Highlight; }
+  .ds-icon-button[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+}

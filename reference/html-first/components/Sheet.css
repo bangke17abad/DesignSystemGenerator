@@ -1,0 +1,268 @@
+/* Sheet · engine 1.8.0 reference (catalog/components/Sheet.json). Tokens only (I3); logical properties only (§12.4).
+   bottom / side: dialog.ds-sheet opened with showModal() (top layer, inert page, ::backdrop scrim, Esc = cancel event).
+   persistent: aside.ds-sheet[data-variant=persistent] (complementary landmark, no scrim, no focus trap, F6 moves focus).
+   Detents via data-detent = collapsed | medium | large. The handle is a labelled button (Expand / Collapse sheet) so every drag
+   has a non-drag alternative (SC 2.5.7), and Close is always present (UB7). Safe areas and the virtual keyboard (--_kb, set by
+   Sheet.js from visualViewport) keep the footer visible. No-JS: the trigger is a link to the same content as a page. */
+.ds-sheet {
+  --_pad: var(--space-4);
+  --_max: calc(100dvh - env(safe-area-inset-top) - var(--space-6));
+  --_dir: 1;
+  z-index: var(--z-modal);
+  box-sizing: border-box;
+  position: fixed;
+  inset-block: auto var(--_kb, 0px);
+  inset-inline: 0;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+  max-block-size: var(--_max);
+  margin-block: 0;
+  margin-inline: auto;
+  padding-block: 0 env(safe-area-inset-bottom);
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-block-end-width: 0;
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  overflow: hidden;
+  font-family: var(--font-sans);
+  transform: translateY(var(--_drag, 0px));
+}
+[dir="rtl"] .ds-sheet { --_dir: -1; }
+.ds-sheet:is([open], [data-variant="persistent"]) { display: flex; flex-direction: column; }
+.ds-sheet[open]:not([data-static]) { animation: ds-sheet-up var(--motion-base-duration) var(--motion-easing-enter); }
+.ds-sheet::backdrop { background: var(--color-structure-scrim); opacity: var(--_scrim, 1); animation: ds-sheet-fade var(--motion-base-duration) var(--motion-easing-enter); }
+@keyframes ds-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes ds-sheet-side { from { transform: translateX(calc(var(--_dir) * 100%)); } to { transform: none; } }
+@keyframes ds-sheet-fade { from { opacity: 0; } to { opacity: 1; } }
+:root:has(.ds-sheet:modal) { overflow: hidden; } /* scroll lock while a modal Sheet is open */
+
+/* detents: medium ≈ half the viewport, large = almost full; content shorter than the detent hugs its content */
+.ds-sheet[data-detent="medium"] { max-block-size: min(var(--_max), 55dvh); }
+.ds-sheet[data-detent="large"] { block-size: var(--_max); }
+.ds-sheet[data-dragging] { transition: none; user-select: none; }
+.ds-sheet[aria-busy="true"] { cursor: progress; }
+
+/* handle: drag affordance AND a button (Expand / Collapse sheet) */
+.ds-sheet__handle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: center;
+  inline-size: calc(var(--space-12) + var(--space-8));
+  min-block-size: max(var(--space-6), var(--target-current));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-border-strong);
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-sheet__handle::before {
+  content: "";
+  inline-size: var(--space-8);
+  block-size: var(--space-1);
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+.ds-sheet[data-dragging] .ds-sheet__handle { cursor: grabbing; }
+@media (hover: hover) { .ds-sheet__handle:hover { color: var(--color-structure-text-secondary); } }
+.ds-sheet__handle[data-force~="hover"] { color: var(--color-structure-text-secondary); }
+
+.ds-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex: none;
+  padding-block: 0 var(--space-2);
+  padding-inline: var(--_pad) var(--space-2);
+  touch-action: none; /* the header also drags the sheet */
+}
+.ds-sheet__header:first-child { padding-block-start: var(--space-3); }
+.ds-sheet__title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block-start: var(--space-1);
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* very long titles: two lines; the full title stays the accessible name */
+  overflow: hidden;
+}
+.ds-sheet__title[tabindex="-1"]:focus-visible, .ds-sheet__title[data-force~="focus"] { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); border-radius: var(--radius-xs); }
+.ds-sheet__back { margin-inline-start: calc(-1 * var(--space-2)); }
+
+.ds-sheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: var(--space-2) var(--space-4);
+  padding-inline: var(--_pad);
+  scroll-padding-block-end: calc(var(--control-height-lg) + 2 * var(--space-3)); /* SC 2.4.11: focus never under the footer */
+}
+.ds-sheet__body > p { max-inline-size: var(--layout-measure); }
+.ds-sheet__body:focus-visible { outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-sheet__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex: none;
+  padding-block: var(--space-3);
+  padding-inline: var(--_pad);
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: inherit;
+}
+.ds-sheet__footer > .ds-button { flex: 1 1 auto; min-block-size: max(var(--control-height-lg), var(--target-current)); }
+.ds-sheet__footer-reason { flex: 1 1 100%; color: var(--color-structure-text-secondary); }
+
+/* list presentation (Menu / Select options inside a Sheet): full-width rows >= target-min-touch, inset ring */
+.ds-sheet__list { display: flex; flex-direction: column; margin: 0 calc(-1 * var(--_pad)); padding: 0; list-style: none; }
+.ds-sheet__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: max(var(--control-height-lg), var(--target-min-touch));
+  margin: 0;
+  padding-block: var(--space-2);
+  padding-inline: var(--_pad);
+  border: 0;
+  background: transparent;
+  color: var(--color-structure-text-primary);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.ds-sheet__item:focus-visible, .ds-sheet__item[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+@media (hover: hover) { .ds-sheet__item:not([aria-disabled="true"]):hover { background: var(--row-background-hover); } }
+.ds-sheet__item[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-sheet__item:not([aria-disabled="true"]):active, .ds-sheet__item[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+.ds-sheet__item:is([aria-checked="true"], [aria-pressed="true"], [aria-current="true"]) { background: var(--row-background-selected); }
+.ds-sheet__item > .ds-icon[data-check] { margin-inline-start: auto; color: var(--color-interaction-default); visibility: hidden; }
+.ds-sheet__item:is([aria-checked="true"], [aria-pressed="true"]) > .ds-icon[data-check] { visibility: visible; }
+.ds-sheet__item[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+
+/* loading skeleton lines */
+.ds-sheet__skeleton {
+  display: block;
+  block-size: var(--type-body-line);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-sheet-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) infinite alternate;
+}
+.ds-sheet__skeleton:nth-child(2n) { inline-size: 70%; }
+@keyframes ds-sheet-pulse { from { opacity: 1; } to { opacity: 0.55; } }
+
+/* collapsed (persistent only): header + handle; the body leaves the focus order */
+.ds-sheet[data-detent="collapsed"] > :not(.ds-sheet__handle, .ds-sheet__header) { display: none; }
+
+/* persistent: in the page flow of its region (map, list), no scrim */
+.ds-sheet[data-variant="persistent"] { position: sticky; inset-block-end: 0; max-block-size: var(--_max); }
+.ds-sheet[data-variant="persistent"][data-detent="large"] { block-size: auto; }
+
+@media (--bp-tablet-up) {
+  /* bottom on tablet/desktop: centred with a max width */
+  .ds-sheet:not([data-variant="side"]) { max-inline-size: var(--layout-modal-md); border-inline-width: var(--border-width-thin); }
+  /* side: slides in from inline-end (left in RTL), full height, layout-panel-width */
+  .ds-sheet[data-variant="side"] {
+    inset-block: 0;
+    inset-inline: auto 0;
+    inline-size: min(var(--layout-panel-width), 100%);
+    block-size: 100dvh;
+    max-block-size: none;
+    margin: 0;
+    padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
+    border-block-end-width: var(--border-width-thin);
+    border-inline-end-width: 0;
+    border-start-start-radius: var(--radius-lg);
+    border-end-start-radius: var(--radius-lg);
+    border-start-end-radius: 0;
+    transform: translateX(calc(var(--_dir) * var(--_drag, 0px)));
+  }
+  .ds-sheet[data-variant="side"][open]:not([data-static]) { animation-name: ds-sheet-side; }
+  .ds-sheet[data-variant="side"] > .ds-sheet__handle { display: none; } /* no drag on the side presentation; Close stays */
+  .ds-sheet[data-variant="side"] > .ds-sheet__header { padding-block-start: var(--space-4); }
+}
+
+/* Static preview twin: a non-modal <dialog open data-static> in flow inside a framed scrim region (no top layer, no inert). */
+.ds-sheet-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-block-size: calc(var(--layout-row-height) * 6);
+  padding-block-start: var(--space-8);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-scrim);
+  overflow: hidden;
+}
+.ds-sheet-frame[data-variant="persistent"] { background: var(--color-structure-surface-sunken); }
+.ds-sheet-frame[data-variant="side"] { align-items: flex-end; justify-content: stretch; padding-block-start: 0; }
+.ds-sheet-frame[data-device="phone"] { max-inline-size: calc(var(--layout-modal-sm) - var(--space-4)); margin-inline: auto; }
+.ds-sheet-frame__page { position: absolute; inset: 0; padding: var(--space-4); color: var(--color-structure-text-secondary); }
+.ds-sheet-frame[data-keyboard] { padding-block-end: calc(var(--layout-row-height) * 3); }
+.ds-sheet-frame__keyboard {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  display: grid;
+  place-items: center;
+  block-size: calc(var(--layout-row-height) * 3);
+  margin: 0;
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-secondary);
+}
+.ds-sheet-frame > .ds-sheet[data-static] {
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  max-block-size: none;
+  margin: 0;
+  animation: none;
+}
+.ds-sheet-frame[data-variant="side"] > .ds-sheet[data-static] { flex: 1 1 auto; }
+.ds-sheet-frame > .ds-sheet[data-static][data-detent="large"] { block-size: auto; min-block-size: calc(var(--layout-row-height) * 8); }
+.ds-sheet-frame > .ds-sheet[data-static][data-dragging] { --_drag: var(--space-8); margin-block-end: calc(-1 * var(--space-8)); }
+@media (--bp-tablet-up) {
+  .ds-sheet-frame[data-variant="side"] { min-block-size: calc(var(--layout-row-height) * 9); }
+  .ds-sheet-frame[data-variant="side"] > .ds-sheet[data-static] { position: relative; inset: auto; block-size: auto; }
+}
+@media (--bp-tablet-down) {
+  .ds-sheet-frame[data-variant="side"] { align-items: stretch; justify-content: flex-end; padding-block-start: var(--space-8); }
+  .ds-sheet-frame[data-variant="side"] > .ds-sheet[data-static] { flex: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sheet[open], .ds-sheet::backdrop { animation: none; }
+  .ds-sheet__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-sheet { border: var(--border-width-thin) solid CanvasText; }
+  .ds-sheet__handle::before { background: CanvasText; }
+  .ds-sheet__item:is([aria-checked="true"], [aria-pressed="true"]) { border: var(--border-width-thin) solid Highlight; }
+}

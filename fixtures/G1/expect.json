@@ -1,0 +1,111 @@
+{
+  "assertions": [
+    {
+      "eq": "ink-graphite",
+      "lang": "archetype"
+    },
+    {
+      "eq": "archetype",
+      "lang": "mode"
+    },
+    {
+      "eq": "Inter",
+      "lang": "decisions.L4.value.families.ui"
+    },
+    {
+      "eq": "lucide",
+      "lang": "decisions.L9.value.set"
+    },
+    {
+      "eq": "neutral",
+      "lang": "decisions.L2.value.info"
+    },
+    {
+      "eq": [
+        "Light",
+        "High-contrast"
+      ],
+      "manifest": "axes.theme"
+    },
+    {
+      "eq": [
+        "comfortable",
+        "compact"
+      ],
+      "manifest": "axes.density"
+    },
+    {
+      "eq": 48,
+      "token": "target-min-extended"
+    },
+    {
+      "eq": 16,
+      "token": "type-body-size"
+    },
+    {
+      "eq": 17,
+      "token": "type-body-lg-size"
+    },
+    {
+      "scope_includes": [
+        "BottomNav",
+        "ConnectionStatus",
+        "Menu"
+      ]
+    },
+    {
+      "scope_excludes": [
+        "PinInput",
+        "StepUpDialog"
+      ]
+    },
+    {
+      "patterns_include": [
+        "CrudFlow",
+        "FormFlow",
+        "DestructiveAction",
+        "SystemPages",
+        "AsyncFeedback",
+        "AppNavigation",
+        "SearchAndFilter",
+        "AuthAndSession",
+        "Settings",
+        "OfflineSync",
+        "DetailView",
+        "MasterDetail",
+        "Dashboard"
+      ]
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V1",
+        "V2",
+        "V11",
+        "V13",
+        "V14",
+        "VB1",
+        "VB2",
+        "VB4",
+        "VB5",
+        "VB8"
+      ]
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V3",
+        "V22"
+      ]
+    }
+  ],
+  "fixture": "G1",
+  "run_only": [
+    "lifecycle.json PickList: failed C1, cancelled C3, picked C4; stagnation dari brief",
+    "Langkah pindai punya alternatif input manual (§9.1)"
+  ],
+  "source": "golden-briefs.md G1"
+}

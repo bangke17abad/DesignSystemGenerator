@@ -1,0 +1,57 @@
+<!-- Container fixture · content / measure / full, constrained, align start + RTL, unpadded, wide child, empty, 200% text (catalog preview, §6.9). The dashed outline (.ds-demo__frame) is preview chrome showing the Container box; padding is inside it. -->
+<section class="ds-demo" data-ds-demo="variant content (layout-content-max)">
+  <div class="ds-container ds-demo__frame">
+    <div class="ds-demo__swatch">Application page content: forms, lists and settings stay within layout-content-max, with §8.1 page margins.</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant measure · state constrained (layout-measure, running text)">
+  <div class="ds-container ds-demo__frame" data-variant="measure">
+    <p>Refunds are issued to the original payment method within five working days after the returned items are checked. If the payment method has expired, the refund is sent as account credit and you will receive an email with the amount and the reference number. Partial refunds apply when some items in an order are not returned.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant full (tables, maps, dashboards)">
+  <div class="ds-container ds-demo__frame" data-variant="full">
+    <div class="ds-grid" data-variant="auto-fit" style="--ds-grid-min: 12em">
+      <div class="ds-demo__swatch">Revenue</div><div class="ds-demo__swatch">Open invoices</div><div class="ds-demo__swatch">Overdue</div><div class="ds-demo__swatch">Cash on hand</div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="align start + padded=false">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-container ds-demo__frame" data-variant="measure" data-align="start">
+      <p>Aligned to inline-start instead of centred: used beside a docked panel.</p>
+    </div>
+    <div class="ds-container ds-demo__frame" data-variant="measure" data-padded="false">
+      <p>Unpadded: the parent already provides the page margin (never a padded Container inside a padded Container).</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="align start + RTL" dir="rtl" lang="ar">
+  <div class="ds-container ds-demo__frame" data-variant="measure" data-align="start">
+    <p>تُصدر المبالغ المستردة إلى وسيلة الدفع الأصلية خلال خمسة أيام عمل. المحاذاة إلى بداية السطر تعني الحافة اليمنى في الكتابة من اليمين إلى اليسار.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="child wider than the Container (scrolls itself)">
+  <div class="ds-container ds-demo__frame" data-variant="measure">
+    <div data-ds-scroll="x" style="overflow-x: auto" tabindex="0" role="region" aria-label="Exchange rates table">
+      <table>
+        <thead><tr><th scope="col">Currency</th><th scope="col">Buy</th><th scope="col">Sell</th><th scope="col">Change today</th><th scope="col">Change this week</th><th scope="col">Updated</th></tr></thead>
+        <tbody><tr><td>IDR / USD</td><td>16,240</td><td>16,410</td><td>+0.21%</td><td>−0.84%</td><td>09:41 WIB</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="measure + text 200% (ch grows with text)">
+  <div data-ds-zoom="200">
+    <div class="ds-container ds-demo__frame" data-variant="measure">
+      <p>Pengembalian dana dikirim ke metode pembayaran asal dalam lima hari kerja setelah barang yang dikembalikan diperiksa.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state empty">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-demo__swatch">Before</div>
+    <div class="ds-container"></div>
+    <div class="ds-demo__swatch">After: the empty Container renders no padding or space</div>
+  </div>
+</section>

@@ -1,0 +1,441 @@
+{
+  "accessibility": {
+    "attributes": [
+      "alt wajib: string bermakna untuk gambar informatif, \"\" hanya bila decorative ditulis eksplisit",
+      "alt tidak mengulang caption atau teks di sebelahnya; alt menyebut fungsi bila gambar adalah tautan",
+      "loading=\"lazy\" dan decoding=\"async\" untuk gambar di luar viewport awal; gambar di viewport awal eager",
+      "width/height atau aspect-ratio dari token untuk mencegah pergeseran layout",
+      "gambar kompleks (diagram, peta) dihubungkan ke deskripsi panjang lewat aria-describedby atau tautan di caption",
+      "GIF/animasi: tidak autoplay > 5 detik tanpa kontrol pause (SC 2.2.2)"
+    ],
+    "focus_order": "tidak ada tab stop kecuali zoom-trigger atau tautan pembungkus",
+    "native": {
+      "compose": "Image(painter, contentDescription = alt) / AsyncImage (Coil) dengan placeholder dan error; contentDescription = null untuk dekoratif; Modifier.aspectRatio(rasio)",
+      "flutter": "Image.network(src, semanticLabel: alt, excludeFromSemantics: decorative, loadingBuilder, errorBuilder, frameBuilder) di dalam AspectRatio",
+      "swiftui": "AsyncImage(url:) { phase in … } dengan .aspectRatio(contentMode:) + .accessibilityLabel(alt); Image(decorative:) atau .accessibilityHidden(true) untuk dekoratif"
+    },
+    "politeness": "polite",
+    "role": "img (img/picture) dengan alt; figure dengan figcaption untuk variant figure; decorative: alt=\"\"",
+    "sr_label": "alt; caption dibaca sebagai bagian figure; decorative tidak dibaca",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.4.5",
+      "1.4.10",
+      "1.4.11",
+      "2.2.2",
+      "2.4.4",
+      "2.5.1"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "frame",
+      "role": "kotak berasio token yang memesan ruang sebelum gambar dimuat (tanpa pergeseran layout)",
+      "tokens": [
+        "aspect-square",
+        "aspect-photo",
+        "aspect-video",
+        "radius-none",
+        "radius-sm",
+        "radius-md",
+        "color-structure-surface-sunken"
+      ]
+    },
+    {
+      "part": "image",
+      "role": "img/picture dengan alt; object-fit cover atau contain; srcset untuk densitas",
+      "tokens": []
+    },
+    {
+      "part": "placeholder",
+      "role": "Skeleton atau warna netral selama memuat",
+      "tokens": [
+        "color-structure-skeleton"
+      ]
+    },
+    {
+      "part": "fallback",
+      "role": "gagal dimuat: ikon gambar + teks alt terlihat di dalam frame",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "type-body-size",
+        "type-body-line",
+        "space-2"
+      ]
+    },
+    {
+      "part": "caption",
+      "role": "figcaption opsional di bawah gambar; keterangan, kredit",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "zoom-trigger",
+      "role": "tombol opsional \"View full size\" yang membuka Modal; gambar sendiri bukan satu-satunya target",
+      "tokens": [
+        "color-focus-ring",
+        "icon-md",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "border",
+      "role": "garis tipis opsional untuk gambar berlatar putih/terang di atas surface sejenis",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onLoad",
+        "payload": "void",
+        "when": "gambar selesai dimuat"
+      },
+      {
+        "name": "onError",
+        "payload": "void",
+        "when": "gambar gagal dimuat dan fallback tampil"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "URL gambar.",
+        "name": "src",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Teks alternatif; \"\" hanya bersama decorative=true.",
+        "name": "alt",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menyatakan gambar dekoratif secara eksplisit (alt=\"\").",
+        "name": "decorative",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "photo",
+        "description": "Rasio frame dari token aspect-*.",
+        "name": "aspect",
+        "required": false,
+        "type": "\"square\" | \"photo\" | \"video\""
+      },
+      {
+        "default": "cover",
+        "description": "Cara gambar mengisi frame.",
+        "name": "fit",
+        "required": false,
+        "type": "\"cover\" | \"contain\""
+      },
+      {
+        "description": "Kandidat resolusi untuk densitas layar.",
+        "name": "srcSet",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Petunjuk lebar tampil untuk pemilihan srcSet.",
+        "name": "sizes",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Gambar di viewport awal: eager, bukan lazy.",
+        "name": "priority",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Merender figure + figcaption.",
+        "name": "caption",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menambahkan zoom-trigger yang membuka Modal.",
+        "name": "zoomable",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "gambar tidak fokusabel; hanya zoom-trigger atau tautan pembungkus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka Modal ukuran penuh berisi gambar dan caption; Esc menutup dan fokus kembali",
+      "trigger": "Enter atau Space pada zoom-trigger"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka Modal; klik pada gambar tanpa zoom tidak melakukan apa pun",
+      "trigger": "klik zoom-trigger atau gambar yang punya zoom"
+    },
+    {
+      "input": "touch",
+      "result": "Modal; pinch-zoom di Modal juga punya tombol zoom in/out (SC 2.5.1)",
+      "trigger": "tap zoom-trigger; pinch di Modal"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Team reviewing the new layout on a wall screen",
+        "View full size",
+        "Image unavailable",
+        "Photo: Studio archive"
+      ],
+      "id-ID": [
+        "Tim meninjau tata letak baru di layar dinding",
+        "Lihat ukuran penuh",
+        "Gambar tidak tersedia",
+        "Foto: Arsip studio"
+      ]
+    },
+    "rules": [
+      "Alt menjelaskan isi yang relevan dengan konteks, bukan \"image of\"; maksimal ±125 karakter, deskripsi panjang di tempat lain.",
+      "Teks penting tidak pernah ada di dalam gambar; bila tak terhindarkan (tangkapan layar), teksnya diulang di alt atau caption.",
+      "Caption untuk keterangan dan kredit; tidak menggantikan alt.",
+      "Fallback memakai alt sebagai teks terlihat."
+    ]
+  },
+  "depends_on": [
+    "Skeleton",
+    "Modal",
+    "IconButton"
+  ],
+  "do": [
+    "Tulis alt untuk setiap gambar informatif dan tandai dekoratif secara eksplisit.",
+    "Pesan ruang dengan token aspect-* agar layout tidak bergeser.",
+    "Tampilkan fallback dengan alt terlihat saat gagal."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Menaruh teks, label, atau angka penting di dalam gambar."
+    },
+    {
+      "text": "Gambar tanpa atribut alt sama sekali."
+    },
+    {
+      "text": "Animasi otomatis lebih dari 5 detik tanpa kontrol pause."
+    },
+    {
+      "ref": "UB2",
+      "text": "Memakai foto berwarna sebagai satu-satunya penanda kategori atau status."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "caption membungkus; fallback teks alt membungkus di dalam frame dan dipotong visual dengan alt lengkap tetap di nama aksesibel",
+      "case": "alt atau caption +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "caption tumbuh; fallback teks membesar dan frame boleh tumbuh tinggi melewati rasio saat gagal",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "fallback langsung; tidak ada permintaan jaringan",
+      "case": "src kosong"
+    },
+    {
+      "behaviour": "object-fit contain di frame token terdekat; zoom-trigger membuka ukuran penuh dengan gulir",
+      "case": "gambar sangat besar atau rasio ekstrem (panorama 10:1)"
+    },
+    {
+      "behaviour": "placeholder bertahan; versi cache dipakai bila ada; gagal → fallback dengan alt",
+      "case": "offline atau jaringan lambat"
+    },
+    {
+      "behaviour": "hanya frame yang gagal menampilkan fallback; grid tidak bergeser",
+      "case": "galeri dengan sebagian gambar gagal"
+    },
+    {
+      "behaviour": "gambar tidak dicerminkan kecuali ilustrasi berarah yang disediakan versi RTL-nya; caption mengikuti arah teks",
+      "case": "RTL"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "img tanpa atribut alt ditolak",
+    "alt=\"\" tanpa decorative eksplisit ditolak",
+    "img tanpa aspect-ratio atau width/height ditolak (css-pattern)",
+    "Teks penting di dalam gambar (manual-review, SC 1.4.5)"
+  ],
+  "name": "Image",
+  "preview": {
+    "combinations": [
+      "hover+focus (zoom)",
+      "loading+pressed (dicegah)",
+      "fallback dengan alt panjang",
+      "rasio square/photo/video",
+      "teks 200%"
+    ],
+    "states": [
+      "loading",
+      "loaded",
+      "error",
+      "focus",
+      "hover"
+    ],
+    "variants": [
+      "content",
+      "figure",
+      "decorative",
+      "thumbnail"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan gambar konten (foto, ilustrasi, tangkapan layar, thumbnail) dengan rasio tetap dari token, teks alternatif wajib, pemuatan lazy, dan fallback yang terlihat bila gagal.",
+    "when_not_to_use": [
+      "Untuk orang atau entitas di daftar: pakai Avatar.",
+      "Untuk ikon antarmuka: pakai ikon dari set L9.",
+      "Untuk data yang harus dibaca nilainya: pakai Chart dengan tabel data, bukan gambar grafik.",
+      "Untuk teks, tombol, atau label: tulis sebagai teks HTML/native, bukan gambar teks (SC 1.4.5).",
+      "Untuk latar dekoratif: CSS background atau aset dekoratif sesuai L15, di luar komponen ini."
+    ]
+  },
+  "related": [
+    "Avatar",
+    "Card",
+    "Modal"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh kontainer; srcset memilih resolusi sesuai densitas; rasio sama di semua lebar; zoom-trigger ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar kolom Grid; rasio token; caption di bawah",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "dibatasi lebar kontainer atau layout-measure untuk gambar dalam teks; sizes atribut mencegah unduhan berlebih",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Image tidak memuat aksi yang dibatasi peran; visibilitas gambar mengikuti objek pemiliknya."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Foto dan tangkapan layar tidak dicerminkan; ilustrasi berarah memakai aset RTL terpisah bila brief menyediakannya; caption dan fallback mengikuti arah teks."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran mengikuti lebar kontainer dan rasio token aspect-*; tidak ada prop size (§6.8). Area klik hanya relevan pada zoom-trigger yang mengikuti IconButton/Button."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "zoom-trigger hover + ring",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "zoom tidak tersedia sebelum gambar dimuat",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fallback tidak fokusabel; zoom-trigger disembunyikan saat gagal",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "loading",
+      "token_swaps": {
+        "placeholder": "color-structure-skeleton"
+      },
+      "treatment": "frame berasio dengan placeholder Skeleton; tidak ada pergeseran saat gambar muncul; fade masuk motion-fast (tanpa fade di reduced motion)"
+    },
+    {
+      "name": "loaded",
+      "token_swaps": {},
+      "treatment": "gambar mengisi frame"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "fallback": "color-structure-text-secondary",
+        "frame": "color-structure-surface-sunken"
+      },
+      "treatment": "fallback: ikon gambar + teks alt terlihat (atau \"Image unavailable\" bila dekoratif disembunyikan seluruhnya); frame tetap berukuran sama"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "zoom-trigger": "color-focus-ring"
+      },
+      "treatment": "zoom-trigger: ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "zoom-trigger": "color-interaction-hover"
+      },
+      "treatment": "zoom-trigger di (hover: hover): state-layer hover; gambar tidak di-zoom otomatis"
+    }
+  ],
+  "target_hints": {
+    "compose": "AsyncImage/Image dibungkus {Ns}Image",
+    "flutter": "Image + AspectRatio dibungkus {ns}_image.dart",
+    "html": {
+      "element": "figure > img (atau picture) + figcaption",
+      "notes": "aspect-ratio dari token di frame; loading=\"lazy\" decoding=\"async\"; fallback lewat onerror modul JS dan teks alt bawaan browser tanpa JS"
+    },
+    "swiftui": "AsyncImage dibungkus {Ns}Image"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Gambar informatif dengan alt yang menyampaikan isi atau fungsinya.",
+      "name": "content"
+    },
+    {
+      "description": "figure + figcaption; caption terlihat untuk keterangan, sumber, atau kredit; alt tetap menjelaskan gambar.",
+      "name": "figure"
+    },
+    {
+      "description": "alt=\"\" yang ditulis eksplisit lewat prop decorative; disembunyikan dari teknologi bantu.",
+      "name": "decorative"
+    },
+    {
+      "description": "Pratinjau kecil di List/Table/Card; object-fit cover; alt singkat atau kosong bila judul objek sudah tampil di sampingnya.",
+      "name": "thumbnail"
+    }
+  ]
+}

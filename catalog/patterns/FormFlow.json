@@ -1,0 +1,76 @@
+{
+  "name": "FormFlow",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Selalu disertakan.",
+  "problem": {
+    "problem": "Pengguna mengisi dan mengirim data lewat form tanpa kehilangan isian, tahu persis field mana yang salah dan cara memperbaikinya, dan tahu hasil pengiriman.",
+    "when": ["Setiap form yang mengirim data ke server atau mengubah state lokal.", "Form satu layar dengan ≤ 12 field (lebih dari itu atau lebih dari satu layar memakai Wizard)."],
+    "when_not": ["Pengaturan yang berlaku seketika per kontrol: pakai pola Settings dengan Switch.", "Pencarian dan filter: pakai SearchAndFilter."]
+  },
+  "composition": [
+    { "component": "Form", "parts": ["Form.Header", "Form.Fieldset", "Form.Actions"], "role_in_pattern": "wadah semantik, judul, deskripsi, dan action bar" },
+    { "component": "ErrorSummary", "role_in_pattern": "daftar error bertaut setelah submit gagal" },
+    { "component": "TextField", "role_in_pattern": "field isian; label di atas, helper di bawah" },
+    { "component": "Select", "role_in_pattern": "pilihan dari daftar tetap" },
+    { "component": "Checkbox", "role_in_pattern": "persetujuan atau opsi boolean" },
+    { "component": "Button", "role_in_pattern": "satu aksi primer kirim + aksi batal sekunder" },
+    { "component": "InlineAlert", "role_in_pattern": "error policy (C2) atau system (C1) di atas form" },
+    { "component": "Toast", "role_in_pattern": "konfirmasi berhasil yang bisa diabaikan" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman ringkasan error dan hasil kirim" }
+  ],
+  "flow": [
+    { "step": "Isi field", "state_class": "C6", "transition": "validasi field saat blur, bukan per ketikan; field yang belum disentuh tidak ditandai error" },
+    { "step": "Kirim", "state_class": "C5", "transition": "tombol primer loading, lebar terkunci; klik ganda diabaikan" },
+    { "step": "Validasi gagal", "state_class": "C2", "transition": "ErrorSummary muncul di atas form; fokus pindah sesuai aturan §6.5 Form; isian dipertahankan" },
+    { "step": "Error server", "state_class": "C1", "transition": "InlineAlert C1 dengan Retry di atas form; isian dipertahankan; tidak memakai toast" },
+    { "step": "Berhasil", "state_class": "C4", "transition": "Toast konfirmasi dengan kata kerja yang sama dengan tombol; navigasi ke tujuan berikut bila ada" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "satu kolom; action bar sticky di bawah zona jempol dan naik di atas keyboard virtual; Select dan DatePicker menjadi Sheet" },
+    { "device_class": "tablet", "behaviour": "satu kolom lebar maks 600dp di tengah; action bar mengikuti akhir form, sticky bila form lebih tinggi dari viewport" },
+    { "device_class": "desktop", "behaviour": "satu atau dua kolom per fieldset (field berpasangan seperti tanggal mulai/selesai); action bar di akhir form, rata start" }
+  ],
+  "states": {
+    "empty": "Field kosong dengan label, penanda opsional, dan helper format; tidak ada error sebelum interaksi.",
+    "loading": "Data awal (mode ubah) dimuat dengan Skeleton yang meniru layout field; tombol kirim diblokir dengan alasan sampai data siap.",
+    "error": "ErrorSummary + error inline per field (ikon + teks + aria-describedby); error server sebagai InlineAlert C1 dengan Retry.",
+    "partial": "Sebagian data tersimpan (mis. lampiran gagal): InlineAlert C2 menyebut bagian yang gagal dan aksi untuk mengulangnya saja.",
+    "success": "Toast C4 \"Perubahan disimpan\" dan fokus berpindah ke judul halaman tujuan atau tetap di form bila pengguna tetap di layar."
+  },
+  "accessibility": [
+    { "step": "Isi field", "focus": "urutan DOM = urutan visual; label terhubung; autocomplete untuk data pribadi (SC 1.3.5)" },
+    { "step": "Validasi gagal", "focus": "lihat aturan fokus §6.5 Form/ErrorSummary", "announcement": "jumlah error diumumkan assertive lewat LiveAnnouncer; judul dokumen diawali penanda error" },
+    { "step": "Error server", "focus": "fokus tetap; InlineAlert ber-role alert", "announcement": "pesan error diumumkan assertive" },
+    { "step": "Berhasil", "focus": "fokus ke h1 halaman tujuan (programmatic, dengan ring)", "announcement": "pesan berhasil diumumkan polite" }
+  ],
+  "content": {
+    "rules": ["Judul form menyebut objek dan aksi (\"Ubah alamat pengiriman\").", "Tombol kirim memakai kata kerja spesifik yang sama dengan toast berhasil.", "Pesan error menyebut apa yang salah dan cara memperbaiki, tanpa menyalahkan pengguna.", "Field opsional ditandai \"(opsional)\"; field wajib tidak diberi tanda bintang saja."],
+    "examples": {
+      "en-US": ["Save changes", "Changes saved", "Enter an email address in the format name@example.com", "There are 2 problems with this form"],
+      "id-ID": ["Simpan perubahan", "Perubahan disimpan", "Masukkan alamat email dengan format nama@contoh.com", "Ada 2 masalah di form ini"]
+    }
+  },
+  "roles": [
+    { "pattern": "read-only", "when": "role boleh melihat tetapi tidak mengubah: field dirender sebagai nilai read-only berkontras penuh, tanpa tombol kirim" },
+    { "pattern": "disabled-with-reason", "when": "sebagian field dikunci oleh status entitas (mis. sudah disetujui): field read-only + alasan di helper" },
+    { "pattern": "step-up", "when": "pengiriman mengubah data finansial atau hukum: StepUpDialog sebelum submit (SC 3.3.4)" }
+  ],
+  "do": ["Pertahankan seluruh isian saat error validasi maupun error server.", "Validasi saat blur dan saat submit; tunjukkan format di helper sebelum pengguna salah.", "Isi otomatis data yang sudah pernah dimasukkan dalam alur yang sama (SC 3.3.7)."],
+  "dont": [
+    { "text": "Menonaktifkan tombol kirim sampai form valid tanpa menjelaskan alasannya.", "ref": "UB10" },
+    { "text": "Memakai placeholder sebagai satu-satunya label.", "ref": "UB10" },
+    { "text": "Menampilkan error server sebagai toast yang hilang sendiri.", "ref": "§12.2" }
+  ],
+  "edge_cases": [
+    { "case": "label dan pesan error +40% (locale terpanjang)", "behaviour": "label membungkus ke baris berikut; tidak ada label terpotong" },
+    { "case": "teks 200%", "behaviour": "dua kolom menjadi satu kolom; action bar tidak menutupi field yang fokus (SC 2.4.11)" },
+    { "case": "sesi habis saat mengisi", "behaviour": "isian disimpan lokal; setelah masuk kembali, isian dipulihkan" },
+    { "case": "offline saat kirim", "behaviour": "InlineAlert C2 persisten; kirim diantrekan bila OfflineSync dipilih, selain itu tombol diblokir dengan alasan" },
+    { "case": "submit ganda (klik ganda atau Enter berulang)", "behaviour": "kiriman kedua diabaikan selama loading; server memakai idempotency key bila brief mensyaratkan" },
+    { "case": "pengguna menutup halaman dengan perubahan belum tersimpan", "behaviour": "konfirmasi keluar (beforeunload di web, dialog di native); Esc tidak membuang data tanpa konfirmasi" }
+  ],
+  "wcag": ["1.3.1", "1.3.5", "2.4.3", "2.4.11", "3.3.1", "3.3.2", "3.3.3", "3.3.4", "3.3.7", "4.1.3"],
+  "related_patterns": ["Wizard", "CrudFlow", "AsyncFeedback", "DestructiveAction"],
+  "lint": ["Setiap Form punya tepat satu Button variant=primary", "Setiap TextField invalid punya errorText", "ErrorSummary ada di setiap Form yang bisa gagal validasi"]
+}

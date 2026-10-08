@@ -1,0 +1,747 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/catalog-component.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accessibility": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "focus_order": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "native": {
+          "additionalProperties": false,
+          "properties": {
+            "compose": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "flutter": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "swiftui": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "flutter",
+            "swiftui",
+            "compose"
+          ],
+          "type": "object"
+        },
+        "politeness": {
+          "enum": [
+            "polite",
+            "assertive",
+            "both"
+          ]
+        },
+        "role": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sr_label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "wcag": {
+          "items": {
+            "pattern": "^\\d\\.\\d\\.\\d{1,2}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "attributes",
+        "focus_order",
+        "sr_label",
+        "wcag",
+        "native"
+      ],
+      "type": "object"
+    },
+    "anatomy": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "part": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "tokens": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "part",
+          "role",
+          "tokens"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "api": {
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "pattern": "^on[A-Z][A-Za-z]*$",
+                "type": "string"
+              },
+              "payload": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "when": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "payload",
+              "when"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "parts": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "props": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "default": {
+                "type": "string"
+              },
+              "description": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "name": {
+                "pattern": "^[a-z][A-Za-z0-9]*$",
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "type": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "required",
+              "description"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "props",
+        "events",
+        "parts"
+      ],
+      "type": "object"
+    },
+    "behaviour": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "enum": [
+              "keyboard",
+              "pointer",
+              "touch"
+            ]
+          },
+          "result": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "trigger": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "input",
+          "trigger",
+          "result"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "carries_status": {
+      "type": "boolean"
+    },
+    "content": {
+      "additionalProperties": false,
+      "properties": {
+        "examples": {
+          "additionalProperties": false,
+          "properties": {
+            "en-US": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "id-ID": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "en-US",
+            "id-ID"
+          ],
+          "type": "object"
+        },
+        "rules": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "rules",
+        "examples"
+      ],
+      "type": "object"
+    },
+    "depends_on": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "do": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "dont": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "edge_cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "behaviour": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "case": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "case",
+          "behaviour"
+        ],
+        "type": "object"
+      },
+      "minItems": 5,
+      "type": "array"
+    },
+    "engine_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "group": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "inclusion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "lint": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "pattern": "^[A-Z][A-Za-z0-9]*$",
+      "type": "string"
+    },
+    "preview": {
+      "additionalProperties": false,
+      "properties": {
+        "combinations": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "states": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "variants": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "variants",
+        "states",
+        "combinations"
+      ],
+      "type": "object"
+    },
+    "purpose": {
+      "additionalProperties": false,
+      "properties": {
+        "purpose": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "when_not_to_use": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "purpose",
+        "when_not_to_use"
+      ],
+      "type": "object"
+    },
+    "related": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "responsive": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "behaviour": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "device_class": {
+            "enum": [
+              "phone",
+              "tablet",
+              "desktop"
+            ]
+          }
+        },
+        "required": [
+          "device_class",
+          "behaviour"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "roles": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "enum": [
+                  "hidden",
+                  "disabled-with-reason",
+                  "step-up",
+                  "read-only",
+                  "full"
+                ]
+              },
+              "when": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern",
+              "when"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/NA"
+        }
+      ]
+    },
+    "rtl": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "mirrored_icons": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "notes": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "mirrored_icons",
+            "notes"
+          ],
+          "type": "object"
+        },
+        {
+          "$ref": "#/$defs/NA"
+        }
+      ]
+    },
+    "sizes": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "axis": {
+                "enum": [
+                  "block",
+                  "inline",
+                  "both"
+                ]
+              },
+              "hit_area": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "name": {
+                "enum": [
+                  "sm",
+                  "md",
+                  "lg"
+                ]
+              },
+              "notes": {
+                "type": "string"
+              },
+              "size_token": {
+                "pattern": "^[a-z][a-z0-9-]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "size_token",
+              "axis",
+              "hit_area",
+              "notes"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/NA"
+        }
+      ]
+    },
+    "state_combinations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "enum": [
+              "enabled",
+              "disabled",
+              "loading",
+              "read-only"
+            ]
+          },
+          "base": {
+            "enum": [
+              "default",
+              "selected",
+              "error",
+              "mixed",
+              "open",
+              "current",
+              "complete"
+            ]
+          },
+          "focus": {
+            "type": "boolean"
+          },
+          "interaction": {
+            "enum": [
+              "rest",
+              "hover",
+              "pressed",
+              "dragged"
+            ]
+          },
+          "note": {
+            "type": "string"
+          },
+          "supported": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "base",
+          "interaction",
+          "focus",
+          "availability",
+          "supported",
+          "note"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "states": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "token_swaps": {
+            "additionalProperties": {
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "treatment": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "treatment",
+          "token_swaps"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "target_hints": {
+      "additionalProperties": false,
+      "properties": {
+        "compose": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "flutter": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "html": {
+          "additionalProperties": false,
+          "properties": {
+            "element": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "element",
+            "notes"
+          ],
+          "type": "object"
+        },
+        "swiftui": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "html",
+        "flutter",
+        "swiftui",
+        "compose"
+      ],
+      "type": "object"
+    },
+    "tier": {
+      "enum": [
+        "R",
+        "S",
+        "O"
+      ]
+    },
+    "variants": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "description"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/NA"
+        }
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "engine_version",
+    "group",
+    "tier",
+    "inclusion",
+    "purpose",
+    "anatomy",
+    "variants",
+    "sizes",
+    "states",
+    "state_combinations",
+    "behaviour",
+    "accessibility",
+    "content",
+    "roles",
+    "responsive",
+    "carries_status",
+    "do",
+    "dont",
+    "edge_cases",
+    "api",
+    "rtl",
+    "target_hints",
+    "preview",
+    "related",
+    "depends_on",
+    "lint"
+  ],
+  "title": "catalog-component",
+  "type": "object"
+}

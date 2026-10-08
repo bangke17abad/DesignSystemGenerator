@@ -1,0 +1,506 @@
+{
+  "accessibility": {
+    "attributes": [
+      "nama menyebut objek (\"Copy link\", \"Copy code\") bila ada lebih dari satu CopyButton di halaman",
+      "aria-describedby ke source bila nama tidak menyebut nilainya",
+      "aria-disabled + reason saat diblokir; aria-busy saat loading",
+      "pengumuman sukses dan gagal lewat LiveAnnouncer (polite), tidak hanya perubahan ikon",
+      "nilai rahasia tidak dibacakan dalam pengumuman"
+    ],
+    "focus_order": "segera setelah nilai yang disalin dalam urutan DOM",
+    "native": {
+      "compose": "LocalClipboard.current.setClipEntry(ClipEntry(ClipData.newPlainText(label, nilai))) (Compose 1.8+; sebelumnya LocalClipboardManager.setText); ClipDescription.EXTRA_IS_SENSITIVE untuk nilai rahasia; liveRegion polite untuk konfirmasi",
+      "flutter": "Clipboard.setData(ClipboardData(text: …)) lalu SemanticsService.announce(…, Directionality.of(context)); HapticFeedback.lightImpact bila haptic aktif",
+      "swiftui": "UIPasteboard.general.string = … (iOS) / NSPasteboard.general.setString(_:forType: .string) (macOS); AccessibilityNotification.Announcement(…).post(); .sensoryFeedback(.success, trigger:)"
+    },
+    "politeness": "polite",
+    "role": "button (<button type=\"button\">)",
+    "sr_label": "label terlihat = nama aksesibel (SC 2.5.3); varian icon memakai label tersembunyi yang sama dengan Tooltip",
+    "wcag": [
+      "1.1.1",
+      "1.4.1",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "button",
+      "role": "Button (labeled) atau IconButton (icon) yang memicu salin",
+      "tokens": [
+        "color-interaction-default",
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "radius-sm",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "icon",
+      "role": "ikon salin; berganti ikon centang saat sukses (penanda non-warna)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-primary",
+        "color-semantic-positive-strong"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "\"Copy\" + objek; berganti ke \"Copied\" selama feedbackDuration; lebar terkunci ke label terpanjang",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "source",
+      "role": "nilai yang disalin, ditampilkan di dekatnya (read-only field, blok kode) dan bisa diseleksi manual",
+      "tokens": [
+        "type-code-size",
+        "type-code-family",
+        "font-mono",
+        "color-structure-surface-sunken"
+      ]
+    },
+    {
+      "part": "fallback-hint",
+      "role": "pesan bila salin gagal: teks dipilih otomatis + instruksi pintasan OS",
+      "tokens": [
+        "type-body-size",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "pelepasan pointer, Enter, atau Space, sebelum menyalin"
+      },
+      {
+        "name": "onCopyResult",
+        "payload": "{ status: \"success\" | \"denied\" | \"unsupported\" }",
+        "when": "setelah percobaan menyalin selesai"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Nilai persis yang disalin.",
+        "name": "text",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "glosarium: \"Copy\"",
+        "description": "Label atau nama aksesibel; sebut objek bila lebih dari satu di halaman.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "glosarium: \"Copied\"",
+        "description": "Label dan pengumuman saat sukses.",
+        "name": "successLabel",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "labeled",
+        "description": "Bentuk tombol.",
+        "name": "variant",
+        "required": false,
+        "type": "\"labeled\" | \"icon\" | \"inline\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol; area klik selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "2000",
+        "description": "Lama state success sebelum kembali; tidak lebih pendek dari pengumuman.",
+        "name": "feedbackDuration",
+        "required": false,
+        "type": "number (ms)"
+      },
+      {
+        "default": "false",
+        "description": "Nilai rahasia: tidak dibacakan, ditandai sensitif di clipboard native.",
+        "name": "sensitive",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Nilai sedang diambil.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "nilai disalin; state success; pengumuman polite \"{Objek} copied\"; fokus tetap",
+      "trigger": "Enter atau Space saat fokus"
+    },
+    {
+      "input": "keyboard",
+      "result": "salin ulang dan pengumuman diulang (LiveAnnouncer mengumumkan pesan identik)",
+      "trigger": "menekan lagi selama success"
+    },
+    {
+      "input": "pointer",
+      "result": "sama dengan Enter; menyeret keluar membatalkan (SC 2.5.2)",
+      "trigger": "klik (pelepasan di dalam area)"
+    },
+    {
+      "input": "touch",
+      "result": "salin; haptic-success di native bila L16 mengaktifkan haptic; di Android 13+ sistem menampilkan konfirmasi sendiri sehingga tidak ada Toast tambahan, state inline dan pengumuman tetap",
+      "trigger": "tap"
+    },
+    {
+      "input": "pointer",
+      "result": "state error: nilai dipilih otomatis, instruksi pintasan tampil dan diumumkan",
+      "trigger": "klik saat clipboard ditolak (izin, konteks tidak aman, iframe)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Copy link",
+        "Copy code",
+        "Link copied",
+        "Couldn't copy. Select the text and press Ctrl+C."
+      ],
+      "id-ID": [
+        "Salin tautan",
+        "Salin kode",
+        "Tautan disalin",
+        "Tidak bisa menyalin. Pilih teks lalu tekan Ctrl+C."
+      ]
+    },
+    "rules": [
+      "Label \"Copy\" + objek dari glosarium; konfirmasi memakai kata kerja yang sama (\"Copy link\" → \"Link copied\").",
+      "Pesan gagal menyebut apa yang terjadi dan cara manual, dengan simbol pintasan sesuai OS (L14).",
+      "Pengumuman tidak membacakan nilai yang disalin.",
+      "Lebar tombol dikunci ke label terpanjang antara \"Copy …\" dan \"Copied\" di locale aktif."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "LiveAnnouncer",
+    "Tooltip",
+    "Spinner"
+  ],
+  "do": [
+    "Umumkan keberhasilan lewat LiveAnnouncer selain mengganti ikon.",
+    "Sediakan jalur manual (teks terpilih + instruksi) bila clipboard ditolak.",
+    "Salin nilai mentah yang tepat, tanpa teks tersembunyi, pemisah tampilan, atau karakter kontrol bidi."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Hanya mengganti ikon menjadi centang sebagai satu-satunya konfirmasi."
+    },
+    {
+      "text": "Menampilkan Toast tambahan di Android 13+ yang sudah menampilkan konfirmasi sistem."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai warna positive sebagai warna tombol default."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "lebar dikunci ke label terpanjang (Copy …/Copied) di locale itu; di phone label boleh dua baris",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi tombol tumbuh; source membungkus atau bergulir horizontal di dalam blok kode sendiri",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "aria-disabled dengan reason \"Nothing to copy yet\"",
+      "case": "nilai kosong (0 karakter)"
+    },
+    {
+      "behaviour": "salin tetap bekerja; pengumuman hanya menyebut objek; untuk data besar disertai aksi unduh",
+      "case": "nilai maksimum (sangat panjang)"
+    },
+    {
+      "behaviour": "salin nilai lokal tetap bekerja; nilai yang harus diambil dari server diblokir dengan reason \"Needs connection\"",
+      "case": "offline"
+    },
+    {
+      "behaviour": "Spinner; salin dilakukan dalam aktivasi yang sama agar izin clipboard tidak hilang",
+      "case": "loading nilai asinkron"
+    },
+    {
+      "behaviour": "state error dengan teks terpilih dan instruksi pintasan",
+      "case": "clipboard ditolak atau konteks tidak aman"
+    },
+    {
+      "behaviour": "menyalin nilai yang ditampilkan kecuali prop text memberi nilai mentah; karakter bidi dan teks VisuallyHidden tidak ikut",
+      "case": "nilai berformat (pemisah ribuan, spasi grup) atau campuran arah"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Opsional: disertakan bila journey, entitas, atau surface di brief memerlukannya (mis. identifier, kode, atau tautan berbagi yang harus disalin); alasan dicatat. §6.1 tidak memberi kondisi wajib.",
+  "lint": [
+    "CopyButton tanpa pengumuman lewat LiveAnnouncer ditolak (V5)",
+    "Lebih dari satu CopyButton per halaman dengan label identik tanpa objek ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "CopyButton",
+  "preview": {
+    "combinations": [
+      "hover+focus",
+      "success+focus",
+      "error+focus",
+      "disabled+focus",
+      "loading+pressed (dicegah)",
+      "RTL inline"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "success",
+      "error",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "labeled",
+      "icon",
+      "inline"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyalin satu nilai ke clipboard dengan satu aksi, memberi konfirmasi yang terlihat dan diumumkan polite, dan menyediakan jalan manual bila akses clipboard ditolak.",
+    "when_not_to_use": [
+      "Untuk berbagi lewat aplikasi lain: pakai lembar berbagi sistem (native) atau Menu \"Share\"; CopyButton bisa menjadi salah satu itemnya.",
+      "Untuk teks panjang yang pengguna perlu pilih sebagian: biarkan teks bisa diseleksi; CopyButton hanya untuk nilai utuh.",
+      "Untuk mengekspor data terstruktur besar: pakai aksi unduh.",
+      "Untuk nilai yang sudah ada di field yang bisa diedit: seleksi teks native sudah cukup."
+    ]
+  },
+  "related": [
+    "Button",
+    "IconButton",
+    "TextField",
+    "Toast",
+    "Kbd"
+  ],
+  "responsive": [
+    {
+      "behaviour": "varian icon atau inline dengan area klik ≥ target-min-touch; Tooltip lewat tekan lama; konfirmasi inline, tanpa Toast duplikat",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "labeled atau inline; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sm diizinkan di baris tabel dan header blok kode; Tooltip saat hover dan fokus",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh melihat nilai (rahasia, token); nilai dan CopyButton tidak dirender"
+    },
+    {
+      "pattern": "step-up",
+      "when": "menyalin nilai rahasia memerlukan otorisasi ulang; StepUpDialog lalu salin dalam aktivasi baru"
+    },
+    {
+      "pattern": "read-only",
+      "when": "tetap tersedia; menyalin tidak mengubah data"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Varian inline menempel di inline-end field (kiri di RTL); ikon salin dan centang tidak dicerminkan; nilai yang disalin dan ditampilkan diisolasi LTR bila berupa kode atau identifier."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh diperluas ke target-min-touch",
+      "name": "sm",
+      "notes": "Baris tabel dan header blok kode pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-current, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, atau in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring di luar; fill hover",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "state success dengan fokus: centang + label Copied, fokus tidak berpindah",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fallback-hint terlihat; tombol tetap bisa dicoba ulang",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak bisa ditekan saat mengambil nilai",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "aria-disabled tetap fokusabel agar reason terbaca",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "icon": "color-structure-text-primary"
+      },
+      "treatment": "ikon salin + label"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "button": "color-interaction-hover"
+      },
+      "treatment": "token-swap atau state-layer hover sesuai varian Button/IconButton; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "button": "color-interaction-pressed"
+      },
+      "treatment": "interaction-pressed; state-press-transform tanpa mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px"
+    },
+    {
+      "name": "success",
+      "token_swaps": {
+        "icon": "color-semantic-positive-strong"
+      },
+      "treatment": "ikon centang (positive-strong) + label \"Copied\" selama feedbackDuration lalu kembali; lebar terkunci; fokus tetap di tombol; diumumkan polite lewat LiveAnnouncer"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "fallback-hint": "color-semantic-critical-strong"
+      },
+      "treatment": "clipboard ditolak atau tidak tersedia: nilai di source dipilih otomatis, fallback-hint tampil dengan ikon + instruksi \"press Ctrl+C\" (⌘C di Apple), diumumkan polite"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" (nilai belum tersedia, perlu izin); label text-disabled; reason terlihat"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "nilai diambil asinkron: Spinner menggantikan ikon, aria-busy, tekan diabaikan; salin tetap dalam aktivasi pengguna yang sama (ClipboardItem dengan Promise)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}CopyButton membungkus Button/IconButton + LocalClipboard",
+    "flutter": "{ns}_copy_button.dart membungkus {ns}_button/{ns}_icon_button + Clipboard.setData",
+    "html": {
+      "element": "button",
+      "notes": "navigator.clipboard.writeText dengan fallback seleksi teks; ClipboardItem dengan Promise untuk nilai asinkron; pengumuman lewat window.{NS}.announce"
+    },
+    "swiftui": "{Ns}CopyButton membungkus Button/IconButton + UIPasteboard/NSPasteboard"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Button secondary/tertiary berlabel \"Copy {objek}\"; label berganti \"Copied\" saat sukses.",
+      "name": "labeled"
+    },
+    {
+      "description": "IconButton dengan Tooltip label; dipakai di ruang sempit (baris tabel, header kode). Sukses: ikon centang + Tooltip \"Copied\" + pengumuman.",
+      "name": "icon"
+    },
+    {
+      "description": "Menempel di inline-end field read-only atau blok kode; nilai dan tombol satu kesatuan visual, tombol tetap elemen terpisah dengan nama sendiri.",
+      "name": "inline"
+    }
+  ]
+}

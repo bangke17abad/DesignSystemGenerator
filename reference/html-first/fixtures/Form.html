@@ -1,0 +1,248 @@
+<!-- Form fixture · variants and states (§6.9). Forms carry data-ds-preview so submitting runs validation and a simulated round trip instead of navigating. Buttons come from Button (depends_on). -->
+<section class="ds-demo" data-ds-demo="variants/page (default; submit empty to see validation, ErrorSummary and focus)">
+  <form class="ds-form" id="fm-1" method="post" action="#" aria-labelledby="fm-1-title" aria-describedby="fm-1-desc" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-1-title">Request access</h2>
+      <p class="ds-form__description" id="fm-1-desc">Tell us which workspace you need and why. It takes about 2 minutes.</p>
+      <p class="ds-form__requirement">All fields are required unless marked optional.</p>
+    </div>
+    <div class="ds-form__alerts"></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Your details</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-1-name">Full name</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-1-name" name="fm-1-name" type="text" autocomplete="name" dir="auto" required data-msg-required="Enter your full name"></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-1-email">Work email</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-1-email" name="fm-1-email" type="email" autocomplete="email" dir="ltr" spellcheck="false" autocapitalize="off" required data-msg-required="Enter your work email address" data-msg-type="Enter an email address in the format name@example.com"></div>
+        </div>
+        <div class="ds-text-field" data-span="full">
+          <label class="ds-text-field__label" for="fm-1-phone">Phone number <span class="ds-text-field__optional">(optional)</span></label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-1-phone" name="fm-1-phone" type="tel" autocomplete="tel" dir="ltr" spellcheck="false" autocapitalize="off" aria-describedby="fm-1-phone-help"></div>
+          <p class="ds-text-field__helper" id="fm-1-phone-help">Only used if we need to reach you about this request.</p>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Access</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-select" data-ds-module="select">
+          <label class="ds-select__label" for="fm-1-ws">Workspace</label>
+          <div class="ds-select__group"><select class="ds-select__input" id="fm-1-ws" name="fm-1-ws" required data-msg-required="Select a workspace"><option value="">Select a workspace</option><option value="fin">Finance</option><option value="ops">Operations</option><option value="hr">People and culture</option></select><svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></div>
+        </div>
+        <fieldset class="ds-radio-group" id="fm-1-level" role="radiogroup" aria-labelledby="fm-1-level-legend" aria-required="true" data-variant="inline" data-msg-required="Select an access level" data-ds-module="radio-group" data-span="full">
+          <legend class="ds-radio-group__legend" id="fm-1-level-legend">Access level</legend>
+          <div class="ds-radio-group__items"><label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="fm-1-level" value="view"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">View only</span></span></label><label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="fm-1-level" value="edit"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Edit</span></span></label></div>
+        </fieldset>
+        <div class="ds-text-area" data-ds-module="text-area" data-span="full" style="--ds-text-area-min-rows: 2">
+          <label class="ds-text-area__label" for="fm-1-reason">Reason for request</label>
+          <textarea class="ds-text-area__input" id="fm-1-reason" name="fm-1-reason" dir="auto" data-max-length="200" required aria-describedby="fm-1-reason-help" data-msg-required="Enter a reason for the request"></textarea>
+          <div class="ds-text-area__footer"><p class="ds-text-area__helper" id="fm-1-reason-help">Up to 200 characters.</p><span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>0/200</span></span></div>
+        </div>
+        <div data-span="full" data-ds-module="checkbox">
+          <label class="ds-checkbox"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" id="fm-1-policy" name="fm-1-policy" required aria-required="true" data-msg-required="Accept the access policy to continue"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon ds-checkbox__mark" data-mark="mixed" aria-hidden="true"><use href="#ds-i-minus"/></svg></span><span class="ds-checkbox__text"><span class="ds-checkbox__label">I agree to the workspace access policy</span></span></label>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions" data-sticky><span class="ds-form__status" data-ds-text="supporting">Draft saved 2 min ago</span><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary"><span>Submit request</span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="invalid (after submit: ErrorSummary + inline errors, focus on first invalid field)">
+  <form class="ds-form" id="fm-2" method="post" action="#" aria-labelledby="fm-2-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-2-title">Request access</h2>
+    </div>
+    <div class="ds-form__alerts"><section class="ds-error-summary" aria-labelledby="fm-2-es" tabindex="-1" data-ds-focus-target data-ds-module="error-summary"><div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="fm-2-es">There are 3 problems</h2></div><ul class="ds-error-summary__list"><li><a class="ds-error-summary__link" href="#fm-2-email">Work email: Enter an email address in the format name@example.com</a></li><li><a class="ds-error-summary__link" href="#fm-2-ws">Workspace: Select a workspace</a></li><li><a class="ds-error-summary__link" href="#fm-2-level">Access level: Select an access level</a></li></ul></section></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Your details</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-2-name">Full name</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-2-name" name="fm-2-name" type="text" autocomplete="name" dir="auto" value="Siti Rahmawati" required></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-2-email">Work email</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-2-email" name="fm-2-email" type="email" autocomplete="email" dir="ltr" spellcheck="false" autocapitalize="off" value="siti@example" required data-force="focus" aria-invalid="true" aria-describedby="fm-2-email-err"></div>
+          <p class="ds-text-field__error" id="fm-2-email-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter an email address in the format name@example.com</span></p>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Access</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-select" data-ds-module="select">
+          <label class="ds-select__label" for="fm-2-ws">Workspace</label>
+          <div class="ds-select__group"><select class="ds-select__input" id="fm-2-ws" name="fm-2-ws" required aria-invalid="true" aria-describedby="fm-2-ws-err" data-msg-required="Select a workspace"><option value="">Select a workspace</option><option value="fin">Finance</option><option value="ops">Operations</option><option value="hr">People and culture</option></select><svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></div>
+          <p class="ds-select__error" id="fm-2-ws-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a workspace</span></p>
+        </div>
+        <fieldset class="ds-radio-group" id="fm-2-level" role="radiogroup" aria-labelledby="fm-2-level-legend" aria-required="true" aria-invalid="true" aria-describedby="fm-2-level-err" data-variant="inline" data-msg-required="Select an access level" data-ds-module="radio-group" data-span="full">
+          <legend class="ds-radio-group__legend" id="fm-2-level-legend">Access level</legend>
+          <div class="ds-radio-group__items"><label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="fm-2-level" value="view"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">View only</span></span></label><label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="fm-2-level" value="edit"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Edit</span></span></label></div>
+          <p class="ds-radio-group__error" id="fm-2-level-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select an access level</span></p>
+        </fieldset>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary"><span>Submit request</span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="dirty + submitting (loading + pressed prevented)">
+  <form class="ds-form" id="fm-3" method="post" action="#" aria-busy="true" aria-labelledby="fm-3-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-3-title">Update billing contact</h2>
+    </div>
+    <div class="ds-form__alerts"></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Contact</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-3-name">Contact name</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-3-name" name="fm-3-name" type="text" autocomplete="name" dir="auto" value="Budi Santoso" required></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-3-email">Billing email</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-3-email" name="fm-3-email" type="email" autocomplete="email" dir="ltr" spellcheck="false" autocapitalize="off" value="budi@example.com" required></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><span class="ds-form__status" data-ds-text="supporting">Saving…</span><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary" aria-busy="true"><span>Save contact</span><span class="ds-button__spinner" aria-hidden="true"></span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="policy-error (C2) / system-error (C1 + Retry)">
+  <form class="ds-form" id="fm-4" method="post" action="#" aria-labelledby="fm-4-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-4-title">Transfer funds</h2>
+    </div>
+    <div class="ds-form__alerts"><div class="ds-form__notice" data-attention="c2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><div class="ds-form__notice-body"><p class="ds-form__notice-title">Amount is above your daily limit</p><p>Transfers above Rp 50.000.000 need a second approver. Lower the amount or ask a finance manager to approve it.</p></div></div><div class="ds-form__notice" data-attention="c1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><div class="ds-form__notice-body"><p class="ds-form__notice-title">Couldn't submit the transfer</p><p>Your entries are saved. Try again in a moment.</p><button type="button" class="ds-form__notice-action">Try again</button></div></div></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Transfer</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-4-amt">Amount</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-4-amt" name="fm-4-amt" type="text" value="75.000.000" required inputmode="decimal"></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-4-ref">Reference <span class="ds-text-field__optional">(optional)</span></label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-4-ref" name="fm-4-ref" type="text" value="INV-2026-0042"></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary"><span>Transfer</span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="blocked-with-reason (fields read-only, submit aria-disabled + reason) / offline">
+  <form class="ds-form" id="fm-5" method="post" action="#" aria-labelledby="fm-5-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-5-title">Submit timesheet</h2>
+    </div>
+    <div class="ds-form__alerts"><div class="ds-form__notice" data-attention="c2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-offline"/></svg><div class="ds-form__notice-body"><p class="ds-form__notice-title">You're offline</p><p>Changes are kept on this device. Will send when online.</p></div></div></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Week 11</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-5-hours">Hours worked</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-5-hours" name="fm-5-hours" type="text" value="38" readonly aria-readonly="true"></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-5-proj">Project</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-5-proj" name="fm-5-proj" type="text" value="Warehouse migration" readonly aria-readonly="true"></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary" aria-disabled="true" aria-describedby="fm-5-reason"><span>Submit timesheet</span></button><p class="ds-form__reason" id="fm-5-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>The March period closed on 31 March. Ask your manager to reopen it.</span></p></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="read-only (Edit replaces the action bar)">
+  <form class="ds-form" id="fm-6" method="post" action="#" aria-labelledby="fm-6-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-6-title">Shipping address</h2>
+    </div>
+    <div class="ds-form__alerts"></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Address</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field" data-span="full">
+          <label class="ds-text-field__label" for="fm-6-street">Street address</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-6-street" name="fm-6-street" type="text" value="Jl. Asia Afrika No. 8" readonly aria-readonly="true"></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-6-city">City</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-6-city" name="fm-6-city" type="text" value="Bandung" readonly aria-readonly="true"></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-6-zip">Postal code</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-6-zip" name="fm-6-zip" type="text" value="40111" readonly aria-readonly="true"></div>
+        </div>
+        <div class="ds-select">
+          <label class="ds-select__label" for="fm-6-country">Country</label>
+          <div class="ds-select__group"><input class="ds-select__input" id="fm-6-country" type="text" value="Indonesia" readonly aria-readonly="true"><input type="hidden" name="fm-6-country" value="Indonesia"></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><button type="button" class="ds-button">Edit address</button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="embedded + dirty + Esc (confirmation, focus on Keep editing)">
+  <form class="ds-form" id="fm-7" method="post" action="#" data-variant="embedded" aria-labelledby="fm-7-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-7-title">Rename project</h2>
+    </div>
+    <div class="ds-form__alerts"></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">Project</legend>
+      <div class="ds-form__fields" data-columns="1">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-7-name">Project name</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-7-name" name="fm-7-name" type="text" dir="auto" value="Warehouse migration 2026" required></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__confirm" role="alertdialog" aria-labelledby="fm-7-ct" aria-describedby="fm-7-cd">
+      <p class="ds-form__confirm-title" id="fm-7-ct">Discard unsaved changes?</p>
+      <p id="fm-7-cd">The new project name will be lost.</p>
+      <div class="ds-inline" data-gap="3" data-justify="end"><button type="button" class="ds-button" data-variant="destructive" data-ds-discard>Discard</button><button type="button" class="ds-button" data-ds-keep data-force="focus">Keep editing</button></div>
+    </div>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary"><span>Save</span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="inline-edit (Enter saves, Esc restores)">
+  <form class="ds-form" id="fm-8" method="post" action="#" data-variant="inline-edit" aria-label="Edit display name" data-ds-preview data-msg-success="Name saved" data-ds-module="form">
+    <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-8-name">Display name</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-8-name" name="fm-8-name" type="text" autocomplete="nickname" dir="auto" value="Siti R." required></div>
+    </div>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>Cancel</button><button type="submit" class="ds-button" data-variant="primary">Save</button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="RTL 2 columns (1 column on phone)">
+  <form class="ds-form" id="fm-9" dir="rtl" lang="ar" method="post" action="#" aria-labelledby="fm-9-title" data-ds-preview data-msg-success="Request submitted" data-ds-module="form">
+    <div class="ds-form__header">
+      <h2 class="ds-form__title" id="fm-9-title">طلب وصول</h2>
+    </div>
+    <div class="ds-form__alerts"></div>
+    <fieldset class="ds-form__section">
+      <legend class="ds-form__legend">بياناتك</legend>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-9-name">الاسم الكامل</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-9-name" name="fm-9-name" type="text" autocomplete="name" dir="auto" value="سارة أحمد" required></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-9-email">البريد الإلكتروني</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-9-email" name="fm-9-email" type="email" autocomplete="email" dir="ltr" spellcheck="false" autocapitalize="off" value="sara@example.com" required></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-9-city">المدينة</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-9-city" name="fm-9-city" type="text" autocomplete="address-level2" dir="auto" value="الرياض" required></div>
+        </div>
+        <div class="ds-text-field">
+          <label class="ds-text-field__label" for="fm-9-zip">الرمز البريدي</label>
+          <div class="ds-text-field__group"><input class="ds-text-field__input" id="fm-9-zip" name="fm-9-zip" type="text" autocomplete="postal-code" value="12271" required></div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ds-form__actions"><button type="button" class="ds-button" data-ds-cancel>إلغاء</button><button type="submit" class="ds-button" data-variant="primary"><span>إرسال الطلب</span></button></div>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="success"><p class="ds-text-secondary">After a successful submit the person moves to the result page, or a Toast repeats the button verb ("Request submitted"), announced politely; the dirty guard is released.</p></section>

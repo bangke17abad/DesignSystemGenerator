@@ -1,0 +1,92 @@
+/* Engine 1.8.0 · html-first reference · base layer.
+   Reads only system tokens (I3). Breakpoint placeholders (--bp-*-up) are replaced with the token values by tools/render-previews.mjs
+   (which also writes the packaged assets/bundle.css), so the package contains exactly one breakpoint set (V8, R11). Class prefix "ds-" and the
+   global "DS" are renamed to the project namespace when packaged. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  color: var(--color-structure-text-primary);
+  background: var(--color-structure-surface-base);
+  font-variant-numeric: tabular-nums;
+}
+img, svg, video { display: block; max-inline-size: 100%; }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:where(h1, h2, h3, h4, p, ul, ol, dl, figure) { margin: 0; }
+
+/* Typography roles (STD-2: everything except .ds-text-caption is body text >= 16) */
+.ds-text-display { font-family: var(--type-display-family); font-size: var(--type-display-size); line-height: var(--type-display-line); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-tracking); }
+.ds-text-h1 { font-family: var(--type-h1-family); font-size: var(--type-h1-size); line-height: var(--type-h1-line); font-weight: var(--type-h1-weight); letter-spacing: var(--type-h1-tracking); }
+.ds-text-h2 { font-family: var(--type-h2-family); font-size: var(--type-h2-size); line-height: var(--type-h2-line); font-weight: var(--type-h2-weight); letter-spacing: var(--type-h2-tracking); }
+.ds-text-h3 { font-family: var(--type-h3-family); font-size: var(--type-h3-size); line-height: var(--type-h3-line); font-weight: var(--type-h3-weight); letter-spacing: var(--type-h3-tracking); }
+.ds-text-body-lg { font-size: var(--type-body-lg-size); line-height: var(--type-body-lg-line); }
+.ds-text-body { font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-text-label { font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+.ds-text-code { font-family: var(--font-mono); font-size: var(--type-code-size); line-height: var(--type-code-line); }
+.ds-text-caption { font-size: var(--type-caption-size); line-height: var(--type-caption-line); color: var(--color-structure-text-secondary); }
+.ds-text-secondary { color: var(--color-structure-text-secondary); }
+.ds-num { font-variant-numeric: tabular-nums; }
+
+/* Focus (I4, UB8): ring is added outside, never replaces anything. data-force="focus" renders it in static previews. */
+:where(a, button, input, select, textarea, summary, [tabindex], [role="button"], [role="tab"], [role="option"], [role="menuitem"], [role="treeitem"], [role="gridcell"], [role="slider"], [role="switch"]):focus-visible,
+[data-force~="focus"] {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+[data-ds-on="inverse"] :focus-visible, [data-ds-on="inverse"] [data-force~="focus"],
+[data-ds-on="solid"]:focus-visible, [data-ds-on="solid"][data-force~="focus"] { outline-color: var(--color-focus-ring-inverse); }
+/* Programmatic focus on non-interactive targets (main, h1, ErrorSummary) uses an inset ring so it never overflows the viewport. */
+:where(main, h1, h2, [data-ds-focus-target])[tabindex="-1"]:focus-visible,
+:where(main, h1, h2, [data-ds-focus-target])[tabindex="-1"][data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+/* Accessibility utilities */
+.ds-vh:not(:focus):not(:active):not(:focus-within) {
+  position: absolute !important; inline-size: 1px !important; block-size: 1px !important; overflow: hidden !important;
+  clip-path: inset(50%) !important; white-space: nowrap !important; margin: -1px !important; padding: 0 !important; border: 0 !important;
+}
+bdi, .ds-bdi { unicode-bidi: isolate; }
+
+/* Icons: placeholder glyphs from reference/html-first/icons.json, replaced by the L9 set in a run */
+.ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; fill: none; stroke: currentColor; stroke-width: max(var(--icon-stroke), 1.25); stroke-linecap: round; stroke-linejoin: round; }
+.ds-icon[data-size="sm"] { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-icon[data-size="lg"] { inline-size: var(--icon-lg); block-size: var(--icon-lg); }
+[dir="rtl"] .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* Hit area (STD-4): every interactive control uses this or an equivalent min size based on --target-current. */
+.ds-target { min-block-size: var(--target-current); min-inline-size: var(--target-current); }
+
+/* Layout primitives (§6.5): no colour; gap only from space tokens; logical properties only. */
+.ds-stack { display: flex; flex-direction: column; gap: var(--ds-gap, var(--space-4)); }
+.ds-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-gap, var(--space-2)); }
+.ds-inline[data-nowrap] { flex-wrap: nowrap; }
+.ds-inline[data-justify="between"] { justify-content: space-between; }
+.ds-inline[data-justify="end"] { justify-content: flex-end; }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="1"] { --ds-gap: var(--space-1); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="2"] { --ds-gap: var(--space-2); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="3"] { --ds-gap: var(--space-3); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="4"] { --ds-gap: var(--space-4); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="6"] { --ds-gap: var(--space-6); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="8"] { --ds-gap: var(--space-8); }
+:is(.ds-stack, .ds-inline, .ds-grid)[data-gap="12"] { --ds-gap: var(--space-12); }
+.ds-grid { display: grid; gap: var(--ds-gap, var(--space-4)); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ds-container { inline-size: 100%; max-inline-size: var(--layout-content-max); margin-inline: auto; padding-inline: var(--space-4); }
+@media (--bp-tablet-up) {
+  .ds-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .ds-container { padding-inline: var(--space-6); }
+}
+@media (--bp-desktop-up) {
+  .ds-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .ds-container { padding-inline: var(--space-8); }
+}
+
+/* Preview chrome (only in previews/) */
+.ds-preview { padding: var(--space-6) var(--space-4); }
+.ds-preview > header { margin-block-end: var(--space-6); }
+.ds-demo { border-block-start: var(--border-width-thin) solid var(--color-structure-border); padding-block: var(--space-4) var(--space-6); }
+.ds-demo > .ds-demo__label { display: block; margin-block-end: var(--space-3); font-size: var(--type-caption-size); line-height: var(--type-caption-line); color: var(--color-structure-text-secondary); }

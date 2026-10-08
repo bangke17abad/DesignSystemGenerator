@@ -1,0 +1,728 @@
+{
+  "accessibility": {
+    "attributes": [
+      "input type=\"file\" dengan accept dan multiple; tersembunyi secara visual (bukan display:none) dan tidak menjadi tab stop kedua",
+      "choose-button aria-describedby ke constraints dan error-text",
+      "zona aria-hidden untuk teks drag di sentuh; instruksi drag tidak menjadi satu-satunya instruksi",
+      "file-list: ul/li; tiap item aria-busy saat mengunggah; ProgressBar dengan aria-valuenow dan label \"Uploading {name}\"",
+      "aksi item: button dengan nama berisi nama berkas (\"Remove invoice.pdf\")",
+      "aria-invalid pada group dan error-text saat error field",
+      "aria-disabled + reason pada choose-button saat diblokir atau maksimum tercapai",
+      "pengumuman tambah, selesai, gagal, hapus lewat LiveAnnouncer polite; tidak ada pengumuman per persen"
+    ],
+    "focus_order": "label → choose-button → aksi item pertama … aksi item terakhir → elemen berikutnya; setelah pemilih tertutup fokus kembali ke choose-button",
+    "native": {
+      "compose": "rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) atau PickMultipleVisualMedia; Modifier.dragAndDropTarget(shouldStartDragAndDrop = { … }, target = DragAndDropTarget) untuk tablet/ChromeOS; LinearProgressIndicator(progress = { p }) dengan Modifier.semantics { contentDescription }",
+      "flutter": "plugin first-party file_selector (openFiles(acceptedTypeGroups: [XTypeGroup(...)])) atau image_picker untuk kamera/galeri; drop dari OS di desktop/web butuh paket pihak ketiga (Not verified against the pinned version); LinearProgressIndicator(value:) dengan Semantics(label: 'Uploading {name}'); SemanticsService.announce untuk selesai/gagal",
+      "swiftui": "Button(\"Choose files\") + .fileImporter(isPresented:allowedContentTypes:allowsMultipleSelection:onCompletion:) atau PhotosPicker; .dropDestination(for: URL.self) { urls, _ in … } isTargeted: { dragover = $0 } untuk iPad/macOS; ProgressView(value:) dengan .accessibilityLabel"
+    },
+    "politeness": "polite",
+    "role": "group berlabel (fieldset/legend atau role=group + aria-labelledby) berisi button \"Choose file\" yang memicu input type=file tersembunyi secara visual, dan list berkas",
+    "sr_label": "group \"{label}\"; tombol \"Choose files, button\" + batasan; item \"{name}, {size}, {status}\"",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.5.3",
+      "2.5.7",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat menamai apa yang diunggah (\"Supporting documents\") + penanda optional",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "zone",
+      "role": "area target drop; bukan tab stop; klik di area membuka pemilih (kenyamanan pointer); garis batas gaya dari bahasa desain",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-md",
+        "space-6",
+        "space-4"
+      ]
+    },
+    {
+      "part": "icon",
+      "role": "ikon unggah dekoratif (aria-hidden)",
+      "tokens": [
+        "icon-lg",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "instruction",
+      "role": "teks \"Drag files here or\" + tombol; di sentuh hanya tombol",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "choose-button",
+      "role": "Button secondary \"Choose file(s)\" yang membuka pemilih sistem; jalur keyboard dan sentuh wajib",
+      "tokens": [
+        "control-height-md",
+        "type-label-size",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "constraints",
+      "role": "tipe yang diterima, ukuran maksimum, jumlah maksimum; terlihat sebelum memilih dan dirujuk aria-describedby",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "dragover-overlay",
+      "role": "penanda zona aktif saat berkas diseret di atasnya: border tebal + teks \"Drop to upload\" (bukan hanya warna)",
+      "tokens": [
+        "color-interaction-subtle",
+        "color-interaction-border",
+        "border-width-thick",
+        "motion-fast-duration"
+      ]
+    },
+    {
+      "part": "file-list",
+      "role": "daftar berkas (List semantik) di bawah zona; urutan penambahan",
+      "tokens": [
+        "space-2",
+        "color-structure-border"
+      ]
+    },
+    {
+      "part": "file-item",
+      "role": "baris berkas: ikon tipe, nama (boleh terpotong di tengah dengan nama penuh di nama aksesibel), ukuran terformat, StatusLabel, aksi",
+      "tokens": [
+        "layout-row-height",
+        "type-body-size",
+        "color-structure-text-primary",
+        "color-structure-text-secondary",
+        "icon-md",
+        "space-3"
+      ]
+    },
+    {
+      "part": "item-progress",
+      "role": "ProgressBar determinate per berkas saat mengunggah + persentase teks",
+      "tokens": [
+        "color-interaction-default",
+        "color-structure-surface-sunken",
+        "radius-full",
+        "type-caption-size"
+      ]
+    },
+    {
+      "part": "item-status",
+      "role": "ikon status terkunci + teks: success (C4, positive), uploading/queued (C5, info), atau error (C1, critical) dengan alasan",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-positive-strong",
+        "color-semantic-critical-strong",
+        "type-caption-size"
+      ]
+    },
+    {
+      "part": "item-actions",
+      "role": "IconButton berlabel: \"Cancel upload {name}\", \"Retry {name}\", \"Remove {name}\"; masing-masing ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "error tingkat field (wajib kosong, jumlah melebihi batas) di bawah zona",
+      "tokens": [
+        "type-caption-size",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada choose-button dan aksi item; zona menampilkan ring saat fokus berada di dalamnya (focus-within) bila brief memintanya",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "FileItem[]",
+        "when": "berkas ditambah, status berubah, atau dihapus"
+      },
+      {
+        "name": "onFilesRejected",
+        "payload": "Array<{ file: File; reason: \"type\" | \"size\" | \"count\" | \"duplicate\" }>",
+        "when": "berkas ditolak validasi klien"
+      },
+      {
+        "name": "onRetry",
+        "payload": "{ id: string }",
+        "when": "Retry ditekan pada item error"
+      },
+      {
+        "name": "onCancel",
+        "payload": "{ id: string }",
+        "when": "Cancel ditekan saat mengunggah"
+      }
+    ],
+    "parts": [
+      "FileDropzone.Zone",
+      "FileDropzone.Trigger",
+      "FileDropzone.Constraints",
+      "FileDropzone.List",
+      "FileDropzone.Item",
+      "FileDropzone.ItemProgress",
+      "FileDropzone.ItemAction"
+    ],
+    "props": [
+      {
+        "description": "Nama group; apa yang diunggah.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Penjelasan tambahan di bawah label.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "area",
+        "description": "Zona besar atau baris tombol; phone memaksa compact.",
+        "name": "variant",
+        "required": false,
+        "type": "\"area\" | \"compact\""
+      },
+      {
+        "description": "MIME type dan/atau ekstensi yang diterima; ditampilkan di constraints.",
+        "name": "accept",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "description": "Ukuran maksimum per berkas dalam byte.",
+        "name": "maxSize",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "1",
+        "description": "Jumlah maksimum berkas.",
+        "name": "maxFiles",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Mengizinkan beberapa berkas.",
+        "name": "multiple",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Menawarkan kamera langsung di phone bila brief meminta.",
+        "name": "capture",
+        "required": false,
+        "type": "\"user\" | \"environment\""
+      },
+      {
+        "description": "Controlled: daftar berkas { id, name, size, type, status: \"queued\" | \"uploading\" | \"success\" | \"error\" | \"canceled\", progress, errorText }.",
+        "name": "value",
+        "required": false,
+        "type": "FileItem[]"
+      },
+      {
+        "description": "Uncontrolled: berkas yang sudah ada.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "FileItem[]"
+      },
+      {
+        "description": "Fungsi unggah milik produk; tanpa ini komponen hanya mengumpulkan berkas untuk dikirim Form.",
+        "name": "uploader",
+        "required": false,
+        "type": "(file: File, ctx: { signal: AbortSignal; onProgress: (p: number) => void }) => Promise<{ id: string }>"
+      },
+      {
+        "default": "false",
+        "description": "Minimal satu berkas.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Error field; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Error tingkat field.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Pengganti teks constraints bawaan.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila unggah tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Hanya daftar berkas tanpa zona dan aksi hapus.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field Form.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "membuka pemilih berkas sistem; setelah memilih, fokus kembali ke choose-button dan \"{n} files added\" diumumkan polite",
+      "trigger": "Enter atau Space pada choose-button"
+    },
+    {
+      "input": "keyboard",
+      "result": "berpindah antar aksi item (Cancel/Retry/Remove) dalam urutan daftar",
+      "trigger": "Tab di daftar"
+    },
+    {
+      "input": "keyboard",
+      "result": "item dihapus; fokus ke aksi item berikutnya, atau sebelumnya, atau choose-button bila daftar kosong (§9.5); \"{name} removed\" diumumkan",
+      "trigger": "Enter pada Remove"
+    },
+    {
+      "input": "keyboard",
+      "result": "unggahan dibatalkan (AbortSignal), item dihapus atau ditandai \"Canceled\" dengan Retry",
+      "trigger": "Enter pada Cancel saat mengunggah"
+    },
+    {
+      "input": "pointer",
+      "result": "dragover saat di atas; lepas menambahkan berkas yang lolos validasi dan menolak sisanya dengan alasan per berkas; lepas di luar zona tidak membuka berkas di tab browser (default dicegah di area halaman)",
+      "trigger": "seret berkas OS ke zona lalu lepas"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka pemilih yang sama dengan choose-button (kenyamanan); tidak ada fokus ganda",
+      "trigger": "klik di area zona (bukan tombol)"
+    },
+    {
+      "input": "touch",
+      "result": "pemilih sistem (Files, Photos, Camera sesuai accept/capture); tidak ada instruksi drag di sentuh; aksi item ≥ target-min-touch",
+      "trigger": "tap choose-button (phone/tablet)"
+    },
+    {
+      "input": "touch",
+      "result": "perilaku sama dengan keyboard; drag dari app lain (split view) diterima bila platform mendukung",
+      "trigger": "keyboard eksternal di tablet"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Supporting documents",
+        "Drag files here or",
+        "Choose files",
+        "PDF or JPG, up to 10 MB each, max 5 files",
+        "Drop to upload",
+        "invoice.pdf uploaded",
+        "Larger than 10 MB. Choose a smaller file.",
+        "Remove invoice.pdf"
+      ],
+      "id-ID": [
+        "Dokumen pendukung",
+        "Seret berkas ke sini atau",
+        "Pilih berkas",
+        "PDF atau JPG, maks. 10 MB per berkas, maks. 5 berkas",
+        "Lepas untuk mengunggah",
+        "invoice.pdf berhasil diunggah",
+        "Lebih dari 10 MB. Pilih berkas yang lebih kecil.",
+        "Hapus invoice.pdf"
+      ]
+    },
+    "rules": [
+      "Tombol menyebut aksi dan jumlah: \"Choose file\" (single) atau \"Choose files\" (multiple), kata kerja dari glosarium.",
+      "Batasan ditulis sebelum memilih, dengan satuan dan tipe yang dikenali pengguna: \"PDF or JPG, up to 10 MB each, max 5 files\" (ukuran diformat locale, satuan biner/desimal konsisten).",
+      "Error per berkas menyebut berkas dan perbaikan: \"report.docx isn't accepted. Upload a PDF or JPG.\"",
+      "Status memakai ICU plural: \"{count, plural, one {# file added} other {# files added}}\".",
+      "Teks drag hanya tampil bila pointer dengan drag tersedia; di sentuh tidak menyebut \"drag\"."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "ProgressBar",
+    "StatusLabel",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Selalu sediakan tombol \"Choose file\" sebagai jalur keyboard dan sentuh.",
+    "Tampilkan tipe, ukuran, dan jumlah maksimum sebelum pengguna memilih.",
+    "Beri status per berkas dengan ikon + teks, dan Retry untuk kegagalan jaringan.",
+    "Kembalikan fokus secara terkendali setelah berkas dihapus."
+  ],
+  "dont": [
+    {
+      "ref": "UB7",
+      "text": "Dropzone tanpa tombol pemilih, sehingga hanya drag yang bisa dipakai."
+    },
+    {
+      "ref": "UB2",
+      "text": "Status berhasil/gagal yang hanya dibedakan warna border atau baris."
+    },
+    {
+      "text": "Menghapus seluruh daftar saat satu berkas gagal."
+    },
+    {
+      "ref": "UB5",
+      "text": "Aksi item berupa ikon kecil tanpa label dan di bawah 44 di sentuh."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "instruksi dan tombol membungkus ke baris terpisah; batasan membungkus; tombol tidak terpotong",
+      "case": "teks instruksi dan batasan +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "zona tumbuh tinggi; item membungkus ke dua baris (nama di baris pertama, ukuran dan status di baris kedua); aksi tetap ≥ target-current",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "daftar tidak dirender; submit tanpa berkas = error field \"Add at least one document\" dan fokus ke choose-button",
+      "case": "0 berkas (required)"
+    },
+    {
+      "behaviour": "berkas yang melebihi jumlah ditolak per berkas dengan alasan; ukuran di atas batas ditolak sebelum diunggah; daftar > 10 item tetap menampilkan semua dengan ringkasan \"{n} files, {size} total\"",
+      "case": "jumlah atau ukuran maksimum"
+    },
+    {
+      "behaviour": "dipotong di tengah (awal…akhir + ekstensi tetap terlihat); nama penuh di nama aksesibel dan Tooltip",
+      "case": "nama berkas sangat panjang"
+    },
+    {
+      "behaviour": "offline-first: berkas diantrekan dengan status \"Waiting for connection\" dan tidak ditampilkan sebagai berhasil sebelum server mengonfirmasi (I6); selain itu item error dengan Retry; berkas yang sudah selesai tetap",
+      "case": "offline atau unggahan terputus"
+    },
+    {
+      "behaviour": "paste gambar dari clipboard diterima saat fokus di dalam komponen bila brief mengizinkan; drop teks/tautan (bukan berkas) diabaikan dengan pesan \"Drop files, not text\"; folder ditolak kecuali brief mengizinkan",
+      "case": "paste dan drop dari sumber lain"
+    },
+    {
+      "behaviour": "daftar dan aksi mengikuti arah halaman (aksi di inline-end = kiri); ProgressBar terisi dari inline-start; ukuran, persen, dan nama berkas diisolasi bdi agar \"10 MB\" dan \"invoice.pdf\" tetap utuh",
+      "case": "RTL dengan angka (ukuran, persentase, nama berkas)"
+    },
+    {
+      "behaviour": "validasi klien hanya kenyamanan; penolakan server muncul sebagai error item dengan alasan dari server",
+      "case": "tipe berkas palsu (ekstensi tidak cocok isi)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Opsional: disertakan bila journey atau entitas di brief memuat unggah berkas (lampiran, impor data, dokumen pendukung, foto bukti); alasan dicatat. Bila disertakan, jalur keyboard \"Choose file\" tidak boleh dihapus.",
+  "lint": [
+    "FileDropzone tanpa FileDropzone.Trigger (choose-button) ditolak (UB7)",
+    "status item tanpa ikon dan teks ditolak (UB2)",
+    "aksi item tanpa nama berkas di label ditolak",
+    "reason wajib bila aria-disabled",
+    "pengumuman progres per persen ditolak"
+  ],
+  "name": "FileDropzone",
+  "preview": {
+    "combinations": [
+      "dragover pada zona diblokir (ditolak)",
+      "error+focus pada Retry",
+      "success+hover",
+      "success+focus",
+      "disabled + berkas terunggah",
+      "loading+pressed (hapus dicegah saat mengunggah)",
+      "phone compact",
+      "RTL + ukuran berkas"
+    ],
+    "states": [
+      "idle",
+      "hover",
+      "focus",
+      "dragover",
+      "uploading",
+      "success",
+      "error",
+      "max-reached",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "area",
+      "compact"
+    ]
+  },
+  "purpose": {
+    "purpose": "Area unggah berkas yang menerima drag-and-drop dari sistem operasi dan selalu menyediakan tombol \"Choose file\" untuk keyboard dan sentuh, dengan batasan yang terlihat dan progres, keberhasilan, atau error per berkas.",
+    "when_not_to_use": [
+      "Untuk satu foto profil atau gambar dengan pratinjau dan crop: komposisikan Avatar/Image + Button \"Change photo\"; dropzone besar berlebihan.",
+      "Untuk memasukkan data yang bisa diketik atau ditempel (CSV pendek, kode): pakai TextArea.",
+      "Untuk memindah item di dalam aplikasi (urutkan, pindah folder): pakai pola drag dengan alternatif Menu, bukan dropzone.",
+      "Untuk memindai dokumen atau QR dengan kamera saja: pakai alur kamera dengan alternatif input manual (§9.1 Pemindai)."
+    ]
+  },
+  "related": [
+    "Button",
+    "List",
+    "ProgressBar",
+    "StatusLabel",
+    "Image",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant compact: tombol \"Choose files\" lebar penuh size lg (opsi \"Take photo\" bila accept gambar dan brief meminta capture); tanpa teks drag; aksi item ≥ target-min-touch; daftar bertumpuk",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "variant area bila ada ruang; tombol ≥ target-min-touch; teks drag hanya bila (pointer: fine) atau drag multitasking tersedia",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "variant area dengan teks drag; seluruh zona menerima drop; daftar di bawah zona dengan aksi di inline-end",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh menambah dan menghapus berkas"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role hanya melihat/mengunduh berkas; zona tidak dirender"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "unggah ditutup (mis. dokumen sudah dikirim untuk persetujuan); reason di constraints"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu lampiran ada"
+    },
+    {
+      "pattern": "step-up",
+      "when": "menghapus berkas yang sudah diserahkan resmi memerlukan StepUpDialog"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon unggah (panah atas), ikon tipe berkas, centang, dan silang tidak dicerminkan; ProgressBar terisi dari inline-start (kanan di RTL) karena arah progress mengikuti arah baca; nama berkas, ukuran, dan persen diisolasi bdi."
+  },
+  "sizes": {
+    "not_applicable": "Tinggi zona mengikuti isi dan variant; ukuran kontrol berasal dari Button choose-button dan IconButton aksi item, masing-masing ≥ target-current (24 pointer, 44 sentuh, 48 glove)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "dragover: berkas OS di atas zona",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "zona diblokir tidak menampilkan dragover; drop ditolak dan reason diumumkan",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada Retry di item error; ring di luar tombol, status error tetap",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "selected = item berhasil; hover hanya pada aksi item",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "item berhasil dengan fokus pada Remove",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "berkas yang sudah diunggah tetap terlihat saat field diblokir; Remove disembunyikan",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "item yang sedang diunggah tidak bisa dihapus; hanya Cancel",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "idle",
+      "token_swaps": {
+        "zone": "color-structure-surface-sunken"
+      },
+      "treatment": "zona dengan instruksi, tombol, dan batasan; daftar kosong tidak dirender"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "zone": "color-interaction-border"
+      },
+      "treatment": "pointer di atas zona: border ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px pada choose-button atau aksi item yang fokus"
+    },
+    {
+      "name": "dragover",
+      "token_swaps": {
+        "dragover-overlay": "color-interaction-border",
+        "zone": "color-interaction-subtle"
+      },
+      "treatment": "berkas diseret di atas zona: latar interaction-subtle, border tebal, teks berganti \"Drop to upload\"; berkas yang diketahui tidak diterima menampilkan \"This file type isn't accepted\" dengan ikon (bukan hanya warna)"
+    },
+    {
+      "name": "uploading",
+      "token_swaps": {
+        "item-progress": "color-interaction-default"
+      },
+      "treatment": "item dengan ProgressBar determinate dan persentase; tombol Cancel; aria-busy pada item; awal dan akhir diumumkan polite, bukan setiap persen"
+    },
+    {
+      "name": "success",
+      "token_swaps": {
+        "item-status": "color-semantic-positive-strong"
+      },
+      "treatment": "ikon centang + \"Uploaded\" pada item; tombol Remove; diumumkan polite \"{name} uploaded\""
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "item-status": "color-semantic-critical-strong",
+        "zone": "color-semantic-critical"
+      },
+      "treatment": "ikon error + alasan spesifik pada item (\"Larger than 10 MB\", \"Upload failed, check your connection\"); tombol Retry (bila bisa diulang) dan Remove; diumumkan polite; error field (wajib, jumlah) di error-text dengan aria-invalid"
+    },
+    {
+      "name": "max-reached",
+      "token_swaps": {
+        "choose-button": "color-structure-text-disabled"
+      },
+      "treatment": "jumlah maksimum tercapai: choose-button aria-disabled dengan reason \"You can add up to {max} files\"; drop ditolak dengan pesan yang sama"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "instruction": "color-structure-text-disabled",
+        "zone": "color-structure-surface-sunken"
+      },
+      "treatment": "aria-disabled=\"true\" pada choose-button, zona tidak menerima drop; latar surface-sunken diredam; reason terlihat di constraints"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "file-item": "color-structure-text-primary"
+      },
+      "treatment": "zona tidak dirender; daftar berkas berupa tautan unduh/lihat tanpa aksi hapus; aria-readonly tidak dipakai (bukan field teks)"
+    }
+  ],
+  "target_hints": {
+    "compose": "ActivityResultContracts.OpenMultipleDocuments + dragAndDropTarget dibungkus {Ns}FileDropzone",
+    "flutter": "file_selector + daftar item dibungkus {ns}_file_dropzone.dart",
+    "html": {
+      "element": "fieldset > button + input[type=file] + ul",
+      "notes": "tanpa JS: input type=file native berlabel di dalam form multipart tetap berfungsi (jalur keyboard dasar); modul data-{ns}-module=\"file-dropzone\" menambah zona drop, validasi klien, daftar, progres, dan Retry"
+    },
+    "swiftui": ".fileImporter + .dropDestination dibungkus {Ns}FileDropzone"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default di tablet/desktop: zona dengan ikon, instruksi drag, tombol, dan batasan; tinggi minimum ±3 baris teks.",
+      "name": "area"
+    },
+    {
+      "description": "Baris tombol \"Choose file\" + batasan tanpa zona besar; default di phone dan di form padat. Drop tetap diterima di baris bila pointer tersedia.",
+      "name": "compact"
+    }
+  ]
+}

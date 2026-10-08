@@ -1,0 +1,594 @@
+{
+  "accessibility": {
+    "attributes": [
+      "nama tautan: \"Unread. Dana Putri approved Purchase request 2041. 10 minutes ago.\" (penanda belum dibaca diucapkan sebagai teks, bukan hanya warna/bobot)",
+      "time datetime ISO; waktu relatif juga di nama aksesibel",
+      "Pengumuman lewat LiveAnnouncer: item baru yang datang saat daftar terbuka diumumkan polite dan digabung (\"3 new notifications\"); item terkait event kritis sudah diumumkan assertive oleh perlakuan event kritis, tidak diumumkan ulang di sini",
+      "tandai dibaca semua: hasilnya diumumkan polite (\"All notifications marked as read\")",
+      "native: aksi swipe juga tersedia sebagai custom accessibility action"
+    ],
+    "focus_order": "heading hari → item (tautan) → Menu aksi item → item berikutnya; fokus tidak berpindah saat item baru datang di atas",
+    "native": {
+      "compose": "LazyColumn { stickyHeader { Text(day, Modifier.semantics { heading() }) }; items { ListItem(modifier = Modifier.clickable { open() }.semantics { contentDescription = \"Unread. …\"; customActions = listOf(CustomAccessibilityAction(\"Mark as read\") { … }) }) } }. Not verified against the pinned version",
+      "flutter": "ListTile di dalam ListView dengan Semantics(label: 'Unread. …', button: true, customSemanticsActions: {CustomSemanticsAction(label: 'Mark as read'): …}); heading hari dengan Semantics(header: true). Not verified against the pinned version",
+      "swiftui": "List { Section(header: Text(day)) { Button { open } label: { row } .accessibilityLabel(\"Unread. …\") .accessibilityAction(named: \"Mark as read\") { … } .swipeActions { … } } }. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "listitem di dalam list per grup hari (ul di bawah heading hari); isi utama adalah tautan ke objek; Menu aksi terpisah",
+    "sr_label": "status baca + kalimat kejadian + objek + waktu relatif; ikon leading dekoratif",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "2.1.1",
+      "2.4.4",
+      "2.5.7",
+      "2.5.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "row",
+      "role": "baris yang bisa diaktifkan (tautan ke objek); tinggi minimal layout-row-height dan ≥ target-min-touch di sentuh",
+      "tokens": [
+        "layout-row-height",
+        "target-min-touch",
+        "space-3",
+        "space-4",
+        "color-structure-surface-base"
+      ]
+    },
+    {
+      "part": "leading",
+      "role": "Avatar aktor atau ikon jenis kejadian; ikon status terkunci bila item membawa status",
+      "tokens": [
+        "avatar-md",
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "unread-marker",
+      "role": "penanda belum dibaca non-warna: titik berbentuk + judul bobot lebih tebal + teks tersembunyi \"Unread\"; warna titik dari interaksi (bukan status)",
+      "tokens": [
+        "color-interaction-default",
+        "radius-full",
+        "space-2"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "kalimat kejadian dengan objek (teks isi); bobot naik saat belum dibaca",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "status",
+      "role": "StatusLabel opsional bila kejadian mengubah status objek",
+      "tokens": [
+        "space-1"
+      ]
+    },
+    {
+      "part": "timestamp",
+      "role": "waktu relatif dalam elemen time ber-ISO; waktu tepat di Tooltip dan nama aksesibel",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "row-actions",
+      "role": "Menu aksi per item (Mark as read/unread, Mute this type); alternatif untuk swipe",
+      "tokens": [
+        "icon-md",
+        "target-min-touch",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "day-header",
+      "role": "judul grup per hari (\"Today\", \"Yesterday\", tanggal) sebagai heading",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "item diaktifkan (membuka objek)"
+      },
+      {
+        "name": "onReadChange",
+        "payload": "boolean",
+        "when": "status baca berubah (buka item, Menu, atau swipe)"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "boolean",
+        "when": "item dipilih/batal dipilih dalam mode massal"
+      }
+    ],
+    "parts": [
+      "NotificationItem.Group (heading hari + list)",
+      "NotificationItem.Actions (Menu aksi item)"
+    ],
+    "props": [
+      {
+        "default": "default",
+        "description": "Bentuk item.",
+        "name": "variant",
+        "required": false,
+        "type": "\"default\" | \"with-status\" | \"grouped\""
+      },
+      {
+        "description": "Kalimat kejadian.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Tujuan objek.",
+        "name": "href",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Status baca (controlled).",
+        "name": "read",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Status baca awal (uncontrolled).",
+        "name": "defaultRead",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Waktu kejadian.",
+        "name": "timestamp",
+        "required": true,
+        "type": "Date | string (ISO 8601)"
+      },
+      {
+        "description": "Keluarga semantik bila kejadian membawa status.",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Dipilih dalam mode aksi massal.",
+        "name": "selected",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "masuk ke daftar lalu Tab ke item berikutnya; Menu aksi item mendapat tab stop sesudah itemnya",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka objek tujuan dan menandai dibaca (onReadChange true); status dibaca diumumkan bila pengguna tetap di daftar",
+      "trigger": "Enter pada item"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka Menu aksi (Mark as unread, Mute this type)",
+      "trigger": "Shift+F10 atau tombol Menu pada item"
+    },
+    {
+      "input": "pointer",
+      "result": "sama dengan Enter; klik tombol Menu tidak membuka objek",
+      "trigger": "klik item"
+    },
+    {
+      "input": "touch",
+      "result": "aksi cepat (mark read/unread); alternatif satu-pointer lewat Menu aksi (SC 2.5.7)",
+      "trigger": "swipe horizontal pada item"
+    },
+    {
+      "input": "touch",
+      "result": "membuka objek; area klik seluruh baris ≥ target-min-touch",
+      "trigger": "tap item"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Dana Putri approved Purchase request 2041",
+        "Your export is ready to download",
+        "Approval for Invoice 2041 is overdue by 2 days",
+        "3 people commented on Invoice 2041",
+        "Today",
+        "Yesterday",
+        "Mark all as read",
+        "This item was deleted"
+      ],
+      "id-ID": [
+        "Dana Putri menyetujui Permintaan pembelian 2041",
+        "Ekspor Anda siap diunduh",
+        "Persetujuan Faktur 2041 terlambat 2 hari",
+        "3 orang mengomentari Faktur 2041",
+        "Hari ini",
+        "Kemarin",
+        "Tandai semua sudah dibaca",
+        "Item ini telah dihapus"
+      ]
+    },
+    "rules": [
+      "Kalimat: aktor + kata kerja lampau + objek bernama (\"Dana approved Purchase request 2041\"); kata kerja dari glosarium.",
+      "Objek disebut dengan nama/ID yang bisa dikenali, bukan \"an item\".",
+      "Waktu relatif dengan formatter locale; grup hari memakai \"Today\", \"Yesterday\", lalu tanggal lengkap.",
+      "Gabungan memakai ICU plural (\"3 people commented\").",
+      "Tidak memakai tanda seru atau huruf kapital penuh untuk urgensi; urgensi datang dari kelas status."
+    ]
+  },
+  "depends_on": [
+    "StatusLabel",
+    "Avatar",
+    "Menu",
+    "Tooltip",
+    "LiveAnnouncer",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Tandai belum dibaca dengan titik + bobot + teks tersembunyi, tidak hanya warna latar.",
+    "Kelompokkan per hari dengan heading.",
+    "Sebutkan objek dengan nama yang bisa dikenali dan tautkan langsung ke sana.",
+    "Pastikan event kritis sudah punya perlakuan sendiri sebelum dicatat sebagai item."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Membedakan belum dibaca hanya dengan warna latar atau warna teks."
+    },
+    {
+      "text": "Menjadikan NotificationItem satu-satunya tempat event kritis (I5)."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menampilkan aksi item hanya saat hover."
+    },
+    {
+      "ref": "UB4",
+      "text": "Meredupkan teks item yang sudah dibaca di bawah 4.5:1."
+    },
+    {
+      "ref": "UB7",
+      "text": "Swipe tanpa alternatif Menu dan keyboard."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "kalimat membungkus sampai 3 baris lalu ellipsis dengan teks lengkap di nama aksesibel dan di objek tujuan; nama objek tidak dipotong lebih dulu",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "timestamp pindah ke baris bawah; tinggi baris tumbuh; Menu aksi tetap terjangkau",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState cleared \"You're all caught up\" (atau setara L11), tanpa CTA",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "daftar dipaginasi dengan \"Load more\" yang menjaga fokus; Badge pada IconButton menampilkan 99+",
+      "case": "jumlah maksimum (ribuan item, badge 99+)"
+    },
+    {
+      "behaviour": "daftar cache dengan ConnectionStatus stale; mark-as-read diantrekan dan tidak ditampilkan terkonfirmasi sampai server mengonfirmasi (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "item baru ditahan di atas dengan tombol \"Show 12 new\" bila pengguna sedang membaca, agar posisi gulir dan fokus tidak meloncat; pengumuman digabung",
+      "case": "pembaruan beruntun cepat (banyak notifikasi masuk)"
+    },
+    {
+      "behaviour": "setiap kejadian item sendiri; kejadian sejenis berurutan digabung (variant grouped)",
+      "case": "beberapa status bersamaan pada satu objek"
+    },
+    {
+      "behaviour": "state target-gone; aktivasi membuka EmptyState not-found",
+      "case": "objek tujuan terhapus"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; bila dipilih, pattern NotificationCenter ikut disertakan.",
+  "lint": [
+    "Penanda belum dibaca tanpa teks tersembunyi ditolak (UB2)",
+    "Swipe tanpa Menu aksi alternatif ditolak (UB7)",
+    "Event kritis yang hanya menghasilkan NotificationItem ditolak (I5, manual-review)"
+  ],
+  "name": "NotificationItem",
+  "preview": {
+    "combinations": [
+      "selected + hover",
+      "selected + focus",
+      "unread + focus",
+      "loading + pressed (dicegah)",
+      "grup Today/Yesterday",
+      "Show 12 new (penahan)"
+    ],
+    "states": [
+      "unread",
+      "read",
+      "hover",
+      "pressed",
+      "focus",
+      "selected",
+      "critical (C1)",
+      "warning (C2)",
+      "neutral-negative (C3)",
+      "positive (C4)",
+      "info (C5)",
+      "target-gone"
+    ],
+    "variants": [
+      "default",
+      "with-status",
+      "grouped"
+    ]
+  },
+  "purpose": {
+    "purpose": "Satu entri riwayat pemberitahuan di daftar notifikasi: siapa/apa, kejadian, objek tujuan, waktu, dan penanda belum dibaca non-warna; dikelompokkan per hari dan membuka objek terkait saat diaktifkan.",
+    "when_not_to_use": [
+      "Untuk konfirmasi langsung atas aksi pengguna: pakai Toast.",
+      "Untuk kondisi yang masih berlangsung dan perlu tetap terlihat: pakai Banner atau InlineAlert.",
+      "Untuk event kritis (I5): perlakuan khusus event kritis lebih dulu; NotificationItem hanya catatan riwayatnya, tidak pernah satu-satunya penanda.",
+      "Untuk riwayat audit entitas (siapa mengubah apa): pakai Timeline.",
+      "Untuk pesan percakapan: komponen domain, bukan NotificationItem."
+    ]
+  },
+  "related": [
+    "Badge",
+    "Toast",
+    "Banner",
+    "Timeline",
+    "List",
+    "StatusLabel",
+    "Avatar"
+  ],
+  "responsive": [
+    {
+      "behaviour": "halaman penuh atau Sheet; heading hari sticky; swipe untuk aksi cepat dengan Menu sebagai alternatif",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "Popover lebar atau ContextPanel overlay; baris ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "Popover dari IconButton notifikasi atau ContextPanel; aksi per item muncul juga saat fokus, tidak hanya saat hover",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "pengguna boleh membuka objek tujuan"
+    },
+    {
+      "pattern": "read-only",
+      "when": "akses ke objek dicabut setelah notifikasi dikirim: item tetap, aktivasi membuka EmptyState restricted tanpa membocorkan isi baru"
+    },
+    {
+      "pattern": "hidden",
+      "when": "notifikasi tentang objek yang tidak pernah boleh dilihat role tidak dibuat (difilter di server)"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-right",
+      "arrow-right"
+    ],
+    "notes": "Penanda belum dibaca dan Avatar di inline-start; Menu di inline-end; arah swipe mengikuti arah inline; waktu dan ID diisolasi."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "seluruh baris; ≥ target-min-touch di sentuh, ≥ target-min-pointer di pointer; Menu aksi punya area sendiri yang tidak tumpang tindih",
+      "name": "md",
+      "notes": "Satu ukuran; kepadatan lewat sumbu density (§5.9).",
+      "size_token": "layout-row-height"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring fokus inset di atas latar hover",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "latar selection + state layer hover; checkbox tetap tercentang",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring fokus inset tetap terlihat di atas selection",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "item yang sedang ditandai dibaca tidak bisa ditekan ulang",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "item tidak bisa diseret",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "unread",
+      "token_swaps": {
+        "title": "color-structure-text-primary",
+        "unread-marker": "color-interaction-default"
+      },
+      "treatment": "titik penanda + judul type-label-weight + teks tersembunyi \"Unread\"; tanpa latar berwarna (latar bukan satu-satunya penanda)"
+    },
+    {
+      "name": "read",
+      "token_swaps": {
+        "title": "color-structure-text-primary"
+      },
+      "treatment": "titik hilang, judul kembali type-body-weight; teks tetap text-primary (bukan diredupkan di bawah 4.5:1)"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "row": "color-interaction-subtle"
+      },
+      "treatment": "token-swap ke interaction-subtle atau state-layer hover sesuai L16; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "row": "color-interaction-subtle"
+      },
+      "treatment": "state-layer pressed atau interaction-subtle; tanpa perubahan layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring fokus inset −2px (baris)"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "row": "color-structure-selection"
+      },
+      "treatment": "dalam mode pilih massal: checkbox tercentang + latar selection"
+    },
+    {
+      "name": "critical (C1)",
+      "token_swaps": {
+        "status-container-filled": "color-semantic-critical",
+        "status-container-tinted": "color-semantic-critical-subtle",
+        "status-content-filled": "color-semantic-on-critical",
+        "status-icon": "color-semantic-critical",
+        "status-text": "color-semantic-critical-strong"
+      },
+      "treatment": "ikon status critical + StatusLabel C1 dengan perlakuan L3; item ini catatan, event kritis sudah ditangani overlay/Banner dan diumumkan assertive saat terjadi"
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "status-container-filled": "color-semantic-warning",
+        "status-container-tinted": "color-semantic-warning-subtle",
+        "status-content-filled": "color-semantic-on-warning",
+        "status-icon": "color-semantic-warning",
+        "status-text": "color-semantic-warning-strong"
+      },
+      "treatment": "ikon warning + StatusLabel C2 dari L3 (mis. \"Approval overdue\")"
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "status-container-filled": "color-semantic-neutral-negative",
+        "status-container-tinted": "color-semantic-neutral-negative-subtle",
+        "status-content-filled": "color-semantic-on-neutral-negative",
+        "status-icon": "color-semantic-neutral-negative",
+        "status-text": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "ikon neutral-negative + StatusLabel C3 dari L3 (\"Request withdrawn\")"
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "status-container-filled": "color-semantic-positive",
+        "status-container-tinted": "color-semantic-positive-subtle",
+        "status-content-filled": "color-semantic-on-positive",
+        "status-icon": "color-semantic-positive",
+        "status-text": "color-semantic-positive-strong"
+      },
+      "treatment": "ikon positive + StatusLabel C4 dari L3"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "status-container-filled": "color-semantic-info",
+        "status-container-tinted": "color-semantic-info-subtle",
+        "status-content-filled": "color-semantic-on-info",
+        "status-icon": "color-semantic-info",
+        "status-text": "color-semantic-info-strong"
+      },
+      "treatment": "ikon info + StatusLabel C5 dari L3"
+    },
+    {
+      "name": "target-gone",
+      "token_swaps": {
+        "title": "color-structure-text-secondary"
+      },
+      "treatment": "objek tujuan terhapus: item tetap ada, tautan diganti teks \"This item was deleted\" dan aktivasi membuka EmptyState not-found"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}NotificationItem: ListItem + SwipeToDismissBox dengan customActions",
+    "flutter": "{ns}_notification_item.dart: ListTile + Dismissible dengan custom semantics actions",
+    "html": {
+      "element": "li",
+      "notes": "li > a.{ns}-notification-item + button Menu; grup: h3 + ul; time[datetime]"
+    },
+    "swiftui": "{Ns}NotificationItem: Button row di List dengan swipeActions dan accessibilityAction"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Aktor/ikon + kalimat + waktu + penanda belum dibaca.",
+      "name": "default"
+    },
+    {
+      "description": "Ditambah StatusLabel bila kejadian mengubah status objek (mis. \"Request approved\" → C4).",
+      "name": "with-status"
+    },
+    {
+      "description": "Beberapa kejadian sejenis digabung (\"3 people commented on Invoice 2041\") dengan tautan ke daftar lengkap.",
+      "name": "grouped"
+    }
+  ]
+}

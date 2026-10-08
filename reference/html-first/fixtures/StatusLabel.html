@@ -1,0 +1,52 @@
+<!-- StatusLabel fixture · every attention class rendered with the L3 treatment of the active language (attention-cN-* tokens).
+     The fixture never forces a treatment: quiet / outline / tinted / filled comes from the language, so C1-C2 must always read
+     louder than C3-C6 (I7). Text follows ui_locale en-US. -->
+<section class="ds-demo" data-ds-demo="classes C1-C6 (L3 treatment)">
+  <div class="ds-inline" data-gap="4">
+    <span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Payment failed</span></span></span>
+    <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Awaiting approval</span></span></span>
+    <span class="ds-status-label" data-status="neutral-negative"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-neutral-negative"/></svg><span>Cancelled</span></span></span>
+    <span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Approved</span></span></span>
+    <span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>In transit</span></span></span>
+    <span class="ds-status-label"><span class="ds-status-label__container"><span>Draft</span></span></span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="in a table column (C1 ≥ C2 ≥ C3 ≥ C4-C6)">
+  <table class="ds-text-body">
+    <thead><tr><th scope="col">Invoice</th><th scope="col">Status</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><bdi>INV-2041</bdi></th><td><span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Payment failed</span></span></span></td></tr>
+      <tr><th scope="row"><bdi>INV-2042</bdi></th><td><span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Returned for correction</span></span></span></td></tr>
+      <tr><th scope="row"><bdi>INV-2043</bdi></th><td><span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Paid</span></span></span></td></tr>
+      <tr><th scope="row"><bdi>INV-2044</bdi></th><td><span class="ds-status-label"><span class="ds-status-label__container"><span>Open</span></span></span></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="ds-demo" data-ds-demo="variant with-detail">
+  <div class="ds-stack" data-gap="3">
+    <span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Overdue</span></span><span class="ds-status-label__detail">· <time datetime="P3D"><bdi>3 days</bdi></time></span></span>
+    <span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>In review</span></span><span class="ds-status-label__detail">· since <time datetime="2026-10-06T09:30"><bdi>2 days ago</bdi></time></span></span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="stagnant (overlay C2) + local-unconfirmed">
+  <div class="ds-stack" data-gap="3">
+    <span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Pending approval</span></span><span class="ds-status-label__overlay"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span><span class="ds-vh">, </span>Overdue <bdi>3 days</bdi></span></span></span>
+    <span class="ds-status-label"><span class="ds-status-label__container"><span>Open</span></span><span class="ds-status-label__overlay"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span><span class="ds-vh">, </span>No activity for <bdi>14 days</bdi></span></span></span>
+    <span class="ds-status-label" data-status="info" data-unconfirmed><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Not synced</span></span></span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="card without column header (VisuallyHidden prefix)">
+  <p class="ds-text-body"><bdi>PO-7781</bdi> · Office chairs ×12 —
+    <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span><span class="ds-vh">Status: </span>Awaiting approval</span></span></span>
+  </p>
+</section>
+<section class="ds-demo" data-ds-demo="long label in a narrow cell (wraps, never truncated)">
+  <div class="ds-inline" data-gap="4">
+    <div style="inline-size: 9rem">
+      <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span lang="id">Menunggu persetujuan manajer keuangan</span></span></span>
+    </div>
+    <div style="inline-size: 9rem">
+      <span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span lang="id">Pembayaran dikonfirmasi</span></span></span>
+    </div>
+  </div>
+</section>

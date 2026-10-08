@@ -1,0 +1,155 @@
+<!-- Popover fixture · variants info / form, states closed / open / loading / error / trigger-disabled-with-reason, flip at the edge,
+     Popover in a Modal, phone → Sheet, RTL, long text. Static demos render the open panel in flow (data-static, no top layer).
+     Live demos use the native popover attribute (works without JS: centred, light dismiss, Esc) enhanced by Popover.js
+     (anchoring + flip/shift, focus in and back, focus-out closes, form = Sheet on phone). Never opened by hover. -->
+<section class="ds-demo" data-ds-demo="variants/info (open, focus on the labelled container)">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true" aria-controls="po-s1">About this score</button>
+    <div class="ds-popover" id="po-s1" role="dialog" aria-labelledby="po-s1-title" tabindex="-1" data-force="focus" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s1-title">About this score</h2><button type="button" class="ds-icon-button" data-size="sm" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-popover__body">
+        <p>Stableford points for the last 20 visits, adjusted for venue difficulty.</p>
+        <dl class="ds-popover__dl"><dt>Visits</dt><dd>20</dd><dt>Best</dt><dd>41 pts</dd></dl>
+      </div>
+      <div class="ds-popover__footer"><a class="ds-button" data-variant="tertiary" href="#scoring-rules">Learn more</a></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/form (Rename: field + Apply / Cancel, focus on the field)">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true" aria-controls="po-s2">Rename</button>
+    <div class="ds-popover" id="po-s2" role="dialog" aria-labelledby="po-s2-title" data-variant="form" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s2-title">Rename</h2></div>
+      <form class="ds-popover__body" action="#rename">
+        <div class="ds-text-field"><label class="ds-text-field__label" for="po-s2-name">Booking name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="po-s2-name" value="Saturday fourball" data-force="focus"></div></div>
+      </form>
+      <div class="ds-popover__footer"><button type="button" class="ds-button" data-variant="tertiary">Cancel</button><button type="button" class="ds-button" data-variant="primary">Apply</button></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="closed (trigger) · trigger-disabled-with-reason">
+  <div class="ds-inline" data-gap="4">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="false">Filter booking slots</button>
+    <div>
+      <button type="button" class="ds-button" aria-haspopup="dialog" aria-disabled="true" aria-describedby="po-dis-reason"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Venue rules</span></button>
+      <span class="ds-popover__trigger-reason" id="po-dis-reason">Rules are published after the club confirms the season.</span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (skeleton, aria-busy, size locked)">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true">Visit history</button>
+    <div class="ds-popover" role="dialog" aria-labelledby="po-s3-title" aria-busy="true" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s3-title">Visit history</h2></div>
+      <div class="ds-popover__body" aria-hidden="true"><span class="ds-popover__skeleton"></span><span class="ds-popover__skeleton"></span></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error (form + validation error; stays open) · offline Apply blocked">
+  <div class="ds-inline" data-gap="6">
+    <div class="ds-popover-demo">
+      <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true">Rename</button>
+      <div class="ds-popover" role="dialog" aria-labelledby="po-s4-title" data-variant="form" data-static>
+        <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s4-title">Rename</h2></div>
+        <form class="ds-popover__body" action="#rename">
+          <div class="ds-text-field" data-invalid><label class="ds-text-field__label" for="po-s4-name">Booking name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="po-s4-name" value="" aria-invalid="true" aria-describedby="po-s4-err"></div>
+          <p class="ds-popover__error" id="po-s4-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a booking name.</span></p></div>
+        </form>
+        <div class="ds-popover__footer"><button type="button" class="ds-button" data-variant="tertiary">Cancel</button><button type="button" class="ds-button" data-variant="primary">Apply</button></div>
+      </div>
+    </div>
+    <div class="ds-popover-demo">
+      <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true">Rename</button>
+      <div class="ds-popover" role="dialog" aria-labelledby="po-s5-title" data-variant="form" data-static>
+        <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s5-title">Rename</h2></div>
+        <form class="ds-popover__body" action="#rename">
+          <div class="ds-text-field"><label class="ds-text-field__label" for="po-s5-name">Booking name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="po-s5-name" value="Saturday fourball"></div></div>
+        </form>
+        <div class="ds-popover__footer"><button type="button" class="ds-button" data-variant="primary" aria-disabled="true" aria-describedby="po-s5-reason">Apply</button><span class="ds-popover__reason" id="po-s5-reason">Needs connection. Your text is kept.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="open + flip at viewport edge (block-start, align end)">
+  <div class="ds-stack" data-gap="2">
+    <div class="ds-popover-demo" data-side="block-start" data-align="end">
+      <button type="button" class="ds-icon-button" data-variant="secondary" aria-haspopup="dialog" aria-expanded="true" aria-label="Booking slot details"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg></button>
+      <div class="ds-popover" role="dialog" aria-labelledby="po-s6-title" data-side="block-start" data-static>
+        <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s6-title">07:40 · Hall 1</h2></div>
+        <div class="ds-popover__body"><p>Four guests, buggy included. Check-in closes 15 minutes before.</p></div>
+      </div>
+    </div>
+    <p class="ds-text-secondary">Preferred side is block-end; a trigger near the bottom edge flips the panel above it and shifts it inside the viewport.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="Popover inside a Modal (z-popover above z-modal; Esc closes the Popover first)">
+  <div class="ds-modal-frame">
+    <dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="po-m-title" data-static>
+      <div class="ds-modal__form">
+        <header class="ds-modal__header"><h2 class="ds-modal__title" id="po-m-title">Edit booking</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+        <div class="ds-modal__body">
+          <div class="ds-popover-demo">
+            <button type="button" class="ds-button" data-variant="tertiary" aria-haspopup="dialog" aria-expanded="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Cancellation policy</span></button>
+            <div class="ds-popover" role="dialog" aria-labelledby="po-m-pop-title" data-static>
+              <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-m-pop-title">Cancellation policy</h2></div>
+              <div class="ds-popover__body"><p>Free until 24 hours before the booking slot.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="phone → Sheet (form variant)">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" aria-labelledby="po-sh-title" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="po-sh-title">Rename</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body"><div class="ds-text-field"><label class="ds-text-field__label" for="po-sh-name">Booking name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="po-sh-name" value="Saturday fourball"></div></div></div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="tertiary">Cancel</button><button type="button" class="ds-button" data-variant="primary">Apply</button></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long text (+40%): widens to layout-modal-sm, footer actions stack">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true">Tentang skor ini</button>
+    <div class="ds-popover" role="dialog" aria-labelledby="po-s7-title" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s7-title">Tentang perhitungan skor Stableford yang disesuaikan</h2></div>
+      <div class="ds-popover__body"><p>Poin Stableford dari 20 ronde terakhir, disesuaikan dengan tingkat kesulitan lapangan dan kondisi cuaca pada hari permainan.</p></div>
+      <div class="ds-popover__footer"><a class="ds-button" data-variant="tertiary" href="#scoring-rules">Pelajari lebih lanjut tentang aturan</a><button type="button" class="ds-button">Tutup penjelasan</button></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (inline-end side, Close at inline-end)" dir="rtl" lang="ar">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-button" aria-haspopup="dialog" aria-expanded="true">حول هذه النتيجة</button>
+    <div class="ds-popover" role="dialog" aria-labelledby="po-s8-title" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-s8-title">حول هذه النتيجة</h2><button type="button" class="ds-icon-button" data-size="sm" aria-label="إغلاق"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-popover__body"><p>نقاط آخر 20 جولة بعد تعديلها حسب صعوبة الملعب.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (press to open, Esc / outside / focus-out close, focus returns; form = Sheet on phone)">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button" popovertarget="po-live-1" aria-haspopup="dialog">About this score</button>
+    <div class="ds-popover" id="po-live-1" popover="auto" role="dialog" aria-labelledby="po-live-1-title" data-variant="info" data-side="block-end" data-align="start" data-ds-module="popover">
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-live-1-title">About this score</h2><button type="button" class="ds-icon-button" data-size="sm" popovertarget="po-live-1" popovertargetaction="hide" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-popover__body"><p>Stableford points for the last 20 visits, adjusted for venue difficulty.</p></div>
+      <div class="ds-popover__footer"><a class="ds-button" data-variant="tertiary" href="#scoring-rules">Learn more</a></div>
+    </div>
+    <button type="button" class="ds-button" popovertarget="po-live-2" aria-haspopup="dialog">Rename</button>
+    <div class="ds-popover" id="po-live-2" popover="auto" role="dialog" aria-labelledby="po-live-2-title" data-variant="form" data-align="start" data-ds-module="popover" data-ds-announce="Booking renamed">
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="po-live-2-title">Rename</h2><button type="button" class="ds-icon-button" data-size="sm" popovertarget="po-live-2" popovertargetaction="hide" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <form class="ds-popover__body" id="po-live-2-form" action="#rename" novalidate>
+        <div class="ds-text-field"><label class="ds-text-field__label" for="po-live-2-name">Booking name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="po-live-2-name" name="name" value="Saturday fourball" required aria-errormessage="po-live-2-err"></div>
+        <p class="ds-popover__error" id="po-live-2-err" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a booking name.</span></p></div>
+      </form>
+      <div class="ds-popover__footer"><button type="reset" form="po-live-2-form" class="ds-button" data-variant="tertiary">Cancel</button><button type="submit" form="po-live-2-form" class="ds-button" data-variant="primary">Apply</button></div>
+    </div>
+    <div>
+      <button type="button" class="ds-button" data-ds-popover="po-live-3" aria-haspopup="dialog" aria-disabled="true" aria-describedby="po-live-3-reason"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Venue rules</span></button>
+      <span class="ds-popover__trigger-reason" id="po-live-3-reason">Rules are published after the club confirms the season.</span>
+    </div>
+    <div class="ds-popover" id="po-live-3" popover="auto" role="dialog" aria-label="Venue rules" data-ds-module="popover"><div class="ds-popover__body"><p>Season rules.</p></div></div>
+  </div>
+</section>

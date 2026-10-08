@@ -1,0 +1,105 @@
+<!-- Accordion fixture · variants (multiple, single), sizes, states (collapsed, expanded, hover, focus, pressed, error,
+     disabled-with-reason, loading), mandatory combinations (error+focus, error+hover, disabled+focus, loading + close, error panel
+     opened automatically after submit, RTL) and edge cases. html-first base = native <details>/<summary> with the heading inside the
+     summary; variant single = native exclusive `name`. A blocked item renders h3 > button[aria-disabled] and no panel. -->
+<section class="ds-demo" data-ds-demo="variants/multiple (default) · collapsed + expanded · summary text">
+  <div class="ds-accordion" id="acc-faq" data-ds-module="accordion">
+    <details class="ds-accordion__item" open>
+      <summary class="ds-accordion__trigger" id="acc1-t1"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">How do refunds work?</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc1-t1"><p>Cancel at least 24 hours before your booking slot and the booking fee goes back to your original payment method within 5 working days.</p></div>
+    </details>
+    <details class="ds-accordion__item">
+      <summary class="ds-accordion__trigger" id="acc1-t2"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Billing address</h3><span class="ds-accordion__summary">Jl. Pajajaran No. 12, Bogor</span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc1-t2"><p>Jl. Pajajaran No. 12, Bogor 16143, Indonesia</p></div>
+    </details>
+    <details class="ds-accordion__item">
+      <summary class="ds-accordion__trigger" id="acc1-t3"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Advanced settings</h3><span class="ds-accordion__summary"><bdi>3</bdi> items</span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc1-t3"><ul><li>Booking window: 14 days</li><li>Cancellation cut-off: 24 hours</li><li>Guest passes per month: 2</li></ul></div>
+    </details>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/single (native exclusive name; open item can be closed)">
+  <div class="ds-accordion" data-ds-module="accordion">
+    <details class="ds-accordion__item" name="acc-single" open>
+      <summary class="ds-accordion__trigger" id="acc2-t1"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Weekday rules</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc2-t1"><p>First booking slot 06:00, last booking slot 15:30. Check-in is required before 09:00.</p></div>
+    </details>
+    <details class="ds-accordion__item" name="acc-single">
+      <summary class="ds-accordion__trigger" id="acc2-t2"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Weekend rules</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc2-t2"><p>Members only before 10:00. Four-ball groups only.</p></div>
+    </details>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states: hover · focus · pressed · error+focus · error+hover · disabled+focus (reason)">
+  <div class="ds-accordion">
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger" data-force="hover"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Hover</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Panel</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger" data-force="focus"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Focus (inset ring)</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Panel</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger" data-force="pressed"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Pressed</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Panel</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger" data-force="focus"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Contact details</h3><span class="ds-accordion__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span><span class="ds-vh">, </span><bdi>2</bdi> errors</span></span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Fields</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger" data-force="hover"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Payment</h3><span class="ds-accordion__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span><span class="ds-vh">, </span><bdi>1</bdi> error</span></span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Fields</p></div></details>
+    <div class="ds-accordion__item">
+      <h3 class="ds-accordion__heading-wrap"><button type="button" class="ds-accordion__trigger" aria-disabled="true" aria-expanded="false" aria-describedby="acc3-r" data-force="focus"><span class="ds-accordion__titles"><span class="ds-accordion__heading">Event entries</span><span class="ds-accordion__reason" id="acc3-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Opens after you verify your membership.</span></span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button></h3>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error panel opens automatically after a failed submit (Accordion.js) · ErrorSummary-style link opens it">
+  <form class="ds-stack" data-gap="3" action="#acc-form" id="acc-form">
+    <div class="ds-accordion" data-ds-module="accordion">
+      <details class="ds-accordion__item">
+        <summary class="ds-accordion__trigger" id="acc4-t1"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Member</h3><span class="ds-accordion__summary">Rina Wijaya</span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+        <div class="ds-accordion__panel" role="region" aria-labelledby="acc4-t1"><p>Rina Wijaya · MBR-00918</p></div>
+      </details>
+      <details class="ds-accordion__item" data-invalid>
+        <summary class="ds-accordion__trigger" id="acc4-t2"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Billing address</h3><span class="ds-accordion__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span><span class="ds-vh">, </span><bdi>1</bdi> error</span></span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+        <div class="ds-accordion__panel" role="region" aria-labelledby="acc4-t2">
+          <div class="ds-text-field" style="max-inline-size: 16rem">
+            <label class="ds-text-field__label" for="acc4-postcode">Postcode</label>
+            <div class="ds-text-field__group"><input class="ds-text-field__input" id="acc4-postcode" name="postcode" inputmode="numeric" required aria-invalid="true" aria-describedby="acc4-err"></div>
+            <p id="acc4-err" class="ds-text-field__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a 5-digit postcode.</span></p>
+          </div>
+        </div>
+      </details>
+    </div>
+    <p>There is a problem: <a href="#acc4-postcode">Enter a 5-digit postcode</a></p>
+  </form>
+</section>
+<section class="ds-demo" data-ds-demo="loading (lazy panel: Skeleton + aria-busy; closing cancels) · sizes sm / lg">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-accordion" data-ds-module="accordion">
+      <details class="ds-accordion__item" open>
+        <summary class="ds-accordion__trigger" id="acc5-t1"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Booking history</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+        <div class="ds-accordion__panel" role="region" aria-labelledby="acc5-t1" aria-busy="true"><span class="ds-vh">Loading</span><div class="ds-accordion__skeleton" aria-hidden="true"><span></span><span></span></div></div>
+      </details>
+      <details class="ds-accordion__item" data-lazy>
+        <summary class="ds-accordion__trigger" id="acc5-t2"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Payment history</h3><span class="ds-accordion__summary">loads when opened</span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+        <div class="ds-accordion__panel" role="region" aria-labelledby="acc5-t2"><div class="ds-accordion__skeleton" aria-hidden="true"><span></span><span></span></div><template><p>3 payments since January 2026. Last payment Rp 1.450.000 on 2 October 2026.</p></template></div>
+      </details>
+    </div>
+    <div class="ds-accordion" data-size="sm">
+      <details class="ds-accordion__item"><summary class="ds-accordion__trigger"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Size sm (dense pointer panels)</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Panel</p></div></details>
+    </div>
+    <div class="ds-accordion" data-size="lg">
+      <details class="ds-accordion__item"><summary class="ds-accordion__trigger"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Size lg (FAQ on touch surfaces)</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Panel</p></div></details>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long title (+40%: wraps, chevron stays top at inline-end) · many items: Expand all / Collapse all + ↑/↓">
+  <div class="ds-accordion__toolbar"><button type="button" class="ds-button" data-size="sm" data-ds-accordion-all="open" aria-controls="acc-long">Expand all</button><button type="button" class="ds-button" data-size="sm" data-variant="tertiary" data-ds-accordion-all="close" aria-controls="acc-long">Collapse all</button></div>
+  <div class="ds-accordion" id="acc-long" lang="id" data-arrows data-ds-module="accordion">
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Bagaimana cara mengajukan pengembalian dana untuk pemesanan yang dibatalkan karena cuaca buruk?</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Pengembalian dana otomatis dalam 5 hari kerja.</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Apakah tamu boleh bermain tanpa anggota?</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Tidak, tamu harus didampingi anggota.</p></div></details>
+    <details class="ds-accordion__item"><summary class="ds-accordion__trigger"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">Di mana saya dapat menyewa peralatan?</h3></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary><div class="ds-accordion__panel"><p>Di meja resepsionis, lantai dasar gedung utama.</p></div></details>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (chevron at inline-end = left; down/up glyph not mirrored; numbers isolated)">
+  <div class="ds-accordion" dir="rtl" lang="ar" data-ds-module="accordion">
+    <details class="ds-accordion__item" open>
+      <summary class="ds-accordion__trigger" id="acc7-t1"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">عنوان الفواتير</h3><span class="ds-accordion__summary"><bdi>3</bdi> عناصر</span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc7-t1"><p>شارع باجاجاران رقم <bdi>12</bdi>، بوغور</p></div>
+    </details>
+    <details class="ds-accordion__item">
+      <summary class="ds-accordion__trigger" id="acc7-t2"><span class="ds-accordion__titles"><h3 class="ds-accordion__heading">الدفع</h3><span class="ds-accordion__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span><bdi>2</bdi> أخطاء</span></span></span><svg class="ds-icon ds-accordion__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+      <div class="ds-accordion__panel" role="region" aria-labelledby="acc7-t2"><p>الحقول</p></div>
+    </details>
+  </div>
+</section>

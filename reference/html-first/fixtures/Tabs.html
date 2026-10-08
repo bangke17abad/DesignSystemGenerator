@@ -1,0 +1,253 @@
+<!-- Tabs fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases.
+     No-JS fallback: the list is in-page links to anchored sections; every panel shows in sequence with its heading.
+     Tabs.js upgrades to tablist/tab/tabpanel with roving tabindex, arrows (wrap), Home/End. Variant "links" is a nav (no JS). -->
+<section class="ds-demo" data-ds-demo="variants/line">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Booking sections" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb1-p0" id="tb1-t0" data-selected><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb1-p1" id="tb1-t1"><span>Guests</span><span class="ds-tabs__count" data-ds-text="supporting">4</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb1-p2" id="tb1-t2"><span>Payments</span><span class="ds-tabs__count" data-ds-text="supporting">2</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb1-p3" id="tb1-t3"><span>History</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb1-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Booking summary for booking slot 07:40, four guests, buggy included.</p></section>
+  <section class="ds-tabs__panel" id="tb1-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Guests</h3><p>Guests content.</p></section>
+  <section class="ds-tabs__panel" id="tb1-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Payments</h3><p>Payments content.</p></section>
+  <section class="ds-tabs__panel" id="tb1-p3"><h3 class="ds-tabs__panel-heading ds-text-h3">History</h3><p>History content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/contained">
+<div class="ds-tabs" data-ds-module="tabs" data-variant="contained">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Report period" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb2-p0" id="tb2-t0" data-selected><span>Day</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb2-p1" id="tb2-t1"><span>Week</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb2-p2" id="tb2-t2"><span>Month</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb2-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Day</h3><p>Utilisation by hour.</p></section>
+  <section class="ds-tabs__panel" id="tb2-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Week</h3><p>Week content.</p></section>
+  <section class="ds-tabs__panel" id="tb2-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Month</h3><p>Month content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/links (nav, aria-current)">
+<nav class="ds-tabs" data-variant="links" aria-label="Member pages">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#member-profile" aria-current="page">Profile</a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#member-level">Level</a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#member-billing">Billing</a></li>
+    </ul>
+  </div>
+</nav>
+</section>
+<section class="ds-demo" data-ds-demo="states (default, hover, pressed, focus, selected, blocked-with-reason, error)">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="States demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p0" id="tb3-t0" data-selected><span>Selected</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p1" id="tb3-t1"><span>Default</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p2" id="tb3-t2" data-force="hover"><span>Hover</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p3" id="tb3-t3" data-force="pressed"><span>Pressed</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p4" id="tb3-t4" data-force="focus"><span>Focus</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p5" id="tb3-t5" aria-disabled="true" aria-describedby="tb3-t5-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Payouts</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb3-p6" id="tb3-t6" data-invalid><svg class="ds-icon ds-tabs__error-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Details</span><span class="ds-tabs__count" data-ds-text="supporting">(2 errors)</span></a></li>
+    </ul>
+  </div>
+  <span class="ds-tabs__reason" id="tb3-t5-r">Payouts: Needs a verified bank account.</span>
+  <section class="ds-tabs__panel" id="tb3-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Selected</h3><p>Selected panel. The blocked tab takes focus with arrows but cannot be selected.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Default</h3><p>Default content.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Hover</h3><p>Hover content.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p3"><h3 class="ds-tabs__panel-heading ds-text-h3">Pressed</h3><p>Pressed content.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p4"><h3 class="ds-tabs__panel-heading ds-text-h3">Focus</h3><p>Focus content.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p5"><h3 class="ds-tabs__panel-heading ds-text-h3">Payouts</h3><p>Payouts content.</p></section>
+  <section class="ds-tabs__panel" id="tb3-p6"><h3 class="ds-tabs__panel-heading ds-text-h3">Details</h3><p>Details content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="selected+hover / error+focus">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Combination demo A" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb4-p0" id="tb4-t0" data-selected data-force="hover"><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb4-p1" id="tb4-t1" data-force="focus" data-invalid><svg class="ds-icon ds-tabs__error-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Details</span><span class="ds-tabs__count" data-ds-text="supporting">(2 errors)</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb4-p2" id="tb4-t2"><span>Notes</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb4-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb4-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Details</h3><p>Details content.</p></section>
+  <section class="ds-tabs__panel" id="tb4-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Notes</h3><p>Notes content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="selected+focus">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Combination demo B" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb5-p0" id="tb5-t0" data-selected data-force="focus"><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb5-p1" id="tb5-t1"><span>Details</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb5-p2" id="tb5-t2"><span>Notes</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb5-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb5-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Details</h3><p>Details content.</p></section>
+  <section class="ds-tabs__panel" id="tb5-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Notes</h3><p>Notes content.</p></section>
+</div>
+<p class="ds-text-secondary">Blocked + selected is prevented: if the selected tab becomes blocked, selection moves to the first available tab (announced politely).</p>
+</section>
+<section class="ds-demo" data-ds-demo="panel loading (aria-busy) + loading+pressed allowed">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Loading demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb6-p0" id="tb6-t0" data-selected><span>Activity</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb6-p1" id="tb6-t1" data-force="pressed"><span>Files</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb6-p2" id="tb6-t2"><span>Members</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb6-p0" aria-busy="true"><h3 class="ds-tabs__panel-heading ds-text-h3">Activity</h3><span class="ds-tabs__skeleton" aria-hidden="true"></span><span class="ds-tabs__skeleton" aria-hidden="true"></span><span class="ds-tabs__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading activity</span></section>
+  <section class="ds-tabs__panel" id="tb6-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Files</h3><p>Files content.</p></section>
+  <section class="ds-tabs__panel" id="tb6-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Members</h3><p>Members content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="panel empty">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Empty demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb7-p0" id="tb7-t0"><span>Activity</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb7-p1" id="tb7-t1" data-selected><span>Files</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb7-p2" id="tb7-t2"><span>Members</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb7-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Activity</h3><p>Activity content.</p></section>
+  <section class="ds-tabs__panel" id="tb7-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Files</h3><div class="ds-tabs__empty"><p class="ds-tabs__empty-title">No files yet</p><p class="ds-text-secondary">Scorecards and receipts you upload appear here.</p></div></section>
+  <section class="ds-tabs__panel" id="tb7-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Members</h3><p>Members content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="size sm">
+<div class="ds-tabs" data-ds-module="tabs" data-size="sm">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Size sm demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb8-p0" id="tb8-t0" data-selected><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb8-p1" id="tb8-t1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span>Schedule</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb8-p2" id="tb8-t2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span>Alerts</span><span class="ds-tabs__count" data-ds-text="supporting">3</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb8-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb8-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Schedule</h3><p>Schedule content.</p></section>
+  <section class="ds-tabs__panel" id="tb8-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Alerts</h3><p>Alerts content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="size md">
+<div class="ds-tabs" data-ds-module="tabs" data-size="md">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Size md demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb9-p0" id="tb9-t0" data-selected><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb9-p1" id="tb9-t1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span>Schedule</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb9-p2" id="tb9-t2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span>Alerts</span><span class="ds-tabs__count" data-ds-text="supporting">3</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb9-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb9-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Schedule</h3><p>Schedule content.</p></section>
+  <section class="ds-tabs__panel" id="tb9-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Alerts</h3><p>Alerts content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="size lg">
+<div class="ds-tabs" data-ds-module="tabs" data-size="lg">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Size lg demo" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb10-p0" id="tb10-t0" data-selected><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb10-p1" id="tb10-t1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span>Schedule</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb10-p2" id="tb10-t2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span>Alerts</span><span class="ds-tabs__count" data-ds-text="supporting">3</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb10-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb10-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Schedule</h3><p>Schedule content.</p></section>
+  <section class="ds-tabs__panel" id="tb10-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Alerts</h3><p>Alerts content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="overflow scroll (12 tabs)">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Venue modules" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p0" id="tb11-t0" data-selected><span>Overview</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p1" id="tb11-t1"><span>Booking board</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p2" id="tb11-t2"><span>Guests</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p3" id="tb11-t3"><span>Buggies</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p4" id="tb11-t4"><span>Assistants</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p5" id="tb11-t5"><span>Front desk</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p6" id="tb11-t6"><span>Food & beverage</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p7" id="tb11-t7"><span>Lockers</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p8" id="tb11-t8"><span>Events</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p9" id="tb11-t9"><span>Memberships</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p10" id="tb11-t10"><span>Invoices</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb11-p11" id="tb11-t11"><span>Settings</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb11-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Overview</h3><p>Overview content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Booking board</h3><p>Booking board content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Guests</h3><p>Guests content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p3"><h3 class="ds-tabs__panel-heading ds-text-h3">Buggies</h3><p>Buggies content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p4"><h3 class="ds-tabs__panel-heading ds-text-h3">Assistants</h3><p>Assistants content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p5"><h3 class="ds-tabs__panel-heading ds-text-h3">Front desk</h3><p>Front desk content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p6"><h3 class="ds-tabs__panel-heading ds-text-h3">Food & beverage</h3><p>Food & beverage content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p7"><h3 class="ds-tabs__panel-heading ds-text-h3">Lockers</h3><p>Lockers content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p8"><h3 class="ds-tabs__panel-heading ds-text-h3">Events</h3><p>Events content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p9"><h3 class="ds-tabs__panel-heading ds-text-h3">Memberships</h3><p>Memberships content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p10"><h3 class="ds-tabs__panel-heading ds-text-h3">Invoices</h3><p>Invoices content.</p></section>
+  <section class="ds-tabs__panel" id="tb11-p11"><h3 class="ds-tabs__panel-heading ds-text-h3">Settings</h3><p>Settings content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="overflow scroll + RTL" dir="rtl" lang="ar">
+<div class="ds-tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="أقسام الحجز" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p0" id="tb12-t0" data-selected><span>نظرة عامة</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p1" id="tb12-t1"><span>اللاعبون</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p2" id="tb12-t2"><span>المدفوعات</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p3" id="tb12-t3"><span>السجل</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p4" id="tb12-t4"><span>الإعدادات</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p5" id="tb12-t5"><span>التقارير</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p6" id="tb12-t6"><span>الأعضاء</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb12-p7" id="tb12-t7"><span>البطولات</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb12-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">نظرة عامة</h3><p>نظرة عامة content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">اللاعبون</h3><p>اللاعبون content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">المدفوعات</h3><p>المدفوعات content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p3"><h3 class="ds-tabs__panel-heading ds-text-h3">السجل</h3><p>السجل content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p4"><h3 class="ds-tabs__panel-heading ds-text-h3">الإعدادات</h3><p>الإعدادات content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p5"><h3 class="ds-tabs__panel-heading ds-text-h3">التقارير</h3><p>التقارير content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p6"><h3 class="ds-tabs__panel-heading ds-text-h3">الأعضاء</h3><p>الأعضاء content.</p></section>
+  <section class="ds-tabs__panel" id="tb12-p7"><h3 class="ds-tabs__panel-heading ds-text-h3">البطولات</h3><p>البطولات content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="vertical">
+<div class="ds-tabs" data-ds-module="tabs" data-orientation="vertical">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Settings sections" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb13-p0" id="tb13-t0" data-selected><span>Profile</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb13-p1" id="tb13-t1"><span>Notifications</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb13-p2" id="tb13-t2"><span>Security</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb13-p3" id="tb13-t3" aria-disabled="true" aria-describedby="tb13-t3-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Billing</span></a></li>
+    </ul>
+  </div>
+  <span class="ds-tabs__reason" id="tb13-t3-r">Billing: Only the account owner can change billing.</span>
+  <section class="ds-tabs__panel" id="tb13-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Profile</h3><p>Name, contact and level.</p></section>
+  <section class="ds-tabs__panel" id="tb13-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Notifications</h3><p>Notifications content.</p></section>
+  <section class="ds-tabs__panel" id="tb13-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Security</h3><p>Security content.</p></section>
+  <section class="ds-tabs__panel" id="tb13-p3"><h3 class="ds-tabs__panel-heading ds-text-h3">Billing</h3><p>Billing content.</p></section>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="longest locale labels (+40%), manual activation">
+<div class="ds-tabs" data-ds-module="tabs" data-activation="manual" lang="id">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Bagian pemesanan" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb14-p0" id="tb14-t0" data-selected><span>Ringkasan pemesanan</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb14-p1" id="tb14-t1"><span>Daftar pemain terdaftar</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#tb14-p2" id="tb14-t2"><span>Riwayat pembayaran</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="tb14-p0"><h3 class="ds-tabs__panel-heading ds-text-h3">Ringkasan pemesanan</h3><p>Ringkasan pemesanan content.</p></section>
+  <section class="ds-tabs__panel" id="tb14-p1"><h3 class="ds-tabs__panel-heading ds-text-h3">Daftar pemain terdaftar</h3><p>Daftar pemain terdaftar content.</p></section>
+  <section class="ds-tabs__panel" id="tb14-p2"><h3 class="ds-tabs__panel-heading ds-text-h3">Riwayat pembayaran</h3><p>Riwayat pembayaran content.</p></section>
+</div>
+</section>

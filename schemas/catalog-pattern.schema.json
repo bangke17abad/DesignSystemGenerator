@@ -1,0 +1,392 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/catalog-pattern.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accessibility": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "announcement": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "focus": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "step": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "focus"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "composition": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "component": {
+            "pattern": "^[A-Z][A-Za-z0-9]*$",
+            "type": "string"
+          },
+          "parts": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "role_in_pattern": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "component",
+          "role_in_pattern"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "content": {
+      "additionalProperties": false,
+      "properties": {
+        "examples": {
+          "additionalProperties": false,
+          "properties": {
+            "en-US": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 2,
+              "type": "array"
+            },
+            "id-ID": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 2,
+              "type": "array"
+            }
+          },
+          "required": [
+            "en-US",
+            "id-ID"
+          ],
+          "type": "object"
+        },
+        "rules": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "rules",
+        "examples"
+      ],
+      "type": "object"
+    },
+    "do": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "dont": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "edge_cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "behaviour": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "case": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "case",
+          "behaviour"
+        ],
+        "type": "object"
+      },
+      "minItems": 5,
+      "type": "array"
+    },
+    "engine_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "flow": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "state_class": {
+            "enum": [
+              "C1",
+              "C2",
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          },
+          "step": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "transition": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "state_class",
+          "transition"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "inclusion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "lint": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "pattern": "^[A-Z][A-Za-z0-9]*$",
+      "type": "string"
+    },
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "problem": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "when": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "when_not": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "problem",
+        "when",
+        "when_not"
+      ],
+      "type": "object"
+    },
+    "related_patterns": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "roles": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "enum": [
+                  "hidden",
+                  "disabled-with-reason",
+                  "step-up",
+                  "read-only",
+                  "full"
+                ]
+              },
+              "when": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern",
+              "when"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/NA"
+        }
+      ]
+    },
+    "states": {
+      "additionalProperties": false,
+      "properties": {
+        "empty": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "error": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "loading": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "partial": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "success": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "empty",
+        "loading",
+        "error",
+        "partial",
+        "success"
+      ],
+      "type": "object"
+    },
+    "tier": {
+      "enum": [
+        "R",
+        "S",
+        "O"
+      ]
+    },
+    "variants": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "behaviour": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "device_class": {
+            "enum": [
+              "phone",
+              "tablet",
+              "desktop"
+            ]
+          }
+        },
+        "required": [
+          "device_class",
+          "behaviour"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "wcag": {
+      "items": {
+        "pattern": "^\\d\\.\\d\\.\\d{1,2}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "name",
+    "engine_version",
+    "tier",
+    "inclusion",
+    "problem",
+    "composition",
+    "flow",
+    "variants",
+    "states",
+    "accessibility",
+    "content",
+    "roles",
+    "do",
+    "dont",
+    "edge_cases",
+    "wcag",
+    "related_patterns",
+    "lint"
+  ],
+  "title": "catalog-pattern",
+  "type": "object"
+}

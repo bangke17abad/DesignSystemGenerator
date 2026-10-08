@@ -1,0 +1,17 @@
+/* Container · engine 1.8.0 reference (catalog/components/Container.json). Extends .ds-container from base.css
+   (content variant, §8.1 page margins 16 · 24 · 32). Not a landmark; no background, border or shadow; never scrolls. */
+.ds-container[data-variant="measure"] { max-inline-size: var(--layout-measure); }
+.ds-container[data-variant="full"] { max-inline-size: none; }
+.ds-container[data-align="start"] { margin-inline: 0 auto; }
+.ds-container[data-padded="false"] { padding-inline: 0; }
+/* the measure is in ch, so it grows with 200% text and keeps characters per line; padding is added outside the measure */
+.ds-container[data-variant="measure"]:not([data-padded="false"]) { max-inline-size: calc(var(--layout-measure) + 2 * var(--space-4)); }
+@media (--bp-tablet-up) {
+  .ds-container[data-variant="measure"]:not([data-padded="false"]) { max-inline-size: calc(var(--layout-measure) + 2 * var(--space-6)); }
+}
+@media (--bp-desktop-up) {
+  .ds-container[data-variant="measure"]:not([data-padded="false"]) { max-inline-size: calc(var(--layout-measure) + 2 * var(--space-8)); }
+}
+/* wide children (tables, images, code) stay inside; they scroll themselves, the Container never does */
+:where(.ds-container) > :where(*) { max-inline-size: 100%; }
+.ds-container:empty { display: none; }

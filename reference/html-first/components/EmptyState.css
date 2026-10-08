@@ -1,0 +1,75 @@
+/* EmptyState · engine 1.8.0 reference (catalog/components/EmptyState.json). Tokens only (I3); logical properties only (§12.4).
+   Empty is not a status: no semantic colour, no attention tokens. Text start-aligned by default; data-align="center" for
+   languages whose L17 centres (there is no alignment token yet). CTA = Button composed in .ds-empty-state__actions. */
+.ds-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-8);
+  padding-inline: var(--space-4);
+  color: var(--color-structure-text-primary);
+  text-align: start;
+}
+.ds-empty-state[data-align="center"] { align-items: center; text-align: center; }
+.ds-empty-state[data-size="page"] { padding-block: var(--space-12); }
+.ds-empty-state[data-size="cell"] { padding-block: var(--space-6); padding-inline: 0; }
+
+/* decorative illustration / icon (L9 may forbid it on operational surfaces: then it is simply omitted) */
+.ds-empty-state__illustration {
+  display: grid;
+  place-items: center;
+  inline-size: calc(var(--icon-lg) + 2 * var(--space-3));
+  block-size: calc(var(--icon-lg) + 2 * var(--space-3));
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-secondary);
+}
+.ds-empty-state__illustration .ds-icon { inline-size: var(--icon-lg); block-size: var(--icon-lg); }
+
+.ds-empty-state__title {
+  margin: 0;
+  max-inline-size: var(--layout-measure);
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: break-word;
+}
+.ds-empty-state__title:focus-visible { outline-offset: calc(-1 * var(--border-width-thin)); }
+.ds-empty-state__description {
+  margin: 0;
+  max-inline-size: var(--layout-measure);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  color: var(--color-structure-text-secondary);
+}
+.ds-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-block-start: var(--space-1);
+}
+.ds-empty-state[data-align="center"] .ds-empty-state__actions { justify-content: center; }
+.ds-empty-state__reason {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+[dir="rtl"] .ds-empty-state .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* phone: CTA full width; tablet up: intrinsic width */
+@media (--bp-tablet-down) {
+  .ds-empty-state__actions { flex-direction: column; align-items: stretch; inline-size: 100%; }
+  .ds-empty-state[data-size="page"] { padding-block: var(--space-8); }
+}
+
+@media (forced-colors: active) {
+  .ds-empty-state__illustration { border: var(--border-width-thin) solid CanvasText; }
+}

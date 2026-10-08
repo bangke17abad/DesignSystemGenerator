@@ -1,0 +1,23 @@
+{
+  "assertions": [
+    {
+      "eq": "P04",
+      "manifest": "packs.0.id"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V22"
+      ]
+    }
+  ],
+  "fixture": "G12",
+  "run_only": [
+    "Komponen dan pattern P04 (10 R + PhaseBanner; pattern 6 R + StatusTracking + ServiceFeedback)",
+    "P04-V1..Vk"
+  ],
+  "source": "golden-briefs.md G12"
+}

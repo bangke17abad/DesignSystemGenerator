@@ -1,0 +1,50 @@
+<!-- LiveAnnouncer fixture · polite / assertive via DS.announce, identical repeats, merged burst, announcing from a modal, announcement log, states idle / announcing / cleared (catalog preview, §6.9). The regions themselves (#ds-live-polite, #ds-live-assertive) are created by ds.js at load and have no visual design. -->
+<section class="ds-demo" data-ds-demo="polite · assertive (DS.announce)">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-inline" data-gap="3">
+      <button type="button" class="ds-button ds-target" data-variant="primary" data-ds-module="announce" data-ds-announce="Changes saved" data-ds-politeness="polite">Save changes (polite)</button>
+      <button type="button" class="ds-button ds-target" data-variant="destructive" data-ds-module="announce" data-ds-announce="Payment failed. Your card was declined." data-ds-politeness="assertive">Simulate payment error (assertive)</button>
+    </div>
+    <p class="ds-text-secondary">Polite waits until the screen reader finishes speaking; assertive interrupts and is reserved for C1 and critical events. Focus never moves.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="identical message repeated · burst merged">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-target" data-ds-module="announce" data-ds-announce="Copied to clipboard">Copy link (repeat me)</button>
+    <button type="button" class="ds-button ds-target" data-ds-module="announce" data-ds-announce="1 item removed|2 items removed|3 items removed">Remove 3 items quickly</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="announcing while a modal makes the page inert">
+  <div class="ds-stack" data-gap="3">
+    <p class="ds-text-secondary" inert>Background content (inert while the dialog is open).</p>
+    <div role="dialog" aria-modal="false" aria-labelledby="la-dialog-title" class="ds-stack" data-gap="3" style="padding: var(--space-4); border: var(--border-width-thin) solid var(--color-structure-border); border-radius: var(--radius-md); background: var(--color-structure-surface-raised); box-shadow: var(--elevation-2)">
+      <h2 class="ds-text-h3" id="la-dialog-title">Rename file</h2>
+      <p>The live regions sit at the end of body, outside the inert subtree, so this still reaches the screen reader.</p>
+      <div><button type="button" class="ds-button ds-target" data-variant="primary" data-ds-module="announce" data-ds-announce="File renamed to Q3-report.pdf">Rename</button></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="announcement log (preview only, mirrors the regions)">
+  <ol class="ds-live-announcer__log" data-ds-module="live-announcer-log" aria-label="Announcement log">
+    <li class="ds-live-announcer__empty">No announcements yet. Use the buttons above.</li>
+  </ol>
+</section>
+<section class="ds-demo" data-ds-demo="states idle · announcing · cleared">
+  <dl class="ds-stack" data-gap="3">
+    <div class="ds-stack" data-gap="1">
+      <dt class="ds-text-label">idle</dt>
+      <dd class="ds-live-announcer__snapshot" style="margin: 0"><code class="ds-text-code">&lt;div id="ds-live-polite" role="status" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt;</code> — both regions exist and are empty from page load.</dd>
+    </div>
+    <div class="ds-stack" data-gap="1">
+      <dt class="ds-text-label">announcing</dt>
+      <dd class="ds-live-announcer__snapshot" style="margin: 0"><code class="ds-text-code">&lt;div id="ds-live-polite" …&gt;Changes saved&lt;/div&gt;</code> — emptied first, refilled after about 100 ms.</dd>
+    </div>
+    <div class="ds-stack" data-gap="1">
+      <dt class="ds-text-label">cleared</dt>
+      <dd class="ds-live-announcer__snapshot" style="margin: 0"><code class="ds-text-code">&lt;div id="ds-live-polite" …&gt;&lt;/div&gt;</code> — emptied after 7 s so reading navigation never finds a stale message.</dd>
+    </div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="RTL message (dir=auto on the regions)" dir="rtl" lang="ar">
+  <button type="button" class="ds-button ds-target" data-ds-module="announce" data-ds-announce="تم حفظ التغييرات في الملف Q3-report.pdf">حفظ التغييرات</button>
+</section>

@@ -1,0 +1,155 @@
+/* Banner · engine 1.8.0 reference (catalog/components/Banner.json). Tokens only (I3); logical properties only (§12.4).
+   Persistent system-level (under the global bar, full bleed) or page-level (under PageHeader, content width) message, in the
+   document flow (never position: fixed), at most one per level (.ds-banner-region holds one). The card is surface-raised; the
+   status treatment (--attention-cN-*, L3: quiet / outline / tinted / filled) is painted on a ::before layer above it, exactly
+   like Toast, so quiet classes keep a visible container and filled ones cover it. Content on the banner uses currentColor for
+   the action, dismiss and focus ring, so they stay legible on whatever treatment L3 picks. Dismiss exists only for C3-C5. */
+.ds-banner-region { display: flex; flex-direction: column; }
+.ds-banner-region:empty { display: none; }
+
+.ds-banner {
+  --_bg: transparent;
+  --_fg: var(--color-structure-text-primary);
+  --_border: transparent;
+  --_icon: var(--color-structure-text-secondary);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-raised);
+  color: var(--_fg);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+.ds-banner::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: inherit;
+  background: var(--_bg);
+  pointer-events: none;
+}
+.ds-banner[data-status="critical"] { --_bg: var(--attention-c1-background); --_fg: var(--attention-c1-foreground); --_border: var(--attention-c1-border); --_icon: var(--attention-c1-icon); }
+.ds-banner[data-status="warning"] { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-banner[data-status="neutral-negative"] { --_bg: var(--attention-c3-background); --_fg: var(--attention-c3-foreground); --_border: var(--attention-c3-border); --_icon: var(--attention-c3-icon); }
+.ds-banner[data-status="positive"] { --_bg: var(--attention-c4-background); --_fg: var(--attention-c4-foreground); --_border: var(--attention-c4-border); --_icon: var(--attention-c4-icon); }
+.ds-banner[data-status="info"] { --_bg: var(--attention-c5-background); --_fg: var(--attention-c5-foreground); --_border: var(--attention-c5-border); --_icon: var(--attention-c5-icon); }
+.ds-banner[hidden] { display: none; }
+
+/* system: full-bleed band directly under the global bar; text kept to the content width */
+.ds-banner[data-level="system"] {
+  border-width: 0;
+  border-block-end-width: var(--border-width-thin);
+  border-radius: 0;
+  padding-inline: max(var(--space-4), env(safe-area-inset-left, 0px)) max(var(--space-4), env(safe-area-inset-right, 0px));
+}
+.ds-banner[data-level="system"]::before { border-width: 0; border-block-end-width: var(--border-width-thin); inset: 0; inset-block-end: calc(-1 * var(--border-width-thin)); }
+
+.ds-banner__icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-body-line) - var(--icon-md)) / 2);
+  color: var(--_icon);
+}
+[dir="rtl"] .ds-banner__icon { transform: none; }
+.ds-banner__content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  max-inline-size: var(--layout-content-max);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-4);
+}
+.ds-banner__message { flex: 1 1 20rem; min-inline-size: 0; max-inline-size: var(--layout-measure); margin: 0; overflow-wrap: break-word; }
+.ds-banner__more { flex-basis: 100%; }
+
+/* action (one, specific verb) and dismiss share a quiet treatment drawn in currentColor */
+.ds-banner__action,
+.ds-banner__dismiss {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex: none;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding: 0;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-banner__action { padding-inline: var(--space-1); }
+.ds-banner__action .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-banner__dismiss {
+  margin-block: calc((var(--type-body-line) - var(--target-current)) / 2);
+  margin-inline-end: calc(-1 * var(--space-2));
+  text-decoration: none;
+}
+.ds-banner__dismiss .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.ds-banner__action::before,
+.ds-banner__dismiss::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .ds-banner__action:hover { text-decoration-thickness: var(--border-width-thick); }
+  .ds-banner__dismiss:hover { border-color: currentColor; }
+  .ds-banner__action:hover::before,
+  .ds-banner__dismiss:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-banner__action[data-force~="hover"] { text-decoration-thickness: var(--border-width-thick); }
+.ds-banner__dismiss[data-force~="hover"] { border-color: currentColor; }
+.ds-banner__action[data-force~="hover"]::before,
+.ds-banner__dismiss[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-banner__action:active::before,
+.ds-banner__action[data-force~="pressed"]::before,
+.ds-banner__dismiss:active::before,
+.ds-banner__dismiss[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+/* C1 / C2 are never dismissible, even if markup asks for it */
+.ds-banner:is([data-status="critical"], [data-status="warning"]) .ds-banner__dismiss { display: none; }
+[dir="rtl"] .ds-banner .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* focus ring takes the content colour, which L3 guarantees against the banner's treatment */
+.ds-banner[data-status] :focus-visible,
+.ds-banner[data-status] [data-force~="focus"] { outline-color: currentColor; }
+
+/* phone: action drops under the message */
+@media (--bp-tablet-down) {
+  .ds-banner__content { flex-direction: column; align-items: flex-start; }
+  .ds-banner__message { flex-basis: auto; }
+}
+
+@media (forced-colors: active) {
+  .ds-banner { border-color: CanvasText; }
+  .ds-banner::before { border-color: transparent; }
+  .ds-banner__icon { color: CanvasText; }
+  .ds-banner__action, .ds-banner__dismiss { color: LinkText; }
+  .ds-banner__dismiss { color: ButtonText; }
+}

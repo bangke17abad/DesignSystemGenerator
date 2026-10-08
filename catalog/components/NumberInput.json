@@ -1,0 +1,680 @@
+{
+  "accessibility": {
+    "attributes": [
+      "inputmode=\"numeric\" untuk bilangan bulat non-negatif, \"decimal\" untuk pecahan; bilangan negatif di iOS butuh keyboard dengan minus (catat `A-nn` bila tidak tersedia)",
+      "aria-valuenow (nilai mentah), aria-valuemin, aria-valuemax bila ada batas",
+      "aria-valuetext berisi nilai terformat + satuan (\"1,250 kilograms\", \"15 percent\")",
+      "aria-describedby ke helper (rentang/step), affix, dan error-text; aria-invalid saat error; aria-required",
+      "tombol ±: button dengan label \"Increase {label}\" / \"Decrease {label}\", tabindex −1 (keyboard memakai panah), aria-controls ke input",
+      "tombol di batas: aria-disabled + deskripsi \"Maximum is {max}\"",
+      "aria-disabled + reason saat diblokir; aria-readonly saat read-only",
+      "autocomplete=\"off\" kecuali nilai adalah data pribadi yang punya token (mis. transaction-amount)"
+    ],
+    "focus_order": "label → input (satu tab stop) → elemen berikutnya; tombol ± tidak menjadi tab stop tetapi dapat dijangkau kursor virtual pembaca layar",
+    "native": {
+      "compose": "OutlinedTextField(keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), suffix = { Text(unit) }) + IconButton ± (contentDescription); Modifier.semantics { stateDescription = formatted; progressBarRangeInfo = ProgressBarRangeInfo(value, min..max, steps); setProgress { … } }",
+      "flutter": "TextField(keyboardType: TextInputType.numberWithOptions(decimal: true, signed: min < 0), inputFormatters: [FilteringTextInputFormatter.allow(...)]) + IconButton ±; NumberFormat (package intl) saat onEditingComplete/focus lost; Semantics(value, increasedValue, decreasedValue, onIncrease, onDecrease) agar adjustable di TalkBack/VoiceOver",
+      "swiftui": "TextField(\"Quantity\", value: $qty, format: .number) .keyboardType(.decimalPad atau .numbersAndPunctuation bila negatif) + Stepper(value:in:step:) atau tombol ±; .accessibilityValue(Text(formatted)) dan .accessibilityAdjustableAction { direction in … }"
+    },
+    "politeness": "polite",
+    "role": "input type=\"text\" dengan role spinbutton (bukan input type=number); tombol ± adalah button",
+    "sr_label": "\"{label}, spin button, {aria-valuetext}, {min} to {max}\"; perubahan dari panah dan tombol dibaca otomatis lewat aria-valuetext tanpa pengumuman tambahan",
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat; satuan boleh disebut di label (\"Weight (kg)\") bila tidak ada affix",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "bidang field; lebar disesuaikan panjang nilai maksimum yang wajar, bukan lebar penuh",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "teks angka rata inline-end (atau start bila brief/L11 memilih) dengan angka tabular agar digit sejajar",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "affix",
+      "role": "prefiks/sufiks satuan atau mata uang (\"kg\", \"%\", simbol mata uang) di dalam container; posisi mengikuti format locale; dirujuk aria-describedby",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "decrement",
+      "role": "tombol kurang berlabel \"Decrease {label}\"; area klik ≥ target-current, ≥ target-min-touch di sentuh",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-primary",
+        "color-interaction-subtle",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "increment",
+      "role": "tombol tambah berlabel \"Increase {label}\"; ukuran dan aturan sama dengan decrement",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-primary",
+        "color-interaction-subtle",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "rentang dan langkah yang diizinkan (\"From 1 to 99, in steps of 1\") selalu terlihat bila ada batas",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error menyebut rentang yang benar",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container (bukan per tombol saat fokus di input)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "number | string | null",
+        "when": "nilai valid berubah: setiap langkah panah/tombol, dan saat blur/Enter setelah mengetik"
+      },
+      {
+        "name": "onInputValueChange",
+        "payload": "string",
+        "when": "teks mentah berubah saat mengetik (sebelum diurai)"
+      }
+    ],
+    "parts": [
+      "NumberInput.Label",
+      "NumberInput.Input",
+      "NumberInput.Decrement",
+      "NumberInput.Increment",
+      "NumberInput.Affix"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "stepper",
+        "description": "Dengan atau tanpa tombol ±.",
+        "name": "variant",
+        "required": false,
+        "type": "\"stepper\" | \"plain\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol; tombol ± ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: nilai mentah (string desimal untuk presisi uang).",
+        "name": "value",
+        "required": false,
+        "type": "number | string | null"
+      },
+      {
+        "description": "Uncontrolled: nilai awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "number | string | null"
+      },
+      {
+        "description": "Batas bawah; disebut di helper.",
+        "name": "min",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Batas atas; disebut di helper.",
+        "name": "max",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "1",
+        "description": "Langkah panah dan tombol.",
+        "name": "step",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Langkah Page Up/Down; default 10 × step.",
+        "name": "largeStep",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Format tampilan (style decimal/percent/currency/unit, digit pecahan); locale dari konteks B1.",
+        "name": "formatOptions",
+        "required": false,
+        "type": "Intl.NumberFormatOptions"
+      },
+      {
+        "description": "Teks affix bila tidak dari formatOptions; juga dieja di aria-valuetext.",
+        "name": "unit",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Error dari luar; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error yang menyebut rentang yang benar.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bila kosong, dibangkitkan dari min/max/step.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Validasi/penghitungan berjalan.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila benar-benar tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Nilai terlihat terformat tanpa kontrol.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field Form; yang dikirim nilai mentah.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "menambah/mengurangi satu step dari nilai saat ini (kosong mulai dari min atau 0), di-clamp ke min/max, dihitung dengan aritmetika desimal; caret ke akhir",
+      "trigger": "↑ / ↓"
+    },
+    {
+      "input": "keyboard",
+      "result": "menambah/mengurangi largeStep (default 10 × step)",
+      "trigger": "Page Up / Page Down (atau Shift+↑/↓)"
+    },
+    {
+      "input": "keyboard",
+      "result": "ke min / max bila didefinisikan (pola spinbutton); bila tidak ada batas, memindah caret seperti field teks",
+      "trigger": "Home / End"
+    },
+    {
+      "input": "keyboard",
+      "result": "digit, pemisah desimal locale, tanda minus (bila min < 0), dan spasi diterima; huruf ditolak tanpa suara kecuali e/E untuk notasi ilmiah yang diizinkan prop; tidak ada validasi error sebelum blur",
+      "trigger": "mengetik"
+    },
+    {
+      "input": "keyboard",
+      "result": "teks diurai menurut locale; bila valid diformat (pengelompokan, digit pecahan) dan onValueChange memancarkan nilai mentah; bila tidak valid, teks dipertahankan dan error ditampilkan",
+      "trigger": "blur atau Enter"
+    },
+    {
+      "input": "pointer",
+      "result": "satu step pada pelepasan (SC 2.5.2); tekan-tahan > 500 ms mengulang tiap ±100 ms dan berhenti saat dilepas atau pointer keluar tombol",
+      "trigger": "klik increment/decrement"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak mengubah nilai (mencegah perubahan tidak sengaja saat menggulir halaman)",
+      "trigger": "roda gulir saat fokus"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual numerik/desimal (inputmode); tombol ± ≥ target-min-touch dengan jarak ≥ 8; haptic-selection per langkah bila platform mendukung",
+      "trigger": "tap field"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Quantity",
+        "From 1 to 99",
+        "Increase quantity",
+        "Decrease quantity",
+        "Enter a number from 1 to 99",
+        "Discount (%)",
+        "1,250.50"
+      ],
+      "id-ID": [
+        "Jumlah",
+        "Dari 1 sampai 99",
+        "Tambah jumlah",
+        "Kurangi jumlah",
+        "Masukkan angka dari 1 sampai 99",
+        "Diskon (%)",
+        "1.250,50"
+      ]
+    },
+    "rules": [
+      "Label menamai besaran, satuan di affix atau di label dalam kurung; jangan keduanya.",
+      "Helper menyebut rentang dan langkah dengan angka terformat locale: \"From {min} to {max}\" (+ \"in steps of {step}\" bila step ≠ 1).",
+      "Error menyebut nilai yang diterima: \"Enter a number from 1 to 99\", bukan \"Invalid number\".",
+      "Angka, pemisah desimal, pengelompokan, dan posisi simbol mata uang memakai Intl.NumberFormat/formatter platform per locale (B1 formats), tidak pernah penggabungan string.",
+      "aria-valuetext memakai satuan yang dieja (\"percent\", \"kilograms\") melalui ICU, bukan simbol."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Spinner"
+  ],
+  "do": [
+    "Tampilkan min/max/step di helper sebelum pengguna mengetik.",
+    "Pertahankan nilai ketikan yang tidak valid dan jelaskan rentangnya, jangan clamp diam-diam.",
+    "Kirim nilai mentah (angka atau string desimal), bukan teks terformat.",
+    "Hitung langkah dengan aritmetika desimal agar 0.1 + 0.2 tidak menjadi 0.30000000000000004."
+  ],
+  "dont": [
+    {
+      "text": "Memakai input type=number di reference web (roda gulir mengubah nilai, pengurai locale tidak konsisten)."
+    },
+    {
+      "ref": "UB5",
+      "text": "Tombol ± lebih kecil dari 44 di sentuh atau ditumpuk sehingga masing-masing setengah tinggi field."
+    },
+    {
+      "text": "Memakai NumberInput untuk nomor telepon, rekening, atau kode pos."
+    },
+    {
+      "ref": "UB10",
+      "text": "Satuan atau batas hanya di placeholder."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label dan helper membungkus; lebar field tetap ditentukan nilai, bukan label; affix panjang (\"per bulan\") pindah ke helper bila menyempitkan input di bawah 6 karakter",
+      "case": "label dan helper +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "field dan tombol tumbuh; tombol tetap persegi ≥ tinggi field; affix tidak menutupi digit",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "nilai mentah null (bukan 0); required kosong = error \"Enter a quantity\"; panah dari kosong mulai di min (atau 0 bila 0 dalam rentang)",
+      "case": "kosong"
+    },
+    {
+      "behaviour": "di atas Number.MAX_SAFE_INTEGER atau presisi uang: nilai dipertukarkan sebagai string desimal; tampilan memakai pengelompokan dan bisa membungkus; tidak ada notasi ilmiah otomatis",
+      "case": "nilai maksimum / angka sangat besar"
+    },
+    {
+      "behaviour": "\"1.234,50 €\", \"1,234.50\", \"−5\" (U+2212), digit lebar penuh, dan digit Arab-Indic dinormalkan menurut locale aktif; teks ambigu (\"1.234\" di locale yang memakai titik sebagai desimal) mengikuti locale field, bukan ditebak; teks non-angka ditolak dengan error yang menyebut format",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "digit selalu LTR dan diisolasi (bdi / unicode-bidi: isolate); decrement di inline-start (kanan), increment di inline-end (kiri); tanda minus dan simbol mata uang mengikuti pola locale",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "nilai lokal diterima dan ditandai \"Will check when online\"; validasi server menampilkan Spinner + aria-busy tanpa mengunci input; hasil penolakan menjadi error yang menyebut batas baru",
+      "case": "offline atau validasi server (stok, saldo) loading"
+    },
+    {
+      "behaviour": "kelipatan dihitung dari min (min + n × step); nilai di antara langkah dari ketikan = error \"Use steps of {step}\" kecuali brief mengizinkan pembulatan (`A-nn`)",
+      "case": "step pecahan dan min tidak kelipatan step"
+    },
+    {
+      "behaviour": "pengulangan berhenti di min/max, haptic-warning sekali bila tersedia, tombol berubah ke at-limit",
+      "case": "tekan-tahan sampai batas"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila entitas B5 punya atribut kuantitas, jumlah uang, persentase, atau ukuran yang diisi pengguna.",
+  "lint": [
+    "input type=number pada reference web ditolak",
+    "NumberInput dengan pattern pengenal (telepon, rekening, kode pos) ditolak: pakai FormattedInput (manual-review)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled",
+    "min/max didefinisikan tetapi helperText menimpa tanpa menyebut rentang ditandai (manual-review)"
+  ],
+  "name": "NumberInput",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "pressed+focus",
+      "loading+pressed (dicegah)",
+      "disabled+focus",
+      "read-only+focus",
+      "currency id-ID vs en-US",
+      "RTL + affix"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "at-limit",
+      "error",
+      "disabled-with-reason",
+      "read-only",
+      "loading"
+    ],
+    "variants": [
+      "stepper",
+      "plain"
+    ]
+  },
+  "purpose": {
+    "purpose": "Field untuk satu nilai angka (kuantitas, jumlah, persentase, ukuran) dengan keyboard numerik, tombol tambah/kurang opsional, batas min/max/step yang terlihat, dan format locale saat blur tanpa kehilangan nilai mentah.",
+    "when_not_to_use": [
+      "Untuk angka yang sebenarnya pengenal berpola (nomor telepon, rekening, kode pos, identitas): pakai FormattedInput; nilai itu tidak dihitung dan tidak boleh diberi pemisah ribuan.",
+      "Untuk memilih perkiraan dalam rentang kecil di mana nilai pasti tidak penting: pakai Slider (tetap dengan input ketik).",
+      "Untuk kode verifikasi: pakai PinInput.",
+      "Untuk tanggal dan waktu: pakai DatePicker atau TimePicker.",
+      "Untuk memilih dari ≤ 5 angka tetap (mis. 1, 2, 4, 8 kursi): pakai SegmentedControl atau RadioGroup."
+    ]
+  },
+  "related": [
+    "TextField",
+    "FormattedInput",
+    "Slider",
+    "SegmentedControl"
+  ],
+  "responsive": [
+    {
+      "behaviour": "size lg di surface sentuh; tombol ± ≥ target-min-touch di kedua sisi, tidak bertumpuk; keyboard virtual numerik; lebar penuh hanya bila sendirian di baris",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "size md/lg; tombol ± ≥ target-min-touch di mode sentuh; lebar intrinsik sesuai nilai maksimum",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size sm/md; tombol ± boleh ditumpuk vertikal di inline-end pada pointer (masing-masing ≥ target-min-pointer); varian plain di sel tabel",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengubah nilai"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat nilai terformat tanpa tombol ±"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "nilai dikunci sementara (mis. dokumen sudah disetujui); reason di helper"
+    },
+    {
+      "pattern": "step-up",
+      "when": "perubahan melewati ambang berisiko (mis. jumlah di atas batas otorisasi): nilai disimpan setelah StepUpDialog, bukan saat mengetik"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu nilai (mis. harga pokok); field tidak dirender"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon minus dan plus tidak dicerminkan; posisinya mengikuti inline-start/inline-end (decrement di kanan pada RTL). Digit dan nilai diisolasi dan tetap LTR; posisi affix mata uang mengikuti pola locale, bukan arah."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "container max(control-height-sm, target-current); tombol ± ≥ target-min-pointer pada pointer; di mode sentuh tombol diperluas ke target-min-touch atau komponen naik ke lg",
+      "name": "sm",
+      "notes": "Sel tabel dan form padat pada pointer; varian stepper sm tidak dipakai di surface sentuh.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); tombol ± ≥ target-current dengan jarak ≥ 8 antar target",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "tombol ± ≥ target-min-touch (target-min-extended bila ada) dan tidak bertumpuk",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, kasir, atau kuantitas di keranjang.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring fokus di luar; error dibaca lewat aria-describedby",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "pressed",
+      "note": "menekan ± tidak memindah fokus dari input bila fokus sudah di input",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "± tidak bisa ditekan saat loading",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "border critical tetap; hover hanya pada tombol",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "nilai bisa diseleksi dan disalin; panah tidak mengubah nilai",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "kosong atau berisi nilai terformat locale; helper menyebut rentang"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-border",
+        "increment": "color-interaction-subtle"
+      },
+      "treatment": "border container ke interaction-border; hover tombol ± memakai lapisan interaction-subtle; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px di luar container; saat fokus nilai tampil tanpa pemisah ribuan (mentah ter-locale) agar mudah diedit"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "decrement": "color-interaction-pressed",
+        "increment": "color-interaction-pressed"
+      },
+      "treatment": "tombol ± dengan lapisan pressed; tekan-tahan mengulang langkah; tanpa transform yang menggeser layout"
+    },
+    {
+      "name": "at-limit",
+      "token_swaps": {
+        "decrement": "color-structure-text-disabled"
+      },
+      "treatment": "nilai = min atau max: tombol yang tidak bisa bergerak tampil diredam dengan aria-disabled dan alasan \"Minimum is {min}\" pada nama/deskripsinya; tetap fokusabel oleh pembaca layar"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "di luar rentang, bukan kelipatan step, atau tidak bisa diurai: border critical + teks error; nilai ketikan dipertahankan, tidak di-clamp diam-diam; aria-invalid"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "input": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" pada input dan tombol; latar surface-sunken, teks text-disabled; reason di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "container": "color-structure-surface-base",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "aria-readonly; nilai terformat berteks penuh dengan affix, tanpa border kontrol aktif dan tanpa tombol ±"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "affix": "color-structure-text-secondary"
+      },
+      "treatment": "nilai sedang dihitung atau divalidasi server (mis. stok): Spinner kecil di inline-end, aria-busy; tombol ± tidak bereaksi; input tetap terbaca"
+    }
+  ],
+  "target_hints": {
+    "compose": "OutlinedTextField + IconButton dibungkus {Ns}NumberInput",
+    "flutter": "TextField + IconButton dibungkus {ns}_number_input.dart",
+    "html": {
+      "element": "input[type=text][role=spinbutton]",
+      "notes": "inputmode numeric/decimal; tanpa JS: input bekerja sebagai teks dengan pattern sederhana dan nilai diurai server; modul data-{ns}-module=\"number-input\" menambah tombol, panah, dan format blur; nilai mentah di input hidden name={name}"
+    },
+    "swiftui": "TextField(value:format:) + Stepper dibungkus {Ns}NumberInput"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default untuk kuantitas kecil dan bilangan bulat: tombol decrement di inline-start dan increment di inline-end (atau ditumpuk di inline-end pada pointer padat).",
+      "name": "stepper"
+    },
+    {
+      "description": "Tanpa tombol; untuk jumlah uang, ukuran berpresisi, dan sel tabel di mana menambah satu langkah tidak bermakna. Panah keyboard tetap bekerja.",
+      "name": "plain"
+    }
+  ]
+}

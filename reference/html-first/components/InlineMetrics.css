@@ -1,0 +1,198 @@
+/* InlineMetrics · engine 1.8.0 reference (catalog/components/InlineMetrics.json). Tokens only (I3); logical properties only (§12.4).
+   dl > div.item > dt (label) + dd (value + unit) + dd (delta). Maximum three items. Numbers are tabular and never truncated:
+   items wrap instead. Value and delta are never coloured as good/bad (I1, UB12): the delta carries an arrow icon, a sign,
+   a direction word and its period. Freshness ("As of …") sits below. Not interactive: only info triggers and Retry focus. */
+.ds-inline-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4) var(--space-6);
+  margin: 0;
+  color: var(--color-structure-text-primary);
+}
+.ds-inline-metrics__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+/* separator between items (tablet up, when they sit on one row) */
+@media (--bp-tablet-up) {
+  .ds-inline-metrics[data-separators] > .ds-inline-metrics__item + .ds-inline-metrics__item {
+    padding-inline-start: var(--space-6);
+    border-inline-start: var(--border-width-thin) solid var(--color-structure-border);
+  }
+}
+.ds-inline-metrics__label {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  overflow-wrap: break-word;
+}
+.ds-inline-metrics__value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-1);
+  margin: 0;
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-h2-family);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  font-weight: var(--type-h2-weight);
+  letter-spacing: var(--type-h2-tracking);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap; /* never truncated or shrunk (UB3): the item wraps to a new row instead */
+}
+.ds-inline-metrics__value > bdi, .ds-inline-metrics__value > data { unicode-bidi: isolate; }
+.ds-inline-metrics__unit {
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  letter-spacing: normal;
+}
+/* delta: neutral, icon + sign + word + period */
+.ds-inline-metrics__delta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-variant-numeric: tabular-nums;
+}
+.ds-inline-metrics__delta .ds-icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block: calc((var(--type-caption-line) - var(--icon-sm)) / 2);
+  stroke-width: max(var(--icon-stroke), 1.5);
+}
+[dir="rtl"] .ds-inline-metrics__delta .ds-icon { transform: none; } /* up/down arrows are never mirrored */
+
+/* inline variant: "Items 24" on one line, for toolbars and table headers */
+.ds-inline-metrics[data-variant="inline"] { align-items: baseline; gap: var(--space-2) var(--space-6); }
+.ds-inline-metrics[data-variant="inline"] .ds-inline-metrics__item { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); }
+.ds-inline-metrics[data-variant="inline"] .ds-inline-metrics__value {
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: normal;
+}
+
+/* freshness: "As of {time}" (+ clock); stale adds StatusLabel C2 beside it, never colours the value */
+.ds-inline-metrics__freshness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: var(--space-2) 0 0;
+  color: var(--color-structure-text-tertiary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-variant-numeric: tabular-nums;
+}
+.ds-inline-metrics__freshness .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-inline-metrics__freshness[data-stale] { color: var(--color-structure-text-secondary); }
+.ds-inline-metrics__freshness .ds-status-label { font-size: var(--type-label-size); }
+
+/* unavailable: dash + "Not available" (never 0) */
+.ds-inline-metrics__value[data-unavailable] { color: var(--color-structure-text-secondary); }
+.ds-inline-metrics__na {
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  letter-spacing: normal;
+  white-space: normal;
+}
+
+/* loading: label stays, the value is a Skeleton the width of a typical number */
+.ds-inline-metrics__skeleton {
+  display: block;
+  inline-size: calc(var(--type-h2-size) * 3);
+  block-size: calc(var(--type-h2-line) * 0.6);
+  margin-block: calc(var(--type-h2-line) * 0.2);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-inline-metrics-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) var(--timing-indicator-delay) 4 alternate both;
+}
+@keyframes ds-inline-metrics-pulse { to { opacity: 0.5; } }
+
+/* updating: old value stays; a quiet "Updating" note, no spinning numbers */
+.ds-inline-metrics__updating { display: inline-flex; align-items: center; gap: var(--space-1); }
+
+/* error: only the failed item shows icon + "Couldn't load" + Retry */
+.ds-inline-metrics__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  color: var(--color-semantic-critical-strong);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-inline-metrics__error > span { display: inline-flex; align-items: center; gap: var(--space-1); }
+
+/* info trigger (IconButton → Popover with the metric definition) */
+.ds-inline-metrics__info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-block: calc((var(--type-label-line) - var(--target-current)) / 2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-inline-metrics__info .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) { .ds-inline-metrics__info:hover { background: var(--button-tertiary-container-background-hover); color: var(--color-structure-text-primary); } }
+.ds-inline-metrics__info[data-force~="hover"] { background: var(--button-tertiary-container-background-hover); color: var(--color-structure-text-primary); }
+.ds-inline-metrics__label-row { display: flex; align-items: center; gap: var(--space-1); }
+.ds-inline-metrics__info { list-style: none; }
+.ds-inline-metrics__info::-webkit-details-marker { display: none; }
+/* the definition panel is anchored to the whole dl (inline axis) and stays under its trigger (block axis), so it never leaves
+   the viewport whichever item it belongs to, in LTR or RTL */
+.ds-inline-metrics { position: relative; }
+.ds-inline-metrics__def { position: static; }
+.ds-inline-metrics__def-panel {
+  position: absolute;
+  inset-inline: 0;
+  z-index: var(--z-popover);
+  max-inline-size: 36ch;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+
+/* phone: two-column grid, label above value */
+@media (--bp-tablet-down) {
+  .ds-inline-metrics:not([data-variant="inline"]) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--type-h2-size) * 5)), 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-inline-metrics__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-inline-metrics__skeleton { border: var(--border-width-thin) solid GrayText; }
+}

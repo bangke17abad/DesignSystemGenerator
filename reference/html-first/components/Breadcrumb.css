@@ -1,0 +1,217 @@
+/* Breadcrumb · engine 1.8.0 reference (catalog/components/Breadcrumb.json). Tokens only (I3); logical properties only (§12.4).
+   nav[aria-label="Breadcrumb"] > ol > li > a; the last item is the current page (span[aria-current="page"], not a link).
+   Separators are CSS chevrons (::before, empty content, never read). Links are underlined (non-colour marker, UB6) with the
+   hit area extended to target-current. Tab moves between links (APG Breadcrumb); arrows are not used.
+   Breadcrumb.js collapses middle items behind a labelled "…" button (aria-expanded) when there are more than maxItems; without
+   JS every item shows and the list wraps. Phone (or data-variant="parent"): one "Back to {parent}" link above the h1. */
+.ds-breadcrumb {
+  min-inline-size: 0;
+  color: var(--color-structure-text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap; /* wraps to a second line before collapsing */
+  align-items: center;
+  gap: 0 var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-breadcrumb__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+/* separator: decorative chevron pointing to inline-end (mirrored in RTL), text-tertiary */
+.ds-breadcrumb__item + .ds-breadcrumb__item::before {
+  content: "" / "";
+  flex: none;
+  inline-size: calc(var(--icon-sm) / 2);
+  block-size: calc(var(--icon-sm) / 2);
+  margin-inline: var(--space-1) var(--space-2);
+  border-block-start: max(var(--border-width-thin), calc(var(--icon-stroke) * 1px)) solid var(--color-structure-text-tertiary);
+  border-inline-end: max(var(--border-width-thin), calc(var(--icon-stroke) * 1px)) solid var(--color-structure-text-tertiary);
+  transform: rotate(45deg);
+}
+[dir="rtl"] .ds-breadcrumb__item + .ds-breadcrumb__item::before { transform: rotate(-45deg); }
+.ds-breadcrumb__item[hidden] { display: none; }
+
+/* ancestor link: underlined, hit area >= target-current (24 pointer, 44 touch) */
+.ds-breadcrumb__link {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: var(--target-current);
+  min-block-size: var(--target-current);
+  max-inline-size: 100%;
+  border-radius: var(--radius-xs);
+  color: var(--color-interaction-default);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--motion-fast-duration) var(--motion-easing-standard), text-decoration-thickness var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* labels: a single very long label is cut with an ellipsis (full name in title + accessible name); list wraps between items */
+.ds-breadcrumb__label {
+  min-inline-size: 0;
+  max-inline-size: var(--layout-nav-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .ds-breadcrumb__link:hover { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-breadcrumb__link[data-force~="hover"] { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+.ds-breadcrumb__link:active,
+.ds-breadcrumb__link[data-force~="pressed"] { color: var(--color-interaction-pressed); }
+
+/* current page: primary text, no underline, not a link */
+.ds-breadcrumb__current {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--target-current);
+  color: var(--color-structure-text-primary);
+}
+/* read-only ancestor (role may not open it): plain text, hierarchy intact */
+.ds-breadcrumb__text { display: inline-flex; align-items: center; min-inline-size: 0; min-block-size: var(--target-current); color: var(--color-structure-text-secondary); }
+
+/* overflow trigger: labelled "…" button replacing the middle items */
+.ds-breadcrumb__overflow {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-block-size: max(var(--control-height-sm), var(--target-current));
+  min-inline-size: max(var(--control-height-sm), var(--target-current));
+  margin: 0;
+  padding: 0;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-interaction-default);
+  cursor: pointer;
+}
+.ds-breadcrumb__overflow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-breadcrumb__overflow .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+@media (hover: hover) {
+  .ds-breadcrumb__overflow:hover { background: var(--row-background-hover); border-color: var(--color-structure-border-control); }
+  .ds-breadcrumb__overflow:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-breadcrumb__overflow[data-force~="hover"] { background: var(--row-background-hover); border-color: var(--color-structure-border-control); }
+.ds-breadcrumb__overflow[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-breadcrumb__overflow:active,
+.ds-breadcrumb__overflow[aria-expanded="true"] { background: var(--color-interaction-subtle); border-color: var(--color-interaction-border); }
+
+/* hidden ancestors: Popover under the trigger (desktop/tablet); in flow below the trail on phone (Sheet stand-in) */
+.ds-breadcrumb__menu {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-1));
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  min-inline-size: calc(var(--layout-nav-width) * 0.75);
+  max-inline-size: min(var(--layout-modal-sm), calc(100vw - 2 * var(--space-4)));
+  max-block-size: calc(var(--layout-row-height) * 6);
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  list-style: none;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  box-shadow: var(--elevation-2);
+}
+.ds-breadcrumb__menu[hidden] { display: none; }
+.ds-breadcrumb__menu-link {
+  display: flex;
+  align-items: center;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-interaction-default);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  overflow-wrap: anywhere;
+}
+.ds-breadcrumb__menu-link:focus-visible,
+.ds-breadcrumb__menu-link[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+@media (hover: hover) {
+  .ds-breadcrumb__menu-link:hover { background: var(--row-background-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-breadcrumb__menu-link[data-force~="hover"] { background: var(--row-background-hover); text-decoration-thickness: var(--border-width-thick); }
+
+/* phone / parent variant: one "Back to {parent}" link with an arrow at inline-start */
+.ds-breadcrumb__back {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding-block: var(--space-1);
+  border-radius: var(--radius-xs);
+  color: var(--color-interaction-default);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  overflow-wrap: anywhere;
+}
+.ds-breadcrumb__back .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+[dir="rtl"] .ds-breadcrumb__back .ds-icon[data-mirror] { transform: scaleX(-1); }
+@media (hover: hover) {
+  .ds-breadcrumb__back:hover { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-breadcrumb__back[data-force~="hover"] { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+.ds-breadcrumb[data-variant="parent"] .ds-breadcrumb__list { display: none; }
+.ds-breadcrumb[data-variant="parent"] .ds-breadcrumb__back { display: inline-flex; }
+@media (--bp-tablet-down) {
+  .ds-breadcrumb:not([data-phone="full"]) .ds-breadcrumb__list { display: none; }
+  .ds-breadcrumb:not([data-phone="full"]) .ds-breadcrumb__back { display: inline-flex; }
+  .ds-breadcrumb__label { max-inline-size: none; white-space: normal; overflow-wrap: anywhere; } /* phone: wrap, never cut */
+  .ds-breadcrumb__menu { position: static; inline-size: 100%; max-inline-size: none; margin-block-start: var(--space-1); box-shadow: none; }
+  .ds-breadcrumb__item:has(> .ds-breadcrumb__menu:not([hidden])) { flex-wrap: wrap; flex-basis: 100%; }
+}
+
+/* loading: Skeleton sized like a label; the link is already active when its URL is known */
+.ds-breadcrumb__skeleton {
+  display: inline-block;
+  inline-size: calc(var(--space-12) * 2);
+  block-size: var(--type-caption-line);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  vertical-align: middle;
+  animation: ds-breadcrumb-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) infinite alternate;
+}
+@keyframes ds-breadcrumb-pulse { from { opacity: 1; } to { opacity: 0.55; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-breadcrumb__link { transition: none; }
+  .ds-breadcrumb__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-breadcrumb__item + .ds-breadcrumb__item::before { border-color: CanvasText; }
+  .ds-breadcrumb__overflow { border-color: ButtonText; }
+  .ds-breadcrumb__menu { border-color: CanvasText; }
+}

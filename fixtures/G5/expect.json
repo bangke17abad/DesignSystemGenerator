@@ -1,0 +1,51 @@
+{
+  "assertions": [
+    {
+      "eq": "neutral",
+      "lang": "decisions.L2.value.info"
+    },
+    {
+      "eq": 80,
+      "token": "z-critical"
+    },
+    {
+      "scope_includes": [
+        "CommandPalette",
+        "Kbd",
+        "StepUpDialog",
+        "PinInput"
+      ]
+    },
+    {
+      "eq": 0,
+      "token": "state-layer-hover-opacity"
+    },
+    {
+      "eq": "error",
+      "token": "haptic-error"
+    },
+    {
+      "eq": "critical",
+      "token": "haptic-critical"
+    },
+    {
+      "eq": "none",
+      "token": "haptic-success"
+    },
+    {
+      "eq": [
+        "Dark",
+        "Light"
+      ],
+      "manifest": "axes.theme"
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G5",
+  "run_only": [
+    "brownfield-audit.md dan migration-map.json untuk pantau-legacy.css (Phase 0A)"
+  ],
+  "source": "golden-briefs.md G5"
+}

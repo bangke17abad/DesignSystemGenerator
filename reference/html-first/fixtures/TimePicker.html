@@ -1,0 +1,152 @@
+<!-- TimePicker fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases. Text follows ui_locale en-US
+     (12-hour); the id-ID demo shows the 24-hour clock with "." separator from the locale formatter. The first demo is live (type
+     "930", "2.30p" or "14h30" and leave the field; ↓ opens the slot list). Static open lists render in flow (data-default-open).
+     Without JS every field is a labelled text input with format + example and time zone in the helper. -->
+<section class="ds-demo" data-ds-demo="variants (live: input, input-with-list)">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-v1">Reminder time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-v1" name="reminder_time" type="text" inputmode="text" autocomplete="off" aria-describedby="tp-v1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-v1-help">For example 2:30 PM. <span class="ds-time-picker__zone">Western Indonesia Time (UTC+7)</span></p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US" data-min="08:00" data-max="17:00" data-step="30"
+         data-unavailable='{"10:00":"Fully booked","10:30":"Fully booked"}' style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-v2">Booking slot</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-v2" name="tee_time" type="text" inputmode="text" value="9:00 AM" required aria-describedby="tp-v2-help"></div>
+      <p class="ds-time-picker__helper" id="tp-v2-help">Between 8:00 AM and 5:00 PM, every 30 minutes. <span class="ds-time-picker__zone">Western Indonesia Time (UTC+7)</span></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/open (selected, active, unavailable with reason, hover)">
+  <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-default-open lang="en-US" data-min="08:00" data-max="11:30" data-step="30"
+       data-unavailable='{"10:00":"Fully booked","10:30":"Fully booked"}' data-force-slots="08:30:hover">
+    <label class="ds-time-picker__label" for="tp-o1">Start time</label>
+    <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-o1" type="text" inputmode="text" value="9:30 AM" aria-describedby="tp-o1-help"></div>
+    <p class="ds-time-picker__helper" id="tp-o1-help">For example 2:30 PM. Western Indonesia Time (UTC+7).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default, hover, focus, error, disabled-with-reason, read-only)">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s1">Default (empty) <span class="ds-time-picker__optional">(optional)</span></label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s1" type="text" inputmode="text" placeholder="h:mm AM/PM" aria-describedby="tp-s1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-s1-help">For example 2:30 PM.</p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-force-trigger="hover" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s2">Hover</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s2" type="text" inputmode="text" data-force="hover" value="7:15 AM"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s3">Focus</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s3" type="text" inputmode="text" data-force="focus" value="1:45 PM"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" data-min="08:00" data-max="17:00" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s4">Pickup time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s4" type="text" inputmode="text" value="7:00 PM" aria-invalid="true" aria-describedby="tp-s4-err tp-s4-help"></div>
+      <p class="ds-time-picker__error" id="tp-s4-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Choose a time between 8:00 AM and 5:00 PM</span></p>
+      <p class="ds-time-picker__helper" id="tp-s4-help">For example 2:30 PM.</p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s5">Meeting time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s5" type="text" value="10:00 AM" readonly aria-disabled="true" aria-describedby="tp-s5-reason"></div>
+      <p class="ds-time-picker__reason" id="tp-s5-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Confirmed by the other party. Ask them to reschedule.</span></p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-s6">Check-in opens</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-s6" type="text" value="3:00 PM" readonly aria-readonly="true" aria-describedby="tp-s6-help"></div>
+      <p class="ds-time-picker__helper" id="tp-s6-help"><time datetime="15:00">3:00 PM</time>, Western Indonesia Time (UTC+7).</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/loading (status row, typing still possible; pressing does nothing)">
+  <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-default-open data-loading lang="en-US">
+    <label class="ds-time-picker__label" for="tp-l1">Appointment time</label>
+    <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-l1" type="text" inputmode="text" aria-describedby="tp-l1-help"></div>
+    <p class="ds-time-picker__helper" id="tp-l1-help">For example 2:30 PM.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations (selected+hover, selected+focus, error+focus, disabled+selected)">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-default-open lang="en-US" data-min="11:00" data-max="12:30" data-step="30" data-force-slots="12:00:hover" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-c1">Selected + hover (noon)</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-c1" type="text" inputmode="text" value="12"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-default-open lang="en-US" data-min="00:00" data-max="01:00" data-step="30" data-force-slots="00:00:focus" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-c2">Selected + focus (midnight)</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-c2" type="text" inputmode="text" value="12:00 AM"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-c3">Error + focus</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-c3" type="text" inputmode="text" value="25:70" aria-invalid="true" data-force="focus" aria-describedby="tp-c3-err"></div>
+      <p class="ds-time-picker__error" id="tp-c3-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a time like 2:30 PM</span></p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-c4">Disabled + selected</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-c4" type="text" value="4:30 PM" readonly aria-disabled="true" data-force="focus" aria-describedby="tp-c4-reason"></div>
+      <p class="ds-time-picker__reason" id="tp-c4-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Shift times are set by your supervisor.</span></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="12-hour en-US vs 24-hour id-ID">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-k1">Start time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-k1" type="text" inputmode="text" value="1430" aria-describedby="tp-k1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-k1-help">For example 2:30 PM. Typed "1430".</p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="id-ID" data-step="60" data-min="06:00" data-max="09:00" data-default-open
+         data-i18n-choose="Pilih waktu" data-i18n-error-format="Masukkan waktu seperti {example}" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-k2">Waktu mulai</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-k2" type="text" inputmode="numeric" value="7.00" aria-describedby="tp-k2-help"></div>
+      <p class="ds-time-picker__helper" id="tp-k2-help">Contoh 14.30. Waktu ditampilkan dalam WIB (UTC+7).</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="Sheet phone (slot list in a Sheet, typed field stays)">
+  <div style="max-inline-size: calc(var(--layout-modal-sm) - var(--space-4))">
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-size="lg" lang="en-US" data-presentation="sheet" data-default-open data-min="18:00" data-max="20:00" data-step="30">
+      <label class="ds-time-picker__label" for="tp-p1">Dinner time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-p1" type="text" inputmode="text" value="7:00 PM" aria-describedby="tp-p1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-p1-help">For example 7:30 PM. The clock button opens the slot list as a Sheet.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, md, lg)">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-size="sm" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-z1">From (sm)</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-z1" type="text" inputmode="text" value="8:00 AM"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-z2">Until (md)</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-z2" type="text" inputmode="text" value="5:00 PM"></div>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" data-size="lg" lang="en-US" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-z3">Departure (lg)</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-z3" type="text" inputmode="text" value="6:45 AM"></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + long label">
+  <div class="ds-grid">
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" dir="rtl" lang="ar" data-i18n-choose="اختر الوقت" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-r1">وقت البدء</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-r1" type="text" inputmode="text" value="14:30" aria-describedby="tp-r1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-r1-help">مثال: <bdi>2:30 م</bdi></p>
+    </div>
+    <div class="ds-time-picker" data-ds-module="time-picker" lang="id-ID" style="grid-column: span 4">
+      <label class="ds-time-picker__label" for="tp-r2">Waktu pengambilan barang di gudang distribusi regional Jawa Barat</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-r2" type="text" inputmode="numeric" value="930" aria-describedby="tp-r2-help"></div>
+      <p class="ds-time-picker__helper" id="tp-r2-help">Contoh 14.30. Waktu ditampilkan dalam WIB (UTC+7). Diketik "930".</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <div class="ds-time-picker" data-ds-module="time-picker" data-variant="input-with-list" lang="en-US">
+      <label class="ds-time-picker__label" for="tp-x1">Start time</label>
+      <div class="ds-time-picker__group"><input class="ds-time-picker__input" id="tp-x1" type="text" inputmode="text" value="2:30 PM" aria-describedby="tp-x1-help"></div>
+      <p class="ds-time-picker__helper" id="tp-x1-help">For example 2:30 PM.</p>
+    </div>
+  </div>
+</section>

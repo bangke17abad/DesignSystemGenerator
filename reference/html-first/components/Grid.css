@@ -1,0 +1,61 @@
+/* Grid · engine 1.8.0 reference (catalog/components/Grid.json). Extends .ds-grid from base.css (4 · 8 · 12 columns).
+   Layout primitive: no colour; source order only (no grid-auto-flow: dense, no order); never role=grid/table. */
+.ds-grid { --_cols: 4; grid-template-columns: repeat(var(--_cols), minmax(0, 1fr)); }
+.ds-grid:not([data-gap]) { --ds-gap: var(--space-4); }
+@media (--bp-tablet-up) {
+  .ds-grid { --_cols: 8; }
+  /* §8.1 tablet gutter 20 = midpoint of space-4 and space-6 (no fixed px) */
+  .ds-grid:not([data-gap]) { --ds-gap: calc((var(--space-4) + var(--space-6)) / 2); }
+}
+@media (--bp-desktop-up) {
+  .ds-grid { --_cols: 12; }
+  .ds-grid:not([data-gap]) { --ds-gap: var(--space-6); }
+}
+/* fixed column count for sub-layouts (and the 4/8/12 comparison preview); still clamps spans */
+.ds-grid[data-columns="4"] { --_cols: 4; }
+.ds-grid[data-columns="8"] { --_cols: 8; }
+.ds-grid[data-columns="12"] { --_cols: 12; }
+
+.ds-grid[data-align="start"] { align-items: start; }
+.ds-grid[data-align="center"] { align-items: center; }
+.ds-grid[data-align="end"] { align-items: end; }
+.ds-grid[data-align="stretch"] { align-items: stretch; }
+
+/* Grid.Item: span per width class, clamped to the active column count (span 6 on a phone = 4) */
+.ds-grid__item {
+  --_span: var(--_span-phone, var(--_cols));
+  grid-column: span min(var(--_span), var(--_cols));
+  min-inline-size: 0;
+}
+.ds-grid__item[data-span="1"] { --_span-phone: 1; } .ds-grid__item[data-span="2"] { --_span-phone: 2; }
+.ds-grid__item[data-span="3"] { --_span-phone: 3; } .ds-grid__item[data-span="4"] { --_span-phone: 4; }
+.ds-grid__item[data-span="5"] { --_span-phone: 5; } .ds-grid__item[data-span="6"] { --_span-phone: 6; }
+.ds-grid__item[data-span="7"] { --_span-phone: 7; } .ds-grid__item[data-span="8"] { --_span-phone: 8; }
+.ds-grid__item[data-span="9"] { --_span-phone: 9; } .ds-grid__item[data-span="10"] { --_span-phone: 10; }
+.ds-grid__item[data-span="11"] { --_span-phone: 11; } .ds-grid__item[data-span="12"] { --_span-phone: 12; }
+@media (--bp-tablet-up) {
+  .ds-grid__item[data-span-tablet] { --_span: var(--_span-tablet); }
+  .ds-grid__item[data-span-tablet="1"] { --_span-tablet: 1; } .ds-grid__item[data-span-tablet="2"] { --_span-tablet: 2; }
+  .ds-grid__item[data-span-tablet="3"] { --_span-tablet: 3; } .ds-grid__item[data-span-tablet="4"] { --_span-tablet: 4; }
+  .ds-grid__item[data-span-tablet="5"] { --_span-tablet: 5; } .ds-grid__item[data-span-tablet="6"] { --_span-tablet: 6; }
+  .ds-grid__item[data-span-tablet="7"] { --_span-tablet: 7; } .ds-grid__item[data-span-tablet="8"] { --_span-tablet: 8; }
+}
+@media (--bp-desktop-up) {
+  .ds-grid__item[data-span-desktop] { --_span: var(--_span-desktop); }
+  .ds-grid__item[data-span-desktop="1"] { --_span-desktop: 1; } .ds-grid__item[data-span-desktop="2"] { --_span-desktop: 2; }
+  .ds-grid__item[data-span-desktop="3"] { --_span-desktop: 3; } .ds-grid__item[data-span-desktop="4"] { --_span-desktop: 4; }
+  .ds-grid__item[data-span-desktop="5"] { --_span-desktop: 5; } .ds-grid__item[data-span-desktop="6"] { --_span-desktop: 6; }
+  .ds-grid__item[data-span-desktop="7"] { --_span-desktop: 7; } .ds-grid__item[data-span-desktop="8"] { --_span-desktop: 8; }
+  .ds-grid__item[data-span-desktop="9"] { --_span-desktop: 9; } .ds-grid__item[data-span-desktop="10"] { --_span-desktop: 10; }
+  .ds-grid__item[data-span-desktop="11"] { --_span-desktop: 11; } .ds-grid__item[data-span-desktop="12"] { --_span-desktop: 12; }
+}
+
+/* auto-fit: column count from the minimum item width (relative text unit via --ds-grid-min, e.g. style="--ds-grid-min: 16em").
+   auto-fill keeps empty tracks, so a single item never stretches to full width. */
+.ds-grid[data-variant="auto-fit"] {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ds-grid-min, calc(var(--layout-content-min) / 2))), 1fr));
+}
+.ds-grid[data-variant="auto-fit"] > .ds-grid__item { grid-column: auto; }
+
+.ds-grid:empty { display: none; }
+@media (prefers-reduced-motion: reduce) { .ds-grid, .ds-grid > * { transition: none; } }

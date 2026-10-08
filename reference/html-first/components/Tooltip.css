@@ -1,0 +1,136 @@
+/* Tooltip · engine 1.8.0 reference (catalog/components/Tooltip.json). Tokens only (I3); logical properties only (§12.4).
+   Live tooltips use popover="manual" so showPopover() lifts them into the top layer (portal: above a modal <dialog>, never
+   clipped by overflow). Tooltip.js sets the physical top/left from getBoundingClientRect and the logical data-side.
+   A tooltip never carries essential information (UB9): the trigger's accessible name or visible text always does. */
+.ds-tooltip {
+  --_bg: var(--color-structure-surface-inverse);
+  --_arrow: var(--space-1);
+  position: fixed;
+  z-index: var(--z-tooltip);
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(40ch, calc(100vw - 2 * var(--space-2)));
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--color-structure-text-oninverse);
+  box-shadow: var(--elevation-1);
+  overflow: visible;
+  font-family: var(--type-caption-family);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-weight: var(--type-caption-weight);
+  letter-spacing: var(--type-caption-tracking);
+  overflow-wrap: anywhere;
+  text-align: start;
+  opacity: 0;
+  transition: opacity var(--motion-fast-duration) var(--motion-easing-exit);
+}
+/* UA [popover] defaults (inset 0, margin auto, canvas colours) are reset; JS supplies the coordinates. */
+.ds-tooltip[popover] { inset: auto; }
+.ds-tooltip[data-open] { opacity: 1; transition-timing-function: var(--motion-easing-enter); }
+.ds-tooltip[hidden]:not([popover]) { display: none; }
+
+/* arrow: a border triangle on the side facing the trigger; --_arrow-offset is the logical offset set by JS (default centre) */
+.ds-tooltip::after {
+  content: "";
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  border: var(--_arrow) solid transparent;
+  pointer-events: none;
+}
+.ds-tooltip[data-side="block-start"]::after {
+  inset-block-start: 100%;
+  inset-inline-start: var(--_arrow-offset, 50%);
+  margin-inline-start: calc(-1 * var(--_arrow));
+  border-block-start-color: var(--_bg);
+}
+.ds-tooltip[data-side="block-end"]::after {
+  inset-block-end: 100%;
+  inset-inline-start: var(--_arrow-offset, 50%);
+  margin-inline-start: calc(-1 * var(--_arrow));
+  border-block-end-color: var(--_bg);
+}
+.ds-tooltip[data-side="inline-start"]::after {
+  inset-inline-start: 100%;
+  inset-block-start: var(--_arrow-offset, 50%);
+  margin-block-start: calc(-1 * var(--_arrow));
+  border-inline-start-color: var(--_bg);
+}
+.ds-tooltip[data-side="inline-end"]::after {
+  inset-inline-end: 100%;
+  inset-block-start: var(--_arrow-offset, 50%);
+  margin-block-start: calc(-1 * var(--_arrow));
+  border-inline-end-color: var(--_bg);
+}
+
+/* shortcut (Kbd) at inline-end; isolated so key combos keep their order in RTL */
+.ds-tooltip__shortcut {
+  display: inline-block;
+  margin-inline-start: var(--space-2);
+  padding-inline: var(--space-1);
+  border: var(--border-width-thin) solid currentColor;
+  border-radius: var(--radius-xs);
+  font-family: var(--type-code-family);
+  font-size: var(--type-caption-size);
+  line-height: inherit;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+/* Static preview twin: the bubble sits in flow next to its trigger (no portal), so demos never overflow at 320 px. */
+.ds-tooltip[data-static] { position: relative; z-index: var(--z-base); opacity: 1; }
+.ds-tooltip-demo {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: calc(var(--space-2) + var(--space-1));
+  max-inline-size: 100%;
+}
+.ds-tooltip-demo[data-side="block-start"] { flex-direction: column-reverse; }
+.ds-tooltip-demo[data-side="block-end"] { flex-direction: column; }
+.ds-tooltip-demo[data-side="inline-end"] { flex-direction: row; }
+.ds-tooltip-demo[data-side="inline-start"] { flex-direction: row-reverse; }
+.ds-tooltip-demo > .ds-tooltip { max-inline-size: min(40ch, 100%); }
+
+/* Preview-only stand-in for IconButton / text trigger (the real trigger is whatever focusable control already exists). */
+.ds-tooltip__demo-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-base);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration: none;
+  cursor: pointer;
+}
+.ds-tooltip__demo-trigger[data-icon-only] { padding-inline: 0; }
+.ds-tooltip__demo-trigger[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-tooltip__demo-trigger[aria-disabled="true"] .ds-icon[data-icon="restricted"] { color: var(--color-structure-text-secondary); }
+@media (hover: hover) {
+  .ds-tooltip__demo-trigger:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+}
+.ds-tooltip__demo-trigger[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-tooltip__demo-trigger:not([aria-disabled="true"]):active,
+.ds-tooltip__demo-trigger[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+.ds-tooltip__reason { display: block; margin-block-start: var(--space-1); color: var(--color-structure-text-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-tooltip { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-tooltip { border: var(--border-width-thin) solid CanvasText; background: Canvas; color: CanvasText; }
+  .ds-tooltip::after { display: none; }
+}

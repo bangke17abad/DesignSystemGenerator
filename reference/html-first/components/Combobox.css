@@ -1,0 +1,56 @@
+/* Combobox · engine 1.8.0 reference (catalog/components/Combobox.json). APG combobox with listbox popup.
+   html-first: <input list> + <datalist> works without JavaScript; Combobox.js replaces the datalist with an accessible listbox. */
+.ds-combobox { position: relative; }
+.ds-combobox .ds-text-field__group { position: relative; }
+.ds-combobox__toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  inline-size: max(var(--target-current), calc(var(--icon-md) + var(--space-4)));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-combobox__toggle:focus-visible, .ds-combobox__toggle[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-combobox .ds-text-field__group:has(> .ds-combobox__toggle) { --_pe: max(var(--target-current), calc(var(--icon-md) + var(--space-4))); }
+.ds-combobox[data-open] .ds-combobox__toggle .ds-icon { transform: rotate(180deg); }
+.ds-combobox__listbox {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(100% + var(--space-1));
+  z-index: var(--z-popover);
+  max-block-size: calc(var(--layout-row-height) * 6);
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  border: var(--border-width-thin) solid var(--color-structure-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  box-shadow: var(--elevation-2);
+}
+.ds-combobox__listbox[data-static] { position: static; margin-block-start: var(--space-1); }
+.ds-combobox__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--layout-row-height), var(--target-current));
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-primary);
+  cursor: pointer;
+}
+.ds-combobox__option .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); visibility: hidden; }
+.ds-combobox__option[aria-selected="true"] { font-weight: var(--type-label-weight); }
+.ds-combobox__option[aria-selected="true"] .ds-icon { visibility: visible; }
+.ds-combobox__option[data-active], .ds-combobox__option[data-force~="hover"] { background: var(--row-background-hover); box-shadow: inset var(--focus-ring-width) 0 0 var(--color-focus-ring); }
+@media (hover: hover) { .ds-combobox__option:hover { background: var(--row-background-hover); } }
+.ds-combobox__option[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-combobox__option mark { background: var(--color-structure-highlight); color: inherit; }
+.ds-combobox__empty { padding: var(--space-2) var(--space-3); color: var(--color-structure-text-secondary); }
+@media (forced-colors: active) { .ds-combobox__option[data-active] { outline: var(--focus-ring-width) solid Highlight; } }

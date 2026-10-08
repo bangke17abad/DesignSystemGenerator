@@ -1,0 +1,289 @@
+{
+  "name": "SystemPages",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Selalu disertakan.",
+  "problem": {
+    "problem": "Saat aplikasi tidak bisa menampilkan yang diminta (tidak ditemukan, tanpa izin, error server, pemeliharaan, offline), pengguna tahu apa yang terjadi, apakah ada yang perlu mereka lakukan, kapan kondisi pulih, dan punya jalan kembali yang nyata — tanpa kehilangan pekerjaan dan tanpa \"Oops\".",
+    "when": [
+      "Rute tidak dikenal atau record tidak ada (404, 410).",
+      "Error server atau aplikasi yang membuat halaman tidak dapat dirender (5xx, error boundary).",
+      "Pemeliharaan terjadwal atau tidak terjadwal.",
+      "Offline pada rute yang membutuhkan koneksi dan belum tersedia di cache.",
+      "Tautan langsung ke sumber yang tidak boleh dilihat role (403)."
+    ],
+    "when_not": [
+      "Error yang hanya memengaruhi satu seksi, tabel, atau form: InlineAlert C1 di tempat itu (§12.2), bukan halaman penuh.",
+      "Koleksi kosong yang sah: EmptyState first-use atau no-results di dalam halaman normal.",
+      "Sesi habis: AuthAndSession (masuk kembali tanpa kehilangan data)."
+    ]
+  },
+  "composition": [
+    {
+      "component": "AppShell",
+      "role_in_pattern": "halaman sistem dirender di dalam shell (global bar, nav) agar pengguna bisa pindah tujuan; pemeliharaan dan kegagalan shell memakai variant focused yang dapat dirender statis"
+    },
+    {
+      "component": "PageHeader",
+      "parts": [
+        "PageHeader.Title",
+        "PageHeader.Description"
+      ],
+      "role_in_pattern": "h1 menyebut kondisi; judul dokumen \"{kondisi} · {aplikasi}\""
+    },
+    {
+      "component": "EmptyState",
+      "parts": [
+        "EmptyState.Actions"
+      ],
+      "role_in_pattern": "variant not-found dan restricted: apa yang terjadi, mengapa, jalan kembali"
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "error server sebagai C1 + Retry di bawah h1 (bukan EmptyState); offline sebagai C2 persisten"
+    },
+    {
+      "component": "Banner",
+      "role_in_pattern": "variant system: pemeliharaan terjadwal sebelum dimulai dan mode offline yang mengubah fungsi aplikasi; variant page: fitur tertentu tidak tersedia"
+    },
+    {
+      "component": "ConnectionStatus",
+      "role_in_pattern": "kondisi koneksi ringkas, waktu data terakhir, dan jumlah antrean (I6)"
+    },
+    {
+      "component": "Button",
+      "role_in_pattern": "Retry / Muat ulang, dengan Spinner in-control saat mencoba"
+    },
+    {
+      "component": "Link",
+      "role_in_pattern": "jalan kembali spesifik: induk terdekat yang ada, beranda, halaman status layanan, bantuan"
+    },
+    {
+      "component": "SearchField",
+      "role_in_pattern": "jalan alternatif di halaman tidak ditemukan bila surface punya pencarian (SC 2.4.5)"
+    },
+    {
+      "component": "CopyButton",
+      "role_in_pattern": "menyalin ID referensi error untuk dukungan"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "transisi offline/online dan hasil Retry"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Klasifikasi",
+      "state_class": "C5",
+      "transition": "router/shell menggolongkan kegagalan ke tepat satu template: tidak ditemukan, tanpa izin, error server, pemeliharaan, offline; draf dan state yang sedang diisi disimpan lokal sebelum konten diganti"
+    },
+    {
+      "step": "Tidak ditemukan",
+      "state_class": "C3",
+      "transition": "EmptyState not-found di dalam AppShell; status HTTP 404 (410 bila sengaja dihapus) di web; jalan kembali ke induk terdekat yang masih ada + pencarian"
+    },
+    {
+      "step": "Tanpa izin",
+      "state_class": "C3",
+      "transition": "EmptyState restricted tanpa menyebut judul atau isi sumber; HTTP 403, atau 404 bila keberadaan sumber pun rahasia bagi role; \"Minta akses\" hanya bila brief punya alurnya; opsi ganti akun"
+    },
+    {
+      "step": "Error server",
+      "state_class": "C1",
+      "transition": "h1 + InlineAlert C1 dengan Retry, ID referensi yang dapat disalin, dan tautan bantuan; detail teknis tidak ditampilkan"
+    },
+    {
+      "step": "Pemeliharaan",
+      "state_class": "C2",
+      "transition": "sebelum: Banner system C2 dengan waktu mulai dan selesai absolut; selama: halaman variant focused dengan perkiraan selesai absolut dan tautan status; web: HTTP 503 + Retry-After"
+    },
+    {
+      "step": "Offline",
+      "state_class": "C2",
+      "transition": "rute belum ter-cache: halaman offline yang menyebut apa yang masih bisa dilakukan; rute ter-cache tetap tampil bertanda waktu (I6); saat koneksi kembali, rute yang diminta dimuat otomatis"
+    },
+    {
+      "step": "Pulih",
+      "state_class": "C4",
+      "transition": "Retry berhasil atau koneksi kembali: rute asal dimuat, draf dan state dipulihkan, Banner/alert hilang"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "halaman penuh di dalam AppShell dengan BottomNav tetap (kecuali shell gagal atau pemeliharaan); ilustrasi diperkecil atau disembunyikan agar h1 dan CTA terlihat tanpa gulir; CTA lebar penuh di zona jempol; ID referensi dan CopyButton dengan area ≥ target-min-touch"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "konten di kolom maks 600 di tengah area main; rail nav dan pencarian global tetap tersedia; CTA lebar intrinsik"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "konten dibatasi layout-measure di main; nav, pencarian global, dan menu akun tetap tersedia; pemeliharaan memakai AppShell variant focused tanpa nav"
+    }
+  ],
+  "states": {
+    "empty": "Halaman sistem tidak pernah kosong: selalu h1 kondisi, satu kalimat penyebab, dan minimal satu jalan kembali; tidak ada layar putih atau hanya kode status.",
+    "loading": "Retry: tombol loading dengan Spinner in-control dan konten halaman sistem tetap; sambung ulang otomatis ditunjukkan lewat ConnectionStatus reconnecting, bukan spinner layar penuh.",
+    "error": "Setiap tipe §12.2 punya satu template: Not found → EmptyState not-found; System → InlineAlert C1 + Retry + ID referensi; Permission → EmptyState restricted (karena sudah tidak bisa dicegah lebih dulu); Offline → InlineAlert/Banner C2 persisten.",
+    "partial": "Sebagian halaman gagal (satu widget atau seksi): bukan halaman sistem; InlineAlert C1 di seksi itu sementara bagian lain tetap bisa dipakai. Satu fitur dalam pemeliharaan: Banner page di fitur itu, sisa aplikasi normal.",
+    "success": "Pulih: rute asal tampil dengan draf dan filter dipulihkan; \"Tersambung kembali\" atau hasil Retry diumumkan polite sekali."
+  },
+  "accessibility": [
+    {
+      "step": "Tidak ditemukan",
+      "focus": "judul dokumen diganti (\"Halaman tidak ditemukan · {aplikasi}\"); fokus ke h1 seperti pindah rute (§9.5)",
+      "announcement": "h1 dibaca karena fokus; tanpa pengumuman tambahan"
+    },
+    {
+      "step": "Tanpa izin",
+      "focus": "fokus ke h1; tautan ganti akun dan jalan kembali dalam urutan baca",
+      "announcement": "h1 dibaca karena fokus"
+    },
+    {
+      "step": "Error server",
+      "focus": "navigasi ke halaman error: fokus ke h1; Retry tepat sesudah judul alert; ID referensi dapat diseleksi sebagai teks",
+      "announcement": "alert yang ada saat halaman dimuat dibaca lewat urutan baca; error yang muncul setelah interaksi di halaman yang sama diumumkan assertive (role alert)"
+    },
+    {
+      "step": "Pemeliharaan",
+      "focus": "fokus ke h1; waktu dalam elemen time; tidak ada hitung mundur per detik",
+      "announcement": "Banner pra-pemeliharaan diumumkan polite sekali saat muncul"
+    },
+    {
+      "step": "Offline",
+      "focus": "fokus tidak dipindah bila koneksi putus saat bekerja; hanya halaman offline penuh yang memindah fokus ke h1",
+      "announcement": "transisi offline/online diumumkan sekali, polite; assertive hanya bila tugas yang sedang berjalan terputus (C1)"
+    },
+    {
+      "step": "Pulih",
+      "focus": "fokus ke h1 rute asal, atau ke elemen terakhir yang fokus bila halaman yang sama dipulihkan di tempat",
+      "announcement": "\"Tersambung kembali\" polite"
+    }
+  ],
+  "content": {
+    "rules": [
+      "h1 menyebut kondisi dalam bahasa pengguna (\"Halaman tidak ditemukan\"), bukan kode saja; kode status boleh tampil sebagai metadata.",
+      "Kalimat penyebab tidak menyalahkan pengguna dan tidak memakai \"Oops\", \"Ups\", humor, atau permintaan maaf berlebihan (§12.1).",
+      "Jalan kembali menyebut tujuannya (\"Kembali ke {induk}\"), bukan hanya \"Kembali\".",
+      "Waktu pemeliharaan ditulis absolut dengan zona waktu pengguna (B1 formats).",
+      "Halaman tanpa izin tidak menyebut nama atau isi sumber yang dibatasi.",
+      "Bantuan dan kontak dukungan berada di posisi relatif yang sama dengan halaman lain (SC 3.2.6)."
+    ],
+    "examples": {
+      "en-US": [
+        "Page not found",
+        "This page may have been moved or deleted. Check the address, or go back to the home page.",
+        "We couldn't load this page because of a problem on our side. Try again. If it keeps happening, contact support with reference ID 7F3K-92.",
+        "Scheduled maintenance until 14:00 (UTC+7). Your saved work isn't affected.",
+        "You're offline. This page needs a connection. It will load when you're back online.",
+        "You don't have access to this page. Ask an admin for access or switch account."
+      ],
+      "id-ID": [
+        "Halaman tidak ditemukan",
+        "Halaman ini mungkin sudah dipindahkan atau dihapus. Periksa alamatnya, atau kembali ke beranda.",
+        "Halaman tidak dapat dimuat karena ada masalah di sistem kami. Coba lagi. Bila terus terjadi, hubungi dukungan dengan ID referensi 7F3K-92.",
+        "Pemeliharaan terjadwal sampai 14.00 WIB. Pekerjaan yang sudah tersimpan tidak terpengaruh.",
+        "Anda sedang offline. Halaman ini memerlukan koneksi dan akan dimuat saat Anda kembali online.",
+        "Anda tidak punya akses ke halaman ini. Minta akses ke admin atau ganti akun."
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "halaman sistem tampil sama untuk semua role; jalan kembali hanya menautkan tujuan yang boleh dibuka role itu"
+    },
+    {
+      "pattern": "hidden",
+      "when": "sumber yang keberadaannya rahasia bagi role: respons memakai template tidak ditemukan, bukan tanpa izin, agar keberadaannya tidak bocor"
+    }
+  ],
+  "do": [
+    "Kembalikan status HTTP yang benar (404, 410, 403, 503) di web agar cache, mesin pencari, dan monitoring membaca kondisi dengan benar.",
+    "Simpan draf dan state sebelum mengganti konten dengan halaman sistem, lalu pulihkan setelah Retry atau koneksi kembali.",
+    "Pertahankan nav dan pencarian global di halaman tidak ditemukan sebagai jalan alternatif (SC 2.4.5).",
+    "Sertakan ID referensi yang dapat disalin pada error server."
+  ],
+  "dont": [
+    {
+      "text": "Memakai \"Oops\", humor, atau ilustrasi yang mengaburkan apa yang terjadi.",
+      "ref": "§12.1"
+    },
+    {
+      "text": "Menampilkan error server sebagai EmptyState \"Tidak ada data\".",
+      "ref": "§12.2"
+    },
+    {
+      "text": "Menyebut judul atau isi sumber di halaman tanpa izin.",
+      "ref": "§10.1"
+    },
+    {
+      "text": "Mengalihkan otomatis ke beranda tanpa penjelasan sehingga pengguna kehilangan konteks dan URL yang salah."
+    },
+    {
+      "text": "Menampilkan stack trace atau pesan teknis mentah kepada pengguna."
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline saat membuka rute yang belum pernah dimuat",
+      "behaviour": "halaman offline menyebut tujuan yang tersedia dari cache; rute yang pernah dimuat tampil dari cache dengan \"Terakhir diperbarui {waktu}\" (I6)"
+    },
+    {
+      "case": "timeout memuat rute",
+      "behaviour": "setelah batas waktu brief (selain itu A-nn), permintaan dibatalkan dan InlineAlert C1 \"Halaman memuat terlalu lama\" + Retry tampil; respons yang datang terlambat tidak menimpa halaman"
+    },
+    {
+      "case": "data sangat banyak (kueri atau URL melampaui batas server, 413/414/422)",
+      "behaviour": "pesan menyebut batasnya dan cara mempersempit permintaan, bukan error generik"
+    },
+    {
+      "case": "data kosong (rute valid, koleksi kosong)",
+      "behaviour": "bukan 404: EmptyState first-use di halaman normal"
+    },
+    {
+      "case": "aksi ganda (Retry ditekan berulang)",
+      "behaviour": "tombol loading mengabaikan klik kedua; percobaan otomatis memakai backoff dan berhenti setelah beberapa kali lalu menunggu aksi pengguna"
+    },
+    {
+      "case": "teks +40% (locale terpanjang) dan RTL",
+      "behaviour": "h1 dan deskripsi membungkus; ID referensi diisolasi (bdi, mono) dan tidak dipecah; ikon panah jalan kembali dicerminkan di RTL"
+    },
+    {
+      "case": "shell aplikasi sendiri gagal dimuat",
+      "behaviour": "fallback statis tanpa JavaScript berisi h1, penjelasan, tautan muat ulang, dan beranda; tidak bergantung pada bundle aplikasi"
+    },
+    {
+      "case": "rute berganti nama atau dipindah",
+      "behaviour": "redirect permanen ke lokasi baru, bukan halaman tidak ditemukan"
+    },
+    {
+      "case": "pemeliharaan dimulai saat pengguna mengisi form",
+      "behaviour": "Banner peringatan sebelumnya; saat dimulai draf disimpan lokal, halaman pemeliharaan tampil, draf dipulihkan setelah pulih"
+    }
+  ],
+  "wcag": [
+    "1.3.1",
+    "2.4.2",
+    "2.4.3",
+    "2.4.4",
+    "2.4.5",
+    "2.4.6",
+    "3.2.6",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "AsyncFeedback",
+    "AppNavigation",
+    "AuthAndSession",
+    "OfflineSync",
+    "SearchAndFilter"
+  ],
+  "lint": [
+    "Setiap halaman sistem punya tepat satu h1 dan minimal satu Link atau Button jalan kembali",
+    "Glosarium dan halaman sistem tidak memuat \"Oops\"/\"Ups\"",
+    "Halaman error server memuat Retry dan ID referensi dengan CopyButton",
+    "Halaman sistem web mengembalikan status HTTP sesuai template"
+  ]
+}

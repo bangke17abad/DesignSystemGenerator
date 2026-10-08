@@ -1,0 +1,115 @@
+{
+  "name": "Dashboard",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada surface operasional (B3 surface_type: operational) atau B5 data_viz_needs, kecuali B7 pattern_exclusions memberi alasan.",
+  "problem": {
+    "problem": "Pengguna tahu dalam beberapa detik apa yang butuh tindakan sekarang, apakah kondisi sehat, dan seberapa segar datanya, lalu menuju item yang perlu ditangani tanpa membaca widget yang tidak membantu keputusan.",
+    "when": [
+      "Layar awal surface operasional yang memantau antrean, SLA, stok, atau kesehatan sistem.",
+      "Ringkasan angka dan tren yang diminta B5 data_viz_needs untuk keputusan berulang."
+    ],
+    "when_not": [
+      "Laporan naratif atau analisis sekali baca: pakai DataStory.",
+      "Satu entitas: pakai DetailView.",
+      "Kumpulan item untuk diproses satu per satu: pakai MasterDetail; Dashboard hanya menautkan ke sana."
+    ]
+  },
+  "composition": [
+    { "component": "PageHeader", "parts": ["PageHeader.Title", "PageHeader.Meta", "PageHeader.Actions"], "role_in_pattern": "judul + cakupan (ruang kerja, lokasi); Meta memuat ConnectionStatus/kesegaran; Actions memuat pemilih periode dan Refresh" },
+    { "component": "ConnectionStatus", "role_in_pattern": "kesegaran data live: Live (tenang), Menyambung ulang, Basi dengan \"Terakhir diperbarui\", Offline (I6)" },
+    { "component": "InlineAlert", "role_in_pattern": "item attention C1/C2 paling atas (\"3 pesanan melewati SLA\") dengan aksi ke daftar terfilter; error System C1 per kartu" },
+    { "component": "List", "parts": ["List.Section", "List.Item", "List.Title", "List.Meta", "List.Empty"], "role_in_pattern": "antrean attention bila lebih dari dua item: urut C1 lalu C2 lalu tenggat terdekat, tiap item dengan StatusLabel dan tautan" },
+    { "component": "StatusLabel", "role_in_pattern": "kelas perhatian tiap item attention; C2 \"Data basi\" di samping metrik yang melewati batas kesegaran" },
+    { "component": "Badge", "role_in_pattern": "jumlah item C1/C2 baru pada judul seksi attention" },
+    { "component": "Card", "parts": ["Card.Header", "Card.Title", "Card.Meta", "Card.Body", "Card.Footer"], "role_in_pattern": "wadah satu kelompok keputusan: judul pertanyaan yang dijawab, Meta kesegaran, Footer tautan drill-down" },
+    { "component": "InlineMetrics", "parts": ["InlineMetrics.Item"], "role_in_pattern": "maks 3 angka kunci per kelompok dengan unit, delta berperiode eksplisit, asOf, dan definisi; tidak tersedia ≠ 0" },
+    { "component": "Chart", "parts": ["Chart.Axis", "Chart.Legend", "Chart.Annotation", "Chart.DataTable"], "role_in_pattern": "tren atau perbandingan yang mendukung keputusan; ambang C1/C2 sebagai anotasi; tabel data setara selalu tersedia" },
+    { "component": "Grid", "parts": ["Grid.Item"], "role_in_pattern": "susunan kartu 4/8/12 kolom menurut lebar tersedia; attention selalu lebar penuh di atas" },
+    { "component": "SegmentedControl", "role_in_pattern": "periode cepat (Hari ini, 7 hari, 30 hari) yang langsung mengganti semua kartu" },
+    { "component": "DateRangePicker", "role_in_pattern": "rentang khusus; rentang aktif tertulis di header dan di URL" },
+    { "component": "Link", "role_in_pattern": "drill-down ke MasterDetail atau daftar dengan filter yang sama dengan angka yang diklik" },
+    { "component": "Skeleton", "role_in_pattern": "per kartu, meniru metrik dan plot; kartu dimuat independen" },
+    { "component": "EmptyState", "role_in_pattern": "kartu tanpa data di periode ini, ruang kerja baru (first-use), dan tidak ada attention" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "ringkasan hasil Refresh manual dan attention C1 baru" }
+  ],
+  "flow": [
+    { "step": "Buka dashboard", "state_class": "C5", "transition": "header + Skeleton per kartu; kartu tampil sendiri-sendiri saat datanya siap tanpa menggeser kartu lain (tinggi dicadangkan)" },
+    { "step": "Lihat attention", "state_class": "C2", "transition": "item C1 lalu C2 tampil paling atas dengan jumlah, alasan, dan tenggat; masing-masing menautkan ke daftar terfilter; C1 bila sudah terlambat atau gagal" },
+    { "step": "Pindai metrik dan tren", "state_class": "C6", "transition": "kondisi sehat tenang (C6) dan tidak lebih keras dari attention (I7); delta selalu menyebut periode pembanding" },
+    { "step": "Drill-down", "state_class": "C6", "transition": "klik angka/segmen membuka MasterDetail dengan filter yang sama; jumlah di daftar sama dengan angka di kartu atau selisihnya dijelaskan (kesegaran berbeda)" },
+    { "step": "Refresh", "state_class": "C5", "transition": "otomatis atau manual: nilai lama tetap terlihat, nilai baru menggantikan di tempat; fokus dan posisi gulir tidak berubah; kesegaran diperbarui" },
+    { "step": "Data basi atau koneksi putus", "state_class": "C2", "transition": "ConnectionStatus Basi/Offline + \"Terakhir diperbarui {waktu}\"; angka tetap tampil tetapi bertanda, tidak pernah seolah terkini (I6)" },
+    { "step": "Tidak ada yang perlu ditindak", "state_class": "C4", "transition": "seksi attention menampilkan satu baris tenang \"Tidak ada yang perlu ditindak\" + kesegaran; seksi tidak disembunyikan dan tidak dirayakan dengan elemen keras" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "satu kolom: attention → metrik (InlineMetrics grid 2 kolom, nilai tidak dipotong) → chart (≤ 3 seri, legenda di bawah, Tampilkan sebagai tabel menonjol); pemilih periode menjadi Select/Sheet; kartu sekunder di bawah lipatan atau di tautan \"Lihat semua\"" },
+    { "device_class": "tablet", "behaviour": "Grid 8 kolom: attention lebar penuh; kartu metrik 2 per baris; chart lebar penuh atau 2 per baris bila tiap chart ≥ lebar minimum terbaca; target titik chart ≥ target-min-touch lewat zona deteksi" },
+    { "device_class": "desktop", "behaviour": "Grid 12 kolom: attention lebar penuh di atas, lalu kartu metrik 3-4 per baris, lalu chart; urutan DOM = urutan prioritas, tidak diatur ulang hanya secara visual; drill-down boleh membuka ContextPanel" }
+  ],
+  "states": {
+    "empty": "Ruang kerja baru: EmptyState first-use per kelompok yang menyebut kapan data muncul dan aksi penyiapan bila valid; periode tanpa data: sumbu kosong + \"Tidak ada data pada periode ini\", bukan garis nol palsu; tanpa attention: baris tenang \"Tidak ada yang perlu ditindak\".",
+    "loading": "Skeleton per kartu meniru metrik dan plot dengan tinggi tetap; judul kartu dan kesegaran sebelumnya tetap tampil; aria-busy per kartu, bukan seluruh halaman.",
+    "error": "Kartu yang gagal: InlineAlert C1 \"Gagal memuat {judul kartu}\" + Retry menggantikan isi kartu itu saja; semua sumber gagal: InlineAlert C1 di atas Grid + Retry semua.",
+    "partial": "Sebagian sumber gagal atau periode belum lengkap: kartu lain tampil normal; header menyebut \"2 dari 6 kartu gagal dimuat\"; titik/periode belum lengkap diberi hatch + label \"Sebagian\" di Chart dan tabel data; metrik tak tersedia ditulis \"Tidak tersedia\", bukan 0.",
+    "success": "Semua kartu termuat: kesegaran \"Per {waktu}\" per kartu atau sekali di header bila seragam; Refresh manual mengumumkan ringkasan polite (\"Diperbarui. 3 item butuh tindakan\")."
+  },
+  "accessibility": [
+    { "step": "Buka dashboard", "focus": "fokus ke h1; SkipLink menuju seksi attention; setiap kartu adalah region/section dengan heading h2 yang menyebut pertanyaannya", "announcement": "tidak ada pengumuman per kartu saat dimuat" },
+    { "step": "Lihat attention", "focus": "attention pertama dalam DOM setelah header; item attention adalah tautan dengan nama yang menyebut jumlah dan kondisi", "announcement": "attention C1 yang muncul setelah halaman dibuka diumumkan polite sekali per batch; event kritis tidak hanya di sini (I5)" },
+    { "step": "Pindai metrik dan tren", "focus": "metrik tidak fokusabel kecuali info-trigger; Chart satu tab stop dengan panah antar titik; Tampilkan sebagai tabel adalah tombol berlabel", "announcement": "nilai titik chart diumumkan polite saat dinavigasi" },
+    { "step": "Refresh", "focus": "fokus dan posisi gulir tidak berubah; elemen fokus yang diganti nilainya tetap elemen yang sama", "announcement": "refresh otomatis tidak diumumkan kecuali melewati ambang brief; refresh manual polite sekali" },
+    { "step": "Data basi atau koneksi putus", "focus": "fokus tidak dipindah; aksi Coba lagi di ConnectionStatus dapat dijangkau dengan Tab", "announcement": "perubahan ke Basi/Offline diumumkan polite sekali, bukan setiap percobaan sambung" }
+  ],
+  "content": {
+    "rules": [
+      "Judul kartu menyebut pertanyaan atau keputusan yang dijawab (\"Pesanan melewati SLA\"), bukan nama metrik teknis.",
+      "Setiap angka punya unit, setiap delta punya periode pembanding (\"+12% vs 7 hari sebelumnya\").",
+      "Kesegaran ditulis dengan waktu absolut dan zona waktu bila pengguna lintas zona (\"Per 14.05 WIB\").",
+      "Nilai tak tersedia ditulis \"Tidak tersedia\" dengan alasan singkat; tidak pernah 0 atau tanda pisah tanpa teks.",
+      "Item attention menyebut jumlah, kondisi, dan tenggat dalam satu kalimat, lalu aksi."
+    ],
+    "examples": {
+      "en-US": ["3 orders are past SLA", "Nothing needs your attention", "As of 14:05 UTC+7", "+12% vs previous 7 days", "Not available: source didn't respond", "Show as table"],
+      "id-ID": ["3 pesanan melewati SLA", "Tidak ada yang perlu ditindak", "Per 14.05 WIB", "+12% vs 7 hari sebelumnya", "Tidak tersedia: sumber tidak merespons", "Tampilkan sebagai tabel"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role operasional melihat semua kartu dalam cakupannya dan dapat drill-down ke daftar yang dapat diproses" },
+    { "pattern": "hidden", "when": "kartu yang datanya di luar izin role (finansial, data pribadi) tidak dirender; Grid menutup celahnya, bukan menampilkan kartu terkunci" },
+    { "pattern": "read-only", "when": "role pemantau: drill-down membuka daftar read-only; tidak ada aksi mutasi dari dashboard" },
+    { "pattern": "disabled-with-reason", "when": "drill-down ke daftar yang tidak diizinkan: tautan diganti teks + reason, angka tetap terlihat bila boleh diketahui" }
+  ],
+  "do": [
+    "Uji setiap kartu dengan pertanyaan I9: state, attention, evidence, decision, action, atau outcome; yang tidak menjawab dipindah ke laporan atau dihapus.",
+    "Tempatkan attention C1/C2 pertama dalam DOM dan visual; kondisi sehat lebih tenang daripada attention.",
+    "Sediakan tabel data setara untuk setiap Chart dan definisi untuk setiap metrik.",
+    "Pastikan angka di kartu dan jumlah di daftar drill-down cocok, atau jelaskan perbedaan kesegarannya."
+  ],
+  "dont": [
+    { "text": "Widget dekoratif (jam, cuaca, kutipan, ilustrasi) atau metrik kesombongan yang tidak memicu keputusan.", "ref": "I9" },
+    { "text": "Kartu sehat (C4-C6) yang lebih keras secara visual daripada attention C1/C2.", "ref": "UB11" },
+    { "text": "Angka live tanpa kesegaran, atau angka basi yang tampil seolah terkini.", "ref": "I6" },
+    { "text": "Chart tanpa alternatif tabel atau dengan seri yang hanya dibedakan warna.", "ref": "SC 1.4.1" },
+    { "text": "Refresh yang memindah fokus, menggulir halaman, atau mengumumkan setiap tick.", "ref": "SC 3.2.1" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "ConnectionStatus Offline (C2 persisten) + nilai terakhir dengan \"Terakhir diperbarui {waktu}\"; refresh otomatis berhenti; tidak ada angka yang tampil terkini (I6)" },
+    { "case": "timeout satu sumber", "behaviour": "kartu sumber itu menampilkan InlineAlert C1 + Retry setelah batas waktu (A-nn bila brief tidak menetapkan); kartu lain tidak menunggu" },
+    { "case": "volume data sangat besar (jutaan baris, ratusan seri)", "behaviour": "agregasi di server; Chart menampilkan ≤ 5 seri + \"Lainnya\"; tabel data dipaginasi; drill-down membuka daftar terfilter, bukan memuat semua titik di klien" },
+    { "case": "tidak ada data sama sekali (ruang kerja baru)", "behaviour": "EmptyState first-use per kelompok dengan kapan data muncul; tidak ada chart nol palsu atau metrik 0 yang menyesatkan" },
+    { "case": "Refresh ditekan berulang (aksi ganda)", "behaviour": "Refresh menjadi loading sampai selesai; permintaan kedua diabaikan; refresh otomatis dan manual tidak berjalan bersamaan" },
+    { "case": "judul kartu dan label metrik +40% (locale terpanjang)", "behaviour": "judul membungkus; label metrik di atas nilai; nilai dan unit tidak pernah dipotong; Grid mengurangi kolom bila kartu di bawah lebar minimum" },
+    { "case": "nilai berubah saat pengguna sedang membaca atau memfokus chart", "behaviour": "pembaruan ditahan untuk kartu yang sedang difokus atau di-hover dan diterapkan setelah fokus pergi, dengan penanda \"Ada data baru\"" },
+    { "case": "teks 200% atau reflow 320 CSS px", "behaviour": "Grid runtuh ke satu kolom tanpa gulir horizontal (selain plot); tabel data menggantikan chart bila chart tak terbaca" }
+  ],
+  "wcag": ["1.1.1", "1.3.1", "1.3.2", "1.4.1", "1.4.10", "1.4.11", "1.4.13", "2.2.2", "2.4.1", "2.4.6", "2.4.11", "3.2.1", "4.1.3"],
+  "related_patterns": ["MasterDetail", "DataStory", "SearchAndFilter", "AsyncFeedback", "OfflineSync", "NotificationCenter", "SystemPages"],
+  "lint": [
+    "Setiap kartu Dashboard punya heading dan penanda kesegaran (asOf atau ConnectionStatus)",
+    "InlineMetrics maksimal 3 Item per kelompok",
+    "Setiap Chart punya Chart.DataTable",
+    "Seksi attention adalah seksi konten pertama setelah PageHeader",
+    "Nilai metrik tidak tersedia tidak boleh dirender sebagai 0"
+  ]
+}

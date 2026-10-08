@@ -1,0 +1,408 @@
+{
+  "accessibility": {
+    "attributes": [
+      "h1 dengan tabindex=\"-1\" untuk fokus program, bukan tab stop",
+      "judul dokumen (<title>) diselaraskan dengan h1: \"{judul} · {nama aplikasi}\" (SC 2.4.2)",
+      "Breadcrumb di dalam nav ber-aria-label; item terakhir aria-current=\"page\"",
+      "aksi primer yang diblokir memakai aria-disabled + aria-describedby ke reason"
+    ],
+    "focus_order": "breadcrumb/back-link → judul (hanya fokus program) → meta interaktif → Menu aksi sekunder → aksi primer",
+    "native": {
+      "compose": "TopAppBar/LargeTopAppBar(title, actions) dengan Modifier.semantics { heading() } pada judul; paneTitle di region untuk pengumuman perubahan layar",
+      "flutter": "AppBar/SliverAppBar(title) atau Text dibungkus Semantics(header: true, headingLevel: 1, namesRoute: true); aksi di actions",
+      "swiftui": ".navigationTitle(judul) + .toolbar { ToolbarItem(placement: .primaryAction) }; judul kustom memakai .accessibilityAddTraits(.isHeader) dan .accessibilityHeading(.h1)"
+    },
+    "role": "header di dalam main (tanpa role landmark); berisi h1 tepat satu per halaman",
+    "sr_label": "h1 = nama halaman; tidak memakai aria-label yang berbeda dari teks terlihat",
+    "wcag": [
+      "1.3.1",
+      "2.4.2",
+      "2.4.6",
+      "2.4.11",
+      "2.5.3",
+      "3.2.3",
+      "3.2.4"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "header di dalam main (bukan landmark banner); tanpa margin luar; jarak internal dari Stack",
+      "tokens": [
+        "space-2",
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "back-link",
+      "role": "Link kembali ke induk di phone sebagai pengganti breadcrumb; ikon chevron dicerminkan di RTL",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "breadcrumb",
+      "role": "slot Breadcrumb di atas judul (tablet dan desktop)",
+      "tokens": []
+    },
+    {
+      "part": "title",
+      "role": "h1 tunggal halaman; membungkus, tidak dipotong",
+      "tokens": [
+        "type-h1-size",
+        "type-h1-line",
+        "type-h1-weight",
+        "type-h1-family",
+        "type-h1-tracking",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "satu kalimat konteks di bawah judul; lebar maks layout-measure",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-secondary",
+        "layout-measure"
+      ]
+    },
+    {
+      "part": "meta",
+      "role": "metadata opsional (StatusLabel, waktu diperbarui, Tag)",
+      "tokens": [
+        "space-2"
+      ]
+    },
+    {
+      "part": "actions",
+      "role": "Inline berisi IconButton/Button pemicu Menu \"More actions\" lalu satu Button primer (primer terakhir di urutan baca)",
+      "tokens": [
+        "space-2"
+      ]
+    },
+    {
+      "part": "sticky-edge",
+      "role": "garis bawah dan latar saat sticky menempel",
+      "tokens": [
+        "z-sticky",
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring pada h1 saat fokus dipindah program setelah pindah rute",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "PageHeader.Breadcrumb",
+      "PageHeader.Back",
+      "PageHeader.Title",
+      "PageHeader.Description",
+      "PageHeader.Meta",
+      "PageHeader.Actions"
+    ],
+    "props": [
+      {
+        "description": "Teks h1; juga dipakai untuk judul dokumen.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Satu kalimat konteks.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "default",
+        "description": "Skala visual judul; elemen tetap h1.",
+        "name": "variant",
+        "required": false,
+        "type": "\"default\" | \"compact\""
+      },
+      {
+        "default": "false",
+        "description": "Menempel saat gulir; hanya bila L17 mengizinkan; otomatis nonaktif bila terlalu tinggi.",
+        "name": "sticky",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Judul belum tersedia; menampilkan Skeleton dan menunda fokus rute.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "urutan: back-link/breadcrumb → aksi sekunder (Menu) → aksi primer; h1 bukan tab stop (hanya target fokus program)",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "AppShell memindahkan fokus ke h1; pembaca layar membaca judul; fokus berikutnya dengan Tab masuk ke aksi",
+      "trigger": "pindah rute"
+    },
+    {
+      "input": "pointer",
+      "result": "header menempel di bawah global bar tanpa menutup elemen fokus (SC 2.4.11)",
+      "trigger": "gulir halaman dengan sticky aktif"
+    },
+    {
+      "input": "touch",
+      "result": "navigasi ke induk; sama dengan breadcrumb terakhir di desktop",
+      "trigger": "tap back-link di phone"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Settings",
+        "Team members",
+        "Manage who can access this workspace.",
+        "Invite member"
+      ],
+      "id-ID": [
+        "Pengaturan",
+        "Anggota tim",
+        "Kelola siapa yang dapat mengakses ruang kerja ini.",
+        "Undang anggota"
+      ]
+    },
+    "rules": [
+      "Judul = nama halaman atau nama entitas; kata benda, sentence case, tanpa titik atau tanda seru.",
+      "Deskripsi satu kalimat yang menjelaskan apa yang bisa dilakukan di halaman; tidak mengulang judul atau breadcrumb.",
+      "Label aksi primer kata kerja spesifik dari glosarium; aksi sekunder masuk Menu \"More actions\".",
+      "Judul tidak pernah dipotong; nama entitas panjang membungkus."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "Menu",
+    "Breadcrumb",
+    "Link",
+    "Skeleton"
+  ],
+  "do": [
+    "Pastikan setiap halaman punya tepat satu h1 yang sama dengan judul dokumen.",
+    "Taruh satu aksi primer dan pindahkan sisanya ke Menu.",
+    "Matikan sticky bila tinggi header melebihi sepertiga viewport (teks 200%, zoom)."
+  ],
+  "dont": [
+    {
+      "text": "Dua aksi primer di header, atau aksi sekunder sebagai deretan tombol yang terus memanjang."
+    },
+    {
+      "ref": "UB8",
+      "text": "Header sticky yang menutup elemen fokus saat menggulir."
+    },
+    {
+      "text": "Memotong judul dengan ellipsis tanpa jalan untuk membaca teks lengkap."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul membungkus beberapa baris; aksi turun ke bawah judul; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "sticky dimatikan otomatis bila header > 1/3 tinggi viewport; aksi membungkus",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "area aksi tidak dirender; judul memakai lebar penuh",
+      "case": "0 aksi"
+    },
+    {
+      "behaviour": "satu primer terlihat; semua aksi lain (berapa pun) di Menu; Menu dengan lebih dari 12 item dikelompokkan",
+      "case": "jumlah aksi maksimum"
+    },
+    {
+      "behaviour": "Breadcrumb menciutkan level tengah ke Menu \"…\"; level pertama dan induk langsung tetap terlihat",
+      "case": "breadcrumb sangat dalam"
+    },
+    {
+      "behaviour": "h1 berisi teks VisuallyHidden \"Loading…\"; fokus rute ditunda sampai judul tersedia",
+      "case": "loading"
+    },
+    {
+      "behaviour": "aksi primer yang butuh server diblokir dengan reason \"Needs connection\" atau diantrekan sesuai pattern OfflineSync",
+      "case": "offline"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Lebih dari satu h1 per halaman ditolak (V5)",
+    "Lebih dari satu Button variant=primary di PageHeader ditolak",
+    "sticky=true tanpa izin L17 ditolak (manual-review)",
+    "title kosong ditolak"
+  ],
+  "name": "PageHeader",
+  "preview": {
+    "combinations": [
+      "judul panjang + aksi",
+      "sticky + teks 200%",
+      "read-only role",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "sticky-stuck",
+      "focus",
+      "loading",
+      "disabled-with-reason"
+    ],
+    "variants": [
+      "default",
+      "compact"
+    ]
+  },
+  "purpose": {
+    "purpose": "Kepala halaman di dalam main: tepat satu h1, breadcrumb bila ada, deskripsi singkat, metadata opsional, dan maksimal satu aksi primer plus Menu untuk aksi sekunder.",
+    "when_not_to_use": [
+      "Untuk global bar aplikasi (logo, pencarian global, akun): itu region header AppShell, bukan PageHeader.",
+      "Untuk judul seksi di dalam halaman: pakai heading h2/h3 biasa di Stack.",
+      "Untuk judul Modal, Sheet, atau ContextPanel: pakai judul bawaan overlay itu (bukan h1).",
+      "Untuk pesan tingkat halaman (pemeliharaan, offline): pakai Banner di bawah global bar."
+    ]
+  },
+  "related": [
+    "AppShell",
+    "Breadcrumb",
+    "Tabs",
+    "Button",
+    "Menu"
+  ],
+  "responsive": [
+    {
+      "behaviour": "breadcrumb diganti back-link; judul membungkus; aksi primer pindah ke action bar bawah zona jempol atau tetap di bawah judul lebar penuh; aksi sekunder di IconButton \"More actions\" yang membuka Menu sebagai sheet",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "breadcrumb di atas judul; aksi di bawah judul atau di inline-end bila muat; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "judul dan aksi sebaris (aksi di inline-end); sticky hanya bila L17 mengizinkan",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh menjalankan aksi primer: aksi tidak dirender dan layout menutup ruangnya"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi terlihat tetapi tidak diizinkan saat ini; ikon gembok + reason terlihat"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi primer berisiko tinggi; membuka StepUpDialog"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role hanya melihat: semua aksi mutasi disembunyikan, Tag netral \"View only\" di meta"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "arrow-left"
+    ],
+    "notes": "Aksi berada di inline-end (kiri di RTL); ikon back-link dicerminkan; judul rata start."
+  },
+  "sizes": {
+    "not_applicable": "PageHeader mengikuti skala tipe L4 dan variant; tidak ada prop size. Area klik aksinya mengikuti Button, IconButton, dan Link."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "h1 fokus program setelah pindah rute; ring ditambahkan di luar",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus tidak dipindah ke h1 sebelum judul nyata tersedia",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "tanpa latar; menyatu dengan surface main"
+    },
+    {
+      "name": "sticky-stuck",
+      "token_swaps": {
+        "sticky-edge": "color-structure-border"
+      },
+      "treatment": "hanya bila L17 mengizinkan: saat menempel, latar surface-base dan garis bawah border muncul; tinggi tidak berubah (I4); scroll-padding main = tinggi header"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "h1 menerima fokus program (tabindex -1) setelah pindah rute dan menampilkan ring 2px focus-ring offset 2px (§6.9)"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "judul belum diketahui: h1 tetap ada berisi teks VisuallyHidden \"Loading…\" dan Skeleton satu baris; aksi ditampilkan dalam state loading atau disembunyikan sampai izin diketahui"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {},
+      "treatment": "aksi primer diblokir mengikuti Button (aria-disabled + reason terlihat di bawah aksi)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}PageHeader: TopAppBar/LargeTopAppBar dengan actions slot",
+    "flutter": "{ns}_page_header.dart: Column dengan Semantics(header: true) pada judul; di phone digabung ke AppBar",
+    "html": {
+      "element": "header",
+      "notes": "header di dalam main (tanpa role banner); h1 tabindex=-1; position: sticky hanya dengan scroll-padding pada main"
+    },
+    "swiftui": "{Ns}PageHeader: .navigationTitle + .toolbar untuk aksi; header kustom di iPad/macOS"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Judul type-h1, deskripsi, breadcrumb, aksi di sisi inline-end pada desktop.",
+      "name": "default"
+    },
+    {
+      "description": "Untuk surface padat (mis. dense-console): judul tetap elemen h1 tetapi memakai skala visual h2/h3 sesuai L4; deskripsi opsional; aksi sebaris dengan judul.",
+      "name": "compact"
+    }
+  ]
+}

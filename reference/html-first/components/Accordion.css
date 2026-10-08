@@ -1,0 +1,153 @@
+/* Accordion · engine 1.8.0 reference (catalog/components/Accordion.json). Tokens only (I3); logical properties only (§12.4).
+   html-first base: one native <details> per item; <summary> carries the heading (level from the page) + summary text +
+   error indicator + chevron. Works fully without JS (toggle, find-in-page opens the panel natively). variant single uses the
+   native exclusive `name` attribute (Accordion.js polyfills it). Accordion.js opens panels that contain errors, deep links,
+   lazy panels and ↑/↓/Home/End between triggers. Open/closed is never colour only: chevron rotates + content appears. */
+.ds-accordion {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-block: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+  color: var(--color-structure-text-primary);
+}
+.ds-accordion__item + .ds-accordion__item { border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+.ds-accordion__toolbar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-block-end: var(--space-2); }
+
+.ds-accordion__trigger {
+  --_h: var(--control-height-md);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  inline-size: 100%;
+  min-block-size: max(var(--_h), var(--target-current));
+  margin: 0;
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-accordion__trigger::-webkit-details-marker { display: none; }
+.ds-accordion[data-size="sm"] .ds-accordion__trigger { --_h: var(--control-height-sm); padding-block: var(--space-2); }
+.ds-accordion[data-size="lg"] .ds-accordion__trigger { --_h: max(var(--control-height-lg), var(--target-min-touch)); padding-block: var(--space-4); }
+/* state layer (L16) */
+.ds-accordion__trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-accordion__titles { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); flex: 1 1 auto; min-inline-size: 0; }
+.ds-accordion__heading {
+  margin: 0;
+  overflow-wrap: anywhere; /* wraps, never an ellipsis */
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  color: var(--color-structure-text-primary);
+}
+.ds-accordion__summary {
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  font-variant-numeric: tabular-nums;
+}
+.ds-accordion__summary bdi { unicode-bidi: isolate; }
+/* error indicator: critical icon + "{n} errors", part of the trigger name; stays when the panel is closed again */
+.ds-accordion__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-semantic-critical-strong);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-accordion__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+/* chevron at inline-end (its position follows the direction; down/up glyph itself is not mirrored); aligned to the first line */
+.ds-accordion__chevron {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-h3-line) - var(--icon-md)) / 2);
+  color: var(--color-structure-text-secondary);
+  transition: transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-accordion__item[open] > .ds-accordion__trigger .ds-accordion__chevron,
+.ds-accordion__trigger[aria-expanded="true"] .ds-accordion__chevron { transform: rotate(180deg); }
+
+@media (hover: hover) {
+  .ds-accordion__trigger:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+  .ds-accordion__trigger:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-accordion__trigger[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-accordion__trigger[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-accordion__trigger:not([aria-disabled="true"]):active,
+.ds-accordion__trigger[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+.ds-accordion__trigger:not([aria-disabled="true"]):active::before,
+.ds-accordion__trigger[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+/* focus: inset ring over the full-width trigger */
+.ds-accordion__trigger:focus-visible,
+.ds-accordion__trigger[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+/* panel */
+.ds-accordion__panel {
+  padding-block: var(--space-1) var(--space-4);
+  padding-inline: var(--space-4);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-primary);
+}
+.ds-accordion__panel > * + * { margin-block-start: var(--space-3); }
+.ds-accordion__panel p { margin-block-end: 0; max-inline-size: var(--layout-measure); }
+.ds-accordion__item[open] > .ds-accordion__panel { animation: ds-accordion-in var(--motion-base-duration) var(--motion-easing-enter); }
+@keyframes ds-accordion-in { from { opacity: 0; } }
+
+/* blocked with reason: no panel is rendered; heading in disabled colour, lock icon, reason in the summary slot */
+.ds-accordion__trigger[aria-disabled="true"] { cursor: not-allowed; }
+.ds-accordion__trigger[aria-disabled="true"] .ds-accordion__heading { color: var(--color-structure-text-disabled); }
+.ds-accordion__trigger[aria-disabled="true"] .ds-accordion__chevron { color: var(--color-structure-text-disabled); }
+.ds-accordion__reason { display: inline-flex; align-items: flex-start; gap: var(--space-1); flex-basis: 100%; color: var(--color-structure-text-primary); font-size: var(--type-body-size); line-height: var(--type-body-line); font-weight: var(--type-body-weight); }
+.ds-accordion__reason .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block: calc((var(--type-body-line) - var(--icon-sm)) / 2); color: var(--color-structure-text-secondary); }
+
+/* loading (lazy panel): Skeleton inside the panel, aria-busy */
+.ds-accordion__skeleton { display: flex; flex-direction: column; gap: var(--space-2); }
+.ds-accordion__skeleton > span {
+  display: block;
+  block-size: calc(var(--type-body-line) / 2);
+  margin-block: calc(var(--type-body-line) / 4);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+}
+.ds-accordion__skeleton > span:last-child { inline-size: 60%; }
+
+/* phone: lg trigger height for touch, panel scrolled into view below sticky headers */
+.ds-accordion__item { scroll-margin-block-start: var(--layout-bar-height); }
+@media (--bp-tablet-down) {
+  .ds-accordion:not([data-size="sm"]) .ds-accordion__trigger { --_h: max(var(--control-height-lg), var(--target-min-touch)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-accordion__chevron { transition: none; }
+  .ds-accordion__item[open] > .ds-accordion__panel { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-accordion__trigger:focus-visible { outline-color: Highlight; }
+  .ds-accordion__skeleton > span { border: var(--border-width-thin) solid GrayText; }
+}
+/* blocked item: h{n} > button (no details, no panel) */
+.ds-accordion__heading-wrap { margin: 0; font-size: var(--type-body-size); line-height: var(--type-body-line); font-weight: var(--type-body-weight); }

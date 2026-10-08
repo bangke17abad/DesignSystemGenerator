@@ -1,0 +1,271 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tidak pernah display:none, visibility:hidden, atribut hidden, aria-hidden, atau font-size 0 (semuanya menghapus teks dari teknologi bantu)",
+      "lang pada elemen bila teks berbeda bahasa dari halaman (SC 3.1.2)",
+      "lebih disukai daripada aria-label untuk konteks tambahan karena ikut diterjemahkan alat terjemahan browser dan tetap konsisten dengan glosarium"
+    ],
+    "focus_order": "default tidak ada di urutan fokus; focusable mengikuti posisi sumber",
+    "native": {
+      "compose": "Modifier.semantics(mergeDescendants = true) { contentDescription = … } atau stateDescription pada node induk; tidak membuat Text berukuran 0",
+      "flutter": "tidak ada node tersembunyi mandiri: teks digabung ke node induk lewat Semantics(label: …) atau MergeSemantics; node mandiri yang jarang diperlukan memakai Opacity(opacity: 0, alwaysIncludeSemantics: true)",
+      "swiftui": ".accessibilityLabel(Text(…)) atau .accessibilityElement(children: .combine) dengan teks tambahan; .accessibilityValue untuk nilai; .accessibilityHint hanya untuk petunjuk opsional"
+    },
+    "role": "tidak ada role; teks dibaca sebagai teks biasa atau digabung ke nama aksesibel elemen induk (mis. tautan, tombol, sel header)",
+    "sr_label": "teks tersembunyi melengkapi label terlihat; teks terlihat selalu di awal nama aksesibel agar SC 2.5.3 terpenuhi (mis. \"Edit\" + tersembunyi \"profile\")",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "2.4.4",
+      "2.4.7",
+      "2.5.3",
+      "3.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "span dengan pola clip: position absolute, inline-size dan block-size 1px, overflow hidden, clip-path inset(50%), white-space nowrap; tanpa margin luar",
+      "tokens": []
+    },
+    {
+      "part": "focus-reveal",
+      "role": "varian focusable saat fokus: pola clip dilepas, tampil di posisi alirannya atau di inset logis yang ditentukan pemanggil",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-text-primary",
+        "space-2",
+        "radius-sm",
+        "z-tooltip"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada varian focusable",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "description": "Teks yang dibaca teknologi bantu.",
+        "name": "children",
+        "required": true,
+        "type": "string | konten inline"
+      },
+      {
+        "default": "false",
+        "description": "Tampil saat elemen di dalamnya menerima fokus.",
+        "name": "focusable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Bahasa teks bila berbeda dari halaman.",
+        "name": "lang",
+        "required": false,
+        "type": "string (BCP 47)"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "default: tidak menerima fokus dan tidak boleh berisi elemen fokusabel; focusable: elemen di dalam menerima fokus lalu tampil",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "teks tersembunyi bisa ikut tersalin; karena itu tidak ditempatkan di dalam nilai yang disalin (kode, identifier)",
+      "trigger": "seleksi teks di sekitar"
+    },
+    {
+      "input": "touch",
+      "result": "elemen 1px sulit disentuh langsung; teks tetap dibaca saat swipe berurutan atau sebagai bagian nama elemen induknya",
+      "trigger": "jelajah sentuh pembaca layar"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "(opens in a new tab)",
+        "Sort ascending",
+        "3 unread notifications",
+        "Loading…"
+      ],
+      "id-ID": [
+        "(membuka tab baru)",
+        "Urutkan naik",
+        "3 notifikasi belum dibaca",
+        "Memuat…"
+      ]
+    },
+    "rules": [
+      "Teks tersembunyi melengkapi, tidak mengulang, teks terlihat.",
+      "Ringkas: frasa, bukan paragraf; informasi panjang harus terlihat.",
+      "Berasal dari glosarium dan diterjemahkan untuk setiap ui_locale seperti teks terlihat.",
+      "Akhiran konteks ditulis dalam kurung atau sebagai lanjutan kalimat agar terbaca alami setelah teks terlihat."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Pakai untuk konteks tautan, teks pendamping ikon status, dan teks Spinner.",
+    "Mulai nama aksesibel dengan teks terlihat lalu tambahkan teks tersembunyi.",
+    "Hapus elemen saat teksnya kosong."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "Menyembunyikan instruksi atau alasan blokir yang juga dibutuhkan pengguna yang melihat."
+    },
+    {
+      "ref": "UB8",
+      "text": "Membungkus tombol atau tautan di VisuallyHidden default sehingga fokus menjadi tak terlihat."
+    },
+    {
+      "text": "Memakai display:none atau aria-hidden lalu mengira teks masih terbaca."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tidak berdampak visual; varian focusable yang tampil membungkus dan tidak melebihi viewport",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "default tidak berdampak; focusable tumbuh mengikuti teks",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "elemen tidak dirender",
+      "case": "teks kosong (0 karakter)"
+    },
+    {
+      "behaviour": "lebih dari ±120 karakter ditandai lint; informasi panjang dipindah ke teks terlihat atau aria-describedby ke helper terlihat",
+      "case": "panjang maksimum"
+    },
+    {
+      "behaviour": "teks \"Loading…\" tersembunyi menyertai Spinner; diganti hasil lewat LiveAnnouncer, bukan dengan mengubah teks tersembunyi diam-diam",
+      "case": "loading"
+    },
+    {
+      "behaviour": "dilarang; teks tersembunyi ikut tersalin dan merusak nilai",
+      "case": "di dalam nilai yang bisa disalin"
+    },
+    {
+      "behaviour": "tetap tersembunyi; clip-path tidak terpengaruh forced colors",
+      "case": "forced colors / mode cetak"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Accessibility",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Elemen fokusabel di dalam VisuallyHidden default ditolak (V5)",
+    "VisuallyHidden dengan teks kosong ditolak",
+    "Pola sembunyi memakai display:none, visibility:hidden, atau font-size:0 pada teks yang harus terbaca ditolak (css-pattern)"
+  ],
+  "name": "VisuallyHidden",
+  "preview": {
+    "combinations": [
+      "tautan + konteks tersembunyi",
+      "ikon status + teks tersembunyi",
+      "focusable + RTL",
+      "pohon aksesibilitas ditampilkan"
+    ],
+    "states": [
+      "hidden",
+      "focus-revealed",
+      "empty"
+    ],
+    "variants": [
+      "default",
+      "focusable"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyembunyikan teks secara visual sambil tetap membuatnya terbaca oleh teknologi bantu; varian focusable tampil saat menerima fokus.",
+    "when_not_to_use": [
+      "Untuk menyembunyikan konten dari semua orang: pakai atribut hidden atau tidak merendernya.",
+      "Untuk menyembunyikan elemen dekoratif dari pembaca layar: pakai aria-hidden=\"true\" (kebalikan VisuallyHidden).",
+      "Untuk informasi yang juga dibutuhkan pengguna yang melihat (instruksi, alasan blokir, format): tampilkan sebagai teks terlihat (helper), bukan tersembunyi.",
+      "Untuk membungkus kontrol interaktif yang tidak tampil saat fokus: fokus menjadi tak terlihat (SC 2.4.7); pakai varian focusable atau SkipLink."
+    ]
+  },
+  "related": [
+    "SkipLink",
+    "LiveAnnouncer",
+    "Link",
+    "Spinner",
+    "StatusLabel"
+  ],
+  "responsive": [
+    {
+      "behaviour": "sama di semua lebar; varian focusable yang tampil tidak melebihi lebar viewport dan membungkus",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sama; tidak pernah dipakai untuk menyembunyikan label yang di layar kecil terlihat (label responsif tetap ada sebagai nama aksesibel)",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "VisuallyHidden tidak memuat aksi berizin; konten yang tersembunyi karena role tidak dirender sama sekali, bukan disembunyikan visual."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Pola clip tidak berarah; varian focusable tampil di inset logis (inline-start) sehingga pindah ke kanan di RTL; teks campuran memakai bdi/dir=\"auto\"."
+  },
+  "sizes": {
+    "not_applicable": "Tidak punya ukuran visual saat tersembunyi; varian focusable mengikuti ukuran anaknya (mis. SkipLink)."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "hidden",
+      "token_swaps": {},
+      "treatment": "terpotong ke 1px dengan clip-path; tetap ada di pohon aksesibilitas dan urutan baca"
+    },
+    {
+      "name": "focus-revealed",
+      "token_swaps": {
+        "focus-reveal": "color-structure-surface-raised",
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "hanya varian focusable: clip dilepas saat :focus-within; latar surface-raised; ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "teks kosong: tidak merender elemen (node kosong membuat pembaca layar membaca jeda atau \"blank\")"
+    }
+  ],
+  "target_hints": {
+    "compose": "Modifier.{ns}SemanticsLabel(…) di atas semantics(mergeDescendants)",
+    "flutter": "tidak ada widget mandiri; helper {ns}SemanticsLabel(…) untuk menggabungkan label ke induk",
+    "html": {
+      "element": "span",
+      "notes": "kelas .{ns}-visually-hidden: position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; varian focusable melepas pola saat :focus-within"
+    },
+    "swiftui": "modifier .{ns}AccessibilityLabel(…) di atas accessibilityLabel"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Selalu tersembunyi visual; tidak fokusabel; untuk teks pelengkap (konteks tautan, header kolom ikon, teks status pendamping ikon, teks Spinner).",
+      "name": "default"
+    },
+    {
+      "description": "Tersembunyi sampai elemen di dalamnya menerima fokus, lalu tampil penuh dengan ring fokus; dipakai SkipLink.",
+      "name": "focusable"
+    }
+  ]
+}

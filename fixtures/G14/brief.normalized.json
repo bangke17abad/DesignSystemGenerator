@@ -1,0 +1,105 @@
+{
+  "brief_schema_version": "1.5",
+  "components": {
+    "include": [
+      {
+        "component": "CountdownTimer",
+        "reason": "flash sale"
+      }
+    ],
+    "packs": [
+      "P02-b2c-commerce",
+      "P01-b2b-ops"
+    ]
+  },
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "Order"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "brand-led-tonal",
+    "brands": [
+      {
+        "id": "default",
+        "interaction_hex": "#0F766E"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "Dark"
+      }
+    ]
+  },
+  "namespace": "PTG",
+  "product_name": "Pasar Tetangga",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel",
+      "input_modality": [
+        "touch"
+      ],
+      "name": "buyer-app",
+      "os_runtime": "iOS",
+      "surface_type": "consumer"
+    },
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel, desktop",
+      "input_modality": [
+        "touch",
+        "pointer",
+        "keyboard"
+      ],
+      "name": "storefront-web",
+      "os_runtime": "web",
+      "surface_type": "public"
+    },
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable",
+        "compact"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard"
+      ],
+      "name": "seller-web",
+      "os_runtime": "web",
+      "surface_type": "operational"
+    }
+  ],
+  "targets": {
+    "adapters": [
+      "A01-antd-v6"
+    ],
+    "primary_web_reference": "react",
+    "production_targets": [
+      "flutter"
+    ]
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "name": "PermissionRequest",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila surface native butuh izin OS (kamera, lokasi, notifikasi, mikrofon, kontak) atau role dapat meminta akses lebih tinggi (engine 1.8.0).",
+  "problem": {
+    "problem": "Pengguna memberi atau meminta akses dengan sadar: tahu mengapa akses dibutuhkan tepat saat itu, apa yang terjadi bila menolak, dan selalu punya jalan lain; organisasi tahu siapa memberi akses apa, kapan, dan sampai kapan. Penolakan tidak pernah mengunci seluruh aplikasi.",
+    "when": ["Fitur di surface native atau web memerlukan izin OS/browser (kamera untuk pindai, lokasi untuk check-in, notifikasi push, mikrofon).", "Aksi atau objek yang terkunci role dapat diminta aksesnya oleh pengguna (akses rekaman, peran approver, admin ruang kerja)."],
+    "when_not": ["Otorisasi ulang untuk aksi berisiko oleh pengguna yang sudah berhak: pakai StepUpDialog di AuthAndSession.", "Izin yang belum dibutuhkan fitur apa pun: jangan diminta, termasuk saat Onboarding.", "Batasan role yang tidak bisa diminta: cukup hidden atau disabled dengan alasan (§10.1, §12.2 Permission).", "Persetujuan privasi atau cookie yang bersifat hukum: pola consent domain dari brief."]
+  },
+  "composition": [
+    { "component": "Sheet", "parts": ["Sheet.Header", "Sheet.Body", "Sheet.Footer"], "role_in_pattern": "phone: penjelasan pra-izin di UI produk sebelum dialog sistem" },
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Body", "Modal.Footer"], "role_in_pattern": "tablet: penjelasan pra-izin; desktop: formulir minta akses bila tidak memakai halaman" },
+    { "component": "InlineAlert", "role_in_pattern": "web desktop: penjelasan pra-izin C5 di samping pemicu; semua surface: state ditolak C3 di area fitur dengan jalur alternatif dan cara mengaktifkan" },
+    { "component": "Button", "role_in_pattern": "\"Lanjutkan\" memicu dialog sistem; \"Nanti saja\"; \"Buka Pengaturan\"; \"Minta akses\"; \"Batalkan permintaan\"" },
+    { "component": "Link", "role_in_pattern": "jalur alternatif (\"Masukkan kode secara manual\") dan deep link Pengaturan bila OS mendukung" },
+    { "component": "EmptyState", "role_in_pattern": "variant restricted untuk layar atau objek yang terkunci role, dengan aksi \"Minta akses\" bila bisa diminta" },
+    { "component": "Form", "parts": ["Form.Header", "Form.Actions"], "role_in_pattern": "formulir minta akses mengikuti FormFlow" },
+    { "component": "Select", "role_in_pattern": "cakupan akses yang diminta dan durasi (bila brief menetapkan kedaluwarsa)" },
+    { "component": "TextArea", "role_in_pattern": "alasan permintaan; alasan penolakan dari approver" },
+    { "component": "StatusLabel", "role_in_pattern": "status permintaan: menunggu C5 (pandangan pemohon), disetujui C4, ditolak C3; pandangan approver: menunggu = C2 (§7.3 Persetujuan)" },
+    { "component": "DescriptionList", "role_in_pattern": "detail permintaan untuk approver: pemohon, cakupan, alasan, durasi, waktu diajukan" },
+    { "component": "Table", "role_in_pattern": "antrean permintaan approver (desktop) dengan kolom status" },
+    { "component": "StepUpDialog", "role_in_pattern": "approver memberi akses tingkat tinggi (admin, finansial, hukum) (SC 3.3.4)" },
+    { "component": "Timeline", "role_in_pattern": "variant audit: siapa meminta, siapa memberi atau menolak, kapan, alasan, dan kedaluwarsa" },
+    { "component": "NotificationItem", "role_in_pattern": "approver menerima permintaan; pemohon menerima keputusan" },
+    { "component": "Toast", "role_in_pattern": "\"Permintaan akses terkirim\" setelah submit" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "hasil kembali dari dialog sistem atau Pengaturan, dan keputusan yang datang saat layar terbuka" }
+  ],
+  "flow": [
+    { "step": "Kebutuhan muncul dalam konteks", "state_class": "C6", "transition": "pengguna memulai fitur (mis. \"Pindai kode\"); status izin diperiksa: sudah diberi = langsung lanjut; belum ditentukan = penjelasan pra-izin; ditolak = state ditolak; tidak pernah diminta saat aplikasi pertama dibuka" },
+    { "step": "Penjelasan pra-izin", "state_class": "C6", "transition": "Sheet/Modal (native) atau InlineAlert C5 (web) menyebut manfaat, data yang dipakai, dan kapan dipakai; \"Lanjutkan\" memicu dialog sistem, \"Nanti saja\" kembali tanpa memanggil API izin sehingga OS tidak mencatat penolakan" },
+    { "step": "Dialog sistem", "state_class": "C5", "transition": "dialog izin OS/browser yang selalu native (§14.3 butir 8); produk tidak meniru tampilannya dan menunggu hasilnya" },
+    { "step": "Diizinkan", "state_class": "C4", "transition": "langsung melanjutkan tugas yang dimulai pengguna tanpa konfirmasi tambahan; izin sebagian (lokasi perkiraan, akses foto terbatas) dinyatakan dan cara memperluasnya disebut" },
+    { "step": "Ditolak", "state_class": "C3", "transition": "InlineAlert C3 di area fitur: apa yang tidak tersedia, jalur alternatif (input manual, unggah berkas), dan cara mengaktifkan di Pengaturan; bagian lain aplikasi tetap berfungsi; tidak meminta ulang otomatis" },
+    { "step": "Minta akses role", "state_class": "C6", "transition": "aksi terkunci tampil disabled dengan alasan atau EmptyState restricted dengan \"Minta akses\"; Form cakupan + alasan + durasi; menyebut siapa yang akan meninjau" },
+    { "step": "Menunggu persetujuan", "state_class": "C5", "transition": "StatusLabel C5 \"Menunggu persetujuan\" dengan peninjau dan waktu diajukan; permintaan ganda dicegah; pemohon dapat membatalkan; approver menerima NotificationItem dan melihatnya sebagai C2" },
+    { "step": "Disetujui", "state_class": "C4", "transition": "NotificationItem ke pemohon; akses berlaku setelah server mengonfirmasi dan layar dimuat ulang izinnya; cakupan dan kedaluwarsa ditampilkan; tercatat di Timeline audit dengan pemberi dan waktu" },
+    { "step": "Ditolak approver", "state_class": "C3", "transition": "StatusLabel C3 dengan alasan dari approver; pemohon dapat mengajukan ulang dengan alasan baru; tercatat di audit" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "pra-izin sebagai Sheet bottom dengan tombol lebar penuh di zona jempol; dialog sistem native; state ditolak inline di layar fitur dengan \"Buka Pengaturan\" (deep link ke halaman izin aplikasi bila OS mendukung) dan alternatif manual; formulir minta akses layar penuh" },
+    { "device_class": "tablet", "behaviour": "pra-izin sebagai Modal dialog di tengah atau Sheet; state ditolak inline; approver melihat antrean dalam List dengan detail di ContextPanel atau halaman" },
+    { "device_class": "desktop", "behaviour": "web: prompt izin browser adalah native, pra-izin berupa InlineAlert C5 di samping pemicu (bukan modal yang memblokir); state ditolak menjelaskan langkah di pengaturan situs browser karena tidak ada deep link; approver memakai Table antrean + DescriptionList di panel detail + StepUpDialog untuk akses tinggi" }
+  ],
+  "states": {
+    "empty": "Approver tanpa permintaan: EmptyState cleared \"Tidak ada permintaan akses\"; pemohon tanpa riwayat: tidak ada seksi permintaan. Tidak ada approver terkonfigurasi: \"Minta akses\" diganti teks siapa yang harus dihubungi (dari brief, selain itu A-nn).",
+    "loading": "Pemeriksaan status izin bersifat sinkron atau sangat singkat dan tidak memunculkan Spinner; submit permintaan memakai Button loading dengan lebar terkunci.",
+    "error": "API izin tidak tersedia (perangkat tanpa kamera, kebijakan perangkat yang dikelola organisasi): C3 dengan alasan + alternatif, tanpa tombol yang tidak bisa berhasil. Submit permintaan gagal: InlineAlert C1 + Retry, isian dipertahankan.",
+    "partial": "Izin sebagian dari OS (lokasi perkiraan, akses foto terbatas, notifikasi senyap) atau akses disetujui dengan cakupan lebih sempit/durasi lebih pendek dari yang diminta: dinyatakan dengan teks dan cara memperluasnya.",
+    "success": "Izin OS diberi: tugas berlanjut. Akses role disetujui: \"Anda kini punya akses {peran} sampai {tanggal}\" + aksi yang tadinya terkunci aktif; diumumkan polite."
+  },
+  "accessibility": [
+    { "step": "Penjelasan pra-izin", "focus": "fokus ke judul Sheet/Modal; Esc atau gestur kembali = \"Nanti saja\" tanpa memanggil API izin; fokus kembali ke pemicu (§9.5)", "announcement": "judul + penjelasan terbaca sebagai nama dan deskripsi dialog" },
+    { "step": "Kembali dari dialog sistem", "focus": "fokus ke langkah berikut tugas (mis. tampilan kamera) bila diizinkan, atau tetap di pemicu bila ditolak", "announcement": "polite hanya bila UI berubah: \"Akses kamera nonaktif. Masukkan kode secara manual.\"" },
+    { "step": "Ditolak", "focus": "InlineAlert role=status; \"Buka Pengaturan\" dan jalur alternatif fokusabel berurutan; status diperiksa ulang saat aplikasi kembali ke foreground", "announcement": "polite saat status berubah setelah kembali dari Pengaturan" },
+    { "step": "Minta akses", "focus": "aturan FormFlow; setelah submit fokus ke StatusLabel/heading status permintaan", "announcement": "polite \"Permintaan akses terkirim\"" },
+    { "step": "Keputusan approver", "focus": "approver: StepUpDialog untuk akses tinggi; setelah keputusan fokus ke permintaan berikutnya di antrean atau judul antrean bila kosong (§9.5)", "announcement": "pemohon yang sedang di layar: polite \"Akses disetujui\" atau \"Permintaan ditolak: {alasan}\"" }
+  ],
+  "content": {
+    "rules": ["Pra-izin menyebut manfaat, data yang dipakai, dan kapan dipakai, masing-masing satu kalimat; tombol \"Lanjutkan\", bukan \"Izinkan\"/\"Allow\" yang meniru kata dialog sistem.", "State ditolak tidak menyalahkan; menyebut apa yang tidak tersedia, alternatifnya, dan jalur Pengaturan yang persis per platform.", "Permintaan akses menamai aksi atau objek yang diminta dan role peninjau; keputusan menyebut pemberi, cakupan, dan kedaluwarsa.", "Bila notifikasi OS ditolak dan brief punya event kritis, sebut bahwa peringatan kritis tetap muncul di aplikasi tetapi tidak saat aplikasi tertutup (I5)."],
+    "examples": {
+      "en-US": ["Use your camera to scan codes. We only use it while you're scanning.", "Continue", "Not now", "Camera access is off. Enter the code manually, or turn on camera access in Settings.", "Request access", "Pending approval"],
+      "id-ID": ["Gunakan kamera untuk memindai kode. Kamera hanya dipakai saat Anda memindai.", "Lanjutkan", "Nanti saja", "Akses kamera nonaktif. Masukkan kode secara manual, atau aktifkan akses kamera di Pengaturan.", "Minta akses", "Menunggu persetujuan"]
+    }
+  },
+  "roles": [
+    { "pattern": "disabled-with-reason", "when": "aksi yang butuh role lebih tinggi dan bisa diminta: terlihat aria-disabled dengan alasan + \"Minta akses\"" },
+    { "pattern": "hidden", "when": "aksi yang tidak pernah bisa diminta role ini disembunyikan tanpa jalur permintaan (§10.1)" },
+    { "pattern": "full", "when": "approver dengan hak memberi akses: antrean, setujui, tolak dengan alasan, cabut akses aktif" },
+    { "pattern": "step-up", "when": "memberi akses admin, finansial, atau hukum: StepUpDialog sebelum keputusan berlaku (SC 3.3.4); pemohon tidak pernah bisa menyetujui permintaannya sendiri" },
+    { "pattern": "read-only", "when": "auditor melihat Timeline audit dan status permintaan tanpa aksi setujui/tolak" }
+  ],
+  "do": ["Minta izin tepat saat fitur dipakai, dengan penjelasan di UI produk sebelum dialog sistem.", "Sediakan jalur alternatif untuk setiap fitur yang bergantung izin (input manual, unggah berkas, pilih lokasi di peta).", "Periksa ulang status izin saat aplikasi kembali ke foreground dan pulihkan fitur tanpa memaksa restart.", "Catat setiap pemberian, penolakan, pencabutan, dan kedaluwarsa akses role di audit."],
+  "dont": [
+    { "text": "Meminta semua izin saat aplikasi pertama dibuka tanpa konteks kebutuhan." },
+    { "text": "Membuat dialog kustom yang meniru dialog izin sistem atau label tombolnya.", "ref": "§14.3" },
+    { "text": "Mengunci seluruh aplikasi atau menampilkan layar buntu karena satu izin ditolak.", "ref": "UB10" },
+    { "text": "Meminta ulang izin dalam loop setelah ditolak, atau mengirim permintaan akses role berulang otomatis." },
+    { "text": "Membatasi peringatan event kritis berdasarkan izin role.", "ref": "I5" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "izin OS tetap bisa diminta; permintaan akses role butuh server: diblokir dengan alasan \"Perlu koneksi\" atau diantrekan sebagai \"Belum sinkron\" bila OfflineSync dipilih, tanpa tampil terkirim sebelum server mengonfirmasi (I6)" },
+    { "case": "timeout saat mengirim permintaan atau keputusan", "behaviour": "tidak dikirim ulang otomatis; permintaan membawa idempotency key; status diperiksa ulang sebelum Retry agar tidak muncul permintaan ganda" },
+    { "case": "antrean approver sangat banyak", "behaviour": "Table dengan filter status dan paginasi; keputusan massal mengikuti BulkActions dengan hasil per permintaan dan alasan per permintaan tetap tercatat; StepUpDialog sekali per batch bila brief mengizinkan" },
+    { "case": "tidak ada permintaan atau tidak ada approver", "behaviour": "EmptyState cleared untuk approver; bila tidak ada approver terkonfigurasi, jalur permintaan diganti kontak dari brief (A-nn bila kosong)" },
+    { "case": "aksi ganda (Lanjutkan ditekan dua kali, Minta akses dikirim ulang)", "behaviour": "API izin dipanggil sekali; permintaan yang masih menunggu ditampilkan alih-alih membuat yang baru" },
+    { "case": "teks pra-izin +40% (locale terpanjang)", "behaviour": "Sheet/Modal bergulir di body dengan footer tetap; tombol bertumpuk vertikal bila tidak muat berdampingan; tidak ada teks terpotong" },
+    { "case": "izin ditolak permanen (OS tidak lagi menampilkan dialog)", "behaviour": "pra-izin tidak ditampilkan lagi; langsung state ditolak dengan jalur Pengaturan dan alternatif" },
+    { "case": "izin dicabut di Pengaturan saat aplikasi berjalan", "behaviour": "fitur turun ke state ditolak saat aplikasi kembali aktif; pekerjaan yang sedang berjalan disimpan, tidak hilang" },
+    { "case": "perangkat dikelola organisasi melarang izin", "behaviour": "C3 \"Diatur oleh organisasi Anda\" tanpa tombol Pengaturan yang tidak akan berhasil; alternatif tetap ditawarkan" },
+    { "case": "akses role kedaluwarsa saat sedang dipakai", "behaviour": "aksi berikutnya ditolak server dengan alasan \"Akses Anda berakhir {waktu}\"; isian yang belum terkirim dipertahankan; tautan \"Minta akses lagi\"" }
+  ],
+  "wcag": ["1.3.1", "2.1.1", "2.4.3", "3.2.1", "3.2.2", "3.3.1", "3.3.2", "3.3.4", "4.1.2", "4.1.3"],
+  "related_patterns": ["Onboarding", "Settings", "AuthAndSession", "NotificationCenter", "FormFlow", "SystemPages"],
+  "lint": ["API izin OS/browser hanya dipanggil dari handler aksi pengguna, tidak saat start aplikasi", "Tombol pra-izin tidak memakai label \"Allow\"/\"Izinkan\"", "Setiap state ditolak punya jalur alternatif dan petunjuk pengaktifan", "Setiap keputusan akses role menulis entri Timeline audit (pemohon, pemberi, waktu, alasan, kedaluwarsa)"]
+}

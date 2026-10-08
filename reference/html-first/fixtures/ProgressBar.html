@@ -1,0 +1,152 @@
+<!-- ProgressBar fixture · determinate phases running (C5) / complete (C4) / failed (C1) / needs-attention (C2) / cancelled (C3),
+     indeterminate (static dashed track under reduced motion), local-pending, segmented, sm in a table row, concurrent processes and
+     role patterns. The indicator is the solid semantic colour of the phase; the outcome is the composed StatusLabel (locked
+     icon + text, L3 treatment). Bars are not live regions: ProgressBar.js announces start, 25 % milestones and the outcome. -->
+<section class="ds-demo" data-ds-demo="running (C5 info) · determinate + Cancel · live demo">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-progress-bar" data-status="info" data-ds-module="progress-bar" id="pb1">
+      <span class="ds-progress-bar__label" id="pb1-l">Importing contacts</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>450 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb1-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="450" aria-valuetext="450 of 1,000 rows" style="--ds-progress: 45%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>About 2 minutes left</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target" data-progress-action="cancel">Cancel import</button></div>
+    </div>
+    <div><button type="button" class="ds-button ds-target" data-variant="tertiary" data-ds-module="progress-demo" data-target="pb1">Run demo import</button></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="complete (C4 positive) + View report">
+  <div class="ds-progress-bar" data-status="positive" id="pb2">
+      <span class="ds-progress-bar__label" id="pb2-l">Importing contacts</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>1,000 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb2-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="1000" aria-valuetext="1,000 of 1,000 rows" style="--ds-progress: 100%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Import complete. 980 rows imported, 20 skipped.</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target" data-variant="tertiary">View report</button></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="failed (C1 critical) + Retry focused">
+  <div class="ds-progress-bar" data-status="critical" id="pb3">
+      <span class="ds-progress-bar__label" id="pb3-l">Importing contacts</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>450 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb3-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="450" aria-valuetext="450 of 1,000 rows" style="--ds-progress: 45%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Import failed at row 451 because the file stopped responding. Try again to continue from row 451.</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target" data-force="focus">Retry from row 451</button></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="needs-attention (C2 warning) + Review">
+  <div class="ds-progress-bar" data-status="warning" id="pb4">
+      <span class="ds-progress-bar__label" id="pb4-l">Importing contacts</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>620 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb4-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="620" aria-valuetext="620 of 1,000 rows" style="--ds-progress: 62%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Paused: 2 columns need matching before the import can continue.</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target">Review columns</button></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="cancelled (C3 neutral-negative)">
+  <div class="ds-progress-bar" data-status="neutral-negative" id="pb5">
+      <span class="ds-progress-bar__label" id="pb5-l">Exporting invoices</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>30%</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb5-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" aria-valuetext="30%" style="--ds-progress: 30%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="neutral-negative"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-neutral-negative"/></svg><span>Export cancelled. 120 of 400 invoices were exported.</span></span></span></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="indeterminate (sweeping segment; static dashed track under reduced motion, label names the stage)">
+  <div class="ds-progress-bar" data-status="info" data-variant="indeterminate" id="pb6">
+      <span class="ds-progress-bar__label" id="pb6-l">Waiting for the server to start the export</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>Waiting for server</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb6-l" aria-valuetext="Waiting for server"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>This usually takes less than a minute</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target">Cancel export</button></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="local-pending (uploaded, server not yet confirmed: stays info)">
+  <div class="ds-progress-bar" data-status="info" id="pb7">
+      <span class="ds-progress-bar__label" id="pb7-l">Uploading statement.pdf</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>4.2 of 4.2 MB</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb7-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-valuetext="4.2 of 4.2 MB" style="--ds-progress: 100%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Processing</span></span></span></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="segmented (upload → validate → import, one progressbar)">
+  <div class="ds-progress-bar" data-status="info" id="pb8">
+      <span class="ds-progress-bar__label" id="pb8-l">Importing vendors</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>Step 2 of 3 · 60%</bdi></span>
+      <div class="ds-progress-bar__track" data-segmented role="progressbar" aria-labelledby="pb8-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="53" aria-valuetext="Step 2 of 3, validating rows, 60% of this step"><span class="ds-progress-bar__segment" style="--ds-progress: 100%"><span class="ds-progress-bar__indicator"></span></span><span class="ds-progress-bar__segment" style="--ds-progress: 60%"><span class="ds-progress-bar__indicator"></span></span><span class="ds-progress-bar__segment" style="--ds-progress: 0%"><span class="ds-progress-bar__indicator"></span></span></div>
+      <ol class="ds-progress-bar__phases" aria-hidden="true"><li>Upload</li><li aria-current="step">Validate</li><li>Import</li></ol>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>About 3 minutes left</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target">Cancel import</button></div>
+    </div>
+</section>
+<section class="ds-demo" data-ds-demo="sm in table rows">
+  <table class="ds-text-body" style="inline-size: 100%">
+    <thead><tr><th scope="col" style="text-align: start">File</th><th scope="col" style="text-align: start">Progress</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" style="text-align: start; font-weight: inherit"><bdi>contacts-north.csv</bdi></th><td><div class="ds-progress-bar" data-status="info" data-size="sm" id="pb9">
+      <span class="ds-progress-bar__label ds-vh" id="pb9-l">Import progress for contacts-north.csv</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>72%</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb9-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" aria-valuetext="72%" style="--ds-progress: 72%"><span class="ds-progress-bar__indicator"></span></div>
+    </div></td></tr>
+      <tr><th scope="row" style="text-align: start; font-weight: inherit"><bdi>contacts-south.csv</bdi></th><td><div class="ds-progress-bar" data-status="positive" data-size="sm" id="pb10">
+      <span class="ds-progress-bar__label ds-vh" id="pb10-l">Import progress for contacts-south.csv</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>100%</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb10-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-valuetext="100%" style="--ds-progress: 100%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Imported</span></span></span></div>
+    </div></td></tr>
+      <tr><th scope="row" style="text-align: start; font-weight: inherit"><bdi>contacts-west.csv</bdi></th><td><div class="ds-progress-bar" data-status="critical" data-size="sm" id="pb11">
+      <span class="ds-progress-bar__label ds-vh" id="pb11-l">Import progress for contacts-west.csv</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>18%</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb11-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18" aria-valuetext="18%" style="--ds-progress: 18%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Failed at row 92</span></span></span></div>
+    </div></td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="ds-demo" data-ds-demo="3 concurrent processes + summary">
+  <section aria-labelledby="pbg-s">
+    <p class="ds-progress-bar-group__summary" id="pbg-s">2 of 3 imports running</p>
+    <ul class="ds-progress-bar-group" aria-labelledby="pbg-s">
+      <li><div class="ds-progress-bar" data-status="info" id="pb12">
+      <span class="ds-progress-bar__label" id="pb12-l">Importing contacts (north)</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>800 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb12-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="800" aria-valuetext="800 of 1,000 rows" style="--ds-progress: 80%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Less than a minute left</span></span></span></div>
+    </div></li>
+      <li><div class="ds-progress-bar" data-status="info" id="pb13">
+      <span class="ds-progress-bar__label" id="pb13-l">Importing contacts (south)</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>250 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb13-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="250" aria-valuetext="250 of 1,000 rows" style="--ds-progress: 25%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>About 4 minutes left</span></span></span></div>
+    </div></li>
+      <li><div class="ds-progress-bar" data-status="positive" id="pb14">
+      <span class="ds-progress-bar__label" id="pb14-l">Importing contacts (west)</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>1,000 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb14-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="1000" aria-valuetext="1,000 of 1,000 rows" style="--ds-progress: 100%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Import complete. 1,000 rows imported.</span></span></span></div>
+    </div></li>
+    </ul>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="read-only (monitoring, no Cancel) · Cancel blocked with reason">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-progress-bar" data-status="info" id="pb15">
+      <span class="ds-progress-bar__label" id="pb15-l">Importing contacts for Dina Putri</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>550 of 1,000 rows</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb15-l" aria-valuemin="0" aria-valuemax="1000" aria-valuenow="550" aria-valuetext="550 of 1,000 rows" style="--ds-progress: 55%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>About 1 minute left</span></span></span></div>
+    </div>
+    <div class="ds-progress-bar" data-status="info" id="pb16">
+      <span class="ds-progress-bar__label" id="pb16-l">Writing payment batch</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>90%</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb16-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90" aria-valuetext="90%" style="--ds-progress: 90%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Less than a minute left</span></span></span></div>
+      <div class="ds-progress-bar__actions"><button type="button" class="ds-button ds-target" aria-disabled="true" aria-describedby="pb16-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Cancel</span></button><p class="ds-progress-bar__reason" id="pb16-r">Payments are being sent to the bank and can no longer be cancelled.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long label (+40% locale) and large numbers">
+  <div class="ds-progress-bar" data-status="info" lang="id" id="pb17">
+      <span class="ds-progress-bar__label" id="pb17-l">Mengimpor kontak dari berkas ekspor sistem penjualan lama</span>
+      <span class="ds-progress-bar__value" aria-hidden="true"><bdi>1,2 jt dari 3,2 jt baris</bdi></span>
+      <div class="ds-progress-bar__track" role="progressbar" aria-labelledby="pb17-l" aria-valuemin="0" aria-valuemax="100" aria-valuenow="37" aria-valuetext="1,2 jt dari 3,2 jt baris" style="--ds-progress: 37%"><span class="ds-progress-bar__indicator"></span></div>
+      <div class="ds-progress-bar__status"><span class="ds-status-label" data-status="info"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>Sekitar 12 menit lagi</span></span></span></div>
+    </div>
+</section>

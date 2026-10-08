@@ -1,0 +1,175 @@
+<!-- SegmentedControl fixture · variants, sizes, states, mandatory combinations (catalog preview) + edge cases.
+     single = fieldset > legend + native radios (arrows, one Tab stop, forms work without JS); the input covers its segment.
+     multiple = the same segments with native checkboxes: catalog html hint names div[role=group] > button[aria-pressed], which needs JS to
+     toggle (§6.4); checkboxes keep the toggle semantics (checked = pressed) without JS. SegmentedControl.js gives multiple one Tab stop.
+     JS adds blocked segments (reachable, never selected, reason announced), Home/End, icon-only Tooltips and the phone Select sync. -->
+<section class="ds-demo" data-ds-demo="variants/single (radiogroup, live)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc1-l" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc1-l">View</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc1-list" type="radio" name="sc1" value="list" checked><label class="ds-segmented-control__label" for="sc1-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>List</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc1-board" type="radio" name="sc1" value="board"><label class="ds-segmented-control__label" for="sc1-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Board</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc1-calendar" type="radio" name="sc1" value="calendar"><label class="ds-segmented-control__label" for="sc1-calendar"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Calendar</span></label></span>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="variants/multiple (toggles, zero or more on)">
+  <fieldset class="ds-segmented-control" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc2-l">Map layers</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc2-pins" type="checkbox" name="sc2" value="pins" checked><label class="ds-segmented-control__label" for="sc2-pins"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Pin positions</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc2-hazards" type="checkbox" name="sc2" value="hazards" checked><label class="ds-segmented-control__label" for="sc2-hazards"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Hazards</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc2-carts" type="checkbox" name="sc2" value="carts"><label class="ds-segmented-control__label" for="sc2-carts"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Parking</span></label></span>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm · md · lg; touch raises sm/md to target-min-touch)">
+  <div class="ds-stack" data-gap="4">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc3sm-l" data-size="sm" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc3sm-l">Range (sm)</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3sm-day" type="radio" name="sc3sm" value="day"><label class="ds-segmented-control__label" for="sc3sm-day"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Day</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3sm-week" type="radio" name="sc3sm" value="week" checked><label class="ds-segmented-control__label" for="sc3sm-week"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Week</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3sm-month" type="radio" name="sc3sm" value="month"><label class="ds-segmented-control__label" for="sc3sm-month"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Month</span></label></span>
+    </div>
+  </fieldset>
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc3md-l" data-size="md" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc3md-l">Range (md)</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3md-day" type="radio" name="sc3md" value="day"><label class="ds-segmented-control__label" for="sc3md-day"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Day</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3md-week" type="radio" name="sc3md" value="week" checked><label class="ds-segmented-control__label" for="sc3md-week"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Week</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3md-month" type="radio" name="sc3md" value="month"><label class="ds-segmented-control__label" for="sc3md-month"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Month</span></label></span>
+    </div>
+  </fieldset>
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc3lg-l" data-size="lg" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc3lg-l">Range (lg)</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3lg-day" type="radio" name="sc3lg" value="day"><label class="ds-segmented-control__label" for="sc3lg-day"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Day</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3lg-week" type="radio" name="sc3lg" value="week" checked><label class="ds-segmented-control__label" for="sc3lg-week"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Week</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc3lg-month" type="radio" name="sc3lg" value="month"><label class="ds-segmented-control__label" for="sc3lg-month"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Month</span></label></span>
+    </div>
+  </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default · hover · pressed · focus · selected)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc4-l">
+    <legend class="ds-segmented-control__legend" id="sc4-l">States</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc4-a" type="radio" name="sc4" value="a" checked><label class="ds-segmented-control__label" for="sc4-a"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Selected</span></label></span>
+      <span class="ds-segmented-control__segment" data-force="hover"><input class="ds-segmented-control__input" id="sc4-b" type="radio" name="sc4" value="b"><label class="ds-segmented-control__label" for="sc4-b"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Hover</span></label></span>
+      <span class="ds-segmented-control__segment" data-force="pressed"><input class="ds-segmented-control__input" id="sc4-c" type="radio" name="sc4" value="c"><label class="ds-segmented-control__label" for="sc4-c"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Pressed</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc4-d" type="radio" name="sc4" value="d" data-force="focus"><label class="ds-segmented-control__label" for="sc4-d"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Focus</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc4-e" type="radio" name="sc4" value="e"><label class="ds-segmented-control__label" for="sc4-e"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Default</span></label></span>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="selected+hover · selected+focus">
+  <div class="ds-stack" data-gap="4">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc5-l">
+    <legend class="ds-segmented-control__legend" id="sc5-l">Selected and hovered</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment" data-force="hover"><input class="ds-segmented-control__input" id="sc5-list" type="radio" name="sc5" value="list" checked><label class="ds-segmented-control__label" for="sc5-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>List</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc5-board" type="radio" name="sc5" value="board"><label class="ds-segmented-control__label" for="sc5-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Board</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc5-cal" type="radio" name="sc5" value="cal"><label class="ds-segmented-control__label" for="sc5-cal"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Calendar</span></label></span>
+    </div>
+  </fieldset>
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc6-l">
+    <legend class="ds-segmented-control__legend" id="sc6-l">Selected and focused</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc6-list" type="radio" name="sc6" value="list"><label class="ds-segmented-control__label" for="sc6-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>List</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc6-board" type="radio" name="sc6" value="board" checked data-force="focus"><label class="ds-segmented-control__label" for="sc6-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Board</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc6-cal" type="radio" name="sc6" value="cal"><label class="ds-segmented-control__label" for="sc6-cal"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Calendar</span></label></span>
+    </div>
+  </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason (one segment: reachable by arrows, never selected)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc7-l" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc7-l">Range</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc7-day" type="radio" name="sc7" value="day"><label class="ds-segmented-control__label" for="sc7-day"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Day</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc7-week" type="radio" name="sc7" value="week" checked><label class="ds-segmented-control__label" for="sc7-week"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Week</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc7-month" type="radio" name="sc7" value="month" aria-disabled="true" aria-describedby="sc7-r"><label class="ds-segmented-control__label" for="sc7-month"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Month</span></label></span>
+    </div>
+    <p class="ds-segmented-control__reason" id="sc7-r">Month view is included in the Pro plan.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="disabled+selected (whole control blocked, selection still announced + reason)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc8-l" data-blocked data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc8-l">Unit</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc8-m" type="radio" name="sc8" value="m" checked aria-disabled="true" aria-describedby="sc8-r"><label class="ds-segmented-control__label" for="sc8-m"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Metres</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc8-y" type="radio" name="sc8" value="y" aria-disabled="true" aria-describedby="sc8-r"><label class="ds-segmented-control__label" for="sc8-y"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Yards</span></label></span>
+    </div>
+    <p class="ds-segmented-control__reason" id="sc8-r">Set by the venue administrator for all staff.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="read-only (choice as full text, no control)">
+  <p class="ds-segmented-control__readonly"><span class="ds-segmented-control__readonly-label">View:</span><span>List</span></p>
+</section>
+<section class="ds-demo" data-ds-demo="loading (controlled region busy; the control is not locked)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc9-l" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc9-l">View</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc9-list" type="radio" name="sc9" value="list"><label class="ds-segmented-control__label" for="sc9-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>List</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc9-board" type="radio" name="sc9" value="board" checked><label class="ds-segmented-control__label" for="sc9-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Board</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc9-cal" type="radio" name="sc9" value="cal"><label class="ds-segmented-control__label" for="sc9-cal"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Calendar</span></label></span>
+    </div>
+  </fieldset>
+  <div class="ds-segmented-control__region" aria-busy="true" aria-label="Board view"><span class="ds-segmented-control__skeleton" aria-hidden="true"></span><span class="ds-segmented-control__skeleton" aria-hidden="true"></span><span class="ds-segmented-control__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading board</span></div>
+</section>
+<section class="ds-demo" data-ds-demo="icon-only in a dense toolbar (hidden name + Tooltip)">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc10-l" data-size="sm" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend ds-vh" id="sc10-l">View</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment" data-icon-only><input class="ds-segmented-control__input" id="sc10-list" type="radio" name="sc10" value="list" checked><label class="ds-segmented-control__label" for="sc10-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg><span class="ds-vh">List</span></label></span>
+      <span class="ds-segmented-control__segment" data-icon-only><input class="ds-segmented-control__input" id="sc10-grid" type="radio" name="sc10" value="grid"><label class="ds-segmented-control__label" for="sc10-grid"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-vh">Grid</span></label></span>
+      <span class="ds-segmented-control__segment" data-icon-only><input class="ds-segmented-control__input" id="sc10-cal" type="radio" name="sc10" value="cal"><label class="ds-segmented-control__label" for="sc10-cal"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-vh">Calendar</span></label></span>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="label +40% (longest locale): wraps; on phone → labelled Select" lang="id">
+  <div class="ds-segmented-control__responsive">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc11-l" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc11-l">Tampilan</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc11-daftar" type="radio" name="sc11" value="daftar"><label class="ds-segmented-control__label" for="sc11-daftar"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Daftar pemain</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc11-papan" type="radio" name="sc11" value="papan" checked><label class="ds-segmented-control__label" for="sc11-papan"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Papan skor</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc11-kalender" type="radio" name="sc11" value="kalender"><label class="ds-segmented-control__label" for="sc11-kalender"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Kalender acara</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc11-statistik" type="radio" name="sc11" value="statistik"><label class="ds-segmented-control__label" for="sc11-statistik"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Statistik pertandingan</span></label></span>
+    </div>
+  </fieldset>
+  <div class="ds-select ds-segmented-control__fallback"><label class="ds-select__label" for="sc11-sel">Tampilan</label><div class="ds-select__group"><select class="ds-select__input" id="sc11-sel" name="sc11-phone"><option value="daftar">Daftar pemain</option><option value="papan" selected>Papan skor</option><option value="kalender">Kalender acara</option><option value="statistik">Statistik pertandingan</option></select></div></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="full width">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc12-l" data-full-width data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc12-l">Period</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc12-today" type="radio" name="sc12" value="today" checked><label class="ds-segmented-control__label" for="sc12-today"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Today</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc12-7d" type="radio" name="sc12" value="7d"><label class="ds-segmented-control__label" for="sc12-7d"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>7 days</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc12-30d" type="radio" name="sc12" value="30d"><label class="ds-segmented-control__label" for="sc12-30d"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>30 days</span></label></span>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% (taller; may stack vertically, same arrow order)">
+  <div style="--type-label-size: 2em; --type-label-line: 1.3;"><fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc13-l" data-stack data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc13-l">View</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc13-list" type="radio" name="sc13" value="list" checked><label class="ds-segmented-control__label" for="sc13-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>List</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc13-board" type="radio" name="sc13" value="board"><label class="ds-segmented-control__label" for="sc13-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Board</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc13-calendar" type="radio" name="sc13" value="calendar"><label class="ds-segmented-control__label" for="sc13-calendar"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>Calendar</span></label></span>
+    </div>
+  </fieldset></div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (first segment at inline-start, arrows swapped, check not mirrored)" dir="rtl" lang="ar">
+  <fieldset class="ds-segmented-control" role="radiogroup" aria-labelledby="sc14-l" data-ds-module="segmented-control">
+    <legend class="ds-segmented-control__legend" id="sc14-l">العرض</legend>
+    <div class="ds-segmented-control__track">
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc14-list" type="radio" name="sc14" value="list" checked><label class="ds-segmented-control__label" for="sc14-list"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>قائمة</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc14-board" type="radio" name="sc14" value="board"><label class="ds-segmented-control__label" for="sc14-board"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>لوحة</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc14-cal" type="radio" name="sc14" value="cal"><label class="ds-segmented-control__label" for="sc14-cal"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span>تقويم</span></label></span>
+      <span class="ds-segmented-control__segment"><input class="ds-segmented-control__input" id="sc14-next" type="radio" name="sc14" value="next"><label class="ds-segmented-control__label" for="sc14-next"><svg class="ds-icon ds-segmented-control__check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg><span>التالي</span></label></span>
+    </div>
+  </fieldset>
+</section>

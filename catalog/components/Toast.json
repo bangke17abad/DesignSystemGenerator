@@ -1,0 +1,516 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: polite untuk semua toast; tidak pernah assertive (C1 tidak memakai Toast)",
+      "aksi Undo disebut dalam pengumuman (\"Message archived. Undo available.\") agar pengguna pembaca layar tahu ada jalan kembali",
+      "durasi ≥ 10 detik bila ada aksi; berhenti saat hover/fokus; di native, saat accessible navigation (TalkBack/VoiceOver aktif) toast beraksi bertahan sampai ditutup",
+      "toast tidak menutup elemen yang fokus (SC 2.4.11); region ditempatkan di luar area action bar dan BottomNav",
+      "maksimal 3 toast terlihat; yang ke-4 masuk antrean, bukan menumpuk",
+      "aksi yang penting (Undo) juga tersedia di tempat lain (mis. riwayat atau menu item) karena toast bersifat sementara"
+    ],
+    "focus_order": "region notifikasi berada di akhir DOM AppShell; tidak masuk urutan Tab normal kecuali lewat pintasan atau saat pengguna Tab dari elemen terakhir halaman",
+    "native": {
+      "compose": "SnackbarHost(hostState) + hostState.showSnackbar(message, actionLabel, withDismissAction = true, duration = SnackbarDuration.Long /* Indefinite bila beraksi dan TalkBack aktif */); Snackbar sudah liveRegion polite sehingga tidak diumumkan ulang lewat {Ns}Announcer. Not verified against the pinned version",
+      "flutter": "ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: …, action: SnackBarAction(label: …), duration: const Duration(seconds: 10), showCloseIcon: true)); SnackBar beraksi bertahan saat MediaQuery.accessibleNavigation true; pengumuman lewat {ns}_announcer. Not verified against the pinned version",
+      "swiftui": "tidak ada toast native: overlay kustom dengan .safeAreaInset(edge: .bottom) di atas TabView dan AccessibilityNotification.Announcement(pesan).post(); timer berhenti bila UIAccessibility.isVoiceOverRunning dan ada aksi. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "tidak ada region live sendiri; kartu toast adalah group berlabel (role=\"group\" + aria-label pesan) di dalam region landmark \"Notifications\" (role=\"region\")",
+    "sr_label": "pesan toast + \"{action} available\" bila ada aksi; tombol tutup \"Dismiss notification\"",
+    "wcag": [
+      "1.4.3",
+      "2.1.1",
+      "2.2.1",
+      "2.4.11",
+      "2.5.7",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "region",
+      "role": "wadah tumpukan tetap di z-toast; dipasang sekali di AppShell; tidak menutup action bar, BottomNav, atau kontrol utama",
+      "tokens": [
+        "z-toast",
+        "space-4",
+        "space-2"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "kartu toast di surface-raised dengan elevasi L7; perlakuan status per kelas dari L3 (quiet: ikon saja; outline: border semantik; tinted: latar -subtle; filled: latar solid)",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "elevation-1",
+        "radius-md",
+        "border-width-thin",
+        "space-3",
+        "space-4",
+        "color-semantic-warning-subtle",
+        "color-semantic-positive-subtle",
+        "color-semantic-info-subtle",
+        "color-semantic-neutral-negative-subtle"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph terkunci §5.7 bila toast membawa status; tanpa ikon untuk konfirmasi netral",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "message",
+      "role": "satu kalimat hasil aksi (teks isi)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "action",
+      "role": "maksimal satu Button tertiary (Undo, View); memperpanjang durasi ke ≥ 10 detik",
+      "tokens": [
+        "color-interaction-default",
+        "type-label-size",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "dismiss",
+      "role": "IconButton tutup, selalu ada pada toast beraksi dan saat accessible navigation aktif",
+      "tokens": [
+        "icon-md",
+        "target-min-touch",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "ikon, teks, dan aksi di atas fill solid bila L3 memberi filled untuk kelas itu",
+      "tokens": [
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative",
+        "color-focus-ring-inverse"
+      ]
+    },
+    {
+      "part": "motion",
+      "role": "masuk dan keluar dengan easing L8; reduced motion → fade satu frame",
+      "tokens": [
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "aksi toast diaktifkan"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "boolean",
+        "when": "toast ditutup pengguna atau waktunya habis"
+      }
+    ],
+    "parts": [
+      "Toast.Provider (sekali di AppShell; mengekspos toast(options) dan mengelola antrean maks 3)",
+      "Toast.Region (landmark tumpukan)"
+    ],
+    "props": [
+      {
+        "default": "message",
+        "description": "Dengan aksi memperpanjang durasi ke ≥ 10 detik.",
+        "name": "variant",
+        "required": false,
+        "type": "\"message\" | \"with-action\""
+      },
+      {
+        "description": "Keluarga semantik; kosong = konfirmasi netral. critical ditolak dan dialihkan ke InlineAlert/Banner. critical tidak pernah dirender sebagai Toast (§12.2).",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Pesan satu kalimat.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Label aksi (Undo, View); mengaktifkan variant with-action.",
+        "name": "actionLabel",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "5000",
+        "description": "Durasi tampil; minimal 10000 bila ada aksi; tidak dapat diturunkan di bawah lantai itu.",
+        "name": "duration",
+        "required": false,
+        "type": "number (ms)"
+      },
+      {
+        "description": "Controlled visibility.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus TIDAK dipindah; pesan diumumkan lewat LiveAnnouncer (polite)",
+      "trigger": "toast muncul"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus pindah ke toast terbaru; timer berhenti; Esc menutup dan mengembalikan fokus ke posisi sebelumnya",
+      "trigger": "pintasan global ke region notifikasi (F6 atau Alt+T, dapat diubah, dicatat di glosarium pintasan)"
+    },
+    {
+      "input": "keyboard",
+      "result": "onPress aksi; toast tetap sampai aksi selesai, lalu hasilnya diumumkan polite (\"Archive undone\")",
+      "trigger": "Enter pada aksi (Undo)"
+    },
+    {
+      "input": "pointer",
+      "result": "semua timer berhenti; berlanjut saat pointer keluar",
+      "trigger": "hover di atas tumpukan"
+    },
+    {
+      "input": "touch",
+      "result": "menutup toast; alternatif satu-pointer: tombol tutup (SC 2.5.7)",
+      "trigger": "swipe ke arah tepi (horizontal)"
+    },
+    {
+      "input": "touch",
+      "result": "onPress aksi; area klik ≥ target-min-touch",
+      "trigger": "tap aksi"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Changes saved",
+        "Message archived",
+        "3 messages archived",
+        "Couldn't archive the message. It was restored to your inbox.",
+        "Export started. You'll get a notification when the file is ready.",
+        "Undo",
+        "View"
+      ],
+      "id-ID": [
+        "Perubahan disimpan",
+        "Pesan diarsipkan",
+        "3 pesan diarsipkan",
+        "Pesan tidak dapat diarsipkan. Pesan dikembalikan ke kotak masuk.",
+        "Ekspor dimulai. Anda akan menerima notifikasi saat file siap.",
+        "Urungkan",
+        "Lihat"
+      ]
+    },
+    "rules": [
+      "Satu kalimat: objek + kata kerja yang sama dengan tombol pemicu (\"Archive\" → \"Message archived\").",
+      "Tanpa \"Success!\", \"Oops\", emoji, atau tanda seru.",
+      "Aksi satu kata kerja: \"Undo\", \"View\"; tidak pernah \"OK\" atau \"Close\" sebagai aksi.",
+      "Rollback menjelaskan apa yang dibatalkan dan bahwa data dipulihkan.",
+      "Jumlah memakai ICU plural; aksi beruntun digabung (\"3 messages archived\")."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai kata kerja yang sama dengan tombol pemicu.",
+    "Beri ≥ 10 detik dan hentikan timer saat hover atau fokus untuk toast beraksi.",
+    "Gabungkan aksi beruntun menjadi satu toast dengan hitungan.",
+    "Sediakan jalan lain untuk aksi Undo selain toast."
+  ],
+  "dont": [
+    {
+      "text": "Menampilkan error server atau kondisi C1 sebagai Toast; pengguna kehilangan pesan saat toast hilang (§12.2)."
+    },
+    {
+      "ref": "UB8",
+      "text": "Menutup action bar, BottomNav, atau elemen yang sedang fokus dengan tumpukan toast."
+    },
+    {
+      "text": "Menampilkan lebih dari 3 toast sekaligus atau toast untuk setiap item dalam aksi massal."
+    },
+    {
+      "text": "Toast beraksi yang hilang sebelum 10 detik atau tidak berhenti saat hover/fokus."
+    },
+    {
+      "ref": "UB11",
+      "text": "Membuat toast sukses filled ketika L3 hanya mengizinkan fill untuk C1-C2."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "pesan membungkus sampai 3 baris; aksi pindah ke bawah pesan; durasi ditambah sesuai panjang teks (±1 detik per 10 kata)",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "toast tumbuh tinggi; di phone bila melebihi ±1/3 tinggi viewport, toast berubah menjadi sheet kecil yang tidak menutup action bar",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak ada toast sukses; bila relevan, InlineAlert info \"No items were changed\"",
+      "case": "0 item (aksi massal tanpa item terdampak)"
+    },
+    {
+      "behaviour": "3 terlihat (desktop), sisanya antre; toast identik digabung dengan hitungan (\"3 messages archived\")",
+      "case": "jumlah maksimum (4+ toast dalam waktu singkat)"
+    },
+    {
+      "behaviour": "aksi yang diantrekan menampilkan toast netral \"Saved on this device. Will send when online.\" tanpa klaim terkirim (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "toast yang ada diperbarui di tempat, timer diulang; pengumuman di-debounce",
+      "case": "pembaruan beruntun cepat (toggle berulang)"
+    },
+    {
+      "behaviour": "satu toast C2 \"8 archived, 2 couldn't be archived\" dengan aksi View, bukan dua toast",
+      "case": "beberapa status bersamaan (sukses + sebagian gagal)"
+    },
+    {
+      "behaviour": "toast tampil di atas scrim (z-toast > z-modal) tetapi tidak fokusabel lewat Tab sampai Modal ditutup; aksi Undo untuk konten Modal ditaruh di dalam Modal",
+      "case": "Modal terbuka"
+    },
+    {
+      "behaviour": "toast tetap sampai waktunya habis bila masih relevan; toast terkait halaman lama yang aksinya tidak berlaku lagi dihapus",
+      "case": "rute berpindah saat toast tampil"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Toast status=critical ditolak (§12.2)",
+    "Toast dengan aksi dan duration < 10000 ditolak (SC 2.2.1)",
+    "Toast.Provider lebih dari satu per aplikasi ditolak",
+    "Pesan toast tidak memakai kata kerja tombol pemicu ditandai (manual-review)"
+  ],
+  "name": "Toast",
+  "preview": {
+    "combinations": [
+      "hover + fokus (timer berhenti)",
+      "loading + pressed pada Undo (dicegah)",
+      "3 toast bertumpuk + 1 antre",
+      "toast di atas Modal",
+      "filled + fokus (focus-ring-inverse)"
+    ],
+    "states": [
+      "neutral (tanpa status)",
+      "positive (C4)",
+      "info (C5)",
+      "neutral-negative (C3)",
+      "warning (C2)",
+      "critical (C1, dicegah)",
+      "paused (hover atau fokus)",
+      "hover (aksi)",
+      "exiting"
+    ],
+    "variants": [
+      "message",
+      "with-action"
+    ]
+  },
+  "purpose": {
+    "purpose": "Konfirmasi sementara atas aksi pengguna (\"Changes saved\") atau rollback optimistic, dengan satu aksi opsional (Undo, View); muncul di tumpukan z-toast, tidak memblokir, dan hilang sendiri tanpa membawa informasi yang tidak tersedia di tempat lain.",
+    "when_not_to_use": [
+      "Untuk error server atau kegagalan yang perlu tindakan: pakai InlineAlert C1 dengan Retry (§12.2), bukan Toast.",
+      "Untuk kondisi yang harus tetap terlihat (offline, pemeliharaan, langganan): pakai Banner atau InlineAlert.",
+      "Untuk event kritis (I5) atau apa pun yang kelasnya C1: tidak pernah Toast.",
+      "Untuk konfirmasi aksi yang tidak bisa dibalik: pakai Modal (pattern DestructiveAction) sebelum aksi, bukan Toast sesudahnya.",
+      "Untuk hasil yang langsung terlihat di tempat aksi (centang inline, nilai berubah): cukup perubahan inline + LiveAnnouncer; jangan menambah Toast duplikat.",
+      "Untuk riwayat yang perlu dibuka lagi: pakai NotificationItem."
+    ]
+  },
+  "related": [
+    "InlineAlert",
+    "Banner",
+    "NotificationItem",
+    "Button",
+    "LiveAnnouncer"
+  ],
+  "responsive": [
+    {
+      "behaviour": "bawah layar di atas BottomNav dan action bar (tidak menutupnya), lebar penuh dikurangi gutter, menghormati safe-area inset; maksimal 1 terlihat, sisanya antre",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "bawah tengah atau bawah inline-end; lebar maksimal layout-modal-sm; maksimal 2 terlihat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "bawah inline-end di atas konten tetapi di luar action bar sticky; lebar maksimal layout-modal-sm; maksimal 3 terlihat bertumpuk dengan space-2",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "aksi toast (Undo, View) hanya ditampilkan bila role boleh menjalankannya"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh menjalankan aksi; toast tampil sebagai variant message tanpa aksi"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Posisi memakai inset-inline-end sehingga pindah ke kiri di RTL; arah swipe-tutup mengikuti arah inline; ikon status tidak dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Satu ukuran: lebar mengikuti isi sampai batas (layout-modal-sm di desktop, lebar penuh dikurangi gutter di phone); tinggi mengikuti teks. Area klik aksi dan tutup mengikuti Button dan IconButton."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "timer berhenti; ring fokus pada aksi",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "pressed",
+      "note": "aksi Undo yang sedang berjalan tidak bisa ditekan ulang; toast bertahan sampai hasil",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "rest",
+      "note": "toast tidak punya state error; error C1 adalah InlineAlert",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "neutral (tanpa status)",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "message": "color-structure-text-primary"
+      },
+      "treatment": "konfirmasi netral: surface-raised, teks text-primary, tanpa ikon status; perlakuan default untuk \"saved\", \"copied\", \"moved\""
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "border-outline": "color-semantic-positive",
+        "container-filled": "color-semantic-positive",
+        "container-tinted": "color-semantic-positive-subtle",
+        "content-filled": "color-semantic-on-positive",
+        "icon": "color-semantic-positive",
+        "message-quiet": "color-semantic-positive-strong"
+      },
+      "treatment": "perlakuan C4 dari L3 (quiet: ikon positif di surface-raised; outline; tinted; filled hanya bila L3 izinkan); tidak lebih keras daripada alert C1-C2 yang sedang tampil"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "border-outline": "color-semantic-info",
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "icon": "color-semantic-info",
+        "message-quiet": "color-semantic-info-strong"
+      },
+      "treatment": "perlakuan C5 dari L3; mis. \"Export started. You'll get a notification when it's ready.\""
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "border-outline": "color-semantic-neutral-negative",
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "icon": "color-semantic-neutral-negative",
+        "message-quiet": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "perlakuan C3 dari L3; rollback optimistic yang tidak perlu tindakan (\"Couldn't archive. The item was restored.\")"
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "icon": "color-semantic-warning",
+        "message-quiet": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3; hanya bila hasil aksi sebagian dan ada aksi \"View\" (≥ 10 detik); kondisi C2 yang menetap juga dicatat di InlineAlert"
+    },
+    {
+      "name": "critical (C1, dicegah)",
+      "token_swaps": {},
+      "treatment": "tidak dirender sebagai toast: komponen menolak status=critical, mengalihkan pesan ke InlineAlert C1 atau Banner di tempat yang relevan, dan lint gagal. Token critical tidak dipakai oleh Toast"
+    },
+    {
+      "name": "paused (hover atau fokus)",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "timer berhenti selama pointer di atas tumpukan atau fokus di dalam toast; berlanjut dengan sisa minimal 2 detik setelah keluar; tidak ada perubahan visual selain ring fokus"
+    },
+    {
+      "name": "hover (aksi)",
+      "token_swaps": {
+        "action-container": "color-interaction-subtle"
+      },
+      "treatment": "aksi tertiary memakai interaction-subtle sebagai latar; hanya di (hover: hover)"
+    },
+    {
+      "name": "exiting",
+      "token_swaps": {},
+      "treatment": "fade/slide keluar motion-base-duration; reduced motion → hilang satu frame; fokus yang ada di dalam toast dikembalikan ke elemen pemicu sebelum toast dilepas"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}ToastHost: membungkus SnackbarHost dengan antrean dan lantai durasi",
+    "flutter": "{ns}_toast.dart: membungkus ScaffoldMessenger/SnackBar dengan antrean dan lantai durasi",
+    "html": {
+      "element": "section",
+      "notes": "section[aria-label=\"Notifications\"] tetap di AppShell berisi div[role=group] per toast; pengumuman lewat window.{NS}.announce(); prefers-reduced-motion → tanpa slide"
+    },
+    "swiftui": "{Ns}ToastCenter: ObservableObject + overlay ViewModifier di root"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Kalimat saja. Hilang sendiri setelah 5 detik (default) + waktu baca tambahan untuk teks panjang.",
+      "name": "message"
+    },
+    {
+      "description": "Kalimat + satu aksi (Undo, View). Bertahan ≥ 10 detik dan berhenti saat hover atau fokus (SC 2.2.1).",
+      "name": "with-action"
+    }
+  ]
+}

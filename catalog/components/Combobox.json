@@ -1,0 +1,849 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-expanded dan aria-controls (id listbox) pada input",
+      "aria-activedescendant ke opsi aktif; fokus DOM tidak pernah pindah ke opsi",
+      "aria-selected pada opsi; aria-multiselectable=\"true\" pada listbox varian multiple",
+      "aria-describedby ke helper dan error-text; aria-invalid saat error; aria-required saat required",
+      "aria-disabled + reason terlihat saat diblokir; aria-readonly saat read-only",
+      "aria-busy=\"true\" pada listbox saat loading",
+      "autocomplete sesuai tujuan (mis. country-name, address-level2) bila nilai adalah data pribadi (SC 1.3.5); selain itu autocomplete=\"off\" agar daftar browser tidak bertumpuk",
+      "trigger dan clear-button: button berlabel (\"Show options\", \"Clear\"), tabindex −1 untuk trigger, clear tetap dapat dijangkau keyboard",
+      "jumlah hasil lewat LiveAnnouncer polite dengan ICU plural, bukan region di dalam komponen"
+    ],
+    "focus_order": "label → input → clear-button (bila ada) → elemen berikutnya; trigger tidak menjadi tab stop; Tag pada multiple dijangkau dengan ← dari awal input; Sheet phone: input pencarian → opsi → Done",
+    "native": {
+      "compose": "ExposedDropdownMenuBox + OutlinedTextField(Modifier.menuAnchor(MenuAnchorType.PrimaryEditable)) + ExposedDropdownMenu berisi DropdownMenuItem; phone: ModalBottomSheet; Modifier.semantics { stateDescription; liveRegion = LiveRegionMode.Polite } untuk jumlah hasil (nama anchor type Not verified against the pinned version)",
+      "flutter": "Autocomplete<T> / RawAutocomplete (optionsBuilder, optionsViewBuilder, displayStringForOption) atau DropdownMenu(enableFilter: true, enableSearch: true, requestFocusOnTap: true); phone: showModalBottomSheet berisi TextField + ListView; Semantics(textField: true, label, value) dan SemanticsService.announce untuk jumlah hasil",
+      "swiftui": "tidak ada combobox native: TextField + .popover berisi List (iPad/macOS) atau .sheet berisi List dengan .searchable(text:) (iPhone); .searchSuggestions untuk saran; .accessibilityAddTraits(.isSelected) pada opsi terpilih; AccessibilityNotification.Announcement untuk jumlah hasil"
+    },
+    "politeness": "polite",
+    "role": "input: combobox (aria-autocomplete=\"list\"); daftar: listbox; opsi: option; grup: group dengan aria-labelledby; Sheet phone: dialog aria-modal berisi combobox + listbox",
+    "sr_label": "nama aksesibel = label terlihat (SC 2.5.3); diumumkan sebagai \"{label}, combo box, {nilai}, {required}\"; opsi diumumkan dengan label, state terpilih, dan posisi (n of m)",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat di atas field; penanda \"optional\" bila tidak wajib",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "bidang field yang membungkus input, tag, dan tombol; tinggi dari size, tumbuh bila tag membungkus",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "teks kueri dan nilai terpilih (single); teks isi ≥ 16",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "trigger",
+      "role": "tombol chevron di inline-end yang membuka/menutup daftar; bukan tab stop terpisah (tabindex −1), area klik ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "clear-button",
+      "role": "IconButton berlabel \"Clear\" di inline-end saat ada nilai; tidak ditampilkan bila required dan single",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "tag",
+      "role": "nilai terpilih pada varian multiple; Tag netral dengan tombol hapus berlabel \"Remove {label}\"",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-text-primary",
+        "radius-xs",
+        "type-body-size",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "listbox",
+      "role": "panel daftar di portal pada z-popover, lebar ≥ lebar container, max-block-size dengan gulir internal; phone: Sheet",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-1",
+        "motion-fast-duration",
+        "motion-easing-enter"
+      ]
+    },
+    {
+      "part": "option",
+      "role": "baris opsi: label, deskripsi opsional, ikon opsional; tinggi ≥ target-current",
+      "tokens": [
+        "layout-row-height",
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "color-structure-text-secondary",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "option-active",
+      "role": "opsi aktif (aria-activedescendant): latar selection + ring inset −2px",
+      "tokens": [
+        "color-structure-selection",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "check",
+      "role": "penanda terpilih non-warna (centang) di inline-start opsi",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "match",
+      "role": "bagian label yang cocok dengan kueri: bobot tebal + highlight, tidak hanya warna",
+      "tokens": [
+        "color-structure-highlight",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "group-label",
+      "role": "judul grup opsi non-interaktif",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "status-row",
+      "role": "baris non-interaktif untuk loading (Spinner + teks), kosong, atau error muat dengan Retry",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary",
+        "icon-md"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "teks bantuan di bawah field; dirujuk aria-describedby",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error di bawah field; menggantikan helper selama invalid",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container saat input fokus",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string | string[] | null",
+        "when": "opsi dipilih, Tag dihapus, atau Clear ditekan"
+      },
+      {
+        "name": "onInputValueChange",
+        "payload": "{ value: string; reason: \"input\" | \"paste\" | \"select\" | \"clear\" | \"escape\" }",
+        "when": "teks kueri berubah (setelah debounceMs untuk reason input)"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"input\" | \"trigger\" | \"arrow\" | \"escape\" | \"outside\" | \"select\" | \"tab\" }",
+        "when": "daftar dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "Combobox.Label",
+      "Combobox.Input",
+      "Combobox.Trigger",
+      "Combobox.Clear",
+      "Combobox.Content",
+      "Combobox.Group",
+      "Combobox.GroupLabel",
+      "Combobox.Option (value, label, description, iconStart, disabled, reason)",
+      "Combobox.Empty",
+      "Combobox.Status",
+      "Combobox.Tag"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; juga nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Penjelasan di bawah label sebelum field.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "single",
+        "description": "Jumlah nilai yang bisa dipilih.",
+        "name": "variant",
+        "required": false,
+        "type": "\"single\" | \"multiple\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: nilai terpilih (array untuk multiple).",
+        "name": "value",
+        "required": false,
+        "type": "string | string[] | null"
+      },
+      {
+        "description": "Uncontrolled: nilai awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | string[] | null"
+      },
+      {
+        "description": "Controlled: teks kueri.",
+        "name": "inputValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: daftar terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal daftar.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "contains",
+        "description": "Penyaringan lokal; \"none\" bila server yang menyaring.",
+        "name": "filter",
+        "required": false,
+        "type": "\"contains\" | \"startsWith\" | \"none\""
+      },
+      {
+        "default": "300",
+        "description": "Jeda sebelum onInputValueChange untuk sumber asinkron; minimum 300.",
+        "name": "debounceMs",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Mengizinkan nilai di luar daftar (opsi \"Use {query}\").",
+        "name": "allowCustomValue",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Batas jumlah nilai pada multiple; disebut di helper.",
+        "name": "maxValues",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib; label tanpa penanda optional.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Menandai error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error yang menyebut cara memperbaiki.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Teks bantuan di bawah field.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Pengganti pesan kosong bawaan glosarium.",
+        "name": "emptyText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Contoh kueri; tidak pernah menggantikan label.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Opsi sedang dimuat; listbox aria-busy.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field benar-benar tidak relevan; selain itu pakai reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan field diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Nilai terlihat dan dapat disalin tetapi tidak dapat diubah.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field untuk Form; nilai yang dikirim adalah value opsi, bukan label.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Token autocomplete HTML untuk data pribadi (SC 1.3.5).",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "daftar terbuka dan tersaring (filter lokal seketika; asinkron debounce ≥ 300 ms); fokus tetap di input; jumlah hasil diumumkan polite setelah daftar stabil",
+      "trigger": "mengetik"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka daftar bila tertutup; memindah opsi aktif (aria-activedescendant), tidak melingkar; Alt+↓ membuka tanpa memindah opsi aktif; Alt+↑ menutup",
+      "trigger": "↓ / ↑"
+    },
+    {
+      "input": "keyboard",
+      "result": "memilih opsi aktif dan menutup daftar (single) atau menambah/menghapus pilihan dan tetap terbuka (multiple); Enter tanpa opsi aktif tidak mengirim form saat daftar terbuka",
+      "trigger": "Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup daftar dan mengembalikan teks ke nilai terpilih terakhir; Esc kedua saat tertutup mengosongkan kueri (bukan nilai required)",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup daftar tanpa memilih dan memindah fokus; teks yang tidak cocok tidak dibuang, field ditandai invalid saat blur bila allowCustomValue false",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "Backspace pertama menyorot Tag terakhir, kedua menghapusnya; penghapusan diumumkan polite \"{label} removed\"",
+      "trigger": "Backspace pada input kosong (multiple)"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah caret di input (bukan opsi aktif), sesuai pola combobox APG",
+      "trigger": "Home / End, ← / →"
+    },
+    {
+      "input": "pointer",
+      "result": "klik trigger membuka/menutup; opsi dipilih saat pelepasan (SC 2.5.2); klik di luar menutup tanpa memilih",
+      "trigger": "klik input atau trigger; klik opsi; klik di luar"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet setinggi layar dengan input pencarian di atas (fokus + keyboard terbuka), opsi ≥ target-min-touch, tombol Done/Close berlabel; nilai diterapkan saat opsi dipilih (single) atau Done (multiple)",
+      "trigger": "tap field (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "nilai dihapus, fokus kembali ke input, perubahan diumumkan polite",
+      "trigger": "tap clear-button atau tombol hapus Tag"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Country",
+        "Search countries",
+        "No matches for \"Austr\"",
+        "Use \"Northwind\"",
+        "12 options available",
+        "Choose a country from the list",
+        "Loading options…"
+      ],
+      "id-ID": [
+        "Negara",
+        "Cari negara",
+        "Tidak ada yang cocok untuk \"Austr\"",
+        "Pakai \"Northwind\"",
+        "12 opsi tersedia",
+        "Pilih negara dari daftar",
+        "Memuat opsi…"
+      ]
+    },
+    "rules": [
+      "Label menamai nilai yang dipilih (\"Country\", bukan \"Select country\"); placeholder opsional berisi contoh kueri, tidak pernah menggantikan label.",
+      "Pesan kosong menyebut kueri dan jalan keluar: \"No matches for {query}\" + saran ejaan atau \"Use {query}\" bila nilai bebas diizinkan.",
+      "Jumlah hasil memakai ICU plural: \"{count, plural, =0 {No options} one {# option available} other {# options available}}\".",
+      "Error validasi menyebut cara memperbaiki: \"Choose a country from the list\", bukan \"Invalid value\".",
+      "Label opsi unik dalam satu daftar; bila dua opsi berlabel sama, tambahkan deskripsi pembeda (kode, kota) di baris kedua.",
+      "Urutan opsi mengikuti collation locale (Intl.Collator), bukan urutan byte; opsi terbaru/sering boleh di grup terpisah berjudul."
+    ]
+  },
+  "depends_on": [
+    "Popover",
+    "Sheet",
+    "Tag",
+    "Spinner",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai Combobox untuk daftar panjang atau asinkron; tunjukkan jumlah hasil dan pesan kosong yang spesifik.",
+    "Pertahankan teks yang sudah diketik ketika tidak cocok; tandai invalid dan jelaskan, jangan dibuang diam-diam.",
+    "Sediakan fallback <select> di reference web tanpa JavaScript dengan opsi dan nilai yang sama.",
+    "Tandai bagian yang cocok dengan bobot tebal, tidak hanya warna."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "Memakai placeholder sebagai satu-satunya label field."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai opsi terpilih hanya dengan warna latar tanpa centang."
+    },
+    {
+      "text": "Memindah fokus DOM ke opsi atau membuka daftar otomatis saat field menerima fokus."
+    },
+    {
+      "ref": "UB5",
+      "text": "Opsi lebih pendek dari target-current atau di sentuh di bawah 44."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "listbox melebar sampai layout-modal-sm lalu label membungkus dua baris; tidak ada ellipsis yang menyembunyikan pembeda; nilai di input boleh terpotong dengan ellipsis + nama lengkap tetap di nama aksesibel",
+      "case": "label opsi +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "container dan opsi tumbuh tinggi; listbox yang tidak muat beralih ke Sheet; opsi aktif selalu digulir ke dalam pandangan (SC 2.4.11)",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "status-row non-interaktif; jumlah \"No options\" diumumkan; field tidak pernah membuka panel kosong tanpa teks",
+      "case": "0 opsi (sumber kosong) atau kueri tanpa hasil"
+    },
+    {
+      "behaviour": "daftar divirtualisasi dengan aria-setsize/aria-posinset; minimum 1 karakter sebelum menyaring sumber server; > 50 hasil menampilkan 50 pertama + \"Keep typing to narrow results\"",
+      "case": "ribuan opsi / jumlah maksimum"
+    },
+    {
+      "behaviour": "Tag membungkus maksimal dua baris lalu \"+n more\" (tombol yang membuka daftar terpilih); batas maxValues dijelaskan di helper",
+      "case": "varian multiple dengan banyak nilai"
+    },
+    {
+      "behaviour": "status-row \"Couldn't load options\" + Retry; nilai yang sudah terpilih tetap; offline: opsi dari cache lokal dengan catatan \"Showing saved options\"",
+      "case": "offline atau sumber asinkron gagal"
+    },
+    {
+      "behaviour": "teks tempelan menyaring seperti ketikan; bila tepat satu opsi cocok persis (normalisasi huruf dan diakritik), opsi itu disorot tetapi tidak dipilih otomatis; autofill browser untuk data pribadi diterima dan dicocokkan ke opsi",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "trigger dan clear di inline-end (kiri); kode, nomor, dan identifier di dalam label diisolasi dengan bdi; kueri pengguna memakai dir=\"auto\"",
+      "case": "RTL dengan angka atau kode dalam label opsi"
+    },
+    {
+      "behaviour": "label nilai diambil dari prop selectedLabel atau ditampilkan apa adanya; tidak dihapus sampai sumber menyatakan nilai tidak valid",
+      "case": "nilai controlled tidak ada di daftar saat ini (opsi asinkron belum dimuat)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila ada field yang memilih dari daftar panjang (> ±15 opsi) atau daftar yang dimuat dari server.",
+  "lint": [
+    "Combobox tanpa label ditolak",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled",
+    "debounceMs < 300 ditolak",
+    "Combobox dengan ≤ 5 opsi statis ditandai: pertimbangkan RadioGroup atau Select (manual-review)",
+    "Template HTML tanpa fallback <select> ditolak (§6.4)"
+  ],
+  "name": "Combobox",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "read-only+focus",
+      "multiple + label +40%",
+      "Sheet phone",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "open",
+      "option-active",
+      "selected",
+      "error",
+      "disabled-with-reason",
+      "read-only",
+      "loading",
+      "empty"
+    ],
+    "variants": [
+      "single",
+      "multiple"
+    ]
+  },
+  "purpose": {
+    "purpose": "Field teks yang menyaring daftar opsi saat pengguna mengetik lalu memilih satu atau beberapa nilai, untuk daftar panjang, daftar asinkron, atau nilai yang lebih cepat diketik daripada digulir.",
+    "when_not_to_use": [
+      "Untuk ≤ ±15 opsi statis yang tidak perlu dicari: pakai Select (atau RadioGroup bila ≤ 5 opsi dan semuanya perlu terlihat).",
+      "Untuk mencari konten atau menyaring daftar di halaman: pakai SearchField.",
+      "Untuk menjalankan perintah atau berpindah tujuan: pakai CommandPalette atau Menu.",
+      "Untuk teks bebas tanpa daftar opsi: pakai TextField.",
+      "Untuk tanggal atau waktu: pakai DatePicker atau TimePicker."
+    ]
+  },
+  "related": [
+    "Select",
+    "TextField",
+    "SearchField",
+    "CommandPalette",
+    "Menu",
+    "Tag"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tap membuka Sheet setinggi layar dengan input pencarian, opsi size lg ≥ target-min-touch, tombol Done/Close; field lebar penuh",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "popover menempel field; opsi ≥ target-min-touch di mode sentuh; beralih ke Sheet bila ruang di bawah/atas field < 5 baris opsi atau keyboard virtual menutupi",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "popover di z-popover, flip/shift agar tidak keluar viewport, maksimal ±8 baris terlihat lalu gulir internal; size sm/md",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengubah nilai field"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role boleh melihat tetapi tidak mengubah; tampil sebagai nilai berteks penuh dengan aria-readonly"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "field sementara terkunci (mis. menunggu field lain atau persetujuan); reason di helper"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu field ada; field tidak dirender dan ErrorSummary tidak merujuknya"
+    },
+    {
+      "pattern": "step-up",
+      "when": "opsi tertentu berisiko tinggi (mis. menetapkan pemilik); memilihnya membuka StepUpDialog sebelum onValueChange dikomit"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Trigger, clear-button, dan centang berada di sisi logis (inline-end/inline-start) sehingga pindah sisi tanpa dicerminkan; chevron ke bawah, ikon clear (x), dan centang tidak dicerminkan; label opsi dan kueri memakai dir=\"auto\"; angka dan kode diisolasi dengan bdi."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "container max(control-height-sm, target-current); trigger dan clear-button masing-masing ≥ target-min-pointer pada pointer, diperluas ke target-min-touch di mode sentuh; opsi ≥ target-current",
+      "name": "sm",
+      "notes": "Hanya untuk tabel dan filter padat pada pointer; teks tetap type-body (≥ 16).",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); trigger/clear ≥ target-current; opsi ≥ target-current",
+      "name": "md",
+      "notes": "Default form.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada); opsi di Sheet ≥ target-min-touch",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, atau in-motion; dipakai otomatis oleh Sheet phone.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "centang tetap; latar selection di atasnya",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "opsi terpilih sekaligus aktif: centang + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical tetap; ring fokus ditambahkan di luar; error tetap terbaca",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "nilai terpilih (atau Tag) tetap terlihat dan diumumkan bersama reason; Tag tidak menampilkan tombol hapus",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "status-row loading tidak bisa dipilih; Enter tidak memilih apa pun saat hanya ada baris loading",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus untuk membaca/menyalin; panah tidak membuka daftar",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tidak ada umpan balik hover pada field diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "border-control, latar surface-raised, placeholder bila kosong (bukan pengganti label)"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-border"
+      },
+      "treatment": "border container ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px di luar container; caret di input; daftar tidak terbuka otomatis saat fokus (SC 3.2.1)"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "trigger": "color-structure-text-primary"
+      },
+      "treatment": "listbox tampil di z-popover (phone: Sheet); aria-expanded=\"true\"; chevron berputar 180° (fade di reduced motion)"
+    },
+    {
+      "name": "option-active",
+      "token_swaps": {
+        "option": "color-structure-selection",
+        "option-active": "color-focus-ring"
+      },
+      "treatment": "opsi yang ditunjuk keyboard atau hover: latar selection + ring inset −2px; fokus DOM tetap di input"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "check": "color-interaction-default"
+      },
+      "treatment": "opsi terpilih: centang terlihat + aria-selected=\"true\"; nilai tampil di input (single) atau sebagai Tag (multiple)"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "border semantic-critical + ikon dan teks error di bawah; aria-invalid=\"true\"; aria-describedby menunjuk error-text"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "input": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; latar surface-sunken, teks text-disabled; tetap fokusabel; daftar tidak bisa dibuka; reason tampil di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "container": "color-structure-surface-base",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "aria-readonly=\"true\"; nilai berteks penuh tanpa border kontrol aktif, tanpa trigger dan clear; teks bisa diseleksi dan disalin"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "status-row": "color-structure-text-secondary"
+      },
+      "treatment": "opsi asinkron dimuat: status-row Spinner + \"Loading options…\" di listbox, listbox aria-busy=\"true\"; input tetap bisa diketik"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "status-row": "color-structure-text-secondary"
+      },
+      "treatment": "kueri tanpa hasil: status-row \"No matches for {query}\" non-interaktif; bila allowCustomValue, satu opsi \"Use \\\"{query}\\\"\""
+    }
+  ],
+  "target_hints": {
+    "compose": "ExposedDropdownMenuBox dibungkus {Ns}Combobox; ModalBottomSheet di compact width",
+    "flutter": "RawAutocomplete dibungkus {ns}_combobox.dart; phone memakai showModalBottomSheet",
+    "html": {
+      "element": "input[role=combobox] + ul[role=listbox]",
+      "notes": "modul JS data-{ns}-module=\"combobox\" memperkaya; fallback tanpa JS: <select> (single) atau <select multiple>/grup Checkbox (multiple) dengan name dan nilai yang sama; listbox di portal; jangan memakai <datalist> sebagai implementasi utama (dukungan pembaca layar tidak konsisten)"
+    },
+    "swiftui": "TextField + popover/sheet berisi List dibungkus {Ns}Combobox"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Satu nilai; label opsi terpilih tampil di input; mengetik ulang menyaring dari awal.",
+      "name": "single"
+    },
+    {
+      "description": "Beberapa nilai; tiap nilai menjadi Tag di dalam container sebelum input; daftar tetap terbuka setelah memilih; listbox aria-multiselectable. Lebih dari ±5 nilai diringkas \"+n more\" yang bisa dibuka.",
+      "name": "multiple"
+    }
+  ]
+}

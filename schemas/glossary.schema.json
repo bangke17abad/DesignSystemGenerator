@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/glossary.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "terms": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "avoid": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "definition": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "pattern": "^[a-z0-9_.-]+$",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "entity",
+              "state",
+              "role",
+              "action",
+              "ui"
+            ]
+          },
+          "labels": {
+            "additionalProperties": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "source": {
+            "enum": [
+              "brief",
+              "glossary_seed",
+              "derived",
+              "pack"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "labels",
+          "definition",
+          "avoid",
+          "source"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "terms"
+  ],
+  "title": "glossary",
+  "type": "object"
+}

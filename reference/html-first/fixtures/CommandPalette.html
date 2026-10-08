@@ -1,0 +1,160 @@
+<!-- CommandPalette fixture · states open-empty-query / option-active / option-hover / loading / no-results / disabled-with-reason /
+     error, combinations, phone full screen, RTL, live demo. Static demos render the dialog as a NON-modal <dialog open data-static> in a
+     framed scrim. The live palette opens with Ctrl+K / ⌘K or the visible opener (a link to an "All commands" page without JS):
+     combobox + listbox, aria-activedescendant, shortcuts shown with Kbd, blocked commands announce their reason and stay open. -->
+<section class="ds-demo" data-ds-demo="open-empty-query (Recent + Suggested; first option active; DOM focus in the input)">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp1-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp1-title">Search and commands</h2><button type="button" class="ds-icon-button" data-size="sm" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp1-title" aria-expanded="true" aria-controls="cp1-list" aria-autocomplete="list" aria-activedescendant="cp1-o1" placeholder="Search or run a command" autocomplete="off" spellcheck="false" dir="auto" data-force="focus"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp1-list" role="listbox" aria-labelledby="cp1-title">
+          <div class="ds-command-palette__group" role="group" aria-labelledby="cp1-g1">
+            <div class="ds-command-palette__group-label" id="cp1-g1" role="presentation">Recent</div>
+            <div class="ds-command-palette__option" role="option" id="cp1-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Go to booking board</span></span><kbd class="ds-kbd" data-tone="quiet" dir="ltr"><span class="ds-vh">G then T</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">G</kbd><span class="ds-kbd__sep">then</span><kbd class="ds-kbd__key">T</kbd></span></kbd></div>
+            <div class="ds-command-palette__option" role="option" id="cp1-o2" aria-selected="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Rina Wijaya</span><span class="ds-command-palette__description">Member · level 12.4</span></span></div>
+          </div>
+          <div class="ds-command-palette__group" role="group" aria-labelledby="cp1-g2">
+            <div class="ds-command-palette__group-label" id="cp1-g2" role="presentation">Suggested</div>
+            <div class="ds-command-palette__option" role="option" id="cp1-o3" aria-selected="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Create booking</span></span><kbd class="ds-kbd" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus B</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">B</kbd></span></kbd></div>
+            <div class="ds-command-palette__option" role="option" id="cp1-o4" aria-selected="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Go to settings</span></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ds-command-palette__footer" data-ds-text="supporting"><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Up arrow, Down arrow</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">↑</kbd><kbd class="ds-kbd__key">↓</kbd></span></kbd> navigate</span><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Enter</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Enter</kbd></span></kbd> run</span><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Escape</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Esc</kbd></span></kbd> close</span></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="query “book” · option-active+hover · match marked (bold + highlight) · disabled-with-reason (selected+focus)">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp2-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp2-title">Search and commands</h2></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp2-title" aria-expanded="true" aria-controls="cp2-list" aria-autocomplete="list" aria-activedescendant="cp2-o3" value="book" autocomplete="off" spellcheck="false" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp2-list" role="listbox" aria-labelledby="cp2-title">
+          <div class="ds-command-palette__group" role="group" aria-labelledby="cp2-g1">
+            <div class="ds-command-palette__group-label" id="cp2-g1" role="presentation">Actions</div>
+            <div class="ds-command-palette__option" role="option" id="cp2-o1" aria-selected="false" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Create <mark class="ds-command-palette__match">book</mark>ing</span><span class="ds-command-palette__description">Hover</span></span></div>
+            <div class="ds-command-palette__option" role="option" id="cp2-o2" aria-selected="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Export <mark class="ds-command-palette__match">book</mark>ings</span></span></div>
+            <div class="ds-command-palette__option" role="option" id="cp2-o3" aria-selected="true" aria-disabled="true" aria-describedby="cp2-o3-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Delete all <mark class="ds-command-palette__match">book</mark>ings</span><span class="ds-command-palette__description" id="cp2-o3-r">Only club owners can do this</span></span></div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (local results first, “Searching…” after 300 ms, aria-busy) · loading+pressed prevented">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp3-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp3-title">Search and commands</h2></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp3-title" aria-expanded="true" aria-controls="cp3-list" aria-autocomplete="list" aria-activedescendant="cp3-o1" value="rina" autocomplete="off" spellcheck="false" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp3-list" role="listbox" aria-labelledby="cp3-title" aria-busy="true">
+          <div class="ds-command-palette__group" role="group" aria-labelledby="cp3-g1">
+            <div class="ds-command-palette__group-label" id="cp3-g1" role="presentation">Recent</div>
+            <div class="ds-command-palette__option" role="option" id="cp3-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label"><mark class="ds-command-palette__match">Rina</mark> Wijaya</span></span></div>
+          </div>
+        </div>
+        <div class="ds-command-palette__status" role="status"><span class="ds-command-palette__spinner" aria-hidden="true"></span><span>Searching members…</span></div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="no-results (names the query, offers another way; announced)">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp4-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp4-title">Search and commands</h2></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp4-title" aria-expanded="true" aria-controls="cp4-list" aria-autocomplete="list" value="report" autocomplete="off" spellcheck="false" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp4-list" role="listbox" aria-labelledby="cp4-title"></div>
+        <div class="ds-command-palette__empty"><p class="ds-command-palette__empty-title">No results for “report”</p><p class="ds-text-secondary">Check the spelling or search all content.</p><a class="ds-button" data-variant="tertiary" href="#search-all">Search all content</a></div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error+focus (remote source failed: InlineAlert C1 with Retry; local commands still run)">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp5-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp5-title">Search and commands</h2></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp5-title" aria-expanded="true" aria-controls="cp5-list" aria-autocomplete="list" aria-activedescendant="cp5-o1" value="go" autocomplete="off" spellcheck="false" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="cp5-alert">
+          <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+          <div class="ds-inline-alert__content"><p class="ds-inline-alert__title" id="cp5-alert">Member search is unavailable</p><div class="ds-inline-alert__actions"><button type="button" class="ds-button" data-force="focus">Retry</button></div></div>
+        </div>
+        <div class="ds-command-palette__list" id="cp5-list" role="listbox" aria-labelledby="cp5-title">
+          <div class="ds-command-palette__group" role="group" aria-labelledby="cp5-g1">
+            <div class="ds-command-palette__group-label" id="cp5-g1" role="presentation">Pages</div>
+            <div class="ds-command-palette__option" role="option" id="cp5-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label"><mark class="ds-command-palette__match">Go</mark> to dashboard</span></span></div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="phone full screen (no shortcuts, options ≥ target-min-touch)">
+  <div class="ds-command-palette-frame" data-device="phone">
+    <dialog open class="ds-command-palette" aria-labelledby="cp6-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp6-title">Search and commands</h2><button type="button" class="ds-icon-button" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="search" role="combobox" aria-labelledby="cp6-title" aria-expanded="true" aria-controls="cp6-list" aria-autocomplete="list" aria-activedescendant="cp6-o1" placeholder="Search or run a command" autocomplete="off" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp6-list" role="listbox" aria-labelledby="cp6-title">
+          <div class="ds-command-palette__option" role="option" id="cp6-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Go to booking board</span></span></div>
+          <div class="ds-command-palette__option" role="option" id="cp6-o2" aria-selected="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Create booking</span></span></div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (search icon inline-start, shortcuts inline-end, mixed query dir=auto)" dir="rtl" lang="ar">
+  <div class="ds-command-palette-frame">
+    <dialog open class="ds-command-palette" aria-labelledby="cp7-title" data-static>
+      <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp7-title">البحث والأوامر</h2></div>
+      <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp7-title" aria-expanded="true" aria-controls="cp7-list" aria-autocomplete="list" aria-activedescendant="cp7-o1" value="حجز" autocomplete="off" dir="auto"></div>
+      <div class="ds-command-palette__results">
+        <div class="ds-command-palette__list" id="cp7-list" role="listbox" aria-labelledby="cp7-title">
+          <div class="ds-command-palette__option" role="option" id="cp7-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">إنشاء <mark class="ds-command-palette__match">حجز</mark></span></span><kbd class="ds-kbd" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus B</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">B</kbd></span></kbd></div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (Ctrl+K / ⌘K or the opener; filter, ↑↓, Enter, Esc, blocked commands, remote group)">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-command-palette-opener">
+      <a class="ds-button" href="#all-commands" data-ds-command-open="cp-live"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span>Search and commands</span></a>
+      <span class="ds-command-palette-opener__hint">or press <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Mod+K" dir="ltr"><span class="ds-vh">Control plus K</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">K</kbd></span></kbd></span>
+    </div>
+    <h3 class="ds-text-h3" id="cp-live-settings">Settings</h3>
+  </div>
+  <dialog class="ds-command-palette" id="cp-live" aria-labelledby="cp-live-title" data-ds-module="command-palette" data-shortcut="Mod+K">
+    <div class="ds-command-palette__header"><h2 class="ds-command-palette__title" id="cp-live-title">Search and commands</h2><button type="button" class="ds-icon-button ds-command-palette__close" data-size="sm" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+    <div class="ds-command-palette__search"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-command-palette__input" type="text" role="combobox" aria-labelledby="cp-live-title" aria-expanded="true" aria-controls="cp-live-list" aria-autocomplete="list" placeholder="Search or run a command" autocomplete="off" spellcheck="false" dir="auto"></div>
+    <div class="ds-command-palette__results">
+      <div class="ds-command-palette__list" id="cp-live-list" role="listbox" aria-labelledby="cp-live-title">
+        <div class="ds-command-palette__group" role="group" aria-labelledby="cp-live-g1" data-when="empty">
+          <div class="ds-command-palette__group-label" id="cp-live-g1" role="presentation">Recent</div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o1" aria-selected="false" data-ds-announce="Booking board opened"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Go to booking board</span></span></div>
+        </div>
+        <div class="ds-command-palette__group" role="group" aria-labelledby="cp-live-g2">
+          <div class="ds-command-palette__group-label" id="cp-live-g2" role="presentation">Actions</div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o2" aria-selected="false" data-keywords="new booking slot reserve" data-ds-announce="New booking started"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Create booking</span></span><kbd class="ds-kbd" data-ds-module="kbd" data-keys="Mod+B" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus B</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">B</kbd></span></kbd></div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o3" aria-selected="false" data-keywords="csv download" data-ds-announce="Export started"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Export bookings</span></span></div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o4" aria-selected="false" aria-disabled="true" aria-describedby="cp-live-o4-r" data-keywords="remove"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Delete all bookings</span><span class="ds-command-palette__description" id="cp-live-o4-r">Only club owners can do this</span></span></div>
+        </div>
+        <div class="ds-command-palette__group" role="group" aria-labelledby="cp-live-g3">
+          <div class="ds-command-palette__group-label" id="cp-live-g3" role="presentation">Pages</div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o5" aria-selected="false" data-href="#cp-live-settings" data-keywords="preferences"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Go to settings</span></span></div>
+        </div>
+        <div class="ds-command-palette__group" role="group" aria-labelledby="cp-live-g4" data-remote hidden>
+          <div class="ds-command-palette__group-label" id="cp-live-g4" role="presentation">Members</div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o6" aria-selected="false" data-keywords="member" data-ds-announce="Profile opened"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Rina Wijaya</span><span class="ds-command-palette__description">Level 12.4</span></span></div>
+          <div class="ds-command-palette__option" role="option" id="cp-live-o7" aria-selected="false" data-keywords="member" data-ds-announce="Profile opened"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-command-palette__text"><span class="ds-command-palette__label">Budi Santoso</span><span class="ds-command-palette__description">Level 18.0</span></span></div>
+        </div>
+      </div>
+      <div class="ds-command-palette__status" data-searching hidden><span class="ds-command-palette__spinner" aria-hidden="true"></span><span>Searching members…</span></div>
+      <div class="ds-command-palette__empty" hidden><p class="ds-command-palette__empty-title">No results for “<span data-ds-query></span>”</p><p class="ds-text-secondary">Check the spelling or search all content.</p></div>
+    </div>
+    <div class="ds-command-palette__footer" data-ds-text="supporting"><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Up arrow, Down arrow</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">↑</kbd><kbd class="ds-kbd__key">↓</kbd></span></kbd> navigate</span><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Enter</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Enter</kbd></span></kbd> run</span><span class="ds-command-palette__hint"><kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Escape</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Esc</kbd></span></kbd> close</span></div>
+  </dialog>
+</section>

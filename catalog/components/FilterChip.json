@@ -1,0 +1,601 @@
+{
+  "accessibility": {
+    "attributes": [
+      "role=\"group\" + aria-label/aria-labelledby (\"Filters\") pada wadah",
+      "aria-pressed pada chip toggle; label tidak berubah antara state",
+      "aria-haspopup=\"dialog\", aria-expanded, aria-controls pada chip options",
+      "aria-describedby ke reason untuk chip aria-disabled",
+      "aria-controls ke region hasil (opsional) dan region hasil aria-busy saat memuat",
+      "jumlah hasil diumumkan lewat LiveAnnouncer polite, bukan aria-live pada setiap chip",
+      "filter-trigger phone: label \"Filter, 2 active\" (count sebagai bagian nama) dan aria-haspopup=\"dialog\""
+    ],
+    "focus_order": "label grup (tidak fokusabel) → chip dalam urutan DOM → Clear filters → region hasil; di phone filter-trigger → (Sheet) filter → Show results",
+    "native": {
+      "compose": "FilterChip(selected, onClick, label = { Text(label) }, leadingIcon = if (selected) { { Icon(Icons.Filled.Check, null) } } else null) dalam FlowRow(Modifier.semantics { contentDescription = \"Filters\" }); compact width: Button(\"Filter ($n)\") membuka ModalBottomSheet",
+      "flutter": "FilterChip(label, selected, onSelected, showCheckmark: true) dalam Wrap di Semantics(container: true, label: 'Filters'); di phone FilledButton.tonal('Filter (n)') membuka showModalBottomSheet berisi CheckboxListTile; Semantics(hint: reason) untuk diblokir",
+      "swiftui": "Toggle(isOn:) { Label(text, systemImage: isOn ? \"checkmark\" : \"\") }.toggleStyle(.button) dengan .accessibilityAddTraits(isOn ? .isSelected : []); di iPhone Button(\"Filter (\\(n))\") membuka .sheet dengan Form berisi Toggle"
+    },
+    "politeness": "polite",
+    "role": "group berlabel berisi button dengan aria-pressed (toggle) atau button dengan aria-haspopup=\"dialog\" + aria-expanded (options)",
+    "sr_label": "label chip + \"toggle button\" + \"pressed\"/\"not pressed\" (+ jumlah bila ada); options: \"Status: Open, button, collapsed\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "group",
+      "role": "kumpulan chip ber-role group dengan label (\"Filters\"); Inline yang membungkus; diikuti jumlah hasil",
+      "tokens": [
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "chip",
+      "role": "tombol toggle; bentuk dari L-bahasa (umumnya radius-full); border kontrol ≥ 3:1 saat tidak terpilih",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-full",
+        "control-height-sm",
+        "space-3"
+      ]
+    },
+    {
+      "part": "check-icon",
+      "role": "ikon centang di inline-start saat terpilih (penanda non-warna); ruang dicadangkan agar lebar tidak melompat",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "nama filter (≥ 16); untuk varian options memuat nilai terpilih (\"Status: Open\")",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "type-label-line",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "count",
+      "role": "jumlah hasil opsional per chip (\"Open · 12\"); angka tabular",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "chevron",
+      "role": "chevron-down pada varian options yang membuka pilihan",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "clear-all",
+      "role": "tombol \"Clear filters\" di akhir grup saat ≥ 1 filter aktif",
+      "tokens": [
+        "color-interaction-default",
+        "type-label-size"
+      ]
+    },
+    {
+      "part": "filter-trigger",
+      "role": "phone: Button \"Filter (n)\" dengan ikon filter; n = jumlah filter aktif",
+      "tokens": [
+        "control-height-md",
+        "icon-md",
+        "color-structure-border-control",
+        "radius-sm"
+      ]
+    },
+    {
+      "part": "sheet",
+      "role": "phone: Sheet berjudul \"Filters\" berisi semua filter sebagai Checkbox/RadioGroup + aksi \"Show n results\" dan \"Clear all\"",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-scrim",
+        "z-modal",
+        "z-overlay-scrim",
+        "layout-bar-height"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di sekitar chip",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onSelectedChange",
+        "payload": "boolean",
+        "when": "chip toggle dinyalakan atau dimatikan"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "string | string[]",
+        "when": "varian options: nilai dipilih"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"outside\" | \"select\" }",
+        "when": "varian options: Popover dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "FilterChip.Group (label, value: string[], defaultValue, onValueChange, resultCount, collapseOnPhone)",
+      "FilterChip.ClearAll (label)",
+      "FilterChip.SheetTrigger (label \"Filter\", activeCount)"
+    ],
+    "props": [
+      {
+        "description": "Nama filter; tidak berubah dengan state.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: chip toggle aktif.",
+        "name": "selected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "toggle",
+        "description": "Toggle boolean atau chip yang membuka pilihan nilai.",
+        "name": "variant",
+        "required": false,
+        "type": "\"toggle\" | \"options\""
+      },
+      {
+        "description": "Varian options: nilai terpilih (controlled).",
+        "name": "value",
+        "required": false,
+        "type": "string | string[]"
+      },
+      {
+        "description": "Varian options: nilai awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | string[]"
+      },
+      {
+        "description": "Varian options: Popover terbuka (controlled).",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Varian options: state buka awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Jumlah hasil untuk filter ini (opsional).",
+        "name": "count",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "sm",
+        "description": "Tinggi chip; area klik selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila filter benar-benar tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan filter diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "setiap chip satu tab stop (bukan roving) agar urutan sederhana; grup panjang boleh memakai roving tabindex dengan ←/→ bila brief memilihnya (A-nn)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "toggle; onSelectedChange; hasil diperbarui; jumlah hasil diumumkan polite (\"24 results\") setelah debounce ≥ 300 ms; fokus tetap di chip",
+      "trigger": "Enter atau Space pada chip toggle"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka Popover pilihan dengan fokus di opsi terpilih; Esc menutup dan mengembalikan fokus ke chip; memilih memperbarui label chip",
+      "trigger": "Enter, Space, atau ↓ pada chip options"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle pada pelepasan (SC 2.5.2); Clear filters mematikan semua dan memindah fokus ke chip pertama, hasil diumumkan",
+      "trigger": "klik chip; klik Clear filters"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet berisi semua filter; perubahan di Sheet diterapkan saat \"Show n results\" (n diperbarui langsung); menutup tanpa menerapkan meminta tidak ada konfirmasi tetapi tidak mengubah filter aktif",
+      "trigger": "tap \"Filter (n)\" (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "gulir; chip yang fokus selalu digulir ke dalam viewport; tidak ada chip yang hanya bisa dicapai lewat geser tanpa keyboard",
+      "trigger": "geser baris chip horizontal (phone/tablet bila tidak memakai Sheet)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Filters",
+        "Overdue",
+        "Assigned to me",
+        "Status: Open",
+        "Clear filters",
+        "Filter (2)",
+        "Show 24 results",
+        "24 results",
+        "No items match these filters. Clear filters to see all items.",
+        "Not available for archived items"
+      ],
+      "id-ID": [
+        "Filter",
+        "Lewat tenggat",
+        "Ditugaskan ke saya",
+        "Status: Terbuka",
+        "Hapus filter",
+        "Filter (2)",
+        "Tampilkan 24 hasil",
+        "24 hasil",
+        "Tidak ada item yang cocok dengan filter ini. Hapus filter untuk melihat semua item.",
+        "Tidak tersedia untuk item yang diarsipkan"
+      ]
+    },
+    "rules": [
+      "Label chip singkat, kata benda atau frasa kondisi (\"Overdue\", \"Assigned to me\"), sentence case; label tidak berubah saat dipilih.",
+      "Varian options menampilkan nama filter + nilai (\"Status: Open\", \"Status: 2 selected\").",
+      "Jumlah hasil diumumkan dengan ICU plural (\"{n, plural, one {# result} other {# results}}\").",
+      "Trigger phone: \"Filter (n)\" dengan n = jumlah filter aktif; tanpa n bila 0.",
+      "EmptyState hasil kosong menyebut bahwa filter penyebabnya dan menawarkan \"Clear filters\"."
+    ]
+  },
+  "depends_on": [
+    "Sheet",
+    "Popover",
+    "Button",
+    "Tooltip",
+    "LiveAnnouncer",
+    "EmptyState"
+  ],
+  "do": [
+    "Tampilkan centang pada chip terpilih dan cadangkan ruangnya agar chip tidak melompat.",
+    "Umumkan jumlah hasil setelah filter berubah tanpa memindah fokus.",
+    "Gabungkan filter menjadi \"Filter (n)\" + Sheet di ponsel."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Chip terpilih yang hanya dibedakan lewat warna fill."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai FilterChip sebagai status atau metadata (itu StatusLabel atau Tag)."
+    },
+    {
+      "ref": "UB5",
+      "text": "Baris chip yang hanya bisa digeser di ponsel tanpa ringkasan Filter (n)."
+    },
+    {
+      "ref": "UB9",
+      "text": "Alasan chip diblokir hanya di tooltip hover."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "chip membungkus ke baris baru dalam grup; label chip tidak dipotong (maks dua baris) kecuali nilai options panjang: ellipsis + nilai lengkap di nama aksesibel dan Popover",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "chip tumbuh tinggi; grup membungkus; di tablet sempit beralih ke Filter (n) + Sheet",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "grup dan trigger tidak dirender",
+      "case": "0 filter tersedia"
+    },
+    {
+      "behaviour": "EmptyState spesifik + Clear filters; chip tetap menunjukkan state; jumlah \"0 results\" diumumkan",
+      "case": "hasil 0 item"
+    },
+    {
+      "behaviour": "> 8 chip: tampilkan yang paling sering + chip \"More filters\" yang membuka Sheet/ContextPanel; > 3 filter aktif di phone tetap diringkas di trigger",
+      "case": "jumlah filter maksimum"
+    },
+    {
+      "behaviour": "loading: daftar Skeleton, chip tetap responsif; offline: filter diterapkan pada data cache dengan catatan \"Showing saved results\", atau aria-disabled dengan reason bila filter butuh server",
+      "case": "loading / offline"
+    },
+    {
+      "behaviour": "state chip dipulihkan dari URL; filter yang tidak dikenal diabaikan dengan InlineAlert info, bukan error",
+      "case": "filter dari URL atau tautan yang dibagikan"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan (mis. tidak ada daftar atau tabel yang bisa disaring).",
+  "lint": [
+    "FilterChip tanpa penanda centang saat terpilih ditolak (UB2)",
+    "FilterChip.Group tanpa label ditolak",
+    "FilterChip dengan prop status atau warna semantik ditolak (UB12)",
+    "Grup > 3 chip tanpa collapseOnPhone ditandai (manual-review)",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "FilterChip",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (diizinkan, permintaan lama dibatalkan)",
+      "Filter (n) + Sheet phone",
+      "label +40% wrap",
+      "RTL"
+    ],
+    "states": [
+      "unselected",
+      "selected",
+      "hover",
+      "pressed",
+      "focus",
+      "loading",
+      "disabled-with-reason",
+      "empty-result"
+    ],
+    "variants": [
+      "toggle",
+      "options"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyaring daftar, tabel, atau hasil pencarian secara langsung dengan chip yang bisa dinyalakan/dimatikan; seleksi bertanda non-warna (centang); di ponsel kumpulan filter menjadi tombol \"Filter (n)\" yang membuka Sheet.",
+    "when_not_to_use": [
+      "Untuk nilai form yang dikirim bersama submit: pakai Checkbox atau RadioGroup.",
+      "Untuk berpindah tampilan atau mode yang saling eksklusif (List/Board): pakai SegmentedControl atau Tabs.",
+      "Untuk metadata yang hanya ditampilkan atau dihapus: pakai Tag.",
+      "Untuk status entitas: pakai StatusLabel atau Badge, bukan chip.",
+      "Untuk lebih dari ±8 filter atau filter dengan banyak nilai: pakai panel filter di Sheet/ContextPanel dengan Checkbox, Select, dan DatePicker."
+    ]
+  },
+  "related": [
+    "Tag",
+    "SegmentedControl",
+    "Checkbox",
+    "SearchField",
+    "Table",
+    "List"
+  ],
+  "responsive": [
+    {
+      "behaviour": "kumpulan chip menjadi Button \"Filter (n)\" yang membuka Sheet berisi semua filter (Checkbox/RadioGroup) dengan aksi \"Show n results\"; boleh menampilkan 1–2 chip paling penting di samping trigger bila muat",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "baris chip membungkus (atau gulir horizontal dengan fokus selalu terlihat); options membuka Popover; ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "baris chip membungkus di atas daftar/tabel; options membuka Popover di z-popover; Clear filters di akhir baris",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "filter atas data yang tidak boleh diketahui role tidak dirender"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "filter terlihat tetapi tidak berlaku untuk role atau tampilan saat ini; reason terlihat"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Grup mengalir dari kanan; centang di inline-start dan tidak dicerminkan; chevron-down tidak berarah horizontal; Clear filters di inline-end grup; angka count diisolasi."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di sentuh area klik diperluas ke target-min-touch lewat padding block; jarak antar chip ≥ space-2",
+      "name": "sm",
+      "notes": "Default chip; visual ringkas, target tetap memenuhi STD-4.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Surface sentuh di tablet.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Glove dan in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "centang tetap; state-layer hover di atas interaction-subtle",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + ring di luar chip",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "filter aktif yang kini tidak berlaku: centang tetap terlihat diredam + reason; tetap bisa dihapus lewat Clear filters",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "chip tetap bisa ditekan saat hasil dimuat; permintaan lama dibatalkan (berbeda dari Button)",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa hover pada chip diblokir",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "FilterChip tidak punya read-only; filter yang dikunci tampil sebagai Tag atau teks \"Showing: …\"",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "unselected",
+      "token_swaps": {
+        "chip": "color-structure-border-control",
+        "label": "color-structure-text-primary"
+      },
+      "treatment": "border-control di atas surface-raised; tanpa centang; aria-pressed=\"false\""
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "check-icon": "color-interaction-default",
+        "chip": "color-interaction-subtle"
+      },
+      "treatment": "ikon centang + latar interaction-subtle + border interaction-default; aria-pressed=\"true\"; centang adalah penanda utama"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "chip": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "chip": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; state-press-transform tanpa mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "hasil sedang dimuat setelah filter berubah: chip sudah menunjukkan state baru, daftar hasil aria-busy + Skeleton; chip tetap bisa ditekan (perubahan berikutnya membatalkan permintaan sebelumnya)"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "chip": "color-structure-surface-sunken",
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; filter tidak berlaku untuk data saat ini atau role; label text-disabled; reason lewat Tooltip yang juga muncul saat fokus + aria-describedby (bukan satu-satunya tempat: juga di Sheet)"
+    },
+    {
+      "name": "empty-result",
+      "token_swaps": {},
+      "treatment": "kombinasi filter menghasilkan 0 item: EmptyState spesifik dengan aksi \"Clear filters\"; chip tidak diubah otomatis"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}FilterChip membungkus Material3 FilterChip dalam FlowRow; ModalBottomSheet di compact width",
+    "flutter": "FilterChip dalam Wrap dibungkus {ns}_filter_chip.dart; phone memakai showModalBottomSheet",
+    "html": {
+      "element": "div[role=group] > button[aria-pressed]",
+      "notes": "tanpa JS: grup checkbox di dalam form GET dengan tombol Apply; modul JS mengubahnya ke chip seketika, mengumumkan jumlah hasil, dan beralih ke Filter (n) + Sheet di bawah bp-tablet"
+    },
+    "swiftui": "{Ns}FilterChip: Toggle .button style; .sheet di compact width"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Filter boolean (\"Assigned to me\", \"Overdue\"); tap menyalakan/mematikan; aria-pressed.",
+      "name": "toggle"
+    },
+    {
+      "description": "Chip yang membuka Popover (desktop/tablet) berisi pilihan nilai (RadioGroup/Checkbox); label menampilkan nilai terpilih; aria-haspopup=\"dialog\" + aria-expanded. Di phone menjadi bagian Sheet filter.",
+      "name": "options"
+    }
+  ]
+}

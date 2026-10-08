@@ -1,0 +1,74 @@
+<!-- Stack fixture · gap variants, divider, align, nesting, empty, RTL, 200% text (catalog preview, §6.9). Dashed boxes (.ds-demo__swatch) are preview chrome that make the invisible primitive visible. -->
+<section class="ds-demo" data-ds-demo="gap space-2 · space-4 · space-8 · space-section">
+  <div class="ds-inline" data-gap="6" style="align-items: flex-start">
+    <div class="ds-stack" data-gap="2">
+      <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-2</span>
+      <div class="ds-stack" data-gap="2"><div class="ds-demo__swatch">Account details</div><div class="ds-demo__swatch">Notification settings</div><div class="ds-demo__swatch">Recent activity</div></div>
+    </div>
+    <div class="ds-stack" data-gap="2">
+      <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-4 (default)</span>
+      <div class="ds-stack"><div class="ds-demo__swatch">Account details</div><div class="ds-demo__swatch">Notification settings</div><div class="ds-demo__swatch">Recent activity</div></div>
+    </div>
+    <div class="ds-stack" data-gap="2">
+      <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-8</span>
+      <div class="ds-stack" data-gap="8"><div class="ds-demo__swatch">Account details</div><div class="ds-demo__swatch">Notification settings</div><div class="ds-demo__swatch">Recent activity</div></div>
+    </div>
+    <div class="ds-stack" data-gap="2">
+      <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-section</span>
+      <div class="ds-stack" data-gap="section"><div class="ds-demo__swatch">Account details</div><div class="ds-demo__swatch">Notification settings</div><div class="ds-demo__swatch">Recent activity</div></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="divider">
+  <div class="ds-stack" data-gap="3" style="max-inline-size: var(--layout-modal-sm)">
+    <div class="ds-divider" aria-hidden="true"></div><!-- leading divider: hidden (no orphan line) -->
+    <p>Account details</p>
+    <div class="ds-divider" aria-hidden="true"></div>
+    <p>Notification settings</p>
+    <div class="ds-divider" aria-hidden="true"></div>
+    <div class="ds-divider" aria-hidden="true"></div><!-- empty group removed: two dividers collapse into one -->
+    <p>Recent activity</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="align start · center · end · stretch">
+  <div class="ds-inline" data-gap="6" style="align-items: flex-start">
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="start"><span class="ds-demo__swatch">Start</span><span class="ds-demo__swatch">Aligned to inline-start</span></div>
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="center"><span class="ds-demo__swatch">Center</span><span class="ds-demo__swatch">Centred children</span></div>
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="end"><span class="ds-demo__swatch">End</span><span class="ds-demo__swatch">Aligned to inline-end</span></div>
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="stretch"><span class="ds-demo__swatch">Stretch</span><span class="ds-demo__swatch">Full width</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="nested (outer gap ≥ inner gap)">
+  <div class="ds-stack" data-gap="8">
+    <div class="ds-stack" data-gap="2">
+      <h2 class="ds-text-h3">Account details</h2>
+      <p class="ds-text-secondary">Name, email address and the language used for messages.</p>
+    </div>
+    <div class="ds-stack" data-gap="2">
+      <h2 class="ds-text-h3">Notification settings</h2>
+      <p class="ds-text-secondary">Choose which updates reach you by email and on this device.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states: empty + visually hidden child">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-demo__swatch">Before the empty Stack</div>
+    <div class="ds-stack" data-gap="8"></div>
+    <span class="ds-vh">Hidden helper text is absolutely positioned and adds no gap.</span>
+    <div class="ds-demo__swatch">After it: one gap only, no extra space</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL" dir="rtl" lang="ar">
+  <div class="ds-inline" data-gap="6" style="align-items: flex-start">
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="start"><span class="ds-demo__swatch">تفاصيل الحساب</span><span class="ds-demo__swatch">start = الحافة اليمنى</span></div>
+    <div class="ds-stack ds-demo__frame" data-gap="2" data-align="end"><span class="ds-demo__swatch">النشاط الأخير</span><span class="ds-demo__swatch">end = الحافة اليسرى</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% + longest locale (+40%)">
+  <div data-ds-zoom="200">
+    <div class="ds-stack" data-gap="4">
+      <div class="ds-demo__swatch">Pengaturan notifikasi untuk semua perangkat yang terhubung</div>
+      <div class="ds-demo__swatch">Aktivitas terbaru</div>
+    </div>
+  </div>
+</section>

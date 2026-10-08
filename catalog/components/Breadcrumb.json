@@ -1,0 +1,431 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label=\"Breadcrumb\" dari glosarium pada nav",
+      "aria-current=\"page\" pada item terakhir",
+      "separator aria-hidden=\"true\" (CSS atau ikon dekoratif), bukan karakter teks yang dibaca",
+      "overflow-trigger: button dengan aria-expanded, aria-controls, dan nama \"Show {n} more levels\"",
+      "urutan ol menyampaikan kedalaman; tidak ada aria-level tambahan"
+    ],
+    "focus_order": "SkipLink → … → Breadcrumb (di PageHeader, sebelum h1) → h1 → konten; tautan dari akar ke leluhur terdekat",
+    "native": {
+      "compose": "TopAppBar(navigationIcon = IconButton back) di compact; di expanded FlowRow berisi Text dengan LinkAnnotation.Url (tautan aksesibel) atau TextButton, dan pemisah Modifier.clearAndSetSemantics { }",
+      "flutter": "tidak ada widget breadcrumb bawaan; AppBar(leading: BackButton) di phone; di desktop Row berisi TextButton dengan Semantics(link: true) dan Icon pemisah ExcludeSemantics",
+      "swiftui": "NavigationStack menyediakan tombol back bawaan; di macOS/iPad lebar: HStack Button(.link) dengan .accessibilityAddTraits(.isLink) dan pemisah .accessibilityHidden(true)"
+    },
+    "politeness": "polite",
+    "role": "nav berlabel berisi ol/li dan a; item terakhir span atau a dengan aria-current=\"page\"",
+    "sr_label": "\"Breadcrumb, navigation, list 4 items\" lalu \"{label}, link\"; item terakhir \"{label}, current page\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "2.1.1",
+      "2.4.4",
+      "2.4.7",
+      "2.5.8",
+      "3.2.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "landmark navigation berlabel berisi daftar berurutan; berada di PageHeader sebelum h1",
+      "tokens": [
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "item-link",
+      "role": "tautan ke leluhur; bergaris bawah (penanda non-warna) dengan area klik diperluas secara vertikal",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-interaction-default",
+        "color-structure-text-secondary",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "current",
+      "role": "item terakhir = halaman saat ini; teks biasa tanpa tautan, aria-current=\"page\"; boleh disembunyikan bila sama dengan h1 di bawahnya",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "separator",
+      "role": "chevron dekoratif antar item; disembunyikan dari pembaca layar; dicerminkan di RTL",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-tertiary"
+      ]
+    },
+    {
+      "part": "overflow-trigger",
+      "role": "tombol \"…\" berlabel yang menggantikan item tengah; membuka daftar tautan leluhur yang disembunyikan",
+      "tokens": [
+        "control-height-sm",
+        "icon-md",
+        "radius-sm"
+      ]
+    },
+    {
+      "part": "back-link",
+      "role": "presentasi phone: satu tautan \"Back to {parent}\" dengan ikon panah di inline-start",
+      "tokens": [
+        "icon-md",
+        "type-label-size",
+        "type-label-weight",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px di luar tautan",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "{ href: string; index: number }",
+        "when": "tautan diaktifkan (untuk router SPA; navigasi default tetap tautan asli)"
+      }
+    ],
+    "parts": [
+      "Breadcrumb.List",
+      "Breadcrumb.Item (label, href, current)",
+      "Breadcrumb.Overflow (label)"
+    ],
+    "props": [
+      {
+        "default": "Breadcrumb",
+        "description": "Nama aksesibel landmark dari glosarium.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "full",
+        "description": "Hierarki penuh atau hanya leluhur langsung; parent otomatis di phone.",
+        "name": "variant",
+        "required": false,
+        "type": "\"full\" | \"parent\""
+      },
+      {
+        "default": "4",
+        "description": "Jumlah item terlihat sebelum item tengah diciutkan.",
+        "name": "maxItems",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Label sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "berpindah antar tautan dan overflow-trigger (pola APG Breadcrumb); panah tidak dipakai karena setiap item adalah tautan biasa",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "navigasi ke leluhur; fokus ke h1 halaman tujuan (§9.5)",
+      "trigger": "Enter pada tautan"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka Popover (desktop) atau Sheet (phone) berisi daftar tautan leluhur tersembunyi; fokus ke tautan pertama; panah ↓/↑ berpindah, Esc menutup dan fokus kembali ke \"…\"",
+      "trigger": "Enter atau Space pada overflow-trigger"
+    },
+    {
+      "input": "pointer",
+      "result": "navigasi pada pelepasan; klik tengah/Ctrl membuka tab baru (tautan asli)",
+      "trigger": "klik tautan"
+    },
+    {
+      "input": "touch",
+      "result": "navigasi ke leluhur langsung; berbeda dari gestur kembali sistem yang mengikuti riwayat",
+      "trigger": "tap back-link (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Projects",
+        "Q3 planning",
+        "Tasks",
+        "Back to Tasks",
+        "Show 2 more levels"
+      ],
+      "id-ID": [
+        "Proyek",
+        "Perencanaan K3",
+        "Tugas",
+        "Kembali ke Tugas",
+        "Tampilkan 2 tingkat lagi"
+      ]
+    },
+    "rules": [
+      "Label item = judul halaman leluhur persis (SC 2.4.4); boleh dipersingkat hanya dengan nama pendek dari glosarium.",
+      "Item pertama adalah akar bagian, bukan nama produk, kecuali beranda memang tujuan bermakna.",
+      "back-link berbunyi \"Back to {parent}\", bukan \"Back\" saja.",
+      "Tidak memakai karakter \">\" atau \"/\" sebagai teks pemisah."
+    ]
+  },
+  "depends_on": [
+    "Link",
+    "Popover",
+    "Sheet",
+    "Skeleton"
+  ],
+  "do": [
+    "Gunakan judul halaman leluhur persis sebagai label.",
+    "Tandai halaman saat ini dengan aria-current=\"page\" dan jangan jadikan tautan.",
+    "Ciutkan item tengah ke tombol berlabel daripada membungkus banyak baris."
+  ],
+  "dont": [
+    {
+      "ref": "UB6",
+      "text": "Tautan Breadcrumb tanpa garis bawah atau penanda non-warna lain."
+    },
+    {
+      "text": "Pemisah berupa teks yang dibacakan pembaca layar (\"greater than\")."
+    },
+    {
+      "text": "Breadcrumb berbasis riwayat kunjungan, bukan hierarki."
+    },
+    {
+      "ref": "UB5",
+      "text": "Area klik tautan di bawah 24×24 pointer atau 44×44 sentuh."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "daftar membungkus ke baris kedua sebelum menciutkan; item current boleh dipotong dengan ellipsis karena sama dengan h1",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tautan membungkus; overflow lebih awal; area klik tumbuh mengikuti teks",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Breadcrumb tidak dirender",
+      "case": "0 leluhur (halaman akar)"
+    },
+    {
+      "behaviour": "tampil: akar, \"…\", dua leluhur terdekat, current; daftar \"…\" menggulir internal",
+      "case": "jumlah item maksimum (hierarki sangat dalam)"
+    },
+    {
+      "behaviour": "Skeleton untuk label yang belum diketahui; tautan sudah aktif bila URL diketahui",
+      "case": "loading"
+    },
+    {
+      "behaviour": "tautan tetap tampil; tujuan yang tidak tersimpan menampilkan state offline setelah dibuka",
+      "case": "offline"
+    },
+    {
+      "behaviour": "dipotong ellipsis di desktop dengan nama lengkap tetap di nama aksesibel dan Tooltip saat fokus",
+      "case": "judul leluhur sangat panjang"
+    },
+    {
+      "behaviour": "Breadcrumb tidak sticky; ikut menggulir bersama PageHeader",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan (mis. struktur informasi datar satu tingkat).",
+  "lint": [
+    "Breadcrumb di luar nav berlabel ditolak",
+    "Item terakhir tanpa aria-current=\"page\" ditolak",
+    "Pemisah berupa teks yang terbaca (tanpa aria-hidden) ditolak",
+    "Breadcrumb di halaman akar ditolak (manual-review)"
+  ],
+  "name": "Breadcrumb",
+  "preview": {
+    "combinations": [
+      "hover+focus",
+      "read-only (leluhur teks)",
+      "collapsed + Popover terbuka",
+      "RTL",
+      "label +40%"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "current",
+      "collapsed",
+      "loading"
+    ],
+    "variants": [
+      "full",
+      "parent"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menunjukkan posisi halaman dalam hierarki dan menyediakan tautan ke setiap leluhur; ditempatkan di PageHeader di atas h1.",
+    "when_not_to_use": [
+      "Untuk riwayat langkah yang pernah dikunjungi pengguna: Breadcrumb mengikuti hierarki, bukan riwayat; pakai tombol Back.",
+      "Untuk alur langkah berurutan: pakai Stepper.",
+      "Untuk struktur datar satu tingkat: judul halaman dan PrimaryNav sudah cukup.",
+      "Untuk berpindah antar tampilan setara: pakai Tabs."
+    ]
+  },
+  "related": [
+    "PageHeader",
+    "PrimaryNav",
+    "Link",
+    "Stepper"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant parent: satu back-link di atas h1; hierarki penuh tersedia lewat overflow bila brief memintanya; area klik ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "variant full dengan overflow setelah item pertama bila tidak muat; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "variant full; > 4 item diciutkan ke \"…\"; label tunggal yang sangat panjang dipotong dengan ellipsis + nama lengkap di title dan nama aksesibel",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "leluhur ada tetapi tidak boleh dibuka role: tampil sebagai teks biasa tanpa tautan, hierarki tetap utuh"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu nama leluhur: item diganti label generik dari glosarium atau Breadcrumb dimulai dari leluhur terdekat yang boleh diketahui"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-right",
+      "chevron-left",
+      "arrow-left"
+    ],
+    "notes": "Urutan dari inline-start (kanan di RTL); chevron pemisah dan panah back-link dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Breadcrumb mengikuti ukuran teks body; area klik tautan dijamin lewat padding blok ≥ target-current (24 pointer, 44 sentuh), bukan prop size."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring + garis bawah tebal",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "item current bukan tautan sehingga tidak punya hover",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "leluhur yang tidak boleh dibuka role tampil sebagai teks biasa",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "item-link": "color-interaction-default"
+      },
+      "treatment": "tautan interaction-default bergaris bawah; separator text-tertiary"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "item-link": "color-interaction-hover"
+      },
+      "treatment": "warna interaction-hover + garis bawah tebal; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "item-link": "color-interaction-pressed"
+      },
+      "treatment": "warna interaction-pressed"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "current": "color-structure-text-primary"
+      },
+      "treatment": "teks text-primary tanpa garis bawah dan tanpa tautan; aria-current=\"page\""
+    },
+    {
+      "name": "collapsed",
+      "token_swaps": {},
+      "treatment": "item tengah diganti overflow-trigger \"…\" dengan nama aksesibel \"Show 3 more levels\"; item pertama dan dua terakhir tetap tampil"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "judul leluhur dimuat asinkron: teks Skeleton seukuran label; struktur daftar sudah ada"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Breadcrumb: FlowRow TextButton di expanded; navigationIcon TopAppBar di compact",
+    "flutter": "{ns}_breadcrumb.dart: Wrap TextButton (lebar) / BackButton di AppBar (phone)",
+    "html": {
+      "element": "nav[aria-label] > ol > li > a",
+      "notes": "pemisah lewat CSS ::before dengan content alternatif kosong; overflow button + Popover memakai atribut popover; tanpa JS semua item tampil membungkus"
+    },
+    "swiftui": "{Ns}Breadcrumb: HStack Button(.link) di regular width; back bawaan NavigationStack di compact"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Semua leluhur sampai halaman saat ini; item tengah diciutkan ke overflow bila > 4 item atau tidak muat.",
+      "name": "full"
+    },
+    {
+      "description": "Hanya leluhur langsung sebagai tautan kembali; dipakai di phone dan di halaman dengan hierarki dalam yang tidak perlu ditampilkan penuh.",
+      "name": "parent"
+    }
+  ]
+}

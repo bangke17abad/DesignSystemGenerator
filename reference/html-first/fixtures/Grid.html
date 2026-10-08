@@ -1,0 +1,67 @@
+<!-- Grid fixture · columns (4 · 8 · 12 by width class), clamped spans, auto-fit, reflow, empty, RTL, 200% text (catalog preview, §6.9). Dashed boxes are preview chrome. -->
+<section class="ds-demo" data-ds-demo="variant columns (4 phone · 8 tablet · 12 desktop)">
+  <div class="ds-grid">
+    <div class="ds-grid__item ds-demo__swatch" data-span="4" data-span-tablet="8" data-span-desktop="12">Page title area · full width</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="4" data-span-tablet="5" data-span-desktop="8">Main column · 4 / 5 / 8</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="4" data-span-tablet="3" data-span-desktop="4">Side column · 4 / 3 / 4</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="2" data-span-tablet="4" data-span-desktop="3">2 / 4 / 3</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="2" data-span-tablet="4" data-span-desktop="3">2 / 4 / 3</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="2" data-span-tablet="4" data-span-desktop="3">2 / 4 / 3</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="2" data-span-tablet="4" data-span-desktop="3">2 / 4 / 3</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="4 / 8 / 12 columns side by side">
+  <div class="ds-stack" data-gap="4">
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">4 columns</span>
+    <div class="ds-grid" data-columns="4" data-gap="1"><span class="ds-demo__swatch" data-compact>1</span><span class="ds-demo__swatch" data-compact>2</span><span class="ds-demo__swatch" data-compact>3</span><span class="ds-demo__swatch" data-compact>4</span></div>
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">8 columns</span>
+    <div class="ds-grid" data-columns="8" data-gap="1"><span class="ds-demo__swatch" data-compact>1</span><span class="ds-demo__swatch" data-compact>2</span><span class="ds-demo__swatch" data-compact>3</span><span class="ds-demo__swatch" data-compact>4</span><span class="ds-demo__swatch" data-compact>5</span><span class="ds-demo__swatch" data-compact>6</span><span class="ds-demo__swatch" data-compact>7</span><span class="ds-demo__swatch" data-compact>8</span></div>
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">12 columns</span>
+    <div class="ds-grid" data-columns="12" data-gap="1"><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span><span class="ds-demo__swatch" data-compact aria-hidden="true">&#8203;</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="span clamped to active columns">
+  <div class="ds-grid" data-columns="4" data-gap="2">
+    <div class="ds-grid__item ds-demo__swatch" data-span="6">span 6 in a 4-column grid → 4</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="12">span 12 → 4</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="3">span 3</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="1">1</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant auto-fit (min item 16em)">
+  <div class="ds-grid" data-variant="auto-fit" style="--ds-grid-min: 16em">
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Ledger sync</h2><p class="ds-text-secondary">Runs every hour</p></article>
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Payroll export</h2><p class="ds-text-secondary">Last run 2 days ago</p></article>
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Expense approvals with a much longer title that wraps</h2><p class="ds-text-secondary">12 waiting</p></article>
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Vendor onboarding</h2><p class="ds-text-secondary">Paused</p></article>
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Tax filings</h2><p class="ds-text-secondary">Due 30 Apr</p></article>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="auto-fit · 1 item does not stretch">
+  <div class="ds-grid" data-variant="auto-fit" style="--ds-grid-min: 16em">
+    <article class="ds-demo__swatch ds-stack" data-gap="1"><h2 class="ds-text-h3">Ledger sync</h2><p class="ds-text-secondary">Only item</p></article>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state reflowed · text 200% reduces columns">
+  <div data-ds-zoom="200">
+    <div class="ds-grid" data-variant="auto-fit" style="--ds-grid-min: 10em">
+      <div class="ds-demo__swatch">Ledger</div><div class="ds-demo__swatch">Payroll</div><div class="ds-demo__swatch">Expenses</div><div class="ds-demo__swatch">Tax</div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state empty">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-demo__swatch">Before</div>
+    <div class="ds-grid"></div>
+    <div class="ds-demo__swatch">After: the empty Grid renders no space (the caller shows EmptyState)</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (source order flows from inline-start)" dir="rtl" lang="ar">
+  <div class="ds-grid" data-columns="4" data-gap="2">
+    <div class="ds-grid__item ds-demo__swatch" data-span="1">١</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="1">٢</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="2">٣ · عمودان</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="3">٤ · ثلاثة أعمدة</div>
+    <div class="ds-grid__item ds-demo__swatch" data-span="1">٥</div>
+  </div>
+</section>

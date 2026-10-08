@@ -1,0 +1,613 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label pada nav dari glosarium (\"Main\") bila ada lebih dari satu landmark navigation",
+      "aria-current=\"page\" pada item tujuan aktif; aria-current=\"true\" tidak dipakai untuk induk (induk memakai penanda visual + teks tersembunyi \"contains current page\")",
+      "aria-expanded dan aria-controls pada judul grup dan collapse-toggle",
+      "aria-disabled + aria-describedby ke reason pada tujuan yang diblokir",
+      "di rail: label tetap ada di DOM sebagai teks VisuallyHidden; Tooltip hanya duplikat visual",
+      "badge diumumkan sebagai bagian nama aksesibel (\"Inbox, 3 new\"), bukan region live terpisah",
+      "drawer: konten di belakang inert; region LiveAnnouncer di luar subtree inert"
+    ],
+    "focus_order": "header → collapse-toggle → grup dan item dalam urutan visual atas-ke-bawah → footer nav; urutan DOM = urutan visual di semua lebar",
+    "native": {
+      "compose": "PermanentNavigationDrawer / ModalNavigationDrawer + NavigationDrawerItem(selected, onClick, label, icon, badge) dan NavigationRail + NavigationRailItem; NavigationSuiteScaffold memilih bentuk dari WindowSizeClass",
+      "flutter": "NavigationRail(extended: …, selectedIndex, destinations: NavigationRailDestination) di tablet/desktop; NavigationDrawer + NavigationDrawerDestination di Scaffold.drawer untuk phone; Semantics(selected: true) otomatis pada destinasi terpilih",
+      "swiftui": "NavigationSplitView dengan List(selection:) bergaya .listStyle(.sidebar) dan NavigationLink; columnVisibility untuk ciut; .accessibilityAddTraits(.isSelected) pada baris aktif kustom"
+    },
+    "politeness": "polite",
+    "role": "nav (landmark navigation) berisi ul/li dan a; grup: button disclosure + ul; drawer: dialog aria-modal berlabel yang membungkus nav",
+    "sr_label": "landmark diumumkan \"Main, navigation\"; item = label + state (current page, locked, jumlah badge); label tidak menyebut kata \"link\" atau \"navigation\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.1",
+      "2.4.3",
+      "2.4.4",
+      "2.4.7",
+      "2.4.11",
+      "2.5.1",
+      "2.5.2",
+      "2.5.8",
+      "3.2.3",
+      "3.2.4",
+      "3.2.6",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "landmark navigation berlabel; lebar layout-nav-width, rail selebar layout-rail-width; gulir internal bila item melebihi tinggi",
+      "tokens": [
+        "layout-nav-width",
+        "layout-rail-width",
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "slot identitas produk dan tombol ciut/buka; tinggi sama dengan global bar",
+      "tokens": [
+        "layout-bar-height",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "tautan tujuan: icon-start + label (+ badge di inline-end); baris penuh adalah area klik",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "radius-sm",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "item-icon",
+      "role": "ikon tujuan dari set L9; varian terisi untuk item current bila set ikon menyediakannya",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "current-indicator",
+      "role": "penanda non-warna item current: bar di inline-start setebal border-width-thick + latar selection + label berbobot lebih tebal",
+      "tokens": [
+        "color-interaction-default",
+        "border-width-thick",
+        "color-structure-selection",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "group",
+      "role": "kelompok item berjudul; bila dapat dilipat, judul berupa tombol disclosure dengan chevron",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-weight",
+        "color-structure-text-tertiary",
+        "icon-sm",
+        "space-4"
+      ]
+    },
+    {
+      "part": "badge",
+      "role": "slot Badge jumlah atau perhatian di inline-end item; di rail menempel pada ikon",
+      "tokens": [
+        "space-1"
+      ]
+    },
+    {
+      "part": "collapse-toggle",
+      "role": "IconButton berlabel untuk berpindah lebar penuh ↔ rail; aria-expanded mencerminkan state",
+      "tokens": [
+        "icon-md",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "drawer",
+      "role": "presentasi phone/tablet saat dibuka dari tombol menu: panel modal dari inline-start di z-nav-overlay dengan scrim di z-nav-scrim",
+      "tokens": [
+        "z-nav-overlay",
+        "z-nav-scrim",
+        "color-structure-scrim",
+        "color-structure-surface-raised",
+        "elevation-2",
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px inset −2px di dalam item agar tidak terpotong tepi nav",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "{ value: string; href: string }",
+        "when": "item diaktifkan (pelepasan pointer, Enter); router menangani navigasi"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"toggle\" | \"escape\" | \"scrim\" | \"navigate\" | \"resize\" }",
+        "when": "nav berpindah lebar penuh ↔ rail atau drawer dibuka/ditutup"
+      }
+    ],
+    "parts": [
+      "PrimaryNav.Header",
+      "PrimaryNav.List",
+      "PrimaryNav.Item (value, label, href, icon, badge, disabled, reason)",
+      "PrimaryNav.Group (label, open, defaultOpen, onOpenChange)",
+      "PrimaryNav.CollapseToggle",
+      "PrimaryNav.Footer"
+    ],
+    "props": [
+      {
+        "default": "vertical",
+        "description": "Orientasi nav.",
+        "name": "variant",
+        "required": false,
+        "type": "\"vertical\" | \"horizontal\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi item; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Nama aksesibel landmark dari glosarium.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: id tujuan current (biasanya dari router).",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Uncontrolled: id tujuan current awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: true = lebar penuh/drawer terbuka, false = rail/drawer tertutup; di dalam AppShell mengikuti AppShell.open.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "true",
+        "description": "Uncontrolled: state awal; selalu false di phone.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Tujuan sedang dimuat; merender Skeleton.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "setiap item adalah tautan di urutan Tab (berfungsi tanpa JavaScript); grup terlipat dilewati; Tab dari item terakhir keluar ke main",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "peningkatan JavaScript: memindah fokus antar item terlihat tanpa melingkar; Home/End ke item pertama/terakhir; arah ←/→ ditukar di RTL",
+      "trigger": "↓/↑ (vertical) atau →/← (horizontal), Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "navigasi ke tujuan; aria-current berpindah; fokus dipindah ke h1 halaman baru (§9.5); di drawer, drawer menutup lebih dulu",
+      "trigger": "Enter pada item"
+    },
+    {
+      "input": "keyboard",
+      "result": "grup dibuka/ditutup tanpa memindah fokus; aria-expanded diperbarui",
+      "trigger": "Enter atau Space pada judul grup; → membuka / ← menutup (vertical)"
+    },
+    {
+      "input": "keyboard",
+      "result": "drawer menutup dan fokus kembali ke tombol menu pemicu",
+      "trigger": "Esc saat drawer terbuka"
+    },
+    {
+      "input": "pointer",
+      "result": "navigasi pada pelepasan (SC 2.5.2); di rail Tooltip label muncul setelah jeda, dapat di-hover dan ditutup Esc (SC 1.4.13)",
+      "trigger": "klik item; hover di rail"
+    },
+    {
+      "input": "pointer",
+      "result": "berpindah lebar penuh ↔ rail (pilihan disimpan per pengguna); klik scrim menutup drawer dan fokus kembali ke tombol menu",
+      "trigger": "klik collapse-toggle atau scrim drawer"
+    },
+    {
+      "input": "touch",
+      "result": "navigasi pada pelepasan; swipe menutup drawer, dengan tombol Close berlabel sebagai jalur satu-pointer (SC 2.5.1); gestur kembali sistem tidak dibajak",
+      "trigger": "tap item; swipe drawer ke inline-start"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Home",
+        "Orders",
+        "Reports",
+        "Settings",
+        "Help",
+        "Collapse navigation"
+      ],
+      "id-ID": [
+        "Beranda",
+        "Pesanan",
+        "Laporan",
+        "Pengaturan",
+        "Bantuan",
+        "Ciutkan navigasi"
+      ]
+    },
+    "rules": [
+      "Label tujuan berupa kata benda dari glosarium (\"Orders\", bukan \"Manage orders\"), sentence case, maksimal 2 kata.",
+      "Label sama persis di PrimaryNav, BottomNav, Breadcrumb, dan judul halaman tujuan (SC 3.2.4).",
+      "Judul grup hanya bila ada ≥ 2 grup; tidak mengulang kata \"menu\" atau \"navigation\".",
+      "Tautan bantuan selalu di posisi relatif yang sama (footer nav) di setiap halaman (SC 3.2.6).",
+      "Reason tujuan diblokir menyebut syarat yang bisa dipenuhi (\"Available after setup is complete\")."
+    ]
+  },
+  "depends_on": [
+    "Tooltip",
+    "Badge",
+    "IconButton",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Tandai item current dengan bar dan bobot label, bukan hanya warna, ditambah aria-current=\"page\".",
+    "Pertahankan nama aksesibel penuh di rail dan tampilkan Tooltip label saat hover maupun fokus.",
+    "Pindahkan fokus ke h1 halaman tujuan setelah navigasi.",
+    "Letakkan tautan bantuan di posisi yang sama di setiap halaman."
+  ],
+  "dont": [
+    {
+      "text": "Memakai role menu, menubar, atau tablist untuk nav berisi tautan; pembaca layar mengubah mode interaksi dan tautan kehilangan semantiknya."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai item current hanya dengan warna teks atau ikon."
+    },
+    {
+      "ref": "UB8",
+      "text": "Ring fokus offset luar yang terpotong tepi nav atau tertutup header sticky."
+    },
+    {
+      "ref": "UB9",
+      "text": "Rail dengan ikon tanpa nama aksesibel atau dengan label hanya di Tooltip."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus maksimal dua baris di lebar penuh; tidak ada ellipsis; di rail nama lengkap ada di Tooltip dan nama aksesibel",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi item tumbuh; nav menggulir di dalam region nav dengan item fokus selalu terlihat; layout-nav-width tidak menyempit",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "PrimaryNav tidak dirender dan tombol menu disembunyikan; AppShell beralih ke variant focused",
+      "case": "0 item (semua tersembunyi untuk role)"
+    },
+    {
+      "behaviour": "> 9 item tingkat atas dikelompokkan berjudul; maksimal dua tingkat (grup → item); kedalaman lebih lanjut pindah ke Tabs atau Breadcrumb di halaman",
+      "case": "jumlah item maksimum"
+    },
+    {
+      "behaviour": "Skeleton per baris + aria-busy; item muncul tanpa menggeser fokus yang sudah ada",
+      "case": "loading izin"
+    },
+    {
+      "behaviour": "nav tetap utuh; tujuan yang tidak tersimpan tetap bisa dibuka dan menampilkan state offline di main, bukan item diblokir",
+      "case": "offline"
+    },
+    {
+      "behaviour": "item leluhur terdekat memakai ancestor-current; tidak ada item yang diberi aria-current palsu",
+      "case": "halaman current tidak ada di nav (deep link)"
+    },
+    {
+      "behaviour": "drawer menggulir internal; header drawer dengan tombol Close tetap terlihat; safe-area inset kiri/kanan dipetakan ke sisi logis",
+      "case": "tinggi viewport kecil (keyboard terbuka atau landscape phone)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Selalu disertakan. Surface kiosk atau berbasis state memakai AppShell variant kiosk dan tidak merender PrimaryNav (alasan dicatat di manifest).",
+  "lint": [
+    "nav tanpa aria-label ditolak bila ada lebih dari satu landmark navigation",
+    "Tepat satu item aria-current=\"page\" per nav (atau nol bila halaman tidak ada di nav)",
+    "role menu/menubar/tablist di dalam PrimaryNav ditolak",
+    "Item rail tanpa nama aksesibel ditolak; item aria-disabled tanpa reason ditolak",
+    "Properti fisik (left, right, border-left) pada nav ditolak (V6)"
+  ],
+  "name": "PrimaryNav",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected (dicegah)",
+      "loading+pressed (dicegah)",
+      "rail + Tooltip + RTL",
+      "drawer + teks 200%"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "current",
+      "ancestor-current",
+      "group-collapsed",
+      "rail",
+      "drawer-open",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "vertical",
+      "horizontal"
+    ]
+  },
+  "purpose": {
+    "purpose": "Navigasi tingkat atas antar tujuan utama aplikasi atau situs; nav tetap di desktop yang menciut ke rail saat ruang tidak cukup, rail di tablet, dan drawer (atau BottomNav) di phone.",
+    "when_not_to_use": [
+      "Untuk berpindah antar tampilan setara di dalam satu halaman: pakai Tabs.",
+      "Untuk 3-5 tujuan utama di phone: pakai BottomNav; PrimaryNav hanya menjadi drawer untuk tujuan sisanya.",
+      "Untuk menjalankan aksi (buat, ekspor, hapus): pakai Button atau Menu; nav hanya berisi tautan tujuan.",
+      "Untuk menunjukkan posisi dalam hierarki: pakai Breadcrumb.",
+      "Untuk mengganti mode atau filter konten yang sama: pakai SegmentedControl."
+    ]
+  },
+  "related": [
+    "AppShell",
+    "BottomNav",
+    "Breadcrumb",
+    "Tabs",
+    "Menu"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tidak tampil tetap; dibuka sebagai drawer modal dari tombol menu di global bar (atau menampung tujuan sisa di luar BottomNav); item size lg; safe-area inset di tepi atas, bawah, dan inline-start",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "rail selebar layout-rail-width di inline-start dengan Tooltip label; tombol ciut membuka drawer modal berlabel penuh; item ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "nav tetap selebar layout-nav-width; menciut ke rail bila nav + ContextPanel + layout-content-min melebihi lebar; pilihan pengguna diingat; size sm/md",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu tujuan ada; item tidak dirender, grup yang kosong ikut hilang, urutan sisa tetap"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tujuan terlihat tetapi belum boleh dibuka (prasyarat, paket); ikon gembok + reason"
+    },
+    {
+      "pattern": "read-only",
+      "when": "tujuan boleh dibuka tetapi isinya hanya baca; nav tidak berubah, perbedaan ada di halaman tujuan"
+    },
+    {
+      "pattern": "full",
+      "when": "default untuk tujuan yang diizinkan server"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "menu-open",
+      "menu-close",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Nav dan rail di inline-start (kanan di RTL); bar current di inline-start; badge di inline-end; drawer meluncur dari inline-start; →/← ditukar untuk buka/tutup grup dan variant horizontal."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh otomatis naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Konsol padat pointer dengan banyak tujuan.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default desktop dan rail.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Drawer phone dan surface sentuh, glove, atau in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "item current tetap memakai bar + latar selection; hover hanya menambah state-layer",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring inset ditambahkan di dalam latar selection; bar tetap terlihat",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "halaman yang sedang dibuka tidak pernah diblokir; bila izin dicabut, rute berpindah dan item hilang",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "item diblokir tidak memberi umpan balik hover selain Tooltip reason",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "baris skeleton tidak dapat ditekan",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "item": "color-structure-text-secondary"
+      },
+      "treatment": "label text-secondary, ikon garis, tanpa latar"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "item": "color-interaction-subtle"
+      },
+      "treatment": "token-swap ke interaction-subtle atau state-layer hover di atas latar; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "item": "color-interaction-pressed"
+      },
+      "treatment": "latar interaction-pressed atau lapisan pressed; tanpa transform yang mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px; di drawer di atas surface-inverse memakai focus-ring-inverse"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "current-indicator": "color-interaction-default",
+        "item": "color-structure-selection"
+      },
+      "treatment": "aria-current=\"page\"; bar inline-start + latar selection + label text-primary berbobot tebal + ikon terisi; tidak pernah hanya beda warna"
+    },
+    {
+      "name": "ancestor-current",
+      "token_swaps": {
+        "current-indicator": "color-interaction-default"
+      },
+      "treatment": "grup terlipat atau item induk yang memuat halaman current memakai bar inline-start tanpa latar, agar posisi tetap terlihat saat grup tertutup atau di rail"
+    },
+    {
+      "name": "group-collapsed",
+      "token_swaps": {},
+      "treatment": "tombol judul grup aria-expanded=\"false\", chevron menunjuk inline-end; item anak tidak dirender ke urutan fokus"
+    },
+    {
+      "name": "rail",
+      "token_swaps": {},
+      "treatment": "label tersembunyi secara visual tetapi tetap nama aksesibel; Tooltip label tampil saat hover dan fokus; badge menjadi titik + jumlah di nama aksesibel"
+    },
+    {
+      "name": "drawer-open",
+      "token_swaps": {
+        "drawer": "color-structure-surface-raised"
+      },
+      "treatment": "drawer modal di z-nav-overlay, scrim di z-nav-scrim, konten di belakang inert, gulir halaman terkunci"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "item": "color-structure-text-disabled"
+      },
+      "treatment": "tujuan terlihat tetapi belum tersedia (prasyarat, langganan): aria-disabled=\"true\" + ikon gembok + reason saat fokus/hover dan di nama aksesibel; tetap fokusabel; Enter mengumumkan reason"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "tujuan bergantung izin sedang dimuat: baris Skeleton selebar item, container aria-busy=\"true\"; tidak ada spinner di nav"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}PrimaryNav: PermanentNavigationDrawer / NavigationRail / ModalNavigationDrawer sesuai WindowSizeClass",
+    "flutter": "{ns}_primary_nav.dart: NavigationRail (tablet/desktop) dan NavigationDrawer (phone) dipilih lewat LayoutBuilder",
+    "html": {
+      "element": "nav[aria-label] > ul > li > a",
+      "notes": "berfungsi tanpa JavaScript; modul JS menambah panah, ciut ke rail, dan drawer; grup memakai button aria-expanded; drawer memakai dialog dengan showModal()"
+    },
+    "swiftui": "{Ns}PrimaryNav: sidebar List di NavigationSplitView"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Sidebar di inline-start dengan grup berjudul; menciut ke rail (ikon + nama aksesibel) bila layout-nav-width + layout-panel-width + layout-content-min melebihi lebar, atau atas pilihan pengguna.",
+      "name": "vertical"
+    },
+    {
+      "description": "Bar tujuan di bawah atau di dalam global bar untuk situs/portal dengan ≤ 7 tujuan tanpa grup bertingkat. Item yang tidak muat pindah ke item \"More\" yang membuka Menu-gaya disclosure berisi tautan (bukan role menu); di phone menjadi drawer.",
+      "name": "horizontal"
+    }
+  ]
+}

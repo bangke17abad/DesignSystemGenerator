@@ -1,0 +1,547 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label pada nav (\"Pagination\"; tambah nama koleksi bila ada lebih dari satu)",
+      "aria-current=\"page\" pada nomor saat ini",
+      "nama aksesibel nomor: \"Page 4\" (bukan \"4\" saja)",
+      "aria-disabled + aria-describedby ke reason pada Previous/Next di batas",
+      "range-summary dalam elemen yang diumumkan lewat LiveAnnouncer polite setelah halaman dimuat",
+      "aria-busy pada koleksi saat memuat"
+    ],
+    "focus_order": "koleksi → Pagination: range-summary → Previous → nomor → Next → page-size → jump",
+    "native": {
+      "compose": "tidak ada kontrol paginasi bawaan; Row OutlinedButton + Text untuk numbered/compact; LazyColumn dengan androidx.paging.compose collectAsLazyPagingItems untuk load-more (tombol eksplisit, bukan auto-load)",
+      "flutter": "PaginatedDataTable(rowsPerPage, onPageChanged, availableRowsPerPage) untuk tabel; daftar: ListView + TextButton \"Load more\" dengan SemanticsService.announce untuk jumlah baru",
+      "swiftui": "tidak ada kontrol paginasi bawaan; HStack Button(\"Previous\")/(\"Next\") + Text(\"Page 3 of 16\") dengan .accessibilityElement(children: .combine); daftar: Button \"Load more\" di akhir List"
+    },
+    "politeness": "polite",
+    "role": "nav berlabel berisi ul/li; nomor = a (href ?page=n) atau button bila tidak berbasis URL; Previous/Next = a atau button",
+    "sr_label": "\"Pagination, navigation\"; item \"Page 4, current page\"; batas \"Previous page, dimmed, you are on the first page\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.4",
+      "2.4.7",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "landmark navigation berlabel di bawah koleksi (dan opsional di atas untuk tabel panjang)",
+      "tokens": [
+        "space-2",
+        "space-4"
+      ]
+    },
+    {
+      "part": "prev-next",
+      "role": "Button berlabel \"Previous\"/\"Next\" dengan ikon chevron; di ujung koleksi menjadi aria-disabled dengan reason implisit (\"First page\")",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "icon-md",
+        "type-label-size",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "page-item",
+      "role": "tautan nomor halaman; angka tabular, lebar minimum sama",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "type-label-size",
+        "type-label-line",
+        "color-structure-text-primary",
+        "radius-sm",
+        "space-1"
+      ]
+    },
+    {
+      "part": "current-indicator",
+      "role": "penanda non-warna halaman saat ini: latar terisi + border + bobot tebal; aria-current=\"page\"",
+      "tokens": [
+        "color-interaction-default",
+        "color-interaction-on-solid",
+        "color-interaction-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "ellipsis",
+      "role": "penanda celah non-interaktif \"…\" (aria-hidden; rentang disampaikan lewat range-summary)",
+      "tokens": [
+        "color-structure-text-tertiary"
+      ]
+    },
+    {
+      "part": "range-summary",
+      "role": "teks \"21-40 of 312\" yang menyebut posisi; diperbarui setiap pindah halaman",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "page-size",
+      "role": "Select berlabel \"Rows per page\"",
+      "tokens": [
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "jump",
+      "role": "NumberInput berlabel \"Go to page\" + Button \"Go\" untuk koleksi > 10 halaman",
+      "tokens": [
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "load-more",
+      "role": "variant load-more: Button lebar penuh \"Load 20 more\" + range-summary",
+      "tokens": [
+        "control-height-lg"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px; focus-ring-inverse di atas item current terisi",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "number",
+        "when": "halaman berubah lewat nomor, Previous/Next, atau jump"
+      },
+      {
+        "name": "onPageSizeChange",
+        "payload": "number",
+        "when": "Rows per page berubah"
+      },
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "tombol load-more diaktifkan"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Controlled: halaman saat ini (mulai 1).",
+        "name": "value",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "1",
+        "description": "Uncontrolled: halaman awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Jumlah item; null bila tidak diketahui (cursor).",
+        "name": "total",
+        "required": false,
+        "type": "number | null"
+      },
+      {
+        "default": "20",
+        "description": "Jumlah item per halaman.",
+        "name": "pageSize",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Opsi Rows per page; tidak ditampilkan bila kosong.",
+        "name": "pageSizeOptions",
+        "required": false,
+        "type": "number[]"
+      },
+      {
+        "default": "numbered",
+        "description": "Bentuk paginasi.",
+        "name": "variant",
+        "required": false,
+        "type": "\"numbered\" | \"compact\" | \"load-more\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Pola URL (mis. \"?page={page}\") agar item menjadi tautan asli.",
+        "name": "hrefTemplate",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Halaman sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "Pagination",
+        "description": "Nama aksesibel nav.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "berpindah antar Previous, nomor, Next, page-size, jump (tautan dan tombol biasa); panah tidak dipakai agar konsisten dengan tautan",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "halaman dimuat; fokus dipindah ke judul atau caption koleksi (tabindex −1) dan range-summary diumumkan polite; URL diperbarui (?page=n)",
+      "trigger": "Enter pada nomor, Previous, atau Next"
+    },
+    {
+      "input": "keyboard",
+      "result": "nilai di luar 1…total ditolak dengan errorText; nilai valid memuat halaman",
+      "trigger": "Enter pada jump"
+    },
+    {
+      "input": "keyboard",
+      "result": "item baru ditambahkan; fokus ke item pertama yang baru; jumlah diumumkan polite (\"20 more items loaded\")",
+      "trigger": "Enter pada load-more"
+    },
+    {
+      "input": "pointer",
+      "result": "pindah halaman pada pelepasan; ubah page-size kembali ke halaman yang memuat item pertama yang sebelumnya terlihat",
+      "trigger": "klik item atau ubah page-size"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan klik; tidak ada gestur swipe antar halaman tanpa tombol padanan",
+      "trigger": "tap Previous/Next"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Previous",
+        "Next",
+        "Page 4",
+        "21-40 of 312",
+        "Rows per page",
+        "Load 20 more"
+      ],
+      "id-ID": [
+        "Sebelumnya",
+        "Berikutnya",
+        "Halaman 4",
+        "21-40 dari 312",
+        "Baris per halaman",
+        "Muat 20 lagi"
+      ]
+    },
+    "rules": [
+      "Previous/Next berlabel teks, bukan hanya chevron; di phone boleh ikon + nama aksesibel bila ruang tidak cukup.",
+      "range-summary memakai format angka lokal (B1) dan rentang aktual (\"301-312 of 312\").",
+      "Total yang belum pasti ditulis jujur (\"About 1,200 results\" atau tanpa total).",
+      "load-more menyebut jumlah yang akan dimuat bila diketahui."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "Select",
+    "NumberInput",
+    "Spinner",
+    "InlineAlert"
+  ],
+  "do": [
+    "Pindahkan fokus ke judul koleksi setelah pindah halaman dan umumkan rentang baru.",
+    "Simpan halaman di URL agar Back browser dan tautan bersama berfungsi.",
+    "Biarkan Previous/Next di batas tetap terlihat dengan alasan, agar layout tidak bergeser."
+  ],
+  "dont": [
+    {
+      "text": "Gulir tak berujung otomatis untuk data operasional; posisi dan footer tidak dapat dicapai."
+    },
+    {
+      "ref": "UB2",
+      "text": "Nomor halaman current ditandai hanya dengan warna."
+    },
+    {
+      "text": "Tombol chevron tanpa nama aksesibel (SC 4.1.2)."
+    },
+    {
+      "ref": "UB5",
+      "text": "Target nomor halaman di bawah 44×44 di sentuh."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "Previous/Next boleh menjadi ikon + nama aksesibel di phone; range-summary pindah ke baris sendiri",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "nomor membungkus; jumlah nomor terlihat dikurangi (current ±1) sebelum membungkus",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Pagination tidak dirender; koleksi menampilkan EmptyState",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "Pagination tidak dirender; range-summary tetap tampil",
+      "case": "1 halaman"
+    },
+    {
+      "behaviour": "nomor dibatasi pertama/current ±2/terakhir dengan ellipsis; jump wajib; angka tabular dengan pemisah ribuan lokal",
+      "case": "jumlah halaman maksimum (ribuan)"
+    },
+    {
+      "behaviour": "variant compact tanpa total; Next aria-disabled saat server menyatakan tidak ada halaman berikutnya",
+      "case": "total tidak diketahui (cursor)"
+    },
+    {
+      "behaviour": "pindah halaman diblokir dengan reason \"Needs connection\" bila halaman tidak tersimpan; gagal = InlineAlert + Retry, halaman lama tetap terlihat",
+      "case": "offline atau gagal memuat"
+    },
+    {
+      "behaviour": "kembali ke halaman terakhir yang valid; diumumkan polite",
+      "case": "item terhapus sehingga halaman current kosong"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; wajib bila ada Table data operasional (paginasi default, §6.5).",
+  "lint": [
+    "Pagination tanpa nav berlabel ditolak",
+    "Nomor halaman tanpa nama \"Page n\" ditolak",
+    "Gulir tak berujung otomatis pada Table operasional ditolak (manual-review)",
+    "Previous/Next disembunyikan di batas (menggeser layout) ditolak"
+  ],
+  "name": "Pagination",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "loading+pressed (dicegah)",
+      "disabled+focus (batas)",
+      "ribuan halaman",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "current",
+      "boundary",
+      "loading",
+      "error"
+    ],
+    "variants": [
+      "numbered",
+      "compact",
+      "load-more"
+    ]
+  },
+  "purpose": {
+    "purpose": "Membagi koleksi besar ke halaman bernomor dan menyediakan perpindahan sebelumnya/berikutnya, lompat ke halaman, dan ukuran halaman, dengan posisi saat ini yang jelas.",
+    "when_not_to_use": [
+      "Untuk feed atau daftar non-operasional yang dibaca berurutan: pakai variant load-more (tombol \"Load more\"), bukan gulir tak berujung otomatis.",
+      "Untuk koleksi yang selalu muat dalam satu layar (< ukuran halaman): tidak dirender.",
+      "Untuk langkah alur: pakai Stepper.",
+      "Untuk berpindah antar tampilan: pakai Tabs."
+    ]
+  },
+  "related": [
+    "Table",
+    "List",
+    "Select",
+    "NumberInput"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant compact: Previous/Next size lg lebar rata + \"Page 3 of 16\"; page-size dan jump disembunyikan; range-summary di atas tombol",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "numbered dengan current ±1; area klik ≥ target-min-touch; page-size tampil",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "numbered lengkap: pertama, …, current ±2, …, terakhir + page-size + jump; boleh duplikat di atas Table panjang",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Pagination tidak memuat aksi yang dibatasi peran; server menentukan item yang dihitung dan dikirim untuk role."
+  },
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "chevron-double-left",
+      "chevron-double-right"
+    ],
+    "notes": "Previous di inline-start (kanan di RTL) dan chevron-nya dicerminkan; angka tetap dalam sistem angka locale tanpa dibalik urutan digitnya."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh otomatis naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Tabel padat pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Phone dan sentuh; variant compact.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "item current tidak berubah saat hover selain kursor default",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring focus-ring-inverse di atas fill current",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak bisa memicu pindah halaman kedua saat memuat",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "Previous/Next di batas tetap fokusabel dan mengumumkan reason",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "page-item": "color-structure-text-primary"
+      },
+      "treatment": "page-item teks text-primary tanpa latar"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "page-item": "color-interaction-subtle"
+      },
+      "treatment": "state-layer hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "page-item": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "current-indicator": "color-interaction-on-solid",
+        "page-item": "color-interaction-default"
+      },
+      "treatment": "aria-current=\"page\"; latar interaction-default + teks on-solid + bobot tebal; tetap tautan yang dapat difokus tetapi tidak memuat ulang"
+    },
+    {
+      "name": "boundary",
+      "token_swaps": {
+        "prev-next": "color-structure-text-disabled"
+      },
+      "treatment": "Previous di halaman pertama atau Next di halaman terakhir: aria-disabled=\"true\" + reason terbaca (\"You are on the first page\"); tetap fokusabel"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "halaman baru dimuat: koleksi aria-busy + Skeleton baris; tombol yang ditekan menampilkan Spinner dengan lebar terkunci; klik lain diabaikan"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "gagal memuat halaman: InlineAlert di atas koleksi + Retry; nomor halaman kembali ke halaman terakhir yang berhasil"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Pagination: Row OutlinedButton + Text; Paging 3 untuk load-more",
+    "flutter": "{ns}_pagination.dart: Row OutlinedButton/TextButton; PaginatedDataTable untuk Table",
+    "html": {
+      "element": "nav[aria-label] > ul > li > a[href]",
+      "notes": "berbasis URL sehingga berfungsi tanpa JS (muat ulang halaman); modul JS mengganti ke fetch + manajemen fokus"
+    },
+    "swiftui": "{Ns}Pagination: HStack Button + Text"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default untuk Table operasional: prev/next + nomor halaman (pertama, terakhir, current ±1, ellipsis) + range-summary + page-size opsional.",
+      "name": "numbered"
+    },
+    {
+      "description": "prev/next + \"Page 3 of 16\"; untuk phone, ContextPanel, dan total tidak diketahui (cursor) di mana teksnya menjadi \"Page 3\".",
+      "name": "compact"
+    },
+    {
+      "description": "Satu tombol menambah item ke daftar yang sama; fokus berpindah ke item pertama yang baru dimuat; untuk daftar non-operasional.",
+      "name": "load-more"
+    }
+  ]
+}

@@ -1,0 +1,602 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-checked=\"mixed\" (properti indeterminate) untuk induk sebagian terpilih",
+      "aria-controls pada induk \"Select all\" ke id anak-anaknya",
+      "label membungkus input atau label for/id: label adalah bagian target (SC 2.5.8) dan nama aksesibel",
+      "aria-describedby ke description, reason, dan errorText",
+      "aria-invalid pada checkbox tunggal wajib (persetujuan); untuk grup, error di-describedby dari fieldset",
+      "aria-required pada checkbox tunggal wajib; grup wajib dijelaskan di legend/helper (\"Select at least one\")",
+      "aria-disabled (bukan disabled native) + pencegahan klik untuk diblokir",
+      "aria-readonly + pencegahan klik/Space untuk read-only"
+    ],
+    "focus_order": "legend tidak fokusabel; tiap checkbox satu tab stop dalam urutan DOM; induk \"Select all\" sebelum anak-anaknya",
+    "native": {
+      "compose": "Row(Modifier.triStateToggleable(state = ToggleableState.On/Off/Indeterminate, role = Role.Checkbox, onClick, enabled)) { TriStateCheckbox(state, onClick = null); Text(label) } sehingga baris + label menjadi satu target; Modifier.semantics { stateDescription = reason } untuk diblokir",
+      "flutter": "CheckboxListTile(value: bool?, tristate: true, onChanged, title, subtitle) sehingga label menjadi bagian target; Semantics(checked:, mixed: value == null, enabled:, hint: reason); grup dalam Semantics(container: true, label: legend)",
+      "swiftui": "Toggle(isOn:) { Text(label) }.toggleStyle(.checkbox) di macOS; iOS: Button { toggle } label: { Label(label, systemImage: isOn ? \"checkmark.square.fill\" : \"square\") } dengan .accessibilityAddTraits(.isToggle) (iOS 17+) dan .accessibilityValue(\"Mixed\") untuk indeterminate"
+    },
+    "politeness": "polite",
+    "role": "checkbox (elemen <input type=\"checkbox\"> dengan <label>); grup = fieldset + legend",
+    "sr_label": "label + state (\"checked\", \"not checked\", \"mixed\"/\"partially checked\") + description; legend grup dibaca saat masuk grup",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "box",
+      "role": "kotak kontrol; border kontrol ≥ 3:1 saat tidak terpilih; fill interaction-default saat terpilih/indeterminate (bentuk dari L-bahasa)",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thick",
+        "radius-xs",
+        "icon-md"
+      ]
+    },
+    {
+      "part": "check-mark",
+      "role": "glyph centang (terpilih) atau garis horizontal (indeterminate); penanda non-warna, kontras ≥ 3:1 terhadap fill",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-interaction-on-solid"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "teks label di inline-end kotak (≥ 16); bagian dari area klik",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "baris kedua opsional di bawah label untuk konsekuensi pilihan",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "hit-area",
+      "role": "baris penuh kotak + label + description; min-block-size ≥ target-current",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch",
+        "space-2"
+      ]
+    },
+    {
+      "part": "group-legend",
+      "role": "legend fieldset untuk Checkbox.Group (≥ 16), dengan optional marker dan helper",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "type-label-line",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon + teks error di bawah grup atau checkbox tunggal (mis. persetujuan wajib)",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di sekitar kotak (atau seluruh baris pada varian card)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "boolean",
+        "when": "Space, klik, atau tap mengubah state (mixed selalu berpindah ke true)"
+      }
+    ],
+    "parts": [
+      "Checkbox.Group (label sebagai legend, value: string[], defaultValue, onValueChange, helperText, required, invalid, errorText, orientation)",
+      "Checkbox.SelectAll (label; menghitung mixed dari anak)"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; bagian dari target dan nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: state centang; \"mixed\" = indeterminate.",
+        "name": "value",
+        "required": false,
+        "type": "boolean | \"mixed\""
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "boolean | \"mixed\""
+      },
+      {
+        "description": "Baris kedua: konsekuensi pilihan.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "default",
+        "description": "Baris biasa atau kartu.",
+        "name": "variant",
+        "required": false,
+        "type": "\"default\" | \"card\""
+      },
+      {
+        "description": "Nama field untuk Form.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"on\"",
+        "description": "Nilai yang dikirim saat tercentang (atribut value HTML).",
+        "name": "submitValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Checkbox tunggal wajib dicentang (persetujuan).",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi baris; area klik ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Tidak bisa diubah; kontras penuh.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "toggle checked/unchecked; dari indeterminate menjadi checked (semua anak terpilih); onValueChange dipanggil. Enter tidak men-toggle (mengirim Form)",
+      "trigger": "Space"
+    },
+    {
+      "input": "keyboard",
+      "result": "setiap checkbox adalah tab stop sendiri (berbeda dari RadioGroup)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle pada pelepasan (SC 2.5.2); seluruh baris adalah target",
+      "trigger": "klik kotak, label, atau description"
+    },
+    {
+      "input": "touch",
+      "result": "toggle; haptic-selection bila native mendukung; tanpa hover menempel",
+      "trigger": "tap baris"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak berubah; untuk diblokir reason diumumkan polite",
+      "trigger": "klik pada checkbox aria-disabled atau read-only"
+    },
+    {
+      "input": "keyboard",
+      "result": "memilih atau mengosongkan semua anak yang enabled; jumlah terpilih diumumkan polite (\"3 of 5 selected\")",
+      "trigger": "Space pada induk \"Select all\""
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Email me order updates",
+        "I agree to the Terms of service",
+        "Notification channels",
+        "Select all that apply.",
+        "Select at least one notification channel",
+        "Accept the terms of service to create an account",
+        "Select all (3 of 5 selected)"
+      ],
+      "id-ID": [
+        "Kirim info pesanan ke email saya",
+        "Saya menyetujui Ketentuan layanan",
+        "Saluran notifikasi",
+        "Pilih semua yang sesuai.",
+        "Pilih minimal satu saluran notifikasi",
+        "Setujui ketentuan layanan untuk membuat akun",
+        "Pilih semua (3 dari 5 dipilih)"
+      ]
+    },
+    "rules": [
+      "Label menyatakan pilihan positif (\"Email me order updates\"), bukan negasi (\"Don't email me\").",
+      "Persetujuan wajib menyebut apa yang disetujui dan menautkan dokumennya (Link) di label atau description.",
+      "Legend grup menyatakan pertanyaan; helper menyebut aturan jumlah (\"Select all that apply\").",
+      "Error grup: \"Select at least one …\"; error persetujuan: \"Accept the terms to continue\".",
+      "Sentence case; tanpa titik di akhir label satu frasa."
+    ]
+  },
+  "depends_on": [
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Jadikan seluruh baris (kotak + label) area klik.",
+    "Pakai fieldset dan legend untuk setiap grup checkbox.",
+    "Tandai indeterminate hanya untuk induk grup dengan aria-checked=\"mixed\"."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Menandai terpilih hanya dengan perubahan warna kotak tanpa centang."
+    },
+    {
+      "ref": "UB5",
+      "text": "Area klik hanya kotak kecil tanpa label."
+    },
+    {
+      "text": "Memakai Checkbox untuk pengaturan yang berlaku seketika (itu Switch) atau memicu aksi/navigasi saat dicentang."
+    },
+    {
+      "text": "Checkbox persetujuan yang sudah dicentang secara default."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus di inline-end kotak; kotak sejajar baris pertama; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "kotak ikut membesar proporsional (em) dan tetap sejajar baris pertama; baris tumbuh tinggi",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "grup tidak dirender; bila wajib, Form menampilkan error sistem (InlineAlert), bukan grup kosong",
+      "case": "0 opsi dalam grup"
+    },
+    {
+      "behaviour": "> 10 opsi: tambahkan \"Select all\" + pencarian atau ganti ke Combobox multi; jumlah terpilih ditampilkan",
+      "case": "jumlah opsi maksimum"
+    },
+    {
+      "behaviour": "hanya anak enabled yang berubah; induk tetap mixed bila anak diblokir terpilih/tidak; dijelaskan di description",
+      "case": "\"Select all\" dengan sebagian anak diblokir"
+    },
+    {
+      "behaviour": "pilihan disimpan lokal sampai submit; Checkbox tidak menyimpan sendiri sehingga offline tidak memengaruhi toggle",
+      "case": "loading / offline"
+    },
+    {
+      "behaviour": "state dipulihkan tanpa memicu validasi; persetujuan legal tidak pernah dipulihkan otomatis (dicentang ulang tiap pengiriman, A-nn bila brief berbeda)",
+      "case": "nilai dipulihkan dari draft atau autofill"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Checkbox tanpa label terlihat ditolak (kecuali kolom seleksi Table dengan label tersembunyi per baris)",
+    "Grup checkbox tanpa fieldset/legend ditolak",
+    "Persetujuan wajib dengan defaultValue true ditolak (manual-review)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "Checkbox",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "error+focus",
+      "read-only+selected",
+      "indeterminate+focus",
+      "label +40% + RTL"
+    ],
+    "states": [
+      "unchecked",
+      "checked",
+      "indeterminate",
+      "hover",
+      "pressed",
+      "focus",
+      "error",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "default",
+      "card"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memilih nol, satu, atau beberapa opsi independen, atau menyatakan persetujuan; nilai diterapkan saat Form dikirim. Penanda terpilih selalu centang (atau garis untuk indeterminate), bukan hanya warna.",
+    "when_not_to_use": [
+      "Untuk pengaturan yang berlaku seketika tanpa tombol simpan: pakai Switch.",
+      "Untuk memilih tepat satu dari beberapa opsi: pakai RadioGroup.",
+      "Untuk menyaring daftar secara langsung: pakai FilterChip.",
+      "Untuk memilih baris tabel: pakai kolom seleksi Table (yang memakai Checkbox di dalamnya dengan aturan Table).",
+      "Untuk lebih dari ±10 opsi yang perlu dicari: pakai Combobox multi."
+    ]
+  },
+  "related": [
+    "Switch",
+    "RadioGroup",
+    "FilterChip",
+    "Table",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "satu opsi per baris, baris penuh sebagai target ≥ target-min-touch; size lg; jarak antar baris ≥ space-2",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "satu kolom; boleh dua kolom untuk > 8 opsi pendek; target ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "satu kolom default; dua kolom hanya untuk > 8 opsi pendek, urutan baca per kolom; size md/sm",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role melihat pilihan tetapi tidak boleh mengubah: aria-readonly, kontras penuh"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "opsi tidak tersedia untuk role atau state data; reason terlihat di description"
+    },
+    {
+      "pattern": "hidden",
+      "when": "opsi yang tidak boleh diketahui role tidak dirender; grup yang kosong ikut tidak dirender"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Kotak di inline-start, label di inline-end (tertukar di RTL); glyph centang tidak dicerminkan (§12.4); garis indeterminate simetris."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "kotak icon-sm visual; area klik = baris kotak+label ≥ target-current (24 pointer; naik ke 44 di sentuh)",
+      "name": "sm",
+      "notes": "Tabel dan daftar padat pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current) mencakup label",
+      "name": "md",
+      "notes": "Default form.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada) mencakup label",
+      "name": "lg",
+      "notes": "Surface sentuh dan glove; jarak antar baris ≥ space-2 (≥ 8).",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "fill interaction-hover; centang tetap",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + ring di luar kotak",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "centang tetap terlihat (diredam); aria-checked tetap diumumkan + reason",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring; errorText tetap",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang kontras penuh, ring tampil, tidak bisa diubah",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak ada state loading pada Checkbox (nilai diterapkan saat submit); bila induk Form loading, input dikunci",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa umpan balik hover pada checkbox diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "unchecked",
+      "token_swaps": {
+        "box": "color-structure-border-control"
+      },
+      "treatment": "kotak kosong ber-border-control; aria-checked=\"false\" (checked=false native)"
+    },
+    {
+      "name": "checked",
+      "token_swaps": {
+        "box": "color-interaction-default",
+        "check-mark": "color-interaction-on-solid"
+      },
+      "treatment": "fill interaction-default + glyph centang on-solid; aria-checked=\"true\"; bentuk centang adalah penanda utama"
+    },
+    {
+      "name": "indeterminate",
+      "token_swaps": {
+        "box": "color-interaction-default",
+        "check-mark": "color-interaction-on-solid"
+      },
+      "treatment": "fill interaction-default + garis horizontal; aria-checked=\"mixed\" (properti indeterminate native); dipakai hanya untuk induk grup yang sebagian anaknya terpilih"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "box": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover di sekitar kotak (atau token-swap ke interaction-hover bila terpilih); hanya di (hover: hover); hover di label juga memicu"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "box": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; state-press-transform pada kotak tanpa menggeser label"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px di sekitar kotak (card: sekitar kartu)"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "box": "color-semantic-critical",
+        "error": "color-semantic-critical-strong"
+      },
+      "treatment": "border kotak critical + ikon + errorText di bawah grup/checkbox; aria-invalid pada input (tunggal) atau pada grup lewat aria-describedby di fieldset"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "box": "color-structure-surface-sunken",
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" (bukan disabled native), klik dicegah, tetap fokusabel; kotak surface-sunken, label text-disabled; reason sebagai description terhubung aria-describedby; centang tetap terlihat bila terpilih"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "box": "color-structure-border-strong",
+        "label": "color-structure-text-primary"
+      },
+      "treatment": "aria-readonly=\"true\"; klik dan Space dicegah (checkbox native tidak punya readonly); kotak dan centang kontras penuh tanpa hover; label text-primary"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Checkbox: Row + Modifier.triStateToggleable + TriStateCheckbox",
+    "flutter": "CheckboxListTile dibungkus {ns}_checkbox.dart; grup {ns}_checkbox_group.dart",
+    "html": {
+      "element": "fieldset > legend + label > input[type=checkbox]",
+      "notes": "appearance: none + gaya dari token; indeterminate diset via properti JS (fallback: state checked/unchecked); aria-disabled dicegah lewat event click; forced-colors memakai CanvasText untuk border dan centang"
+    },
+    "swiftui": "{Ns}Checkbox: Toggle(.checkbox) di macOS, Button + isToggle di iOS"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Kotak + label di satu baris; dalam grup disusun vertikal (satu opsi per baris) agar mudah dipindai.",
+      "name": "default"
+    },
+    {
+      "description": "Seluruh kartu adalah target, berisi label, deskripsi, dan kotak di inline-start; terpilih ditandai centang + border tebal, bukan hanya latar. Untuk pilihan dengan penjelasan panjang.",
+      "name": "card"
+    }
+  ]
+}

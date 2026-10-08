@@ -1,0 +1,513 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke label terlihat atau aria-label pada grup (wajib)",
+      "aria-checked pada radio; aria-pressed pada toggle",
+      "roving tabindex untuk single",
+      "aria-controls ke region yang dikendalikan bila berada di halaman yang sama",
+      "aria-disabled + aria-describedby ke reason per segmen",
+      "segmen ikon-saja: nama aksesibel = label tersembunyi + Tooltip"
+    ],
+    "focus_order": "label → satu tab stop di grup → elemen berikutnya; fokus tetap di segmen setelah memilih",
+    "native": {
+      "compose": "SingleChoiceSegmentedButtonRow + SegmentedButton(selected, onClick, shape = SegmentedButtonDefaults.itemShape(index, count)) atau MultiChoiceSegmentedButtonRow + SegmentedButton(checked, onCheckedChange)",
+      "flutter": "SegmentedButton<T>(segments: ButtonSegment, selected: {…}, multiSelectionEnabled: …, showSelectedIcon: true) dengan Semantics(label) pada grup",
+      "swiftui": "Picker(label, selection:) { … }.pickerStyle(.segmented); untuk multiple: HStack Toggle(.button) dengan .accessibilityAddTraits(.isSelected)"
+    },
+    "politeness": "polite",
+    "role": "single: radiogroup berisi radio; multiple: group berisi button dengan aria-pressed",
+    "sr_label": "\"{label grup}, radio group\" lalu \"{segmen}, selected, 2 of 3\"; perubahan konten diumumkan polite hanya bila jumlah hasil berubah",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.7",
+      "2.5.8",
+      "3.2.2",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "group",
+      "role": "wadah radiogroup berlabel; latar sunken dengan border kontrol; lebar intrinsik atau penuh",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-md",
+        "space-1"
+      ]
+    },
+    {
+      "part": "segment",
+      "role": "satu opsi: icon-start opsional + label; lebar rata antar segmen",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "radius-sm",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "selected-indicator",
+      "role": "penanda non-warna segmen terpilih: latar terangkat dengan border + ikon centang di inline-start + label berbobot tebal",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-interaction-border",
+        "elevation-1",
+        "color-structure-text-primary",
+        "icon-sm",
+        "icon-stroke",
+        "motion-fast-duration",
+        "motion-easing-standard"
+      ]
+    },
+    {
+      "part": "divider",
+      "role": "pemisah dekoratif antar segmen tidak terpilih; disembunyikan di samping segmen terpilih",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "label grup terlihat (di form) atau nama aksesibel (di toolbar)",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px inset −2px di dalam segmen",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string | string[]",
+        "when": "pilihan berubah lewat klik, tap, panah (single), atau Space"
+      }
+    ],
+    "parts": [
+      "SegmentedControl.Item (value, label, icon, disabled, reason)"
+    ],
+    "props": [
+      {
+        "description": "Nama grup; terlihat atau sebagai nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: nilai terpilih (array untuk multiple).",
+        "name": "value",
+        "required": false,
+        "type": "string | string[]"
+      },
+      {
+        "description": "Uncontrolled: nilai awal; single wajib salah satu opsi.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | string[]"
+      },
+      {
+        "default": "single",
+        "description": "Pilihan tunggal (radiogroup) atau toggle ganda.",
+        "name": "variant",
+        "required": false,
+        "type": "\"single\" | \"multiple\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi segmen; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Mengisi lebar kontainer; default true di phone.",
+        "name": "fullWidth",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila kontrol tidak relevan; selain itu reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan seluruh kontrol diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan pilihan sebagai teks.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "single: satu tab stop pada segmen terpilih (roving tabindex); multiple: satu tab stop pada segmen pertama/terakhir terfokus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "single: fokus dan pilihan berpindah bersama (pola radio), melingkar, melewati segmen diblokir untuk pilihan tetapi tetap mengumumkan reason; multiple: hanya memindah fokus; ditukar di RTL",
+      "trigger": "→/← (dan ↓/↑), Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "single: memilih segmen terfokus bila belum; multiple: men-toggle segmen",
+      "trigger": "Space (dan Enter)"
+    },
+    {
+      "input": "pointer",
+      "result": "dipilih pada pelepasan (SC 2.5.2); tampilan berganti seketika tanpa memindah fokus (SC 3.2.2)",
+      "trigger": "klik segmen"
+    },
+    {
+      "input": "touch",
+      "result": "tap memilih; menggeser indikator (bila native menyediakan) selalu punya padanan tap (SC 2.5.7)",
+      "trigger": "tap segmen; geser indikator"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "List",
+        "Board",
+        "Calendar",
+        "Day",
+        "Week",
+        "Month"
+      ],
+      "id-ID": [
+        "Daftar",
+        "Papan",
+        "Kalender",
+        "Hari",
+        "Minggu",
+        "Bulan"
+      ]
+    },
+    "rules": [
+      "Label segmen 1-2 kata, paralel secara gramatikal, sentence case.",
+      "Panjang label kira-kira setara; jangan campur ikon-saja dan berlabel dalam satu grup.",
+      "Grup selalu punya nama: label terlihat di form, nama aksesibel di toolbar.",
+      "Opsi diurutkan secara logis (kecil→besar, waktu dekat→jauh), bukan alfabetis."
+    ]
+  },
+  "depends_on": [
+    "Tooltip"
+  ],
+  "do": [
+    "Tandai segmen terpilih dengan latar terangkat dan ikon centang, tidak hanya warna.",
+    "Pertahankan fokus di segmen setelah memilih; konten berganti tanpa memindah fokus.",
+    "Ganti dengan Select di phone bila label tidak muat tanpa terpotong."
+  ],
+  "dont": [
+    {
+      "text": "Memakai SegmentedControl sebagai tab yang mengganti seluruh konten halaman; pakai Tabs dengan tabpanel."
+    },
+    {
+      "ref": "UB2",
+      "text": "Penanda terpilih hanya beda warna latar."
+    },
+    {
+      "text": "Memotong label segmen dengan ellipsis."
+    },
+    {
+      "text": "Segmen ikon-saja tanpa nama aksesibel (SC 4.1.2)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "segmen membungkus label dua baris dengan tinggi rata; bila tetap tidak muat, beralih ke Select berlabel",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi tumbuh; grup boleh membungkus ke susunan vertikal (segmen bertumpuk) tanpa mengubah urutan panah",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "kontrol tidak dirender; nilai tunggal ditampilkan sebagai teks bila perlu",
+      "case": "0 atau 1 opsi"
+    },
+    {
+      "behaviour": "> 5 opsi ditolak lint; pakai Select atau RadioGroup",
+      "case": "jumlah opsi maksimum"
+    },
+    {
+      "behaviour": "pilihan tetap berlaku seketika; tampilan yang butuh server menampilkan Skeleton atau state offline di region yang dikendalikan, bukan mengunci kontrol",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "tidak ada segmen terpilih; peringatan dev; tab stop jatuh ke segmen pertama",
+      "case": "nilai controlled tidak cocok dengan opsi mana pun"
+    },
+    {
+      "behaviour": "kontrol tidak sticky; tetap di alur dokumen",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "SegmentedControl dengan < 2 atau > 5 opsi ditolak",
+    "Grup tanpa label atau aria-label ditolak",
+    "Segmen ikon-saja tanpa nama aksesibel ditolak",
+    "Segmen aria-disabled tanpa reason ditolak"
+  ],
+  "name": "SegmentedControl",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "read-only",
+      "label +40% → Select di phone",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "selected",
+      "disabled-with-reason",
+      "read-only",
+      "loading"
+    ],
+    "variants": [
+      "single",
+      "multiple"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memilih satu dari 2-5 opsi saling eksklusif yang langsung mengganti tampilan, mode, satuan, atau rentang dari konten yang sama; semua opsi terlihat sekaligus.",
+    "when_not_to_use": [
+      "Untuk berpindah ke panel berisi konten berbeda: pakai Tabs.",
+      "Untuk nilai form yang baru berlaku saat disimpan atau lebih dari 5 opsi: pakai RadioGroup atau Select.",
+      "Untuk menyalakan/mematikan satu pengaturan: pakai Switch.",
+      "Untuk filter yang dapat dikombinasikan bebas: pakai FilterChip.",
+      "Untuk menjalankan aksi: pakai Button atau kelompok IconButton."
+    ]
+  },
+  "related": [
+    "Tabs",
+    "RadioGroup",
+    "Select",
+    "FilterChip",
+    "Switch"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh, segmen rata, size lg; > 3 segmen dengan label panjang beralih ke Select berlabel; tidak menggulir horizontal",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar intrinsik; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar intrinsik di toolbar atau PageHeader; sm diizinkan; segmen ikon-saja dengan Tooltip boleh di toolbar padat",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "disabled-with-reason",
+      "when": "opsi terlihat tetapi tidak tersedia untuk role/paket; gembok + reason"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role boleh melihat pilihan tetapi tidak mengubah (mis. pengaturan bersama)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "opsi tidak boleh diketahui; segmen tidak dirender; bila sisa 1 opsi, kontrol tidak dirender"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Segmen pertama di inline-start; ←/→ ditukar; ikon centang di inline-start label; ikon berarah di segmen dicerminkan, ikon centang tidak."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh otomatis naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Toolbar padat pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Phone, sentuh, glove.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "latar raised tetap; state-layer hover di atasnya",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "seluruh kontrol diblokir: centang diredam, pilihan tetap diumumkan + reason",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "teks penuh tanpa kontrol",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "segmen diblokir tanpa umpan balik hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "segment": "color-structure-text-secondary"
+      },
+      "treatment": "label text-secondary di atas latar sunken"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "segment": "color-interaction-subtle"
+      },
+      "treatment": "state-layer hover pada segmen; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "segment": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; transform state-press-transform tanpa mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px pada segmen terfokus"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "segment": "color-structure-surface-raised",
+        "selected-indicator": "color-interaction-border"
+      },
+      "treatment": "aria-checked=\"true\" (single) atau aria-pressed=\"true\" (multiple); latar surface-raised + border interaction + ikon centang + label tebal; indikator bergeser dengan motion-fast, fade satu frame di reduced motion"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "segment": "color-structure-text-disabled"
+      },
+      "treatment": "segmen tertentu aria-disabled + ikon gembok; tetap dicapai panah tetapi tidak dipilih; reason di Tooltip saat fokus/hover dan aria-describedby"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "group": "color-structure-surface-base"
+      },
+      "treatment": "pilihan tampil sebagai teks penuh (\"View: List\") dengan aria-readonly pada grup; tanpa border kontrol aktif"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "tampilan baru sedang dimuat setelah pilihan: segmen tetap terpilih, konten yang dikendalikan aria-busy + Skeleton; kontrol tidak dikunci"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}SegmentedControl: SingleChoiceSegmentedButtonRow / MultiChoiceSegmentedButtonRow",
+    "flutter": "{ns}_segmented_control.dart: SegmentedButton<T>",
+    "html": {
+      "element": "fieldset > legend + input[type=radio] + label (single); div[role=group] > button[aria-pressed] (multiple)",
+      "notes": "single memakai radio native sehingga panah dan form bekerja tanpa JS; tampilan segmen lewat CSS"
+    },
+    "swiftui": "{Ns}SegmentedControl: Picker .segmented"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Satu pilihan wajib (radiogroup); selalu ada satu segmen terpilih.",
+      "name": "single"
+    },
+    {
+      "description": "Beberapa segmen dapat aktif sebagai toggle (group berisi button aria-pressed), mis. format teks atau lapisan tampilan; minimal nol aktif kecuali brief menyatakan lain.",
+      "name": "multiple"
+    }
+  ]
+}

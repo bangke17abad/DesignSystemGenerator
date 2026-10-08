@@ -1,0 +1,206 @@
+/* TextField · engine 1.8.0 reference (catalog/components/TextField.json). Tokens only (I3); logical properties only (§12.4).
+   Anatomy: label (+ optional marker) → description → control (input, affixes, icon, clear, spinner) → error → helper.
+   The <input> itself is the visible box, so the focus ring (base.css) always sits on the focused element. Prefix/suffix text are
+   attached segments outside the input (never inside the value), so the submitted value never contains the adornment. */
+.ds-text-field {
+  --_h: max(var(--control-height-md), var(--target-current));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+}
+.ds-text-field[data-size="sm"] { --_h: max(var(--control-height-sm), var(--target-current)); }
+.ds-text-field[data-size="lg"] { --_h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+
+.ds-text-field__label {
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-text-field__optional { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+.ds-text-field__description,
+.ds-text-field__helper,
+.ds-text-field__reason,
+.ds-text-field__error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-text-field__error,
+.ds-text-field__reason { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-text-field__error { color: var(--color-semantic-critical-strong); }
+.ds-text-field__error .ds-icon,
+.ds-text-field__reason .ds-icon {
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2);
+}
+.ds-text-field__error[hidden] { display: none; }
+
+/* control */
+.ds-text-field__group { position: relative; display: flex; align-items: stretch; min-inline-size: 0; }
+.ds-text-field__input {
+  --_border: var(--control-container-border);
+  --_inner: 0;
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--_h);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--_ps, var(--space-3)) var(--_pe, var(--space-3));
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  border-start-start-radius: var(--_rs, var(--radius-sm));
+  border-end-start-radius: var(--_rs, var(--radius-sm));
+  border-start-end-radius: var(--_re, var(--radius-sm));
+  border-end-end-radius: var(--_re, var(--radius-sm));
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  box-shadow: inset 0 0 0 var(--_inner) var(--_border);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  text-overflow: clip;
+  appearance: none;
+  transition: border-color var(--motion-fast-duration) var(--motion-easing-standard), box-shadow var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-text-field__input::placeholder { color: var(--control-placeholder-color); opacity: 1; }
+/* autofill keeps the token surface and text colour (UA tint would break the 4.5:1 pairing) */
+.ds-text-field__input:autofill {
+  box-shadow: inset 0 0 0 var(--_inner) var(--_border), inset 0 0 0 100vmax var(--control-container-background);
+  -webkit-text-fill-color: var(--control-value-color);
+  caret-color: var(--control-value-color);
+}
+
+@media (hover: hover) {
+  .ds-text-field__input:not([readonly], [aria-invalid="true"], :focus):hover { --_border: var(--control-container-border-hover); }
+}
+.ds-text-field__input[data-force~="hover"]:not([aria-invalid="true"]) { --_border: var(--control-container-border-hover); }
+.ds-text-field__input:not([readonly]):focus,
+.ds-text-field__input:not([readonly])[data-force~="focus"] { --_border: var(--color-interaction-default); }
+/* error: border is critical and doubled inside (shape cue on top of colour); icon + text carry the meaning */
+.ds-text-field__input[aria-invalid="true"] { --_border: var(--control-container-border-invalid); --_inner: var(--border-width-thin); }
+
+/* read-only ≠ disabled: full-contrast value, decorative border, selectable and focusable */
+.ds-text-field__input[readonly] {
+  --_border: var(--color-structure-border);
+  background: var(--control-container-background-readonly);
+  color: var(--control-value-color);
+}
+/* blocked with reason: readonly + aria-disabled keeps it focusable so the reason is read */
+.ds-text-field__input[aria-disabled="true"] {
+  --_border: var(--color-structure-border);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-disabled);
+  cursor: not-allowed;
+}
+.ds-text-field__input[aria-disabled="true"]::placeholder { color: var(--color-structure-text-disabled); }
+
+/* affixes: attached text segments (unit, country code); read through aria-describedby, never submitted */
+.ds-text-field__affix {
+  display: flex;
+  flex: none;
+  align-items: center;
+  max-inline-size: 50%;
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  background: var(--control-container-background-readonly);
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  white-space: nowrap;
+}
+.ds-text-field__affix[data-affix="start"] { border-inline-end-width: 0; border-start-start-radius: var(--radius-sm); border-end-start-radius: var(--radius-sm); }
+.ds-text-field__affix[data-affix="end"] { border-inline-start-width: 0; border-start-end-radius: var(--radius-sm); border-end-end-radius: var(--radius-sm); }
+.ds-text-field__group:has(> .ds-text-field__affix[data-affix="start"]) { --_rs: 0; }
+.ds-text-field__group:has(> .ds-text-field__affix[data-affix="end"]) { --_re: 0; }
+
+/* decorative leading icon */
+.ds-text-field__icon {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--space-3);
+  margin-block: auto;
+  color: var(--color-structure-text-secondary);
+  pointer-events: none;
+}
+.ds-text-field__group:has(> .ds-text-field__icon) { --_ps: calc(var(--space-3) + var(--icon-md) + var(--space-2)); }
+
+/* clear IconButton (rendered by TextField.js when data-clearable): own hit area >= target-current */
+.ds-text-field__clear {
+  --_size: max(var(--target-current), calc(var(--icon-md) + var(--space-4)));
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  inline-size: var(--_size);
+  min-block-size: var(--target-current);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-text-field__clear[hidden] { display: none; }
+.ds-text-field__clear:focus-visible, .ds-text-field__clear[data-force~="focus"] { outline-offset: calc(-1 * var(--border-width-thick)); }
+@media (hover: hover) { .ds-text-field__clear:hover { color: var(--color-structure-text-primary); } }
+.ds-text-field__clear[data-force~="hover"] { color: var(--color-structure-text-primary); }
+.ds-text-field__group:has(> .ds-text-field__clear:not([hidden])) { --_pe: max(var(--target-current), calc(var(--icon-md) + var(--space-4))); }
+
+/* async validation: spinner at inline-end, field stays editable (aria-busy) */
+.ds-text-field__spinner {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-3);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block: auto;
+  border: var(--border-width-thick) solid var(--color-interaction-default);
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  animation: ds-text-field-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+.ds-text-field__group:has(> .ds-text-field__spinner) { --_pe: calc(var(--space-3) + var(--icon-sm) + var(--space-2)); }
+@keyframes ds-text-field-spin { to { transform: rotate(360deg); } }
+
+/* user-generated values follow their own direction (dir="auto"); email/URL/phone/code stay LTR (dir="ltr" on the input).
+   An LTR input inside an RTL group swaps its logical paddings and radii so affixes, icon, clear and spinner stay attached. */
+.ds-text-field__group:dir(rtl) > .ds-text-field__input:dir(ltr) {
+  padding-inline: var(--_pe, var(--space-3)) var(--_ps, var(--space-3));
+  border-start-start-radius: var(--_re, var(--radius-sm));
+  border-end-start-radius: var(--_re, var(--radius-sm));
+  border-start-end-radius: var(--_rs, var(--radius-sm));
+  border-end-end-radius: var(--_rs, var(--radius-sm));
+  text-align: end;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-text-field__input { transition: none; }
+  .ds-text-field__spinner { animation: none; border-inline-end-color: var(--color-interaction-default); opacity: 0.6; }
+}
+@media (forced-colors: active) {
+  .ds-text-field__input, .ds-text-field__affix { border-color: FieldText; }
+  .ds-text-field__input[aria-invalid="true"] { border-style: double; border-width: var(--border-width-thick); }
+  .ds-text-field__input[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+  .ds-text-field__input:autofill { box-shadow: none; }
+  .ds-text-field__error, .ds-text-field__error .ds-icon { color: CanvasText; }
+  .ds-text-field__spinner { border-color: CanvasText; border-inline-end-color: transparent; }
+}

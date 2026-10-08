@@ -1,0 +1,463 @@
+{
+  "accessibility": {
+    "attributes": [
+      "ikon status aria-hidden=\"true\"; nama state hanya dari label terlihat agar tidak terbaca ganda",
+      "bila konteks kolom tidak terbaca (mis. kartu tanpa header kolom), awali dengan teks tersembunyi VisuallyHidden \"Status:\"",
+      "perubahan state saat tampil diumumkan lewat LiveAnnouncer (polite; assertive hanya C1 atau event kritis), bukan lewat aria-live pada label",
+      "overlay stagnasi dibaca sesudah state dasar dalam satu kalimat (\"Pending approval, overdue 3 days\")",
+      "di forced-colors ikon memakai currentColor dan border tetap tampil sehingga perlakuan outline/tinted tetap terbedakan"
+    ],
+    "focus_order": "tidak pernah menerima fokus; mengikuti elemen fokusabel induknya",
+    "native": {
+      "compose": "Row(Modifier.semantics(mergeDescendants = true) {}) { Icon(contentDescription = null); Text(label) }; perubahan lewat {Ns}Announcer (liveRegion = LiveRegionMode.Polite pada node announcer). Not verified against the pinned version",
+      "flutter": "MergeSemantics(child: Row(children: [ExcludeSemantics(child: Icon(...)), Text(label)])); perubahan diumumkan lewat service LiveAnnouncer (SemanticsService.announce). Not verified against the pinned version",
+      "swiftui": "Label(label, image: …) dengan .accessibilityElement(children: .combine) dan ikon .accessibilityHidden(true); perubahan lewat AccessibilityNotification.Announcement. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "tidak ada role interaktif; teks biasa (span) di dalam sel, item, atau heading; ikon status aria-hidden karena label sudah menamai state",
+    "sr_label": "teks label dari glosarium (+ detail dan overlay stagnasi); tidak memakai nama warna atau nama ikon",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.11",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "wadah inline yang membungkus ikon dan teks; tanpa latar pada quiet, border pada outline, latar -subtle pada tinted, latar solid pada filled (dari L3 per kelas)",
+      "tokens": [
+        "color-semantic-critical-subtle",
+        "color-semantic-warning-subtle",
+        "color-semantic-positive-subtle",
+        "color-semantic-info-subtle",
+        "color-semantic-neutral-negative-subtle",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative",
+        "radius-sm",
+        "border-width-thin",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph terkunci §5.7 untuk kelima status (segi delapan, segitiga, lingkaran-centang, lingkaran-i, lingkaran-minus); tidak ada pada status netral C6; dekoratif bagi teknologi bantu karena teks sudah menamai state",
+      "tokens": [
+        "icon-sm",
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "nama state dari glosarium (teks isi ≥ 16); tidak pernah dipotong",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-semantic-critical-strong",
+        "color-semantic-warning-strong",
+        "color-semantic-positive-strong",
+        "color-semantic-info-strong",
+        "color-semantic-neutral-negative-strong",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "ikon dan teks di atas fill solid (hanya bila L3 mengizinkan filled untuk kelas itu)",
+      "tokens": [
+        "color-semantic-on-critical",
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative"
+      ]
+    },
+    {
+      "part": "detail",
+      "role": "keterangan opsional sesudah label (mis. waktu sejak state berubah, durasi stagnasi); teks pendukung bila hilangnya tidak mengubah keputusan",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "stagnation-overlay",
+      "role": "penanda C2 tambahan (ikon warning + teks) di samping state apa pun saat entitas melewati stagnation_threshold B5; bukan state baru",
+      "tokens": [
+        "color-semantic-warning",
+        "color-semantic-warning-strong",
+        "icon-sm",
+        "space-2"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "description": "Keluarga semantik dari kelas C1-C5. Kosong = netral C6 (teks tanpa ikon).",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Nama state dari glosarium; juga nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Detail opsional sesudah label (waktu, durasi).",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Overlay stagnasi C2; hanya bila stagnation_threshold B5 terisi.",
+        "name": "stagnant",
+        "required": false,
+        "type": "{ label: string } | undefined"
+      },
+      {
+        "default": "false",
+        "description": "Nilai lokal belum dikonfirmasi server; menampilkan C5 \"Not synced\" (I6).",
+        "name": "unconfirmed",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Mengumumkan perubahan state lewat LiveAnnouncer saat label tampil di layar yang diperbarui realtime.",
+        "name": "announceChanges",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "tidak menerima fokus; dibaca sebagai bagian dari baris, sel, atau kartu induknya",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada efek; bila ada penjelasan state, ditaruh di panel detail atau Tooltip pada pembungkus yang fokusabel, bukan satu-satunya tempat info (UB9)",
+      "trigger": "hover di atas label"
+    },
+    {
+      "input": "touch",
+      "result": "tidak ada aksi sendiri; tap mengenai baris atau kartu induk",
+      "trigger": "tap"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Awaiting approval",
+        "Approved",
+        "Payment failed",
+        "Cancelled",
+        "In transit",
+        "Not synced",
+        "Overdue · 3 days"
+      ],
+      "id-ID": [
+        "Menunggu persetujuan",
+        "Disetujui",
+        "Pembayaran gagal",
+        "Dibatalkan",
+        "Dalam perjalanan",
+        "Belum sinkron",
+        "Terlambat · 3 hari"
+      ]
+    },
+    "rules": [
+      "Label = nama state dari glosarium, sama di semua surface (V3); satu sampai tiga kata.",
+      "State ditulis sebagai kondisi, bukan perintah (\"Awaiting approval\", bukan \"Approve now\").",
+      "Sentence case; tanpa huruf kapital penuh, tanpa tanda seru.",
+      "Detail waktu memakai formatter relatif locale; nilai tepat tersedia di elemen time ber-ISO.",
+      "Status netral C6 ditulis sebagai teks biasa; jangan menambah ikon dekoratif."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Ambil kelas C1-C6 dari lifecycle.json dan perlakuan dari L3; komponen hanya menerima status semantik.",
+    "Biarkan status netral C6 tampil sebagai teks tanpa ikon agar perhatian tersisa untuk C1-C2.",
+    "Tambahkan overlay stagnasi sebagai penanda kedua, bukan dengan mengganti state dasar.",
+    "Uji label terpanjang (+40%) dan teks 200% di kolom tabel dan kartu."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Menampilkan status hanya sebagai titik berwarna atau warna teks tanpa ikon dan teks."
+    },
+    {
+      "ref": "UB11",
+      "text": "Memakai fill untuk kelas yang L3 tidak izinkan, atau membuat C4 positif lebih keras daripada C2 di layar yang sama."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai warna interaksi atau merek untuk menandai status."
+    },
+    {
+      "ref": "UB3",
+      "text": "Memotong label status dengan ellipsis atau mengecilkannya di bawah type-label."
+    },
+    {
+      "ref": "UB1",
+      "text": "Menulis hex atau warna ramp langsung untuk satu status khusus."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus ke baris kedua dengan ikon sejajar baris pertama; lebar kolom tabel menyesuaikan; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "ikon ikut membesar sesuai skala ikon L9; tinggi wadah tinted/filled tumbuh; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "entitas tanpa state dari server ditulis \"Unknown status\" sebagai C6 dan dicatat sebagai bug data; tidak pernah label kosong",
+      "case": "0 item / nilai status kosong"
+    },
+    {
+      "behaviour": "ditampilkan sebagai teks mentah netral C6 + peringatan dev; lint V3 gagal",
+      "case": "status tidak dikenal di glosarium"
+    },
+    {
+      "behaviour": "state terakhir yang dikonfirmasi tetap tampil; perubahan lokal ditandai C5 \"Not synced\"; tidak ada state final sebelum server mengonfirmasi (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "label menampilkan state terbaru; pengumuman LiveAnnouncer di-debounce sehingga hanya state stabil terakhir yang dibaca",
+      "case": "pembaruan beruntun cepat (realtime)"
+    },
+    {
+      "behaviour": "maksimal dua penanda: state dasar lalu overlay paling mendesak (urutan C1 > C2 > C5); sisanya di panel detail",
+      "case": "beberapa status bersamaan pada satu entitas (state + stagnasi + belum sinkron)"
+    },
+    {
+      "behaviour": "tetap per baris; ringkasan jumlah ditaruh di InlineAlert atau Badge di atas tabel, bukan dengan memperkeras label",
+      "case": "layar penuh status C1 (banyak baris gagal)"
+    },
+    {
+      "behaviour": "ikon dan border memakai currentColor; makna tetap dari ikon + teks",
+      "case": "tema high-contrast atau forced-colors"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "StatusLabel dengan status tanpa ikon status ditolak (V5, UB2)",
+    "Perlakuan filled untuk kelas yang tidak diizinkan L3 ditolak (token-rule)",
+    "label harus ada di glosarium (V3)",
+    "text-overflow: ellipsis pada StatusLabel ditolak (css-pattern)"
+  ],
+  "name": "StatusLabel",
+  "preview": {
+    "combinations": [
+      "kelima status × perlakuan quiet/outline/tinted/filled sesuai L3 (yang tidak diizinkan ditampilkan sebagai dicegah)",
+      "state + overlay stagnasi",
+      "label +40% di sel sempit",
+      "teks 200%",
+      "forced-colors"
+    ],
+    "states": [
+      "neutral (C6, tanpa status)",
+      "critical (C1)",
+      "warning (C2)",
+      "neutral-negative (C3)",
+      "positive (C4)",
+      "info (C5)",
+      "stagnant (overlay C2)",
+      "local-unconfirmed"
+    ],
+    "variants": [
+      "default",
+      "with-detail",
+      "neutral"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan state lifecycle sebuah entitas (dari lifecycle.json) sebagai ikon status terkunci + teks isi, dengan perlakuan visual per kelas C1-C6 yang dibaca dari L3; satu-satunya cara baku menulis status di baris, kartu, header, dan panel detail.",
+    "when_not_to_use": [
+      "Untuk hitungan atau penanda ringkas yang L3 izinkan filled (mis. jumlah item yang perlu tindakan di navigasi): pakai Badge.",
+      "Untuk metadata netral yang bukan status (kategori, label bebas, atribut): pakai Tag atau teks biasa (I1).",
+      "Untuk pesan yang menjelaskan masalah dan cara memperbaikinya: pakai InlineAlert; StatusLabel hanya menamai state.",
+      "Untuk event kritis (I5): pakai perlakuan khusus event kritis (overlay, Banner C1, pengumuman assertive), bukan label di dalam baris.",
+      "Untuk kesegaran koneksi atau data live: pakai ConnectionStatus.",
+      "Untuk progres numerik atau sisa waktu: pakai ProgressBar atau CountdownTimer."
+    ]
+  },
+  "related": [
+    "Badge",
+    "Tag",
+    "InlineAlert",
+    "Table",
+    "Card",
+    "Timeline"
+  ],
+  "responsive": [
+    {
+      "behaviour": "di kartu bertumpuk (Table di bawah breakpoint tablet) label tampil penuh di baris sendiri; boleh membungkus ke dua baris, tidak pernah dipotong",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "inline di sel atau item; kolom status tidak termasuk kolom sekunder yang dilipat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "inline di sel tabel; lebar kolom mengikuti label terpanjang di locale terpanjang, bukan dipotong ellipsis",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "StatusLabel hanya menampilkan state entitas yang sudah boleh dilihat role; teks state boleh berbeda per sudut pandang (mis. C2 \"Awaiting your approval\" untuk approver, C5 \"Awaiting approval\" untuk pemohon) dan pemetaannya ada di lifecycle.json kolom \"Siapa yang melihat\"."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon status tidak dicerminkan (§12.4); urutan ikon → label mengikuti arah inline; angka dan durasi di detail diisolasi dengan bdi."
+  },
+  "sizes": {
+    "not_applicable": "Satu ukuran: teks isi type-label (≥ 16) dan ikon icon-sm atau icon-md sesuai L9; tinggi mengikuti teks agar tumbuh di teks 200%. Non-interaktif, sehingga tidak ada area klik; bila dibungkus tautan atau baris, area klik milik pembungkus."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "neutral (C6, tanpa status)",
+      "token_swaps": {
+        "label": "color-structure-text-primary"
+      },
+      "treatment": "teks text-primary tanpa ikon status dan tanpa wadah di semua bahasa; tidak pernah lebih keras daripada C1-C5 (I7)"
+    },
+    {
+      "name": "critical (C1)",
+      "token_swaps": {
+        "border-outline": "color-semantic-critical",
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "icon": "color-semantic-critical",
+        "label": "color-semantic-critical-strong"
+      },
+      "treatment": "perlakuan C1 dari L3. quiet: ikon + label -strong tanpa wadah; outline: + border semantik border-width-thin; tinted: + latar -subtle; filled: latar solid, ikon dan label on-critical. Record tidak mengunci satu perlakuan."
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "icon": "color-semantic-warning",
+        "label": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3 (quiet / outline / tinted / filled); intensitas tidak boleh melebihi C1 di bahasa yang sama (I7)"
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "border-outline": "color-semantic-neutral-negative",
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "icon": "color-semantic-neutral-negative",
+        "label": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "perlakuan C3 dari L3; sebagian besar archetype memberi quiet (ikon + teks). Filled hanya bila L3 eksplisit mengizinkan"
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "border-outline": "color-semantic-positive",
+        "container-filled": "color-semantic-positive",
+        "container-tinted": "color-semantic-positive-subtle",
+        "content-filled": "color-semantic-on-positive",
+        "icon": "color-semantic-positive",
+        "label": "color-semantic-positive-strong"
+      },
+      "treatment": "perlakuan C4 dari L3; tidak pernah lebih keras daripada C1-C2 pada layar yang sama (UB11)"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "border-outline": "color-semantic-info",
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "icon": "color-semantic-info",
+        "label": "color-semantic-info-strong"
+      },
+      "treatment": "perlakuan C5 dari L3; bila L2 menetapkan info netral, token info sudah memakai ramp netral dan ikon info tetap membedakannya"
+    },
+    {
+      "name": "stagnant (overlay C2)",
+      "token_swaps": {
+        "overlay-icon": "color-semantic-warning",
+        "overlay-label": "color-semantic-warning-strong"
+      },
+      "treatment": "state dasar tetap tampil; overlay C2 (ikon warning + teks \"Overdue 3 days\") ditambahkan sesudahnya hanya bila B5 stagnation_threshold terisi"
+    },
+    {
+      "name": "changed (live)",
+      "token_swaps": {},
+      "treatment": "state berubah saat tampil (realtime atau setelah aksi): perubahan diumumkan lewat LiveAnnouncer, polite; assertive hanya bila state baru C1 atau event kritis. Tidak ada animasi warna; di bawah reduced motion pergantian instan"
+    },
+    {
+      "name": "local-unconfirmed",
+      "token_swaps": {
+        "icon": "color-semantic-info",
+        "label": "color-semantic-info-strong"
+      },
+      "treatment": "nilai tersimpan lokal belum dikonfirmasi server: state yang diminta tidak ditampilkan sebagai final; StatusLabel menampilkan C5 \"Not synced\" sampai konfirmasi (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}StatusLabel: Row + Icon + Text; perlakuan dari CompositionLocal attention policy",
+    "flutter": "{ns}_status_label.dart: StatelessWidget; perlakuan dibaca dari ThemeExtension attention policy per status",
+    "html": {
+      "element": "span",
+      "notes": "span.{ns}-status-label[data-status][data-treatment] dengan svg aria-hidden + span teks; data-treatment diisi generator dari L3 per kelas"
+    },
+    "swiftui": "{Ns}StatusLabel: View berbasis Label dengan ViewModifier perlakuan dari L3"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Ikon + label dengan perlakuan L3 kelas terkait. Dipakai di baris tabel, item List, Card, dan PageHeader.",
+      "name": "default"
+    },
+    {
+      "description": "Label + detail (mis. \"Overdue · 3 days\"); detail tidak pernah menjadi satu-satunya pembawa makna.",
+      "name": "with-detail"
+    },
+    {
+      "description": "Status C6 (normal, berjalan, arsip): teks saja tanpa ikon status dan tanpa wadah, warna text-primary. Diaktifkan dengan tidak mengisi prop status.",
+      "name": "neutral"
+    }
+  ]
+}

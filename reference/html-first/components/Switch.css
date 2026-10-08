@@ -1,0 +1,187 @@
+/* Switch · engine 1.8.0 reference (catalog/components/Switch.json). Tokens only (I3); logical properties only (§12.4).
+   <input type="checkbox" role="switch"> is the track (form fallback without JS); the thumb is a sibling that moves with
+   inset-inline-start, so the "on" side follows the writing direction (RTL mirrors) and the motion collapses with motion tokens.
+   State is carried by thumb position + check icon in the thumb (+ optional On/Off text), never by colour alone. The label row
+   (label + description + track) is the hit area, >= target-current tall. */
+.ds-switch {
+  --_thumb: calc(var(--icon-md) + var(--space-1));
+  --_inset: calc(var(--border-width-thick) + var(--border-width-thin));
+  --_track-b: calc(var(--_thumb) + 2 * var(--_inset));
+  --_track-i: calc(var(--_thumb) * 1.8 + 2 * var(--_inset));
+  --_row: max(var(--control-height-md), var(--target-current));
+  display: flex;
+  flex-direction: column;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+}
+.ds-switch[data-size="sm"] { --_thumb: calc(var(--icon-sm) + var(--space-1)); --_row: max(var(--control-height-sm), var(--target-current)); }
+.ds-switch[data-size="lg"] { --_thumb: calc(var(--icon-lg) + var(--space-1)); --_row: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+
+.ds-switch__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-block-size: var(--_row);
+  padding-block: max(0px, calc((var(--_row) - var(--type-body-line)) / 2));
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-switch__text { display: flex; flex: 1 1 auto; flex-direction: column; min-inline-size: 0; overflow-wrap: anywhere; }
+.ds-switch__description { color: var(--color-structure-text-secondary); }
+.ds-switch__description:has(> .ds-icon) { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-switch__description .ds-icon,
+.ds-switch__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); flex: none; margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-switch__state { flex: none; color: var(--color-structure-text-secondary); }
+.ds-switch__row:has(.ds-switch__input:checked) .ds-switch__state [data-off],
+.ds-switch__row:has(.ds-switch__input:not(:checked)) .ds-switch__state [data-on] { display: none; }
+
+.ds-switch__control {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: none;
+  inline-size: var(--_track-i);
+  block-size: var(--_track-b);
+  margin-block: calc((var(--type-body-line) - var(--_track-b)) / 2);
+}
+.ds-switch__input {
+  --_track: var(--color-structure-surface-sunken);
+  --_border: var(--control-container-border);
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-full);
+  background: var(--_track);
+  cursor: inherit;
+  appearance: none;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), border-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-switch__input:checked { --_track: var(--control-checked-background); --_border: var(--control-checked-background); }
+.ds-switch__thumb {
+  position: absolute;
+  inset-block-start: var(--_inset);
+  inset-inline-start: var(--_inset);
+  display: grid;
+  place-items: center;
+  inline-size: var(--_thumb);
+  block-size: var(--_thumb);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-raised);
+  box-shadow: var(--elevation-1);
+  color: var(--color-interaction-default);
+  pointer-events: none;
+  transition: inset-inline-start var(--motion-fast-duration) var(--motion-easing-standard), transform var(--motion-fast-duration) var(--motion-easing-standard), border-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* state layer halo around the thumb (opacity 0 in token-swap languages) */
+.ds-switch__thumb::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--space-2));
+  z-index: -1;
+  border-radius: var(--radius-full);
+  background: var(--color-interaction-default);
+  opacity: 0;
+}
+.ds-switch__input:checked ~ .ds-switch__thumb { inset-inline-start: calc(100% - var(--_thumb) - var(--_inset)); border-color: var(--color-structure-surface-raised); }
+.ds-switch__icon { inline-size: calc(var(--_thumb) * 0.7); block-size: calc(var(--_thumb) * 0.7); stroke-width: max(var(--icon-stroke), 2); opacity: 0; }
+.ds-switch__input:checked ~ .ds-switch__thumb .ds-switch__icon { opacity: 1; }
+.ds-switch__spinner {
+  display: none;
+  inline-size: calc(var(--_thumb) * 0.6);
+  block-size: calc(var(--_thumb) * 0.6);
+  border: var(--border-width-thick) solid var(--color-interaction-default);
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  animation: ds-switch-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+.ds-switch__icon, .ds-switch__spinner { grid-area: 1 / 1; }
+@keyframes ds-switch-spin { to { transform: rotate(360deg); } }
+/* loading: optimistic position + spinner in the thumb; input ignored until the server answers */
+.ds-switch__input[aria-busy="true"] ~ .ds-switch__thumb .ds-switch__spinner { display: block; }
+.ds-switch__input[aria-busy="true"] ~ .ds-switch__thumb .ds-switch__icon { visibility: hidden; }
+.ds-switch__row:has([aria-busy="true"]) { cursor: progress; }
+
+/* interaction — never on blocked, read-only or busy switches */
+@media (hover: hover) {
+  .ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):hover .ds-switch__input:not(:checked) { --_border: var(--control-container-border-hover); }
+  .ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):hover .ds-switch__input:checked { --_track: var(--color-interaction-hover); --_border: var(--color-interaction-hover); }
+  .ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):hover .ds-switch__thumb::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-switch__row[data-force~="hover"] .ds-switch__input:not(:checked) { --_border: var(--control-container-border-hover); }
+.ds-switch__row[data-force~="hover"] .ds-switch__input:checked { --_track: var(--color-interaction-hover); --_border: var(--color-interaction-hover); }
+.ds-switch__row[data-force~="hover"] .ds-switch__thumb::before { opacity: var(--state-layer-hover-opacity); }
+.ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):active .ds-switch__thumb,
+.ds-switch__row[data-force~="pressed"]:not(:has([aria-busy="true"])) .ds-switch__thumb { transform: var(--state-press-transform); }
+.ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):active .ds-switch__thumb::before,
+.ds-switch__row[data-force~="pressed"]:not(:has([aria-busy="true"])) .ds-switch__thumb::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-switch__row:not(:has([aria-disabled="true"], [aria-readonly="true"], [aria-busy="true"])):active .ds-switch__input:checked,
+.ds-switch__row[data-force~="pressed"]:not(:has([aria-busy="true"])) .ds-switch__input:checked { --_track: var(--color-interaction-pressed); --_border: var(--color-interaction-pressed); }
+
+/* blocked with reason: focusable, Switch.js stops the toggle; thumb position still shows the state */
+.ds-switch__row:has([aria-disabled="true"]) { cursor: not-allowed; }
+.ds-switch__row:has([aria-disabled="true"]) .ds-switch__label { color: var(--color-structure-text-disabled); }
+.ds-switch__input[aria-disabled="true"] { --_track: var(--color-structure-surface-sunken); --_border: var(--color-structure-text-disabled); }
+.ds-switch__input[aria-disabled="true"]:checked { --_track: var(--color-structure-text-disabled); }
+.ds-switch__input[aria-disabled="true"] ~ .ds-switch__thumb { border-color: var(--color-structure-text-disabled); box-shadow: none; color: var(--color-structure-text-disabled); }
+.ds-switch__row:has([aria-readonly="true"]) { cursor: default; }
+
+/* save failed: state rolled back, icon + message + Retry below the row */
+.ds-switch__error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  column-gap: var(--space-1);
+  margin: 0;
+  color: var(--color-semantic-critical-strong);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-switch__error[hidden] { display: none; }
+.ds-switch__error > span { flex: 1 1 0; min-inline-size: 0; }
+.ds-switch__retry {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-block: calc((var(--type-body-line) - var(--target-current)) / 2);
+  padding-inline: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--color-interaction-default);
+  font-weight: var(--type-label-weight);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+@media (hover: hover) { .ds-switch__retry:hover { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); } }
+.ds-switch__retry[data-force~="hover"] { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+
+/* standalone: track only (table rows, toolbars); visually hidden label names the object */
+.ds-switch[data-variant="standalone"] { display: inline-flex; }
+.ds-switch[data-variant="standalone"] .ds-switch__row { align-items: center; justify-content: center; min-inline-size: var(--target-current); padding-block: 0; }
+.ds-switch[data-variant="standalone"] .ds-switch__control { margin-block: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-switch__input, .ds-switch__thumb { transition: none; }
+  .ds-switch__spinner { animation: none; border-inline-end-color: var(--color-interaction-default); opacity: 0.6; }
+}
+@media (forced-colors: active) {
+  .ds-switch__input { border-color: ButtonText; background: Canvas; }
+  .ds-switch__input:checked { background: Highlight; border-color: Highlight; }
+  .ds-switch__thumb { border-color: CanvasText; background: CanvasText; color: Canvas; }
+  .ds-switch__input:checked ~ .ds-switch__thumb { background: HighlightText; border-color: HighlightText; color: Highlight; }
+  .ds-switch__input[aria-disabled="true"] { border-color: GrayText; }
+  .ds-switch__input[aria-disabled="true"] ~ .ds-switch__thumb { background: GrayText; border-color: GrayText; }
+  .ds-switch__row:has([aria-disabled="true"]) .ds-switch__label { color: GrayText; }
+  .ds-switch__error { color: CanvasText; }
+  .ds-switch__retry { color: LinkText; }
+}

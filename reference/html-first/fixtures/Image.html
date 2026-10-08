@@ -1,0 +1,120 @@
+<!-- Image fixture · variants (content, figure, decorative, thumbnail), states (loading, loaded, error, focus, hover), ratios from aspect-* tokens,
+     zoom (Modal), mandatory combinations and edge cases. Images are inline SVG data URIs: no external files, no network.
+     The error demos use an invalid data: URI or an empty src, so the failure is immediate and local. Without JS a failed image
+     shows the browser's own alt text inside the reserved frame; Image.js swaps in the fallback (icon + visible alt). -->
+<section class="ds-demo" data-ds-demo="variants/content (priority: eager) + thumbnail">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-image" data-ds-module="image" style="max-inline-size: 28rem">
+      <div class="ds-image__frame">
+        <img class="ds-image__img" width="400" height="300" decoding="async" fetchpriority="high" alt="Terrace of hall 7 running downhill towards a lake, late afternoon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239db7c9'/%3E%3Ccircle cx='300' cy='80' r='36' fill='%23efd9a7'/%3E%3Cpath d='M0 220 120 140 220 210 300 160 400 230V300H0Z' fill='%236b8a73'/%3E%3Cpath d='M0 262 160 204 400 272V300H0Z' fill='%23435e4d'/%3E%3C/svg%3E">
+        <div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div>
+      </div>
+    </div>
+    <ul class="ds-stack" data-gap="3" style="padding: 0; list-style: none">
+      <li class="ds-inline" data-gap="3" data-nowrap>
+        <div class="ds-image" data-variant="thumbnail" data-aspect="square" data-ds-module="image">
+          <div class="ds-image__frame"><img class="ds-image__img" width="300" height="300" loading="lazy" decoding="async" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23e6dfd3'/%3E%3Ccircle cx='150' cy='140' r='80' fill='%23b5523b'/%3E%3Crect x='138' y='210' width='24' height='70' rx='6' fill='%23725c42'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+        </div>
+        <span>Competition paddle, red rubber <span class="ds-text-secondary">(thumbnail: alt="" because the title is next to it)</span></span>
+      </li>
+    </ul>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/figure (figcaption + credit) · lazy">
+  <figure class="ds-image" data-aspect="video" data-ds-module="image" style="max-inline-size: 36rem">
+    <div class="ds-image__frame">
+      <img class="ds-image__img" width="640" height="360" loading="lazy" decoding="async" alt="Team reviewing the new layout on a wall screen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23d9d4cc'/%3E%3Crect x='120' y='40' width='400' height='230' rx='6' fill='%232f3640'/%3E%3Crect x='140' y='60' width='110' height='190' fill='%23708090'/%3E%3Crect x='265' y='60' width='235' height='80' fill='%23a3b7c8'/%3E%3Crect x='265' y='155' width='110' height='95' fill='%23c9b98f'/%3E%3Crect x='390' y='155' width='110' height='95' fill='%238fa98f'/%3E%3Ccircle cx='150' cy='330' r='34' fill='%23596273'/%3E%3Ccircle cx='320' cy='336' r='34' fill='%237a6a5d'/%3E%3Ccircle cx='490' cy='330' r='34' fill='%23495a4f'/%3E%3C/svg%3E">
+      <div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div>
+    </div>
+    <figcaption class="ds-image__caption">Design review, week 41. <span class="ds-image__credit">Photo: Studio archive</span></figcaption>
+  </figure>
+</section>
+<section class="ds-demo" data-ds-demo="variants/decorative (alt=&quot;&quot; written explicitly)">
+  <div class="ds-image" data-aspect="video" data-decorative data-ds-module="image" style="max-inline-size: 20rem">
+    <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" loading="lazy" decoding="async" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239db7c9'/%3E%3Ccircle cx='300' cy='80' r='36' fill='%23efd9a7'/%3E%3Cpath d='M0 220 120 140 220 210 300 160 400 230V300H0Z' fill='%236b8a73'/%3E%3Cpath d='M0 262 160 204 400 272V300H0Z' fill='%23435e4d'/%3E%3C/svg%3E"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="ratios square / photo / video (frame reserves space, no layout shift)">
+  <div class="ds-inline" data-gap="4" style="align-items: flex-start">
+    <figure class="ds-image" data-aspect="square" data-ds-module="image" style="inline-size: 10rem">
+      <div class="ds-image__frame"><img class="ds-image__img" width="300" height="300" loading="lazy" decoding="async" alt="Red table tennis paddle on a linen background" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23e6dfd3'/%3E%3Ccircle cx='150' cy='140' r='80' fill='%23b5523b'/%3E%3Crect x='138' y='210' width='24' height='70' rx='6' fill='%23725c42'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Square</figcaption>
+    </figure>
+    <figure class="ds-image" data-ds-module="image" style="inline-size: 12rem">
+      <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" loading="lazy" decoding="async" alt="Terrace of hall 7 towards the lake" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239db7c9'/%3E%3Ccircle cx='300' cy='80' r='36' fill='%23efd9a7'/%3E%3Cpath d='M0 220 120 140 220 210 300 160 400 230V300H0Z' fill='%236b8a73'/%3E%3Cpath d='M0 262 160 204 400 272V300H0Z' fill='%23435e4d'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Photo</figcaption>
+    </figure>
+    <figure class="ds-image" data-aspect="video" data-ds-module="image" style="inline-size: 14rem">
+      <div class="ds-image__frame"><img class="ds-image__img" width="640" height="360" loading="lazy" decoding="async" alt="Team reviewing a layout on a wall screen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23d9d4cc'/%3E%3Crect x='120' y='40' width='400' height='230' rx='6' fill='%232f3640'/%3E%3Crect x='140' y='60' width='110' height='190' fill='%23708090'/%3E%3Crect x='265' y='60' width='235' height='80' fill='%23a3b7c8'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Video</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/loading (placeholder, zoom not offered) · error (fallback with visible alt) · empty src (no request)">
+  <div class="ds-inline" data-gap="4" style="align-items: flex-start">
+    <figure class="ds-image" data-state="loading" data-static style="inline-size: 12rem">
+      <div class="ds-image__frame" aria-busy="true"><img class="ds-image__img" width="400" height="300" alt="Main building terrace at sunset"></div>
+      <figcaption class="ds-image__caption">Loading</figcaption>
+    </figure>
+    <figure class="ds-image" data-ds-module="image" style="inline-size: 12rem">
+      <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" loading="lazy" decoding="async" alt="Main building terrace at sunset" src="data:,"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Failed to load</figcaption>
+    </figure>
+    <figure class="ds-image" data-ds-module="image" style="inline-size: 12rem">
+      <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" alt="Venue map for halls 1–9"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Empty src</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="fallback with long alt (+40% locale): clipped visually, full alt stays the accessible name">
+  <figure class="ds-image" data-ds-module="image" lang="id" style="max-inline-size: 16rem">
+    <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" alt="Tim peninjau sedang membahas tata letak baru untuk aplikasi pemesanan lapangan di layar dinding ruang rapat lantai tiga" src="data:,"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+    <figcaption class="ds-image__caption">Foto: Arsip studio</figcaption>
+  </figure>
+</section>
+<section class="ds-demo" data-ds-demo="zoom-trigger: hover + focus (static) · live Modal with zoom in / out (SC 2.5.1)">
+  <div class="ds-inline" data-gap="4" style="align-items: flex-start">
+    <figure class="ds-image" data-aspect="video" data-ds-module="image" style="inline-size: 20rem">
+      <div class="ds-image__frame">
+        <img class="ds-image__img" width="640" height="360" loading="lazy" decoding="async" alt="Team reviewing the new layout on a wall screen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23d9d4cc'/%3E%3Crect x='120' y='40' width='400' height='230' rx='6' fill='%232f3640'/%3E%3Crect x='140' y='60' width='110' height='190' fill='%23708090'/%3E%3Crect x='265' y='60' width='235' height='80' fill='%23a3b7c8'/%3E%3Crect x='265' y='155' width='110' height='95' fill='%23c9b98f'/%3E%3Crect x='390' y='155' width='110' height='95' fill='%238fa98f'/%3E%3C/svg%3E">
+        <button type="button" class="ds-image__zoom" data-force="hover focus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span>View full size</span></button>
+      </div>
+      <figcaption class="ds-image__caption">Hover + focus on the zoom trigger</figcaption>
+    </figure>
+    <figure class="ds-image" data-aspect="video" data-ds-module="image" style="inline-size: 20rem" id="img-zoom-fallback">
+      <div class="ds-image__frame">
+        <img class="ds-image__img" width="640" height="360" loading="lazy" decoding="async" alt="Team reviewing the new layout on a wall screen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23d9d4cc'/%3E%3Crect x='120' y='40' width='400' height='230' rx='6' fill='%232f3640'/%3E%3Crect x='140' y='60' width='110' height='190' fill='%23708090'/%3E%3Crect x='265' y='60' width='235' height='80' fill='%23a3b7c8'/%3E%3Crect x='265' y='155' width='110' height='95' fill='%23c9b98f'/%3E%3Crect x='390' y='155' width='110' height='95' fill='%238fa98f'/%3E%3C/svg%3E">
+        <a class="ds-image__zoom" href="#img-zoom-fallback" data-ds-modal-open="img-zoom-dialog"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span>View full size<span class="ds-vh">: design review photo</span></span></a>
+        <div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div>
+      </div>
+      <figcaption class="ds-image__caption">Live: opens a Modal</figcaption>
+    </figure>
+  </div>
+  <dialog class="ds-modal" data-variant="dialog" data-size="lg" id="img-zoom-dialog" aria-labelledby="img-zoom-title" data-ds-module="modal image-zoom">
+    <form class="ds-modal__form" method="dialog">
+      <header class="ds-modal__header"><h2 class="ds-modal__title" id="img-zoom-title">Design review, week 41</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+      <div class="ds-modal__body ds-stack" data-gap="3">
+        <div class="ds-image__zoom-controls"><button type="button" class="ds-button" data-size="sm" data-ds-zoom="in"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span>Zoom in</span></button><button type="button" class="ds-button" data-size="sm" data-ds-zoom="out" aria-disabled="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg><span>Zoom out</span></button></div>
+        <div class="ds-image__full-wrap" tabindex="0" role="region" aria-label="Full-size image, scrollable when zoomed">
+          <img class="ds-image__full" width="640" height="360" loading="lazy" decoding="async" alt="Team reviewing the new layout on a wall screen" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%23d9d4cc'/%3E%3Crect x='120' y='40' width='400' height='230' rx='6' fill='%232f3640'/%3E%3Crect x='140' y='60' width='110' height='190' fill='%23708090'/%3E%3Crect x='265' y='60' width='235' height='80' fill='%23a3b7c8'/%3E%3Crect x='265' y='155' width='110' height='95' fill='%23c9b98f'/%3E%3Crect x='390' y='155' width='110' height='95' fill='%238fa98f'/%3E%3C/svg%3E">
+        </div>
+        <p class="ds-image__caption">Design review, week 41. Photo: Studio archive</p>
+      </div>
+      <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Close</button></footer>
+    </form>
+  </dialog>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% (fallback text grows; frame may grow past its ratio)">
+  <div style="zoom: 2; max-inline-size: 12rem">
+    <figure class="ds-image" data-ds-module="image">
+      <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" alt="Main building terrace at sunset" src="data:,"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+      <figcaption class="ds-image__caption">Terrace, 2025</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (photo not mirrored; caption follows text direction)">
+  <figure class="ds-image" dir="rtl" lang="ar" data-ds-module="image" style="max-inline-size: 20rem">
+    <div class="ds-image__frame"><img class="ds-image__img" width="400" height="300" loading="lazy" decoding="async" alt="ممر الحفرة السابعة باتجاه البحيرة" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239db7c9'/%3E%3Ccircle cx='300' cy='80' r='36' fill='%23efd9a7'/%3E%3Cpath d='M0 220 120 140 220 210 300 160 400 230V300H0Z' fill='%236b8a73'/%3E%3Cpath d='M0 262 160 204 400 272V300H0Z' fill='%23435e4d'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div>
+    <figcaption class="ds-image__caption">الحفرة <bdi>7</bdi> — تصوير: أرشيف الاستوديو</figcaption>
+  </figure>
+</section>

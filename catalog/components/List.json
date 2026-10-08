@@ -1,0 +1,640 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke heading daftar",
+      "aria-current=\"true\" pada item yang sedang dibuka di master–detail",
+      "aria-selected pada option (varian listbox)",
+      "aria-setsize dan aria-posinset bila daftar dimuat bertahap atau tervirtualisasi",
+      "aria-busy=\"true\" saat loading",
+      "aria-disabled + aria-describedby ke reason pada item diblokir",
+      "jumlah hasil, item dimuat, dan perpindahan posisi diumumkan lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "heading daftar → item berurutan (item-action lalu trailing-action) → load-more; setelah item dihapus fokus ke item berikutnya atau heading daftar (§9.5)",
+    "native": {
+      "compose": "LazyColumn + ListItem (headlineContent, supportingContent, leadingContent, trailingContent); Modifier.selectable / toggleable; Modifier.semantics(mergeDescendants = true) { customActions = listOf(CustomAccessibilityAction(\"Move up\") { … }) }",
+      "flutter": "ListView.builder + ListTile (leading, title, subtitle, trailing, selected, onTap, enabled); MergeSemantics per item; Semantics(selected:) untuk seleksi; ReorderableListView dengan aksi Semantics customSemanticsActions untuk Move up/down",
+      "swiftui": "List(selection: $selection) dengan Section; .swipeActions dengan padanan di .contextMenu; .accessibilityElement(children: .combine); .onMove dengan EditButton untuk urutan"
+    },
+    "politeness": "polite",
+    "role": "list/listitem (ul/ol/li) untuk static dan navigable; listbox/option dengan aria-multiselectable untuk selectable bila item tidak memuat kontrol lain; daftar dengan kontrol per item tetap list dengan Checkbox",
+    "sr_label": "nama aksesibel item-action = judul + teks pendukung penting + meta (status, waktu) dalam satu kalimat; ikon dekoratif disembunyikan",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.1",
+      "1.4.4",
+      "1.4.10",
+      "2.1.1",
+      "2.4.3",
+      "2.4.4",
+      "2.4.7",
+      "2.5.1",
+      "2.5.7",
+      "2.5.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "ul/ol berlabel (heading terdekat atau aria-label); garis pemisah antar item opsional",
+      "tokens": [
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "li; tinggi minimum layout-row-height, tumbuh mengikuti isi; padding inline dan block dari space-*",
+      "tokens": [
+        "layout-row-height",
+        "space-2",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "item-action",
+      "role": "elemen interaktif utama item (tautan atau tombol) yang mengisi seluruh baris; satu target per item",
+      "tokens": [
+        "color-focus-ring",
+        "state-layer-hover-opacity",
+        "state-layer-pressed-opacity",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "leading",
+      "role": "Avatar, ikon, Image thumbnail, atau Checkbox seleksi di inline-start",
+      "tokens": [
+        "avatar-md",
+        "icon-md",
+        "icon-stroke",
+        "aspect-square"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "teks utama item; boleh dipotong ellipsis bila nama lengkap tersedia di detail, Tooltip, atau long-press",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "supporting-text",
+      "role": "maksimal dua baris teks pendukung; dibungkus, bukan dipotong, bila memuat status, harga, atau waktu",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "meta",
+      "role": "slot trailing: waktu, angka (tabular-nums), StatusLabel, Badge; tidak pernah dipotong",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "trailing-action",
+      "role": "IconButton \"More actions\" (Menu) atau chevron navigasi; target terpisah dari item-action dengan jarak ≥ 8",
+      "tokens": [
+        "icon-md",
+        "control-height-sm",
+        "target-min-touch",
+        "space-2"
+      ]
+    },
+    {
+      "part": "selection-marker",
+      "role": "centang atau Checkbox; penanda non-warna untuk item terpilih",
+      "tokens": [
+        "icon-sm",
+        "color-interaction-default",
+        "color-structure-selection"
+      ]
+    },
+    {
+      "part": "section-header",
+      "role": "judul grup (mis. per hari) sebagai heading; sticky opsional pada z-sticky",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "color-structure-surface-raised",
+        "z-sticky"
+      ]
+    },
+    {
+      "part": "load-more",
+      "role": "Button \"Load more\" di akhir daftar; fokus terjaga setelah memuat",
+      "tokens": [
+        "control-height-md",
+        "space-4"
+      ]
+    },
+    {
+      "part": "skeleton-item",
+      "role": "Skeleton yang meniru leading + dua baris teks",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-xs"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onSelectedChange",
+        "payload": "string[]",
+        "when": "seleksi berubah"
+      },
+      {
+        "name": "onPress",
+        "payload": "{ itemId: string }",
+        "when": "List.Item diaktifkan (pelepasan pointer, Enter, Space)"
+      },
+      {
+        "name": "onLoadMore",
+        "payload": "void",
+        "when": "Load more diaktifkan"
+      },
+      {
+        "name": "onReorder",
+        "payload": "{ itemId: string; fromIndex: number; toIndex: number }",
+        "when": "item dipindah lewat drag, Menu, atau keyboard"
+      },
+      {
+        "name": "onRetry",
+        "payload": "void",
+        "when": "Retry pada error"
+      }
+    ],
+    "parts": [
+      "List.Section (label)",
+      "List.Item (itemId, href, onPress, disabled, reason, unread, pending)",
+      "List.Leading",
+      "List.Title",
+      "List.SupportingText",
+      "List.Meta",
+      "List.TrailingAction",
+      "List.Empty",
+      "List.LoadMore"
+    ],
+    "props": [
+      {
+        "default": "static",
+        "description": "Model interaksi daftar.",
+        "name": "variant",
+        "required": false,
+        "type": "\"static\" | \"navigable\" | \"selectable\""
+      },
+      {
+        "description": "Nama aksesibel bila tidak ada heading terlihat yang dirujuk lewat labelledBy.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "id heading yang menamai daftar.",
+        "name": "labelledBy",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "single",
+        "description": "Untuk variant selectable.",
+        "name": "selectionMode",
+        "required": false,
+        "type": "\"single\" | \"multiple\""
+      },
+      {
+        "description": "Controlled: id item terpilih.",
+        "name": "selected",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "[]",
+        "description": "Uncontrolled: seleksi awal.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "true",
+        "description": "Garis pemisah antar item.",
+        "name": "dividers",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Mengaktifkan urutan manual dengan drag + Menu + keyboard.",
+        "name": "reorderable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Skeleton pertama kali; Spinner di Load more untuk halaman berikut.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error muat; menampilkan InlineAlert C1 + Retry.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan tombol Load more.",
+        "name": "hasMore",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke item-action lalu trailing-action tiap item dalam urutan DOM (varian navigable); varian selectable listbox memakai satu tab stop",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antar item; Space memilih; Shift+↑/↓ memperluas seleksi pada multiple",
+      "trigger": "↑/↓, Home/End (varian selectable sebagai listbox)"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka detail (onPress); di master–detail fokus tetap di daftar dan panel detail diumumkan",
+      "trigger": "Enter pada item-action"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah item satu posisi; posisi baru diumumkan polite \"Moved to position 3 of 8\"",
+      "trigger": "Alt+↑/↓ atau item Menu Move up/Move down (reorderable)"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress pada pelepasan; klik trailing-action tidak memicu item",
+      "trigger": "klik item"
+    },
+    {
+      "input": "touch",
+      "result": "tap membuka detail; swipe hanya pintasan, aksi yang sama selalu ada di trailing-action Menu (SC 2.5.1)",
+      "trigger": "tap item; geser item (bila swipe actions ada)"
+    },
+    {
+      "input": "touch",
+      "result": "memasuki mode seleksi bila varian selectable; alternatif terlihat: tombol Select di toolbar",
+      "trigger": "tekan lama"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Weekly report",
+        "Updated 5 minutes ago",
+        "Today",
+        "Load more",
+        "No items yet. New items appear here when they're created.",
+        "Moved to position 3 of 8"
+      ],
+      "id-ID": [
+        "Laporan mingguan",
+        "Diperbarui 5 menit lalu",
+        "Hari ini",
+        "Muat lagi",
+        "Belum ada item. Item baru tampil di sini setelah dibuat.",
+        "Dipindah ke posisi 3 dari 8"
+      ]
+    },
+    "rules": [
+      "Judul item = nama objek, bukan aksi; teks pendukung menjawab pertanyaan berikut pengguna (siapa, kapan, berapa).",
+      "Maksimal dua baris teks pendukung; detail lain pindah ke halaman atau panel detail.",
+      "Waktu di meta relatif untuk 7 hari terakhir dan absolut setelahnya, diformat locale sesi.",
+      "Heading grup memakai label tanggal atau kategori dari glosarium, sentence case."
+    ]
+  },
+  "depends_on": [
+    "Avatar",
+    "Checkbox",
+    "StatusLabel",
+    "IconButton",
+    "Button",
+    "Skeleton",
+    "EmptyState",
+    "InlineAlert",
+    "Spinner",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Jadikan seluruh baris satu target dengan nama aksesibel lengkap.",
+    "Letakkan status, waktu, dan angka di meta tanpa pemotongan.",
+    "Sediakan Menu sebagai padanan setiap swipe dan drag."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Menyembunyikan aksi hanya di swipe atau hover."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai item belum dibaca atau terpilih hanya dengan warna."
+    },
+    {
+      "ref": "UB5",
+      "text": "Menumpuk dua target bertetangga tanpa jarak 8 dan area 44 di sentuh."
+    },
+    {
+      "ref": "UB7",
+      "text": "Reorder lewat drag tanpa alternatif Menu dan keyboard."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul membungkus maksimal dua baris lalu ellipsis dengan nama lengkap di aksesibel dan detail; meta pindah ke baris bawah bila tidak muat",
+      "case": "judul +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "item tumbuh; leading tetap rata atas; meta pindah ke bawah judul; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik; heading daftar tetap",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "Load more per halaman (default) atau virtualisasi dengan aria-setsize/aria-posinset; tidak ada gulir tak berujung otomatis; posisi gulir dipulihkan saat kembali dari detail",
+      "case": "10.000+ item"
+    },
+    {
+      "behaviour": "Spinner di tombol Load more (lebar terkunci); item lama tetap; fokus tetap pada tombol",
+      "case": "loading halaman berikut"
+    },
+    {
+      "behaviour": "item tersimpan tampil dengan \"Last updated\"; item baru lokal bertanda Pending; Load more aria-disabled dengan reason \"Needs connection\"",
+      "case": "offline"
+    },
+    {
+      "behaviour": "item yang sudah ada tetap; InlineAlert kecil + Retry menggantikan Load more",
+      "case": "gagal sebagian (halaman berikut gagal)"
+    },
+    {
+      "behaviour": "leading di kanan, trailing di kiri; angka dan waktu diisolasi bidi; chevron navigasi dicerminkan",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Item interaktif dengan dua target yang tumpang tindih ditolak",
+    "Swipe action tanpa padanan Menu ditolak (UB9)",
+    "Reorder drag tanpa Menu Move up/down dan keyboard ditolak (UB7)",
+    "Meta berisi status, harga, atau waktu dengan ellipsis ditolak"
+  ],
+  "name": "List",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "dragged + Menu Move up/down",
+      "master–detail aria-current",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "selected",
+      "unread",
+      "disabled-with-reason",
+      "loading",
+      "empty",
+      "error",
+      "pending-sync"
+    ],
+    "variants": [
+      "static",
+      "navigable",
+      "selectable"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan kumpulan item sejenis dalam satu kolom yang dibaca berurutan, tiap item dengan judul, teks pendukung, dan slot leading/trailing; bisa statis, dapat dinavigasi, atau dapat dipilih.",
+    "when_not_to_use": [
+      "Untuk membandingkan banyak atribut antar record: pakai Table.",
+      "Untuk pasangan label–nilai satu record: pakai DescriptionList.",
+      "Untuk memilih nilai form dari opsi: pakai Select, RadioGroup, Checkbox, atau Combobox.",
+      "Untuk daftar aksi dari pemicu: pakai Menu.",
+      "Untuk kejadian kronologis dengan aktor dan waktu: pakai Timeline.",
+      "Untuk item hierarkis yang dibuka per tingkat: pakai Tree."
+    ]
+  },
+  "related": [
+    "Table",
+    "Timeline",
+    "Tree",
+    "NotificationItem",
+    "Menu",
+    "DescriptionList"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh; item ≥ target-min-touch; trailing-action ≥ target-min-touch; master–detail menjadi dua layar (daftar → detail dengan Back); seleksi lewat tombol Select atau tekan lama",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "satu kolom maksimal di tengah atau pane daftar di master–detail; item ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "pane daftar dengan detail di ContextPanel docked; aria-current menandai item terbuka; hover menampilkan aksi tambahan yang juga ada di Menu",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "item yang tidak boleh dilihat role tidak dirender; jumlah dan aria-setsize mengikuti item yang terlihat"
+    },
+    {
+      "pattern": "read-only",
+      "when": "tanpa seleksi, swipe, dan reorder; item tetap bisa dibuka untuk dibaca"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "item terlihat tetapi tidak bisa dibuka atau dipilih saat ini; ikon gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Leading/trailing memakai inline-start/end; chevron navigasi dicerminkan; arah swipe dicerminkan (aksi akhir dari inline-end); angka dan waktu tetap urutan digit LTR lewat isolasi bidi."
+  },
+  "sizes": {
+    "not_applicable": "Tinggi item dari layout-row-height dan sumbu mode kepadatan (§5.9), bukan prop size (§6.8); item tumbuh mengikuti isi, area klik item interaktif ≥ target-current (≥ 44 di sentuh)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "penanda tetap; state-layer di atas selection",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "penanda + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "penanda diredam; status terpilih tetap diumumkan; reason terlihat",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "skeleton tidak bisa ditekan",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "hanya bila reorderable; state-layer dragged; alternatif Menu Move up/Move down dan keyboard wajib (UB7)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "item": "color-structure-surface-base"
+      },
+      "treatment": "item di atas surface-base dengan pemisah opsional"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "item-action": "color-structure-selection"
+      },
+      "treatment": "state-layer hover di atas item-action; hanya varian navigable/selectable di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "item-action": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px di seluruh item"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "item-action": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "item": "color-structure-selection",
+        "selection-marker": "color-interaction-default"
+      },
+      "treatment": "selection-marker tampil (centang/Checkbox) + latar selection; aria-selected atau aria-current=\"true\" untuk master–detail"
+    },
+    {
+      "name": "unread",
+      "token_swaps": {},
+      "treatment": "judul berbobot lebih tebal + titik penanda dengan teks tersembunyi \"Unread\"; bukan hanya warna"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "title": "color-structure-text-disabled"
+      },
+      "treatment": "item tidak bisa dibuka atau dipilih: aria-disabled, teks text-disabled pada judul, ikon gembok, reason sebagai supporting-text yang kontras penuh"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "skeleton-item": "color-structure-skeleton"
+      },
+      "treatment": "skeleton-item sebanyak ukuran halaman; container aria-busy=\"true\""
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "EmptyState spesifik menggantikan daftar"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "InlineAlert C1 + Retry menggantikan daftar; item yang sudah tampil tetap bila gagal hanya pada halaman berikut"
+    },
+    {
+      "name": "pending-sync",
+      "token_swaps": {
+        "meta": "color-structure-text-secondary"
+      },
+      "treatment": "item dibuat atau diubah offline: ikon jam + \"Pending\" di meta sampai dikonfirmasi (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "LazyColumn + ListItem dibungkus {Ns}List",
+    "flutter": "ListView.builder + ListTile dibungkus {ns}_list.dart",
+    "html": {
+      "element": "ul/ol + li",
+      "notes": "item navigable = a atau button yang mengisi li; selectable tanpa kontrol per item = ul[role=listbox] + li[role=option]; tanpa JS: daftar tautan + tautan halaman berikut"
+    },
+    "swiftui": "List + Section dibungkus {Ns}List"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Item non-interaktif; tidak ada hover atau fokus pada item; tautan di dalam teks tetap tautan biasa.",
+      "name": "static"
+    },
+    {
+      "description": "Setiap item satu tautan/tombol penuh baris (membuka detail); chevron di trailing bila membuka halaman lain.",
+      "name": "navigable"
+    },
+    {
+      "description": "Item dapat dipilih (single atau multiple) dengan penanda non-warna; dipakai untuk daftar kerja dengan aksi massal atau master–detail.",
+      "name": "selectable"
+    }
+  ]
+}

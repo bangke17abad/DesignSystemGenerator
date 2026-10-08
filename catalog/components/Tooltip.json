@@ -1,0 +1,404 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-describedby pada pemicu ke id content (varian description)",
+      "aria-label pada pemicu = teks tooltip (varian label)",
+      "content tidak pernah berisi elemen fokusabel",
+      "tidak memakai atribut title native (tidak dapat diakses keyboard dan sentuh)",
+      "aria-keyshortcuts pada pemicu bila tooltip menampilkan pintasan"
+    ],
+    "focus_order": "tooltip tidak masuk urutan fokus; fokus selalu tetap pada pemicu",
+    "native": {
+      "compose": "TooltipBox(positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(), tooltip = { PlainTooltip { Text(…) } }, state = rememberTooltipState()); pemicu tetap punya contentDescription",
+      "flutter": "Tooltip(message, waitDuration, showDuration, triggerMode: TooltipTriggerMode.longPress, enableTapToDismiss, excludeFromSemantics: true bila pemicu sudah punya Semantics label)",
+      "swiftui": ".help(\"…\") untuk pointer di macOS/iPadOS; di iOS tanpa pointer tidak ada tooltip hover: label lewat .accessibilityLabel dan keterangan terlihat atau .popover bila diminta"
+    },
+    "politeness": "polite",
+    "role": "tooltip (div role=\"tooltip\") yang dirujuk aria-describedby pemicu; varian label memakai aria-label pada pemicu sebagai nama dan tooltip disembunyikan dari pohon aksesibilitas (aria-hidden) agar tidak dibaca dua kali",
+    "sr_label": "varian label: nama aksesibel pemicu; varian description: dibaca setelah nama dan role pemicu",
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.13",
+      "2.1.1",
+      "2.4.7",
+      "2.5.3",
+      "3.2.1",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "trigger",
+      "role": "elemen fokusabel yang sudah ada (IconButton, tautan, sel terpotong, time); tidak ditambah tab stop baru hanya demi tooltip",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "gelembung di portal pada z-tooltip; teks satu kalimat; lebar maksimum terbatas; dapat di-hover",
+      "tokens": [
+        "color-structure-surface-inverse",
+        "color-structure-text-oninverse",
+        "type-caption-size",
+        "type-caption-line",
+        "type-caption-weight",
+        "radius-sm",
+        "space-1",
+        "space-2",
+        "z-tooltip",
+        "elevation-1"
+      ]
+    },
+    {
+      "part": "arrow",
+      "role": "penunjuk opsional ke pemicu; mengikuti sisi penempatan",
+      "tokens": [
+        "color-structure-surface-inverse"
+      ]
+    },
+    {
+      "part": "shortcut",
+      "role": "pintasan aksi opsional (Kbd) di inline-end teks",
+      "tokens": [
+        "type-code-family",
+        "type-code-size",
+        "color-structure-text-oninverse"
+      ]
+    },
+    {
+      "part": "motion",
+      "role": "fade masuk/keluar; runtuh satu frame di reduced motion",
+      "tokens": [
+        "motion-fast-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"hover\" | \"focus\" | \"escape\" | \"blur\" | \"press\" | \"long-press\" }",
+        "when": "tooltip dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "Tooltip.Trigger",
+      "Tooltip.Content"
+    ],
+    "props": [
+      {
+        "description": "Teks tooltip; satu frasa atau kalimat pendek.",
+        "name": "content",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "description",
+        "description": "label menamai pemicu (aria-label); description menambah keterangan (aria-describedby).",
+        "name": "variant",
+        "required": false,
+        "type": "\"label\" | \"description\""
+      },
+      {
+        "description": "Controlled: tooltip terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "block-start",
+        "description": "Sisi pilihan; flip otomatis bila tidak muat; logis untuk RTL.",
+        "name": "side",
+        "required": false,
+        "type": "\"block-start\" | \"block-end\" | \"inline-start\" | \"inline-end\""
+      },
+      {
+        "default": "500",
+        "description": "Jeda hover dalam ms; fokus keyboard selalu tanpa jeda.",
+        "name": "delay",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Kunci pintasan yang dirender sebagai Kbd.",
+        "name": "shortcut",
+        "required": false,
+        "type": "string[]"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "tooltip tampil tanpa jeda; tetap selama fokus berada di pemicu",
+      "trigger": "fokus pemicu (Tab)"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup tooltip; fokus tetap di pemicu; Esc tidak diteruskan untuk menutup overlay induk saat tooltip yang ditutup",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "tooltip menutup",
+      "trigger": "blur (Tab keluar)"
+    },
+    {
+      "input": "pointer",
+      "result": "tampil setelah delay; tetap terbuka saat pointer melintas ke content; menutup setelah jeda singkat (±100 ms) ketika pointer meninggalkan keduanya",
+      "trigger": "hover pemicu; pindah ke content"
+    },
+    {
+      "input": "pointer",
+      "result": "aksi pemicu berjalan; tooltip menutup",
+      "trigger": "klik pemicu"
+    },
+    {
+      "input": "touch",
+      "result": "tooltip tampil (konvensi label IconButton platform) dan menutup setelah jari dilepas + jeda baca ≥ 1,5 detik atau tap di luar; tidak ada informasi yang hanya tersedia lewat jalur ini",
+      "trigger": "tekan lama pada pemicu"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "More actions",
+        "Copy link",
+        "March 4, 2026, 14:05",
+        "Search (Ctrl+K)"
+      ],
+      "id-ID": [
+        "Aksi lainnya",
+        "Salin tautan",
+        "4 Maret 2026, 14.05",
+        "Cari (Ctrl+K)"
+      ]
+    },
+    "rules": [
+      "Satu frasa atau satu kalimat pendek; tanpa titik untuk frasa.",
+      "Varian label = nama aksi yang sama dengan nama aksesibel pemicu (SC 2.5.3).",
+      "Tidak mengulang teks yang sudah terlihat di samping pemicu.",
+      "Tidak memuat instruksi wajib, error, atau satu-satunya penjelasan status."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Pakai Tooltip sebagai label setiap IconButton di pointer.",
+    "Pastikan pointer bisa bergerak ke tooltip tanpa tooltip hilang.",
+    "Tutup tooltip dengan Esc tanpa memindah fokus."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Menaruh informasi penting, instruksi, atau satu-satunya penjelasan status di tooltip."
+    },
+    {
+      "text": "Menaruh tautan atau tombol di dalam tooltip; pakai Popover."
+    },
+    {
+      "text": "Memasang tooltip pada elemen yang tidak bisa difokus."
+    },
+    {
+      "ref": "UB10",
+      "text": "Menjelaskan aksi diblokir hanya lewat tooltip tanpa reason terlihat."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "membungkus sampai lebar maksimum (±40 karakter); lebih dari dua baris berarti konten salah tempat: pindah ke Popover atau teks terlihat",
+      "case": "teks +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "gelembung tumbuh; flip ke sisi yang muat; tidak pernah keluar viewport atau terpotong",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tooltip tidak dirender; pemicu ikon tanpa label gagal lint",
+      "case": "teks kosong"
+    },
+    {
+      "behaviour": "maksimal satu tooltip terbuka; berpindah antar pemicu tanpa jeda ulang",
+      "case": "banyak pemicu berdekatan (toolbar)"
+    },
+    {
+      "behaviour": "dirender di portal; flip/shift; ditutup saat pemicu keluar viewport karena gulir",
+      "case": "pemicu di tepi viewport atau di dalam kontainer gulir"
+    },
+    {
+      "behaviour": "tooltip tetap menamai aksi; status loading atau reason offline ditampilkan oleh pemicu, bukan tooltip",
+      "case": "pemicu loading atau offline"
+    },
+    {
+      "behaviour": "sisi start/end ditukar secara logis; teks campuran dengan angka diisolasi bidi",
+      "case": "RTL"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Atribut title sebagai tooltip ditolak",
+    "Tooltip berisi elemen fokusabel ditolak (gunakan Popover)",
+    "Tooltip pada elemen non-fokusabel ditolak",
+    "IconButton tanpa label aksesibel ditolak walau ada Tooltip",
+    "Teks tooltip lebih dari ±120 karakter (manual-review)"
+  ],
+  "name": "Tooltip",
+  "preview": {
+    "combinations": [
+      "hover+focus (satu tooltip)",
+      "disabled+focus (reason)",
+      "pressed menutup",
+      "flip di tepi viewport",
+      "tekan lama sentuh",
+      "RTL"
+    ],
+    "states": [
+      "hidden",
+      "opening",
+      "open",
+      "hovered-content",
+      "dismissed"
+    ],
+    "variants": [
+      "label",
+      "description"
+    ]
+  },
+  "purpose": {
+    "purpose": "Label atau keterangan singkat non-interaktif yang muncul saat pemicu di-hover atau difokus, untuk melengkapi informasi yang sudah ada di tempat lain (label IconButton, nama lengkap yang dipotong, waktu tepat).",
+    "when_not_to_use": [
+      "Untuk informasi penting, instruksi, atau error: tampilkan sebagai teks terlihat (helper, InlineAlert).",
+      "Untuk konten yang berisi tautan, tombol, atau field: pakai Popover.",
+      "Untuk teks lebih dari satu kalimat pendek: pakai Popover atau teks terlihat.",
+      "Untuk alasan aksi diblokir di surface sentuh: tulis reason sebagai teks terlihat; Tooltip hanya tambahan di pointer.",
+      "Untuk elemen non-fokusabel (teks biasa, ikon dekoratif): jadikan pemicu fokusabel atau tampilkan informasinya langsung."
+    ]
+  },
+  "related": [
+    "Popover",
+    "IconButton",
+    "Kbd",
+    "Button"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tidak ada hover; tooltip hanya lewat tekan lama sebagai pelengkap; informasi deskriptif dipindah ke teks terlihat atau Popover",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "tekan lama di sentuh; hover di pointer/trackpad; penempatan flip agar tidak tertutup keyboard virtual",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "hover dengan delay dan fokus seketika; flip/shift di tepi viewport; tampil di portal agar tidak terpotong kontainer overflow",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Tooltip tidak memuat aksi; izin diterapkan pada pemicu (lihat pola disabled-with-reason di Button)."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "side memakai nilai logis sehingga inline-start/end tertukar di RTL; arrow mengikuti sisi; teks dan Kbd di dalamnya mengikuti arah dokumen dengan isolasi bidi untuk angka dan kombinasi tombol."
+  },
+  "sizes": {
+    "not_applicable": "Tooltip tidak interaktif dan tidak punya prop size; ukuran mengikuti teks type-caption dan lebar maksimum, area klik milik pemicu."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "hover + fokus pada pemicu: satu tooltip, tidak ganda",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "pemicu aria-disabled tetap fokusabel; tooltip boleh mengulang reason yang juga terlihat",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "menekan pemicu menutup tooltip agar tidak menutupi hasil aksi",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "pemicu loading tetap memberi label; tooltip tidak menyebut status loading (diumumkan terpisah)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "hidden",
+      "token_swaps": {},
+      "treatment": "tidak dirender di DOM aksesibilitas kecuali sebagai sumber aria-describedby"
+    },
+    {
+      "name": "opening",
+      "token_swaps": {},
+      "treatment": "muncul setelah jeda (delay, default ±500 ms) saat hover; seketika saat fokus keyboard; tooltip berikutnya dalam satu grup muncul tanpa jeda"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "content": "color-structure-surface-inverse"
+      },
+      "treatment": "content tampil di z-tooltip di dekat pemicu, flip/shift agar tidak keluar viewport; tidak menutup pemicu atau elemen fokus"
+    },
+    {
+      "name": "hovered-content",
+      "token_swaps": {},
+      "treatment": "pointer berada di atas content: tetap terbuka (SC 1.4.13 hoverable)"
+    },
+    {
+      "name": "dismissed",
+      "token_swaps": {},
+      "treatment": "Esc menutup tanpa memindah fokus atau pointer; tidak terbuka lagi sampai pemicu ditinggalkan dan dimasuki ulang"
+    }
+  ],
+  "target_hints": {
+    "compose": "TooltipBox + PlainTooltip dibungkus {Ns}Tooltip",
+    "flutter": "Tooltip dibungkus {ns}_tooltip.dart",
+    "html": {
+      "element": "div[role=tooltip] di portal",
+      "notes": "pemicu memegang aria-describedby/aria-label; modul JS untuk hover, fokus, Esc, dan zona hover; tanpa JS label tetap tersedia lewat aria-label atau teks VisuallyHidden; tidak memakai atribut title"
+    },
+    "swiftui": ".help dibungkus modifier {ns}Tooltip(_:); no-op di iOS tanpa pointer"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Menamai pemicu hanya-ikon; isi tooltip sama dengan nama aksesibel pemicu (aria-label), tidak diumumkan dua kali.",
+      "name": "label"
+    },
+    {
+      "description": "Keterangan tambahan yang tidak penting (nama lengkap, waktu tepat, pintasan); terhubung lewat aria-describedby.",
+      "name": "description"
+    }
+  ]
+}

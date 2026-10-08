@@ -1,0 +1,98 @@
+/* Spinner · engine 1.8.0 reference (catalog/components/Spinner.json). Tokens only (I3); logical properties only (§12.4).
+   Only for waits under 2 s or inside a control. Waiting is not a status (I1): the arc is currentColor, never a semantic colour.
+   standalone: span[role=status] > indicator (aria-hidden) + label (visually hidden by default, visible under reduced motion).
+   in-control: span[aria-hidden=true] inside a control that carries aria-busy="true"; the control keeps its accessible name.
+   The circle is semantic, so it uses --shape-circle (never --radius-full, which is 0 in square languages). */
+.ds-spinner {
+  --_size: var(--icon-md);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  max-inline-size: 100%;
+  vertical-align: middle;
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+/* standalone appears only after the indicator delay, so very short waits never flash */
+.ds-spinner:not([data-variant="in-control"]) {
+  animation: ds-spinner-appear var(--motion-instant-duration) linear var(--timing-indicator-delay) backwards;
+}
+.ds-spinner[data-size="sm"] { --_size: var(--icon-sm); gap: var(--space-1); }
+.ds-spinner[data-size="lg"] { --_size: var(--icon-lg); }
+.ds-spinner[data-variant="in-control"] { color: inherit; gap: 0; }
+.ds-spinner[data-variant="in-control"] .ds-spinner__indicator { margin-block: 0; }
+/* on a solid fill or an inverse surface the arc takes the content colour of that surface */
+[data-ds-on="solid"] .ds-spinner { color: var(--color-interaction-on-solid); }
+[data-ds-on="inverse"] .ds-spinner { color: var(--color-structure-text-oninverse); }
+
+.ds-spinner__indicator {
+  position: relative;
+  display: block;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  border: var(--border-width-thick) solid transparent;
+  border-block-start-color: currentColor;
+  margin-block: max(0px, calc((var(--type-body-line) - var(--_size)) / 2));
+  border-radius: var(--shape-circle);
+  animation: ds-spinner-rotate calc(var(--motion-slow-duration) * 3) linear infinite;
+}
+/* track: faint full circle as shape context (decorative) */
+.ds-spinner__indicator::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thick));
+  border: var(--border-width-thick) solid currentColor;
+  border-radius: inherit;
+  opacity: 0.25;
+}
+
+/* label: visible text, or (data-hidden) visually hidden text read by the status node */
+.ds-spinner__label { min-inline-size: 0; overflow-wrap: break-word; }
+.ds-spinner__label[data-hidden] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* in-control: centred over the control's locked width (the control's label stays in the DOM at opacity 0) */
+.ds-button[aria-busy="true"] > .ds-spinner {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  margin-block-start: calc(var(--_size) / -2);
+  margin-inline-start: calc(var(--_size) / -2);
+  opacity: 1;
+}
+
+@keyframes ds-spinner-rotate { to { transform: rotate(360deg); } }
+@keyframes ds-spinner-appear { from { visibility: hidden; } }
+
+/* reduced motion: rotation off (static arc); a standalone spinner must show its text so meaning never depends on motion */
+@media (prefers-reduced-motion: reduce) {
+  .ds-spinner__indicator { animation: none; border-inline-end-color: currentColor; }
+  .ds-spinner:not([data-variant="in-control"]) .ds-spinner__label[data-hidden] {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+}
+@media (forced-colors: active) {
+  .ds-spinner__indicator { border-block-start-color: CanvasText; }
+  .ds-spinner__indicator::before { display: none; }
+  .ds-button[aria-busy="true"] > .ds-spinner .ds-spinner__indicator { border-block-start-color: ButtonText; }
+}

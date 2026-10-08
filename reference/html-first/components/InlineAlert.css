@@ -1,0 +1,120 @@
+/* InlineAlert · engine 1.8.0 reference (catalog/components/InlineAlert.json). Tokens only (I3); logical properties only (§12.4).
+   An InlineAlert is tinted by definition: -subtle background, -strong title, solid status colour for the icon and a full
+   1px border. No thick inline-start severity rail (banned by some languages' L13, e.g. ink-graphite).
+   Actions are Button (secondary/tertiary) composed inside .ds-inline-alert__actions. */
+.ds-inline-alert {
+  --_tint: var(--color-semantic-info-subtle);
+  --_ink: var(--color-semantic-info-strong);
+  --_accent: var(--color-semantic-info);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-inline-size: var(--layout-measure);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) solid var(--_accent);
+  border-radius: var(--radius-md);
+  background: var(--_tint);
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+.ds-inline-alert[data-status="critical"] { --_tint: var(--color-semantic-critical-subtle); --_ink: var(--color-semantic-critical-strong); --_accent: var(--color-semantic-critical); }
+.ds-inline-alert[data-status="warning"] { --_tint: var(--color-semantic-warning-subtle); --_ink: var(--color-semantic-warning-strong); --_accent: var(--color-semantic-warning); }
+.ds-inline-alert[data-status="neutral-negative"] { --_tint: var(--color-semantic-neutral-negative-subtle); --_ink: var(--color-semantic-neutral-negative-strong); --_accent: var(--color-semantic-neutral-negative); }
+.ds-inline-alert[data-status="positive"] { --_tint: var(--color-semantic-positive-subtle); --_ink: var(--color-semantic-positive-strong); --_accent: var(--color-semantic-positive); }
+.ds-inline-alert[data-status="info"] { --_tint: var(--color-semantic-info-subtle); --_ink: var(--color-semantic-info-strong); --_accent: var(--color-semantic-info); }
+.ds-inline-alert[hidden] { display: none; }
+
+/* locked status glyph on the first line of the title; never mirrored */
+.ds-inline-alert__icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-label-line) - var(--icon-md)) / 2);
+  color: var(--_accent);
+}
+[dir="rtl"] .ds-inline-alert__icon { transform: none; }
+.ds-inline-alert__content {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-wrap: break-word;
+}
+.ds-inline-alert__title {
+  margin: 0;
+  color: var(--_ink);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+}
+.ds-inline-alert__body { margin: 0; }
+.ds-inline-alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-block-start: var(--space-2);
+}
+/* compact: icon + one sentence (+ one tertiary action), wraps when long */
+.ds-inline-alert[data-variant="compact"] { align-items: center; padding-block: var(--space-2); padding-inline: var(--space-3); gap: var(--space-2); }
+.ds-inline-alert[data-variant="compact"] .ds-inline-alert__icon { margin-block: 0; }
+.ds-inline-alert[data-variant="compact"] .ds-inline-alert__content { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: var(--space-3); }
+.ds-inline-alert[data-variant="compact"] .ds-inline-alert__actions { margin-block-start: 0; }
+
+/* dismiss (C3-C5 only): IconButton-sized hit area; negative margins keep the alert's padding rhythm */
+.ds-inline-alert__dismiss {
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-block: calc(-1 * var(--space-2));
+  margin-inline-end: calc(-1 * var(--space-2));
+  padding: 0;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-inline-alert__dismiss::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-inline-alert__dismiss .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+@media (hover: hover) {
+  .ds-inline-alert__dismiss:hover { border-color: currentColor; color: var(--color-structure-text-primary); }
+  .ds-inline-alert__dismiss:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-inline-alert__dismiss[data-force~="hover"] { border-color: currentColor; color: var(--color-structure-text-primary); }
+.ds-inline-alert__dismiss[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-inline-alert__dismiss:active,
+.ds-inline-alert__dismiss[data-force~="pressed"] { border-color: currentColor; color: var(--color-structure-text-primary); }
+.ds-inline-alert__dismiss:active::before,
+.ds-inline-alert__dismiss[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* phone: actions go full width under the body */
+@media (--bp-tablet-down) {
+  .ds-inline-alert:not([data-variant="compact"]) .ds-inline-alert__actions { flex-direction: column; align-items: stretch; }
+}
+
+@media (forced-colors: active) {
+  .ds-inline-alert { border-color: CanvasText; }
+  .ds-inline-alert__icon { color: CanvasText; }
+  .ds-inline-alert__dismiss { border-color: ButtonText; color: ButtonText; }
+}

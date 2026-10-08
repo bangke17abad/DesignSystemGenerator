@@ -1,0 +1,157 @@
+<!-- Card fixture · variants (static, interactive, selectable), states, mandatory combinations (catalog preview) + edge cases.
+     The treatment comes from the language (L6/L7 via radius-md, border-width-thin, elevation-*): flat bordered in ink-graphite,
+     rounded in soft-friendly, square with a thick line in neo-brutalist. interactive = ONE title link stretched over the card
+     (no wrapping <a>, no nested interactive traps); footer actions are separate targets above it. selectable = Checkbox
+     labelled by the title, its label stretched over the card. Images are inline SVG data URIs (no network). -->
+<section class="ds-demo" data-ds-demo="variants/static (no primary target; actions only in the footer)">
+  <article class="ds-card" aria-labelledby="card-s1-t" style="max-inline-size: 24rem">
+    <div class="ds-card__header">
+      <div class="ds-card__heading">
+        <h3 class="ds-card__title" id="card-s1-t">Quarterly summary</h3>
+        <p class="ds-card__meta">Updated <time datetime="2026-10-08T07:05:00+07:00">2 hours ago</time></p>
+      </div>
+    </div>
+    <div class="ds-card__body">
+      <p>Booking fee revenue and visits for July to September, compared with the previous quarter.</p>
+    </div>
+    <div class="ds-card__footer">
+      <a class="ds-button" data-variant="primary" href="#report">Open report</a>
+      <button type="button" class="ds-button" data-variant="tertiary">Export summary</button>
+    </div>
+  </article>
+</section>
+<section class="ds-demo" data-ds-demo="variants/interactive (stretched title link) · collection in a Grid · footer action above the stretched link">
+  <ul class="ds-card-grid" aria-label="Reports">
+    <li class="ds-card" data-variant="interactive">
+      <div class="ds-card__media">
+        <div class="ds-image" data-aspect="video" data-ds-module="image"><div class="ds-image__frame"><img class="ds-image__img" width="640" height="360" loading="lazy" decoding="async" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239db7c9'/%3E%3Ccircle cx='300' cy='80' r='36' fill='%23efd9a7'/%3E%3Cpath d='M0 220 120 140 220 210 300 160 400 230V300H0Z' fill='%236b8a73'/%3E%3Cpath d='M0 262 160 204 400 272V300H0Z' fill='%23435e4d'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div></div>
+      </div>
+      <div class="ds-card__header">
+        <div class="ds-card__heading">
+          <h3 class="ds-card__title"><a class="ds-card__link" href="#venue-7">Venue condition, hall 7</a></h3>
+          <p class="ds-card__meta">Inspected <time datetime="2026-10-08T06:30:00+07:00">today, 06:30</time></p>
+        </div>
+        <span class="ds-status-label ds-card__status" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Needs repair</span></span></span>
+      </div>
+      <div class="ds-card__body"><p>Floor near the left entrance is wet after last night's rain.</p></div>
+      <div class="ds-card__footer"><button type="button" class="ds-button" data-size="sm">Assign crew<span class="ds-vh"> to hall 7</span></button></div>
+    </li>
+    <li class="ds-card" data-variant="interactive">
+      <div class="ds-card__header">
+        <div class="ds-card__heading">
+          <h3 class="ds-card__title"><a class="ds-card__link" href="#bookings">Room bookings, this week</a></h3>
+          <p class="ds-card__meta">Updated <time datetime="2026-10-08T08:10:00+07:00">5 minutes ago</time></p>
+        </div>
+      </div>
+      <div class="ds-card__body">
+        <p><span class="ds-card__price"><bdi>312</bdi> bookings</span> across <bdi>4</bdi> days; Saturday morning is full.</p>
+      </div>
+    </li>
+    <li class="ds-card" data-variant="interactive">
+      <div class="ds-card__header">
+        <div class="ds-card__heading">
+          <h3 class="ds-card__title"><a class="ds-card__link" href="#invoice-1042">Invoice INV-1042</a></h3>
+          <p class="ds-card__meta">Due <time datetime="2026-10-02">2 Oct 2026</time></p>
+        </div>
+        <span class="ds-status-label ds-card__status" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Overdue</span></span></span>
+      </div>
+      <div class="ds-card__body"><p><span class="ds-card__price">Rp <bdi>1.250.000</bdi></span> · Rina Wijaya</p></div>
+    </li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="states/interactive: default · hover · focus · pressed">
+  <ul class="ds-card-grid" aria-label="Interactive card states">
+    <li class="ds-card" data-variant="interactive"><div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#s-default">Default</a></h3><p class="ds-card__meta">Rest treatment from L6/L7</p></div></li>
+    <li class="ds-card" data-variant="interactive" data-force="hover"><div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#s-hover">Hover</a></h3><p class="ds-card__meta">Elevation 1 + state layer</p></div></li>
+    <li class="ds-card" data-variant="interactive" data-force="focus"><div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#s-focus">Focus</a></h3><p class="ds-card__meta">Ring around the whole card</p></div></li>
+    <li class="ds-card" data-variant="interactive" data-force="pressed"><div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#s-pressed">Pressed</a></h3><p class="ds-card__meta">Pressed layer; transform only if L16 allows</p></div></li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="variants/selectable: selected · not selected · disabled-with-reason + selected+hover · selected+focus · disabled+selected">
+  <ul class="ds-card-grid" aria-label="Membership plans" data-ds-module="checkbox card">
+    <li class="ds-card" data-variant="selectable">
+      <div class="ds-card__header">
+        <label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" name="plan" value="weekday" checked aria-labelledby="card-p1-t"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label>
+        <div class="ds-card__heading"><h3 class="ds-card__title" id="card-p1-t">Weekday plan</h3><p class="ds-card__meta">Rp <bdi>1.200.000</bdi> per month</p></div>
+      </div>
+      <div class="ds-card__body"><p>Unlimited visits Monday to Friday.</p><span class="ds-card__selected-note"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg>Selected</span></div>
+    </li>
+    <li class="ds-card" data-variant="selectable">
+      <div class="ds-card__header">
+        <label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" name="plan" value="full" aria-labelledby="card-p2-t"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label>
+        <div class="ds-card__heading"><h3 class="ds-card__title" id="card-p2-t">Full week plan</h3><p class="ds-card__meta">Rp <bdi>2.150.000</bdi> per month</p></div>
+      </div>
+      <div class="ds-card__body"><p>Unlimited visits every day, two guest passes.</p><span class="ds-card__selected-note"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg>Selected</span></div>
+    </li>
+    <li class="ds-card" data-variant="selectable">
+      <div class="ds-card__header">
+        <label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" name="plan" value="corporate" aria-labelledby="card-p3-t" aria-disabled="true" aria-describedby="card-p3-r"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label>
+        <div class="ds-card__heading"><h3 class="ds-card__title" id="card-p3-t">Corporate plan</h3><p class="ds-card__meta">From Rp <bdi>9.000.000</bdi> per month</p></div>
+      </div>
+      <div class="ds-card__body"><p class="ds-card__reason" id="card-p3-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only account owners can choose a corporate plan.</span></p></div>
+    </li>
+  </ul>
+  <ul class="ds-card-grid" aria-label="Selectable combinations" data-ds-module="checkbox card" style="margin-block-start: var(--space-4)">
+    <li class="ds-card" data-variant="selectable" data-force="hover">
+      <div class="ds-card__header"><label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" checked aria-labelledby="card-c1-t"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label><div class="ds-card__heading"><h3 class="ds-card__title" id="card-c1-t">Selected + hover</h3><p class="ds-card__meta">Check and ring stay; layer on top</p></div></div>
+    </li>
+    <li class="ds-card" data-variant="selectable">
+      <div class="ds-card__header"><label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" checked aria-labelledby="card-c2-t" data-force="focus"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label><div class="ds-card__heading"><h3 class="ds-card__title" id="card-c2-t">Selected + focus</h3><p class="ds-card__meta">Check, ring and focus ring outside</p></div></div>
+    </li>
+    <li class="ds-card" data-variant="selectable" data-force="focus">
+      <div class="ds-card__header"><label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" checked aria-labelledby="card-c3-t" aria-disabled="true" aria-describedby="card-c3-r"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label><div class="ds-card__heading"><h3 class="ds-card__title" id="card-c3-t">Disabled + selected</h3><p class="ds-card__meta">Muted check, reason visible</p></div></div>
+      <div class="ds-card__body"><p class="ds-card__reason" id="card-c3-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Included in your contract until 31 Dec 2026.</span></p></div>
+    </li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="states/loading (Skeleton, aria-busy; pressing is prevented) · error + focus on Retry">
+  <ul class="ds-card-grid" aria-label="Loading and error">
+    <li class="ds-card" aria-busy="true" data-force="pressed">
+      <span class="ds-vh">Loading report card</span>
+      <div class="ds-skeleton" aria-hidden="true"><div class="ds-skeleton__card"><span class="ds-skeleton__block ds-skeleton__shape"></span><div class="ds-skeleton__text" data-type="h3"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div></div></div>
+    </li>
+    <li class="ds-card">
+      <div class="ds-card__heading"><h3 class="ds-card__title">Visits, September</h3></div>
+      <div class="ds-card__body ds-card__error">
+        <p class="ds-card__error-text"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't load this card.</span></p>
+        <button type="button" class="ds-button" data-force="focus">Retry<span class="ds-vh"> loading visits</span></button>
+      </div>
+    </li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="offline (Last updated; server action blocked with reason) · long title (+40%, two lines then ellipsis)">
+  <ul class="ds-card-grid" aria-label="Edge cases">
+    <li class="ds-card" data-variant="interactive">
+      <div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#bookings">Room bookings</a></h3><p class="ds-card__meta">Last updated <time datetime="2026-10-08T07:40:00+07:00">07:40</time> · offline</p></div>
+      <div class="ds-card__footer">
+        <div>
+          <button type="button" class="ds-button" data-size="sm" aria-disabled="true" aria-describedby="card-off-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Refresh</span></button>
+          <span class="ds-button__reason" id="card-off-r">Needs a connection.</span>
+        </div>
+      </div>
+    </li>
+    <li class="ds-card" data-variant="interactive" lang="id">
+      <div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#long">Ringkasan pemeliharaan lapangan dan perbaikan sistem irigasi otomatis untuk kuartal ketiga tahun anggaran 2026</a></h3><p class="ds-card__meta">Diperbarui <time datetime="2026-10-08T07:05:00+07:00">2 jam lalu</time></p></div>
+      <div class="ds-card__footer"><button type="button" class="ds-button" data-size="sm">Unduh laporan<span class="ds-vh"> pemeliharaan</span></button><button type="button" class="ds-button" data-size="sm" data-variant="tertiary">Bagikan</button></div>
+    </li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="layout horizontal (tablet up: media at inline-start)">
+  <article class="ds-card" data-variant="interactive" data-layout="horizontal" style="max-inline-size: 40rem">
+    <div class="ds-card__media"><div class="ds-image" data-aspect="square" data-ds-module="image"><div class="ds-image__frame"><img class="ds-image__img" width="300" height="300" loading="lazy" decoding="async" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect width='300' height='300' fill='%23e6dfd3'/%3E%3Ccircle cx='150' cy='140' r='80' fill='%23b5523b'/%3E%3Crect x='138' y='210' width='24' height='70' rx='6' fill='%23725c42'/%3E%3C/svg%3E"><div class="ds-image__fallback"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-image"/></svg><span class="ds-image__fallback-text"></span></div></div></div></div>
+    <div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#paddle">Competition paddle, red</a></h3><p class="ds-card__meta">Front desk · <bdi>14</bdi> in stock</p></div>
+    <div class="ds-card__body"><p><span class="ds-card__price">Rp <bdi>850.000</bdi></span></p></div>
+  </article>
+</section>
+<section class="ds-demo" data-ds-demo="RTL with numbers (selection marker and media at inline-start; numbers isolated)">
+  <ul class="ds-card-grid" dir="rtl" lang="ar" aria-label="الخطط" data-ds-module="checkbox card">
+    <li class="ds-card" data-variant="selectable">
+      <div class="ds-card__header"><label class="ds-checkbox ds-card__select"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" checked aria-labelledby="card-r1-t"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span></label><div class="ds-card__heading"><h3 class="ds-card__title" id="card-r1-t">خطة أيام الأسبوع</h3><p class="ds-card__meta"><bdi>1.200.000</bdi> روبية شهرياً</p></div></div>
+      <div class="ds-card__body"><span class="ds-card__selected-note"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg>محدد</span></div>
+    </li>
+    <li class="ds-card" data-variant="interactive">
+      <div class="ds-card__heading"><h3 class="ds-card__title"><a class="ds-card__link" href="#ar-report">تقرير الربع الثالث</a></h3><p class="ds-card__meta">تحديث <time datetime="2026-10-08T07:05:00+07:00">قبل <bdi>2</bdi> ساعة</time></p></div>
+      <div class="ds-card__footer"><a class="ds-button" data-size="sm" href="#ar-next"><span>التالي</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></a></div>
+    </li>
+  </ul>
+</section>

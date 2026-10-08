@@ -1,0 +1,57 @@
+{
+  "brief_schema_version": "1.5",
+  "doc_language": "English",
+  "domain": {
+    "entities": [
+      {
+        "name": "Regulation"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "editorial-contrast",
+    "brands": [
+      {
+        "id": "default"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "Dark"
+      }
+    ]
+  },
+  "namespace": "PSL",
+  "product_name": "Pasal",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard",
+        "touch"
+      ],
+      "name": "portal",
+      "os_runtime": "web",
+      "surface_type": "content"
+    }
+  ],
+  "targets": {
+    "primary_web_reference": "react"
+  },
+  "ui_locales": [
+    "id-ID",
+    "en-US"
+  ]
+}

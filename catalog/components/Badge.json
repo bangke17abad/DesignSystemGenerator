@@ -1,0 +1,427 @@
+{
+  "accessibility": {
+    "attributes": [
+      "angka visual aria-hidden=\"true\"; pemilik membawa aria-label atau VisuallyHidden \"Approvals, 3 waiting\"",
+      "badge kritis (C1) yang baru muncul atau bertambah diumumkan assertive lewat LiveAnnouncer; kelas lain polite; pengurangan tidak diumumkan",
+      "pengumuman di-debounce (mis. 10 item datang beruntun → satu pengumuman \"10 approvals waiting\")",
+      "varian label membawa ikon status (I2) dan teks; varian count bergantung pada konteks pemilik yang menyebut jenis item",
+      "forced-colors: border transparan agar batas pil tetap tampil"
+    ],
+    "focus_order": "tidak pernah menerima fokus; mengikuti pemilik",
+    "native": {
+      "compose": "BadgedBox(badge = { Badge { Text(\"3\") } }) dengan Modifier.semantics { contentDescription = \"Approvals, 3 waiting\" } pada pemilik; pengumuman lewat {Ns}Announcer. Not verified against the pinned version",
+      "flutter": "Badge(label: Text('3')) (Material 3) di dalam pemilik; ExcludeSemantics pada Badge dan Semantics(label: 'Approvals, 3 waiting') pada pemilik; pengumuman lewat SemanticsService.announce (assertive untuk C1). Not verified against the pinned version",
+      "swiftui": ".badge(3) pada tab atau baris List (dibaca sistem), atau overlay kustom dengan .accessibilityHidden(true) + .accessibilityValue(\"3 waiting\") pada pemilik; pengumuman lewat AccessibilityNotification.Announcement. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "tidak ada role sendiri; teks badge disembunyikan dari pohon aksesibilitas dan digantikan kalimat lengkap di nama aksesibel pemilik",
+    "sr_label": "kalimat lengkap dengan ICU plural: \"{count, plural, one {# approval waiting} other {# approvals waiting}}\"; untuk overflow \"more than 99 approvals waiting\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "pil dengan latar solid semantik (filled) atau perlakuan L3 kelas itu; tinggi tumbuh mengikuti teks",
+      "tokens": [
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative",
+        "radius-full",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph status terkunci §5.7 di varian label (wajib bila tidak ada konteks lain yang menyebut kelasnya); varian count bergantung pada konteks pemilik + nama aksesibel",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-semantic-on-critical",
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "angka (tabular) atau kata status; teks isi ≥ 16",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-semantic-on-critical",
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative"
+      ]
+    },
+    {
+      "part": "separation-ring",
+      "role": "cincin pemisah antara badge yang menumpang di sudut ikon dan ikon di bawahnya, warna surface tempat pemilik berada",
+      "tokens": [
+        "color-structure-surface-base",
+        "color-structure-surface-raised",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "sr-text",
+      "role": "kalimat lengkap yang masuk nama aksesibel pemilik (\"3 approvals waiting\")",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "count",
+        "description": "Hitungan atau kata status.",
+        "name": "variant",
+        "required": false,
+        "type": "\"count\" | \"label\""
+      },
+      {
+        "description": "Keluarga semantik; harus kelas yang L3 izinkan filled atau tinted.",
+        "name": "status",
+        "required": true,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Hitungan untuk variant=count; 0 menyembunyikan badge.",
+        "name": "value",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "99",
+        "description": "Batas sebelum ditulis \"{max}+\".",
+        "name": "max",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Teks untuk variant=label; wajib bila variant=label.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Kalimat aksesibel lengkap (ICU plural) yang digabung ke nama pemilik.",
+        "name": "description",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "true",
+        "description": "Mengumumkan kenaikan lewat LiveAnnouncer (assertive hanya status=critical).",
+        "name": "announce",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "badge tidak menerima fokus sendiri; hitungannya dibaca sebagai bagian dari nama pemilik",
+      "trigger": "Tab ke pemilik (item nav, Tab, IconButton)"
+    },
+    {
+      "input": "pointer",
+      "result": "diteruskan ke pemilik (onPress pemilik); badge tidak punya aksi sendiri",
+      "trigger": "klik pada area badge"
+    },
+    {
+      "input": "touch",
+      "result": "mengaktifkan IconButton; badge tidak memperkecil atau menggeser area klik pemilik",
+      "trigger": "tap pada badge di sudut IconButton"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "3",
+        "99+",
+        "Overdue",
+        "Action needed",
+        "3 approvals waiting",
+        "More than 99 messages need review"
+      ],
+      "id-ID": [
+        "3",
+        "99+",
+        "Terlambat",
+        "Perlu tindakan",
+        "3 persetujuan menunggu",
+        "Lebih dari 99 pesan perlu ditinjau"
+      ]
+    },
+    "rules": [
+      "Count: angka dengan formatter locale dan tabular-nums; batas default 99, lalu \"99+\".",
+      "Label: satu-dua kata kondisi dari glosarium (\"Overdue\"), bukan seruan (\"Hurry!\").",
+      "Nama aksesibel menyebut jenis item dan kondisi dalam kalimat lengkap dengan ICU plural.",
+      "Tidak ada \"New\" atau \"Hot\" sebagai badge status; itu metadata (Tag) atau teks.",
+      "Pengumuman kritis menyebut apa yang terjadi dan di mana bertindak."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pastikan kelas yang dipakai diizinkan filled atau tinted oleh L3 sebelum memakai Badge.",
+    "Masukkan hitungan ke nama aksesibel pemilik dengan kalimat lengkap.",
+    "Sembunyikan badge saat hitungan 0 dan tulis \"99+\" di atas batas.",
+    "Hitung hanya item yang bisa ditindak role saat ini."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Memakai titik berwarna tanpa angka atau teks sebagai satu-satunya penanda."
+    },
+    {
+      "text": "Memakai Badge untuk metadata biasa (kategori, versi, \"New\") yang cukup ditulis inline; warna status bukan dekorasi (I1)."
+    },
+    {
+      "ref": "UB11",
+      "text": "Memakai Badge filled untuk C4-C6 di bahasa yang hanya mengizinkan fill C1-C2."
+    },
+    {
+      "ref": "UB3",
+      "text": "Mengecilkan teks badge di bawah type-label demi muat di sudut ikon."
+    },
+    {
+      "text": "Mengumumkan setiap kenaikan hitungan secara assertive untuk kelas non-C1."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "varian label melebar; di nav sempit badge pindah ke baris bawah label, tidak memotong label nav",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "pil tumbuh; pada IconButton badge boleh melampaui batas ikon tetapi tidak menutup ring fokus atau target tetangga",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak dirender; nama pemilik tanpa hitungan",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "\"99+\" (max dapat diatur); nama aksesibel \"more than 99\"",
+      "case": "jumlah maksimum (≥ 100)"
+    },
+    {
+      "behaviour": "tidak dirender + peringatan dev",
+      "case": "angka negatif atau bukan angka"
+    },
+    {
+      "behaviour": "hitungan terakhir yang dikonfirmasi tetap tampil; ConnectionStatus atau Banner menyatakan data mungkin basi (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "nilai visual diperbarui seketika; pengumuman di-debounce dan digabung",
+      "case": "pembaruan beruntun cepat"
+    },
+    {
+      "behaviour": "satu badge dengan kelas paling mendesak (C1); hitungan kelas lain dibaca di nama aksesibel atau tampil di halaman tujuan",
+      "case": "beberapa status bersamaan pada satu pemilik (C1 dan C2)"
+    },
+    {
+      "behaviour": "komponen merender StatusLabel quiet atau teks hitungan; lint mencatat",
+      "case": "L3 tidak mengizinkan filled untuk kelas yang diminta"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan. Nama mengikuti L3 (bila bahasa memberi nama khas, mis. AttentionBadge, dicatat di manifest dan dipakai konsisten).",
+  "lint": [
+    "Badge dengan status yang tidak diizinkan filled/tinted oleh L3 ditolak (token-rule)",
+    "Badge tanpa description ditolak",
+    "Badge berisi teks bebas yang tidak ada di glosarium ditandai (V3)",
+    "Badge berukuran teks < type-label ditolak (UB3)"
+  ],
+  "name": "Badge",
+  "preview": {
+    "combinations": [
+      "badge pada IconButton fokus",
+      "badge pada Tab terpilih",
+      "kelas tidak diizinkan L3 → turun ke StatusLabel",
+      "99+ pada teks 200%"
+    ],
+    "states": [
+      "critical (C1)",
+      "warning (C2)",
+      "neutral-negative (C3)",
+      "positive (C4)",
+      "info (C5)",
+      "empty (0)",
+      "overflow (melebihi max)",
+      "on-selected-owner"
+    ],
+    "variants": [
+      "count",
+      "label"
+    ]
+  },
+  "purpose": {
+    "purpose": "Penanda perhatian ringkas berisi hitungan atau kata status, hanya untuk kelas yang L3 izinkan filled (umumnya C1 dan C2), ditempel pada item navigasi, tab, judul seksi, atau IconButton agar pengguna tahu ada sesuatu yang menunggu tindakan.",
+    "when_not_to_use": [
+      "Untuk menamai state sebuah entitas di baris atau kartu: pakai StatusLabel.",
+      "Untuk kelas yang L3 tidak izinkan filled (sering C3-C6): pakai StatusLabel atau teks hitungan biasa (\"Notifications (3)\").",
+      "Untuk metadata biasa (kategori, versi, \"New\", \"Beta\") bila teks inline cukup: pakai Tag atau teks (I1).",
+      "Untuk event kritis (I5): pakai perlakuan khusus event kritis; Badge hanya boleh menyertai, tidak pernah menjadi satu-satunya penanda.",
+      "Sebagai titik berwarna tanpa angka atau teks: dilarang (UB2)."
+    ]
+  },
+  "related": [
+    "StatusLabel",
+    "IconButton",
+    "PrimaryNav",
+    "BottomNav",
+    "Tabs",
+    "NotificationItem",
+    "Tag"
+  ],
+  "responsive": [
+    {
+      "behaviour": "di BottomNav dan IconButton badge menumpang di sudut block-start/inline-end ikon; tidak menambah tinggi bar; di teks 200% boleh keluar dari ikon tanpa menutup label",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sesudah label item nav atau Tab; di rail menumpang di ikon",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sesudah label nav, Tab, atau judul seksi; tidak dipotong saat nav menyempit ke rail",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "hitungan hanya memuat item yang boleh ditindak role saat ini (mis. approver melihat jumlah persetujuan, pemohon tidak)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak bisa bertindak atas item apa pun yang dihitung; badge tidak dirender, bukan ditampilkan 0"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Posisi menumpang memakai inset logis (block-start/inline-end) sehingga pindah ke kiri atas di RTL; angka diisolasi LTR; ikon status tidak dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Satu ukuran: teks isi ≥ 16 (STD-2) sehingga tidak ada varian kecil; tinggi mengikuti teks dan tumbuh di teks 200%. Badge non-interaktif; area klik milik pemiliknya (IconButton, item nav, Tab)."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "critical (C1)",
+      "token_swaps": {
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "content-tinted": "color-semantic-critical-strong",
+        "icon-tinted": "color-semantic-critical"
+      },
+      "treatment": "dirender hanya bila L3 mengizinkan filled atau tinted untuk C1; filled: latar solid + on-critical; tinted: latar -subtle + teks -strong + ikon semantik. Badge kritis yang baru muncul atau bertambah diumumkan assertive lewat LiveAnnouncer"
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "content-tinted": "color-semantic-warning-strong",
+        "icon-tinted": "color-semantic-warning"
+      },
+      "treatment": "perlakuan C2 dari L3 (filled atau tinted); perubahan diumumkan polite"
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "content-tinted": "color-semantic-neutral-negative-strong",
+        "icon-tinted": "color-semantic-neutral-negative"
+      },
+      "treatment": "hanya bila L3 mengizinkan fill/tint untuk C3; selain itu komponen menurunkan diri ke StatusLabel quiet dan lint mencatat"
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "container-filled": "color-semantic-positive",
+        "container-tinted": "color-semantic-positive-subtle",
+        "content-filled": "color-semantic-on-positive",
+        "content-tinted": "color-semantic-positive-strong",
+        "icon-tinted": "color-semantic-positive"
+      },
+      "treatment": "hanya bila L3 mengizinkan (mis. archetype yang memberi filled C4 untuk perayaan); intensitas tidak melebihi C1-C2 di layar yang sama (I7)"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "content-tinted": "color-semantic-info-strong",
+        "icon-tinted": "color-semantic-info"
+      },
+      "treatment": "hanya bila L3 mengizinkan fill/tint untuk C5; selain itu turun ke StatusLabel atau teks hitungan"
+    },
+    {
+      "name": "empty (0)",
+      "token_swaps": {},
+      "treatment": "badge tidak dirender; nama aksesibel pemilik tanpa hitungan; tidak ada \"0\" yang menarik perhatian"
+    },
+    {
+      "name": "overflow (melebihi max)",
+      "token_swaps": {},
+      "treatment": "nilai ditulis \"{max}+\" (default 99+); nama aksesibel menyebut \"more than 99\""
+    },
+    {
+      "name": "on-selected-owner",
+      "token_swaps": {
+        "separation-ring": "color-structure-surface-raised"
+      },
+      "treatment": "pemilik terpilih atau fokus (tab aktif, nav aktif): badge tidak berubah warna; cincin pemisah memakai surface pemilik; ring fokus pemilik tidak tertutup badge"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Badge: membungkus Badge/BadgedBox Material 3",
+    "flutter": "{ns}_badge.dart: membungkus Material Badge; perlakuan dari ThemeExtension attention policy",
+    "html": {
+      "element": "span",
+      "notes": "span.{ns}-badge[data-status][aria-hidden=true] di dalam pemilik; teks aksesibel di VisuallyHidden pemilik"
+    },
+    "swiftui": "{Ns}Badge: .badge untuk TabView/List, overlay kustom untuk lainnya"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Hitungan item yang perlu tindakan (mis. jumlah persetujuan tertunda). Tampil di sudut IconButton atau sesudah label navigasi/tab. 0 = disembunyikan; di atas max ditulis \"99+\".",
+      "name": "count"
+    },
+    {
+      "description": "Satu-dua kata status kelas yang diizinkan filled (mis. \"Overdue\", \"Action needed\") dengan ikon status, di samping judul seksi atau Card.",
+      "name": "label"
+    }
+  ]
+}

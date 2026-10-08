@@ -1,0 +1,78 @@
+{
+  "assertions": [
+    {
+      "eq": [
+        "default",
+        "kopi-senja",
+        "kopi-pagi"
+      ],
+      "manifest": "axes.brand"
+    },
+    {
+      "contrast_modes": 6
+    },
+    {
+      "approx": 277,
+      "family_hue": "interaction-default",
+      "tol": 2
+    },
+    {
+      "approx": 38,
+      "family_hue": "interaction-kopi-senja",
+      "tol": 2
+    },
+    {
+      "approx": 186,
+      "family_hue": "interaction-kopi-pagi",
+      "tol": 2
+    },
+    {
+      "notes_contain": "info memakai varian netral"
+    },
+    {
+      "approx": 15,
+      "family_hue": "critical",
+      "tol": 1
+    },
+    {
+      "adr": "ADR-HUE-critical"
+    },
+    {
+      "approx": 75,
+      "family_hue": "warning",
+      "tol": 1
+    },
+    {
+      "approx": 155,
+      "family_hue": "positive",
+      "tol": 1
+    },
+    {
+      "semantic_not_varies_by_brand": true
+    },
+    {
+      "eq": "filled",
+      "lang": "decisions.L3.value.attention.C4"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V1",
+        "V2",
+        "V11",
+        "V14",
+        "VB1",
+        "VB2",
+        "VB8"
+      ]
+    }
+  ],
+  "fixture": "G2",
+  "run_only": [
+    "lifecycle.json Payment: menunggu C5, berhasil C4, gagal C1, kedaluwarsa C3"
+  ],
+  "source": "golden-briefs.md G2"
+}

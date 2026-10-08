@@ -1,0 +1,603 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-expanded dan aria-controls pada trigger",
+      "menu aria-labelledby trigger",
+      "roving tabindex: satu item tabindex 0, lainnya −1",
+      "aria-checked pada menuitemcheckbox/menuitemradio",
+      "aria-disabled pada item diblokir (tetap fokusabel) + aria-describedby ke reason",
+      "aria-keyshortcuts pada item yang punya pintasan",
+      "aria-haspopup=\"menu\" + aria-expanded pada SubTrigger",
+      "presentasi Sheet di phone: dialog aria-modal berlabel judul trigger berisi daftar tombol; dukungan role menu di pembaca layar seluler terbatas (Not verified: needs device test)"
+    ],
+    "focus_order": "trigger → (saat terbuka) item dalam urutan sumber → kembali ke trigger saat tutup; destruktif selalu di grup terakhir",
+    "native": {
+      "compose": "DropdownMenu(expanded, onDismissRequest) + DropdownMenuItem(text, leadingIcon, trailingIcon, enabled); di phone ModalBottomSheet; Modifier.semantics { stateDescription = reason } pada item diblokir",
+      "flutter": "MenuAnchor + MenuItemButton / CheckboxMenuButton / RadioMenuButton / SubmenuButton (navigasi panah bawaan); di phone showModalBottomSheet berisi ListTile; Semantics(enabled: false, hint: reason) untuk item diblokir",
+      "swiftui": "Menu { Button(role: .destructive) …; Toggle; Picker; Section; Divider() } label: { … }; .contextMenu untuk varian context; bila §6.5 menuntut sheet: .confirmationDialog atau .sheet dengan .presentationDetents"
+    },
+    "politeness": "polite",
+    "role": "trigger: button dengan aria-haspopup=\"menu\"; content: menu; item: menuitem, menuitemcheckbox, menuitemradio; group dengan aria-labelledby; separator",
+    "sr_label": "menu dinamai trigger (\"More actions\"); item dinamai labelnya + state (centang, diblokir) + pintasan",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.7",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "trigger",
+      "role": "Button atau IconButton dengan aria-haspopup=\"menu\"; chevron di icon-end untuk pemicu berlabel",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "panel menu di portal pada z-popover; max-block-size dengan gulir internal",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-1"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "baris aksi: iconStart, label, shortcut di inline-end; tinggi dari size",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "item-highlight",
+      "role": "item aktif (hover atau fokus keyboard): latar selection + ring fokus inset −2px",
+      "tokens": [
+        "color-structure-selection",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "shortcut",
+      "role": "pintasan bermodifier, teks sekunder (Kbd bila disertakan), simbol mengikuti OS",
+      "tokens": [
+        "type-code-size",
+        "type-code-family",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "check",
+      "role": "penanda centang atau titik untuk item checkbox/radio (non-warna)",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "group-label",
+      "role": "judul grup non-interaktif",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "separator",
+      "role": "Divider semantik antar grup; wajib sebelum grup destruktif",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "destructive-item",
+      "role": "item yang menghapus atau membatalkan; ikon + label kata kerja jelas",
+      "tokens": [
+        "color-semantic-critical-strong"
+      ]
+    },
+    {
+      "part": "lock-icon",
+      "role": "ikon gembok pada item terbatas peran + baris reason",
+      "tokens": [
+        "icon-sm",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "sheet",
+      "role": "presentasi phone: Sheet dari bawah dengan scrim dan tombol tutup berlabel",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-scrim",
+        "z-modal",
+        "z-overlay-scrim"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"outside\" | \"item\" | \"tab\" }",
+        "when": "menu dibuka atau ditutup"
+      },
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "Menu.Item diaktifkan (pelepasan pointer, Enter, Space)"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "boolean",
+        "when": "Menu.CheckboxItem berubah"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "Menu.RadioGroup berubah pilihan"
+      }
+    ],
+    "parts": [
+      "Menu.Trigger",
+      "Menu.Content",
+      "Menu.Item (label, iconStart, shortcut, variant: \"default\" | \"destructive\", disabled, reason, onPress)",
+      "Menu.CheckboxItem (label, selected, defaultSelected, onSelectedChange)",
+      "Menu.RadioGroup (value, defaultValue, onValueChange)",
+      "Menu.RadioItem (label, value)",
+      "Menu.Group",
+      "Menu.GroupLabel",
+      "Menu.Separator",
+      "Menu.Sub",
+      "Menu.SubTrigger",
+      "Menu.SubContent"
+    ],
+    "props": [
+      {
+        "description": "Controlled: menu terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "dropdown",
+        "description": "Cara membuka menu.",
+        "name": "variant",
+        "required": false,
+        "type": "\"dropdown\" | \"context\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi item; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "start",
+        "description": "Perataan content terhadap trigger; logis.",
+        "name": "align",
+        "required": false,
+        "type": "\"start\" | \"end\""
+      },
+      {
+        "default": "false",
+        "description": "Item sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "menu terbuka dan fokus ke item pertama; ↑ membuka dan fokus ke item terakhir",
+      "trigger": "Enter, Space, atau ↓ pada trigger"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antar item (melingkar); Home/End ke pertama/terakhir; mengetik huruf melompat ke item berawalan sama (beberapa huruf dalam 500 ms)",
+      "trigger": "↓/↑, Home/End, huruf"
+    },
+    {
+      "input": "keyboard",
+      "result": "onPress; menu menutup dan fokus kembali ke trigger, kecuali aksi membuka dialog (fokus ke dialog) atau menghapus objek (fokus ke item berikutnya, §9.5). Space pada item checkbox mengubah centang tanpa menutup",
+      "trigger": "Enter atau Space pada item"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka submenu dan fokus ke item pertamanya; ← (→ di RTL) atau Esc menutup submenu dan kembali ke SubTrigger",
+      "trigger": "→ pada SubTrigger (← di RTL)"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup menu dan mengembalikan fokus ke trigger",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup menu dan memindah fokus ke elemen berikut/sebelum trigger (tidak menjebak)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka varian context untuk objek yang fokus",
+      "trigger": "Shift+F10 atau tombol Menu pada objek"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka/menutup; klik di luar menutup tanpa menjalankan aksi; item aktif pada pelepasan (SC 2.5.2)",
+      "trigger": "klik trigger; klik di luar"
+    },
+    {
+      "input": "pointer",
+      "result": "submenu terbuka setelah jeda dengan zona aman diagonal agar tidak menutup saat pointer bergerak menuju submenu",
+      "trigger": "hover SubTrigger"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet dari bawah dengan item ≥ target-min-touch; submenu menjadi tampilan drill-down dengan tombol Back; tap scrim atau tombol Close menutup",
+      "trigger": "tap trigger (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "varian context; aksi yang sama juga tersedia di pemicu terlihat",
+      "trigger": "tekan lama pada objek"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Edit",
+        "Duplicate",
+        "Move to…",
+        "Share link",
+        "Delete item"
+      ],
+      "id-ID": [
+        "Ubah",
+        "Duplikat",
+        "Pindahkan ke…",
+        "Bagikan tautan",
+        "Hapus item"
+      ]
+    },
+    "rules": [
+      "Label item = kata kerja (+ objek bila trigger tidak menamai objek), sentence case, dari glosarium.",
+      "Elipsis (\"…\") hanya bila item membuka langkah yang meminta input lanjutan.",
+      "Item destruktif di grup terakhir, dipisah separator, dengan kata kerja tegas (\"Delete item\", bukan \"Remove?\").",
+      "Pemicu ikon berlabel \"More actions\"; pemicu berlabel menamai kumpulan aksinya.",
+      "Maksimal ±7 item per grup; grup diberi judul bila lebih dari satu grup sejenis."
+    ]
+  },
+  "depends_on": [
+    "Divider",
+    "Sheet",
+    "Spinner"
+  ],
+  "do": [
+    "Sediakan Menu sebagai alternatif satu-pointer untuk setiap drag (\"Move up\", \"Move to…\").",
+    "Kembalikan fokus ke trigger setelah menutup.",
+    "Pisahkan aksi destruktif dengan separator di grup terakhir."
+  ],
+  "dont": [
+    {
+      "text": "Memakai role menu untuk navigasi situs berisi tautan."
+    },
+    {
+      "ref": "UB7",
+      "text": "Drag tanpa item Menu padanannya."
+    },
+    {
+      "ref": "UB10",
+      "text": "Menyembunyikan item terbatas peran tanpa keputusan §10, atau menampilkannya nonaktif tanpa reason."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "menu melebar sampai lebar maksimum (layout-modal-sm) lalu label membungkus dua baris; tidak ada ellipsis pada label",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "item tumbuh tinggi; bila menu tidak muat di viewport, beralih ke Sheet; gulir internal dengan fokus selalu terlihat",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "trigger tidak dirender; hasil asinkron kosong menampilkan \"No actions available\"",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "> 12 item dikelompokkan berjudul; > 20 item dipindah ke CommandPalette atau Combobox; submenu maksimal satu tingkat",
+      "case": "jumlah item maksimum"
+    },
+    {
+      "behaviour": "baris Spinner + aria-busy; fokus ke item pertama setelah siap tanpa menutup menu",
+      "case": "loading"
+    },
+    {
+      "behaviour": "item yang butuh server aria-disabled dengan reason \"Needs connection\" atau diantrekan; item lokal tetap aktif",
+      "case": "offline"
+    },
+    {
+      "behaviour": "menu menutup; fokus ke item berikutnya atau heading terdekat (§9.5)",
+      "case": "trigger hilang saat menu terbuka (baris terhapus)"
+    },
+    {
+      "behaviour": "dirender di portal; flip ke sisi berlawanan; tidak pernah terpotong",
+      "case": "menu di tepi viewport atau di dalam kontainer overflow"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila ada interaksi drag (alternatif satu-pointer, UB7) atau aksi sekunder per baris.",
+  "lint": [
+    "role=menu berisi tautan navigasi ditolak (manual-review)",
+    "Item destruktif tanpa separator sebelumnya ditolak",
+    "Item aria-disabled tanpa reason ditolak",
+    "Komponen dengan drag wajib menyediakan Menu padanan (V5, UB7)"
+  ],
+  "name": "Menu",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "submenu + RTL",
+      "Sheet phone"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "item-hover",
+      "item-focus",
+      "item-pressed",
+      "selected",
+      "disabled-with-reason",
+      "loading",
+      "empty"
+    ],
+    "variants": [
+      "dropdown",
+      "context"
+    ]
+  },
+  "purpose": {
+    "purpose": "Daftar aksi yang dibuka dari pemicu (tombol atau konteks), untuk aksi sekunder, aksi per baris, dan alternatif satu-pointer bagi setiap drag.",
+    "when_not_to_use": [
+      "Untuk navigasi situs atau aplikasi: pakai PrimaryNav (disclosure berisi tautan), bukan role menu.",
+      "Untuk memilih nilai form: pakai Select atau Combobox.",
+      "Untuk lebih dari ±20 aksi atau aksi yang perlu dicari: pakai CommandPalette atau Combobox.",
+      "Untuk konten bebas (form singkat, info): pakai Popover.",
+      "Untuk satu atau dua aksi yang muat terlihat: tampilkan sebagai Button/IconButton langsung."
+    ]
+  },
+  "related": [
+    "Button",
+    "IconButton",
+    "Popover",
+    "CommandPalette",
+    "Select",
+    "Kbd"
+  ],
+  "responsive": [
+    {
+      "behaviour": "Sheet dari bawah; item size lg ≥ target-min-touch; submenu drill-down; pintasan disembunyikan",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "popover menempel trigger; item ≥ target-min-touch di mode sentuh; berpindah ke Sheet bila ruang vertikal tidak cukup",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "popover di z-popover, flip/shift agar tidak keluar viewport; size sm/md; pintasan ditampilkan",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu aksi ada; item tidak dirender (grup dan separator yang kosong ikut hilang)"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi terlihat tetapi tidak diizinkan saat ini; ikon gembok + reason"
+    },
+    {
+      "pattern": "step-up",
+      "when": "item berisiko tinggi; menu menutup lalu StepUpDialog terbuka dengan fokus di dialog"
+    },
+    {
+      "pattern": "read-only",
+      "when": "hanya item non-mutasi (salin tautan, ekspor) yang tampil; bila tidak ada, trigger tidak dirender"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-right",
+      "chevron-left",
+      "arrow-right",
+      "arrow-left"
+    ],
+    "notes": "Chevron submenu dicerminkan dan submenu terbuka ke inline-end (kiri di RTL); tombol panah pembuka/penutup submenu ditukar (← membuka di RTL); shortcut di inline-end; simbol tombol keyboard tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); hanya pointer, di mode sentuh otomatis naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Surface padat pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default pointer.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Mode sentuh dan Sheet phone; item ≥ 44 di sentuh (§6.5).",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "centang tetap; latar selection di atasnya",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "centang diredam; aria-checked tetap diumumkan",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "item tidak bisa ditekan saat menu memuat",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "item diblokir tidak memberi umpan balik hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "trigger aria-expanded=\"false\""
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "trigger": "color-interaction-pressed"
+      },
+      "treatment": "content tampil di z-popover (phone: Sheet); trigger aria-expanded=\"true\" dengan latar pressed"
+    },
+    {
+      "name": "item-hover",
+      "token_swaps": {
+        "item": "color-structure-selection"
+      },
+      "treatment": "latar selection; hanya di (hover: hover); hover memindah item aktif"
+    },
+    {
+      "name": "item-focus",
+      "token_swaps": {
+        "item": "color-structure-selection",
+        "item-highlight": "color-focus-ring"
+      },
+      "treatment": "latar selection + ring 2px focus-ring inset −2px"
+    },
+    {
+      "name": "item-pressed",
+      "token_swaps": {
+        "item": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "check": "color-interaction-default"
+      },
+      "treatment": "item checkbox/radio terpilih: ikon centang/titik terlihat (non-warna); aria-checked=\"true\""
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "item": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; label text-disabled + ikon gembok; tetap bisa difokus; reason sebagai baris kedua atau saat fokus; Enter mengumumkan reason, menu tidak menutup"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "item dimuat asinkron: satu baris Spinner + \"Loading actions…\"; content aria-busy=\"true\""
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "tidak ada aksi untuk konteks/role: pemicu tidak dirender; bila diketahui setelah dibuka, satu baris non-interaktif \"No actions available\""
+    }
+  ],
+  "target_hints": {
+    "compose": "DropdownMenu dibungkus {Ns}Menu; ModalBottomSheet di compact width",
+    "flutter": "MenuAnchor dibungkus {ns}_menu.dart; phone memakai showModalBottomSheet",
+    "html": {
+      "element": "button + div[role=menu]",
+      "notes": "content di portal; modul JS untuk roving tabindex dan typeahead; fallback tanpa JS: details/summary berisi daftar tombol dan tautan"
+    },
+    "swiftui": "Menu / .contextMenu dibungkus {Ns}Menu; .confirmationDialog bila sheet diwajibkan"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Dibuka dari pemicu terlihat (Button/IconButton \"More actions\").",
+      "name": "dropdown"
+    },
+    {
+      "description": "Dibuka lewat klik kanan, tekan lama, Shift+F10, atau tombol Menu pada baris atau objek. Selalu didampingi pemicu dropdown terlihat dengan aksi yang sama, karena konteks menu tidak dapat ditemukan dan tidak tersedia di semua input.",
+      "name": "context"
+    }
+  ]
+}

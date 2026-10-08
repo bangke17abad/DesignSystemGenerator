@@ -1,0 +1,196 @@
+<!-- Timeline fixture · variants (activity, audit, compact), states (default, loading, empty, error, new-available, highlighted,
+     pending-sync, time-focus), mandatory combinations (hover+focus on time, error+focus on Retry, read-only audit, loading+pressed
+     prevented, status changes C1/C2, RTL + numbers) and edge cases. Every entry = actor + past-tense verb + linked object; the
+     relative time keeps the exact time in time[datetime], in VisuallyHidden text and in a Tooltip on hover/focus (Tooltip.js).
+     "Show older activity" is a relative link without JS. -->
+<section class="ds-demo" data-ds-demo="variants/activity (day headers, Avatar / event / status markers, reason, status change, exact time on hover + focus)">
+  <section class="ds-timeline" aria-label="Activity" data-ds-module="timeline">
+    <h3 class="ds-timeline__day">Today</h3>
+    <ol class="ds-timeline__list" aria-label="Activity, today">
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">AS</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Alex Santoso</span> approved <a href="#request-1042">Request <bdi>1042</bdi></a></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:12:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-1">5 minutes ago<span class="ds-vh">, 8 October 2026, 09:12 WIB</span></time>
+            <span class="ds-tooltip" role="tooltip" id="tl-tt-1" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 09:12 WIB</span>
+          </div>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-status="critical" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg></span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">System</span> changed the status of <a href="#invoice-1042">Invoice INV-1042</a></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T07:00:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-2">2 hours ago<span class="ds-vh">, 8 October 2026, 07:00 WIB</span></time>
+            <span class="ds-tooltip" role="tooltip" id="tl-tt-2" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 07:00 WIB</span>
+          </div>
+          <p class="ds-timeline__change"><span>from</span>
+            <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Pending</span></span></span>
+            <svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg><span>to</span>
+            <span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Overdue</span></span></span></p>
+          <p class="ds-timeline__reason">Reason: due date 2 Oct 2026 passed without payment.</p>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg></span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Rina Wijaya</span> uploaded <a href="#receipt">receipt-0918.pdf</a> to <a href="#request-1042">Request <bdi>1042</bdi></a></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T06:41:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-3">3 hours ago<span class="ds-vh">, 8 October 2026, 06:41 WIB</span></time>
+            <span class="ds-tooltip" role="tooltip" id="tl-tt-3" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 06:41 WIB</span>
+          </div>
+        </div>
+      </li>
+    </ol>
+    <h3 class="ds-timeline__day">Yesterday</h3>
+    <ol class="ds-timeline__list" aria-label="Activity, yesterday">
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">DK</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Dina Kusuma</span> returned <a href="#request-1039">Request <bdi>1039</bdi></a> for correction</p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-07T16:20:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-4">Yesterday, 16:20<span class="ds-vh"> WIB, 7 October 2026</span></time>
+            <span class="ds-tooltip" role="tooltip" id="tl-tt-4" popover="manual" aria-hidden="true" data-ds-text="supporting">7 Oct 2026, 16:20 WIB</span>
+          </div>
+          <p class="ds-timeline__reason">“Missing attachment: the signed delivery note.”</p>
+        </div>
+      </li>
+    </ol>
+    <div class="ds-timeline__footer">
+      <a class="ds-button" href="?before=2026-10-07" data-ds-timeline="older">Show older activity</a>
+      <template data-older>
+        <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">AS</span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Alex Santoso</span> created <a href="#request-1039">Request <bdi>1039</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-06T10:05:00+07:00">6 Oct 2026, 10:05</time></div></div></li>
+      </template>
+    </div>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="time: hover + focus (one Tooltip with the exact time) · new-available (list does not move until activated)">
+  <section class="ds-timeline" aria-label="Activity (new available)" data-ds-module="timeline">
+    <button type="button" class="ds-button ds-timeline__new" data-ds-timeline="new"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg><span><bdi>2</bdi> new updates</span></button>
+    <template data-new>
+      <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">RW</span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Rina Wijaya</span> commented on <a href="#request-1042">Request <bdi>1042</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:20:00+07:00">09:20</time></div></div></li>
+      <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-status="positive" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg></span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Finance bot</span> marked <a href="#invoice-1041">Invoice INV-1041</a> as paid</p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:18:00+07:00">09:18</time></div></div></li>
+    </template>
+    <ol class="ds-timeline__list">
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">AS</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Alex Santoso</span> approved <a href="#request-1042">Request <bdi>1042</bdi></a></p>
+            <span class="ds-tooltip-demo" data-side="block-start"><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:12:00+07:00" tabindex="0" data-force="hover focus">5 minutes ago<span class="ds-vh">, 8 October 2026, 09:12 WIB</span></time><span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 09:12 WIB</span></span>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="variants/audit (read-only; exact time + zone visible; old → new values; system actor)">
+  <section class="ds-timeline" data-variant="audit" aria-label="Audit log">
+    <ol class="ds-timeline__list">
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Automation “Late fee”</span> changed Amount on <a href="#invoice-1042">Invoice INV-1042</a></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T00:00:05+07:00">8 Oct 2026, 00:00:05 WIB (UTC+7)</time>
+          </div>
+          <p class="ds-timeline__values">from <bdi>Rp 1.200.000</bdi> to <bdi>Rp 1.250.000</bdi></p>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">DK</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Dina Kusuma (Finance manager)</span> changed Due date on <a href="#invoice-1042">Invoice INV-1042</a></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-09-25T14:31:12+07:00">25 Sep 2026, 14:31:12 WIB (UTC+7)</time>
+          </div>
+          <p class="ds-timeline__values">from <bdi>30 Sep 2026</bdi> to <bdi>2 Oct 2026</bdi></p>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg></span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head">
+            <p class="ds-timeline__sentence"><span class="ds-timeline__actor">Alex Santoso</span> deleted <span class="ds-timeline__deleted">attachment draft-v1.pdf (deleted)</span></p>
+            <time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-09-24T09:02:40+07:00">24 Sep 2026, 09:02:40 WIB (UTC+7)</time>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="variants/compact (narrow panel, small icon markers, no rail)">
+  <section class="ds-timeline" data-variant="compact" aria-label="Recent activity" style="max-inline-size: 22rem">
+    <ol class="ds-timeline__list">
+      <li class="ds-timeline__entry"><span class="ds-timeline__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Alex</span> approved <a href="#request-1042">Request <bdi>1042</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:12:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-5">5 min<span class="ds-vh"> ago, 8 October 2026, 09:12 WIB</span></time><span class="ds-tooltip" role="tooltip" id="tl-tt-5" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 09:12 WIB</span></div></div></li>
+      <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-status="warning" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg></span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">System</span> flagged <a href="#request-1039">Request <bdi>1039</bdi></a> as <span class="ds-vh">status </span>Awaiting approval</p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T08:00:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-6">1 h<span class="ds-vh"> ago, 8 October 2026, 08:00 WIB</span></time><span class="ds-tooltip" role="tooltip" id="tl-tt-6" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Oct 2026, 08:00 WIB</span></div></div></li>
+    </ol>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="highlighted (deep link) · pending-sync · not sent + Retry (error+focus)">
+  <section class="ds-timeline" aria-label="Comments" data-ds-module="timeline">
+    <ol class="ds-timeline__list">
+      <li class="ds-timeline__entry" id="tl-comment-77" data-highlighted tabindex="-1" data-force="focus">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">DK</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Dina Kusuma</span> commented on <a href="#request-1039">Request <bdi>1039</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-07T16:20:00+07:00">7 Oct 2026, 16:20</time></div>
+          <p class="ds-timeline__reason">“Please attach the signed delivery note.”</p>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">RW</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">You</span> commented on <a href="#request-1039">Request <bdi>1039</bdi></a></p><span class="ds-timeline__pending"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span>Sending…</span></span></div>
+          <p class="ds-timeline__reason">“Attached, thanks.”</p>
+        </div>
+      </li>
+      <li class="ds-timeline__entry">
+        <span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">RW</span>
+        <div class="ds-timeline__content">
+          <div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">You</span> commented on <a href="#request-1039">Request <bdi>1039</bdi></a></p><span class="ds-timeline__pending" data-failed><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Not sent</span></span></div>
+          <p class="ds-timeline__reason">“Also adding the invoice copy.”</p>
+          <div class="ds-timeline__entry-actions"><button type="button" class="ds-button" data-size="sm" data-force="focus" data-ds-timeline="retry">Retry<span class="ds-vh"> sending comment</span></button></div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="loading (Skeleton entries, aria-busy; Show older not pressable) · empty · error (InlineAlert C1 + Retry)">
+  <div class="ds-stack" data-gap="6">
+    <section class="ds-timeline" aria-label="Activity (loading)" aria-busy="true">
+      <span class="ds-vh">Loading activity</span>
+      <div class="ds-timeline__skeleton" aria-hidden="true"><span></span><span><i></i><i></i></span></div>
+      <div class="ds-timeline__skeleton" aria-hidden="true"><span></span><span><i></i><i></i></span></div>
+      <div class="ds-timeline__footer"><button type="button" class="ds-button" aria-disabled="true" data-force="pressed" aria-describedby="tl-load-r">Show older activity</button><span class="ds-button__reason" id="tl-load-r">Loading…</span></div>
+    </section>
+    <div class="ds-empty-state" data-size="section">
+      <h3 class="ds-empty-state__title">No activity yet</h3>
+      <p class="ds-empty-state__description">Approvals, comments and status changes on this request will appear here.</p>
+    </div>
+    <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="tl-err-t">
+      <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+      <div class="ds-inline-alert__content">
+        <p class="ds-inline-alert__title" id="tl-err-t">We couldn't load older activity</p>
+        <p class="ds-inline-alert__body">Entries already shown stay available.</p>
+        <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target">Retry</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long sentence (+40% locale) · RTL + numbers (rail and marker at inline-start; arrow old → new mirrored)">
+  <div class="ds-stack" data-gap="6">
+    <section class="ds-timeline" aria-label="Aktivitas" lang="id" style="max-inline-size: 28rem">
+      <ol class="ds-timeline__list">
+        <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">MR</span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Muhammad Rizky Pratama</span> menyetujui <a href="#req">Permintaan pengadaan perlengkapan perawatan lapangan <bdi>1042</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:12:00+07:00" tabindex="0" data-ds-module="tooltip" data-ds-tooltip="tl-tt-7">5 menit lalu<span class="ds-vh">, 8 Oktober 2026, 09.12 WIB</span></time><span class="ds-tooltip" role="tooltip" id="tl-tt-7" popover="manual" aria-hidden="true" data-ds-text="supporting">8 Okt 2026, 09.12 WIB</span></div></div></li>
+      </ol>
+    </section>
+    <section class="ds-timeline" dir="rtl" lang="ar" aria-label="النشاط">
+      <ol class="ds-timeline__list">
+        <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-status="critical" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg></span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">النظام</span> غيّر حالة <a href="#inv">الفاتورة <bdi>INV-1042</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T07:00:00+07:00">8/10/2026، 07:00</time></div>
+          <p class="ds-timeline__change"><span>من</span><span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>قيد الانتظار</span></span></span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg><span>إلى</span><span class="ds-status-label" data-status="critical"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>متأخر</span></span></span></p></div></li>
+        <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">أس</span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">أليكس</span> وافق على <a href="#req">الطلب <bdi>1042</bdi></a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T06:00:00+07:00">8/10/2026، 06:00</time></div></div></li>
+      </ol>
+    </section>
+  </div>
+</section>

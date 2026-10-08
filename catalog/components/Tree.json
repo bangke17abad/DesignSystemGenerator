@@ -1,0 +1,673 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label atau aria-labelledby pada tree",
+      "aria-expanded pada node yang punya anak (tidak pada daun)",
+      "aria-level, aria-setsize, aria-posinset pada setiap treeitem (wajib saat anak lazy atau tervirtualisasi)",
+      "aria-selected (navigation/single) atau aria-checked dengan \"mixed\" (multi-select); aria-multiselectable pada tree untuk multi",
+      "roving tabindex: satu treeitem tabindex 0, lainnya −1",
+      "aria-busy=\"true\" pada node yang memuat anak",
+      "aria-disabled + aria-describedby ke reason pada node diblokir",
+      "hasil muat anak dan perpindahan node diumumkan lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "satu tab stop; di dalam tree urutan node terlihat dari atas ke bawah; setelah node dihapus fokus ke saudara berikutnya, sebelumnya, atau induk (§9.5)",
+    "native": {
+      "compose": "Tidak ada Tree bawaan: LazyColumn dari node yang diratakan dengan Modifier.semantics { stateDescription; selected; expand { } / collapse { }; collectionItemInfo } per baris; di compact width NavHost per tingkat",
+      "flutter": "TreeSliver (TreeSliverNode, TreeSliverController, treeNodeBuilder) atau ListView dari node yang diratakan; Semantics(expanded:, selected:, label:) per node dengan customSemanticsActions untuk Move; di compact width Navigator push per tingkat",
+      "swiftui": "List(nodes, children: \\.children, selection: $selection) atau OutlineGroup/DisclosureGroup di regular width; di compact width NavigationStack dengan NavigationLink per tingkat (drill-down)"
+    },
+    "politeness": "polite",
+    "role": "tree; treeitem per node; group (ul) untuk anak; phone drill-down: list dengan tombol per node dan heading induk",
+    "sr_label": "label node + state (expanded/collapsed, selected) + level + posisi (\"3 of 7\") + meta penting",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.5.7",
+      "2.5.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "ul role=tree berlabel; satu tab stop; gulir internal bila panjang",
+      "tokens": [
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "li role=treeitem; baris dengan indentasi per level dari space-* (properti logis); ring fokus inset −2px",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "space-2",
+        "space-4",
+        "space-6",
+        "color-focus-ring",
+        "state-layer-hover-opacity"
+      ]
+    },
+    {
+      "part": "toggle",
+      "role": "chevron buka/tutup untuk node yang punya anak; bagian dari baris (bukan tab stop terpisah); area klik ≥ target-current",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch",
+        "motion-fast-duration"
+      ]
+    },
+    {
+      "part": "icon",
+      "role": "ikon jenis node opsional (folder, berkas, entitas) dari L9",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "nama node; boleh ellipsis dengan nama lengkap di nama aksesibel dan Tooltip",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "meta",
+      "role": "jumlah anak atau nilai ringkas di inline-end; tabular-nums",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "selection-marker",
+      "role": "centang/Checkbox (multi) atau penanda bobot + garis inline-start (single); non-warna",
+      "tokens": [
+        "color-structure-selection",
+        "color-interaction-default",
+        "border-width-thick",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "guide",
+      "role": "garis panduan level opsional; dekoratif",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "node-loading",
+      "role": "baris anak sementara berisi Spinner + \"Loading…\" saat anak dimuat lazy",
+      "tokens": [
+        "icon-sm",
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "node-error",
+      "role": "baris anak berisi ikon kritis + teks + Retry saat anak gagal dimuat",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "drill-header",
+      "role": "presentasi phone: header dengan tombol Back + nama node induk + Breadcrumb ringkas",
+      "tokens": [
+        "layout-bar-height",
+        "color-structure-surface-raised",
+        "type-h3-size",
+        "type-h3-weight"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string[]",
+        "when": "kumpulan node terbuka berubah"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "string[]",
+        "when": "seleksi berubah"
+      },
+      {
+        "name": "onPress",
+        "payload": "{ nodeId: string }",
+        "when": "node diaktifkan dengan Enter, klik, atau tap (variant navigation)"
+      },
+      {
+        "name": "onLoadChildren",
+        "payload": "{ nodeId: string }",
+        "when": "node lazy dibuka pertama kali atau Retry"
+      },
+      {
+        "name": "onMove",
+        "payload": "{ nodeId: string; parentId: string; index: number }",
+        "when": "node dipindah lewat drag, Menu, atau keyboard"
+      }
+    ],
+    "parts": [
+      "Tree.Item (nodeId, label, hasChildren, disabled, reason, loading, errorText)",
+      "Tree.Group",
+      "Tree.Toggle",
+      "Tree.Meta",
+      "Tree.DrillHeader"
+    ],
+    "props": [
+      {
+        "description": "Nama aksesibel tree.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "navigation",
+        "description": "Model seleksi.",
+        "name": "variant",
+        "required": false,
+        "type": "\"navigation\" | \"single-select\" | \"multi-select\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi baris; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: id node yang terbuka.",
+        "name": "value",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "[]",
+        "description": "Uncontrolled: node terbuka awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "description": "Controlled: id node terpilih.",
+        "name": "selected",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "[]",
+        "description": "Uncontrolled: seleksi awal.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "false",
+        "description": "Mengaktifkan pindah node dengan drag + Menu Move to… + keyboard.",
+        "name": "movable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "bp-tablet",
+        "description": "Lebar di bawahnya Tree menjadi drill-down.",
+        "name": "drillDownBelow",
+        "required": false,
+        "type": "\"bp-tablet\" | \"never\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "masuk ke tree pada node terpilih (atau pertama); satu tab stop (roving tabindex); Tab berikutnya keluar dari tree",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus ke node terlihat berikut/sebelumnya tanpa membuka atau menutup",
+      "trigger": "↓ / ↑"
+    },
+    {
+      "input": "keyboard",
+      "result": "node tertutup: buka; node terbuka: fokus ke anak pertama; daun: tidak ada aksi",
+      "trigger": "→ (← di RTL)"
+    },
+    {
+      "input": "keyboard",
+      "result": "node terbuka: tutup; node tertutup atau daun: fokus ke induk",
+      "trigger": "← (→ di RTL)"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus ke node pertama / node terlihat terakhir",
+      "trigger": "Home / End"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus ke node terlihat berikut yang labelnya berawalan karakter itu; beberapa karakter dalam 500 ms digabung",
+      "trigger": "huruf (typeahead)"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka semua saudara node fokus (opsional, sesuai pola APG)",
+      "trigger": "* (asterisk)"
+    },
+    {
+      "input": "keyboard",
+      "result": "Enter mengaktifkan node (navigation: membuka isi di pane detail); Space memilih/mencentang (single/multi-select); perubahan seleksi diumumkan polite",
+      "trigger": "Enter / Space"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle membuka/menutup tanpa memilih; klik baris memilih/mengaktifkan; klik ganda membuka/menutup",
+      "trigger": "klik toggle; klik baris"
+    },
+    {
+      "input": "pointer",
+      "result": "pindah ke drop-target; Esc membatalkan; alternatif Menu Move to… yang membuka Tree single-select (SC 2.5.7)",
+      "trigger": "drag node (bila move diaktifkan)"
+    },
+    {
+      "input": "touch",
+      "result": "drill-down: node dengan anak membuka layar daftar anak dengan drill-header Back; daun mengaktifkan; tidak ada pohon menjorok",
+      "trigger": "tap baris (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "membuka/menutup; area toggle ≥ target-min-touch dan tidak tumpang tindih dengan area pilih baris",
+      "trigger": "tap toggle (tablet)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Folders",
+        "Shared documents",
+        "12 items",
+        "Loading…",
+        "Couldn't load items. Retry",
+        "Move to…",
+        "Back to Shared documents"
+      ],
+      "id-ID": [
+        "Folder",
+        "Dokumen bersama",
+        "12 item",
+        "Memuat…",
+        "Item gagal dimuat. Coba lagi",
+        "Pindahkan ke…",
+        "Kembali ke Dokumen bersama"
+      ]
+    },
+    "rules": [
+      "Label node = nama objek apa adanya; tidak menambah awalan jenis bila ikon sudah menunjukkannya (nama jenis ada di nama aksesibel bila perlu).",
+      "Meta jumlah anak berupa angka saja dengan nama aksesibel lengkap (\"12 items\").",
+      "Node kosong dan pesan muat memakai teks spesifik dari glosarium.",
+      "Label tree menyebut apa yang ditampilkan (\"Folders\", \"Locations\")."
+    ]
+  },
+  "depends_on": [
+    "Checkbox",
+    "Spinner",
+    "Tooltip",
+    "Menu",
+    "EmptyState",
+    "Breadcrumb",
+    "Button",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai roving tabindex dengan satu tab stop dan peta panah APG.",
+    "Tampilkan state loading dan error per node saat anak dimuat lazy.",
+    "Ganti pohon menjorok dengan drill-down di phone."
+  ],
+  "dont": [
+    {
+      "text": "Memakai role tree untuk navigasi situs berisi tautan."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai node terpilih hanya dengan warna latar."
+    },
+    {
+      "ref": "UB7",
+      "text": "Memindah node hanya lewat drag tanpa Menu Move to… dan keyboard."
+    },
+    {
+      "ref": "UB1",
+      "text": "Indentasi dengan margin fisik (margin-left) alih-alih properti logis."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus atau ellipsis dengan nama lengkap di nama aksesibel dan Tooltip; meta tetap utuh",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "baris tumbuh; indentasi tidak bertambah agar label tidak terdorong keluar; gulir horizontal hanya untuk hierarki sangat dalam",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik di tempat tree",
+      "case": "0 node"
+    },
+    {
+      "behaviour": "virtualisasi dengan aria-setsize/aria-posinset; anak dimuat lazy per halaman dengan node \"Load more\" di akhir group",
+      "case": "10.000+ node atau 1.000 anak di satu induk"
+    },
+    {
+      "behaviour": "indentasi berhenti bertambah di tingkat ±6; Breadcrumb di atas menunjukkan jalur node fokus",
+      "case": "hierarki sangat dalam (> 8 tingkat)"
+    },
+    {
+      "behaviour": "node-error + Retry per node; node yang sudah dimuat tetap dapat dinavigasi",
+      "case": "anak gagal dimuat atau offline"
+    },
+    {
+      "behaviour": "fokus ke saudara berikutnya/induk; perubahan diumumkan polite",
+      "case": "node fokus dihapus atau dipindah oleh pengguna lain"
+    },
+    {
+      "behaviour": "indentasi dari inline-start (kanan); chevron collapsed dicerminkan; → dan ← ditukar; angka di meta diisolasi bidi",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Opsional: disertakan bila entitas di brief B5 memiliki data hierarkis (folder, struktur organisasi, kategori bertingkat, lokasi); alasan dicatat.",
+  "lint": [
+    "treeitem tanpa aria-level/aria-setsize/aria-posinset saat lazy atau virtualized ditolak",
+    "aria-expanded pada daun ditolak",
+    "Lebih dari satu treeitem dengan tabindex 0 ditolak",
+    "Indentasi dengan properti fisik ditolak (V6, §12.4)",
+    "Drag tanpa Menu Move to… ditolak (UB7)"
+  ],
+  "name": "Tree",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected",
+      "loading + tutup",
+      "dragged + Move to…",
+      "drill-down phone",
+      "RTL"
+    ],
+    "states": [
+      "collapsed",
+      "expanded",
+      "hover",
+      "focus",
+      "pressed",
+      "selected",
+      "partially-selected",
+      "loading-children",
+      "error-children",
+      "disabled-with-reason",
+      "empty",
+      "drop-target"
+    ],
+    "variants": [
+      "navigation",
+      "single-select",
+      "multi-select"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan dan menavigasi data hierarkis berjenjang yang dapat dibuka dan ditutup per node, dengan seleksi bertanda non-warna dan anak yang dimuat sesuai kebutuhan.",
+    "when_not_to_use": [
+      "Untuk hierarki dua tingkat yang statis: pakai List dengan section atau Accordion.",
+      "Untuk navigasi situs/aplikasi: pakai PrimaryNav (disclosure berisi tautan), bukan role tree.",
+      "Untuk memilih satu nilai dari hierarki di form: pakai Combobox atau Select bertingkat; Tree hanya bila struktur perlu dilihat.",
+      "Untuk membandingkan atribut node: pakai Table (boleh dengan baris ekspansi)."
+    ]
+  },
+  "related": [
+    "List",
+    "Accordion",
+    "Breadcrumb",
+    "Menu",
+    "Combobox"
+  ],
+  "responsive": [
+    {
+      "behaviour": "drill-down bertingkat (satu tingkat per layar) dengan drill-header Back + nama induk; baris size lg ≥ target-min-touch; tidak ada indentasi menjorok",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "pohon menjorok di pane daftar; size lg di sentuh; indentasi dibatasi (maks ±6 tingkat terlihat, lebih dalam memakai Breadcrumb)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "pohon menjorok di panel samping (layout-panel-width) dengan detail di pane utama; size sm/md; drag + Menu Move to…",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "node yang tidak boleh diketahui role tidak dirender; aria-setsize dan meta jumlah menghitung node terlihat saja"
+    },
+    {
+      "pattern": "read-only",
+      "when": "tanpa drag/move, tanpa seleksi multi; navigasi tetap"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "node terlihat tetapi tidak boleh dibuka atau dipilih saat ini: gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-right",
+      "chevron-left",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Indentasi memakai padding-inline-start; chevron collapsed dicerminkan (menunjuk inline-end); → membuka dan ← menutup di LTR, ditukar di RTL; tombol Back drill-down dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); hanya pointer, di mode sentuh naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Panel samping padat (dense-console).",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default pointer.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch)",
+      "name": "lg",
+      "notes": "Mode sentuh; baris ≥ 44 di sentuh (§6.5).",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "penanda tetap; state-layer di atas",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "penanda + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada node induk; Retry dapat dicapai dengan ↓",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "terpilih tetapi terkunci: penanda diredam, aria-selected tetap",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "node yang sedang memuat anak boleh ditutup (membatalkan muat)",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "hanya bila move diaktifkan; alternatif Menu Move to… dan Ctrl+X/Ctrl+V atau perintah keyboard yang didokumentasikan (UB7)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "collapsed",
+      "token_swaps": {},
+      "treatment": "aria-expanded=\"false\"; chevron menunjuk inline-end"
+    },
+    {
+      "name": "expanded",
+      "token_swaps": {},
+      "treatment": "aria-expanded=\"true\"; chevron menunjuk bawah; anak tampil dalam group"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "item": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover pada baris di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "item": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px pada baris"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "item": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "item": "color-structure-selection",
+        "selection-marker": "color-interaction-default"
+      },
+      "treatment": "latar selection + penanda non-warna (centang atau garis border-thick di inline-start + bobot label)"
+    },
+    {
+      "name": "partially-selected",
+      "token_swaps": {
+        "selection-marker": "color-interaction-default"
+      },
+      "treatment": "multi-select: Checkbox induk indeterminate (aria-checked=\"mixed\") saat sebagian anak terpilih"
+    },
+    {
+      "name": "loading-children",
+      "token_swaps": {},
+      "treatment": "node-loading di bawah node; node aria-busy=\"true\"; fokus tetap di node"
+    },
+    {
+      "name": "error-children",
+      "token_swaps": {
+        "node-error": "color-semantic-critical-strong"
+      },
+      "treatment": "node-error dengan Retry; node tetap expanded agar pesan terlihat"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "node tidak dapat dipilih/dibuka untuk role ini: aria-disabled, label text-disabled, ikon gembok, reason di Tooltip yang terbaca saat fokus; tetap dapat difokus"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "node tanpa anak setelah dimuat: tidak ada toggle; pohon kosong: EmptyState"
+    },
+    {
+      "name": "drop-target",
+      "token_swaps": {
+        "item": "color-interaction-default"
+      },
+      "treatment": "hanya bila reorder/move dengan drag: garis sisip atau outline border-thick + teks \"Move into {node}\"; alternatif Menu Move to… wajib"
+    }
+  ],
+  "target_hints": {
+    "compose": "LazyColumn node rata dibungkus {Ns}Tree; NavHost di compact",
+    "flutter": "TreeSliver dibungkus {ns}_tree.dart; Navigator per tingkat di compact width",
+    "html": {
+      "element": "ul[role=tree] > li[role=treeitem] > ul[role=group]",
+      "notes": "modul JS untuk roving tabindex, typeahead, dan lazy load; fallback tanpa JS: daftar tautan bertingkat (ul bersarang) atau details/summary per node"
+    },
+    "swiftui": "List(children:)/OutlineGroup dibungkus {Ns}Tree; NavigationStack di compact"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Memilih node membuka isinya di pane sebelah (master–detail); seleksi tunggal, aria-selected mengikuti fokus atau Enter sesuai brief.",
+      "name": "navigation"
+    },
+    {
+      "description": "Memilih satu node sebagai nilai (mis. lokasi tujuan Move to…); penanda terpilih non-warna.",
+      "name": "single-select"
+    },
+    {
+      "description": "Checkbox per node dengan state tri-state (induk mixed bila sebagian anak terpilih); aria-multiselectable.",
+      "name": "multi-select"
+    }
+  ]
+}

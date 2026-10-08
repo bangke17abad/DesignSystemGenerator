@@ -1,0 +1,309 @@
+/* BottomNav · engine 1.8.0 reference (catalog/components/BottomNav.json). Tokens only (I3); logical properties only (§12.4).
+   nav[aria-label] > ul > li > a (never a tablist). Phone only: from bp-tablet up the same destinations live in PrimaryNav
+   (rail / fixed nav), so the bar is not rendered there. 3–5 equal cells, icon above an always-visible label, sticky at the
+   block-end edge with the safe-area inset. Current = pill + ring + heavier stroke + heavier label (never colour alone, UB2).
+   BottomNav.js adds ←/→ Home/End (no wrap, swapped in RTL), reselect (scroll to top + announce), the "More" sheet, hiding
+   while the virtual keyboard is open, inline labels in short landscape viewports and un-sticking at 200% text.
+   data-static renders the bar in flow at any width (previews, docs). */
+.ds-bottom-nav {
+  --_safe-start: env(safe-area-inset-left, 0px);
+  --_safe-end: env(safe-area-inset-right, 0px);
+  --_cell-h: max(var(--layout-bar-height), var(--target-min-touch), var(--target-current));
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--z-sticky);
+  display: block;
+  padding-block: var(--space-1) max(var(--space-1), env(safe-area-inset-bottom, 0px));
+  padding-inline: max(var(--space-1), var(--_safe-start)) max(var(--space-1), var(--_safe-end));
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base); /* extends under the home indicator to the screen edge */
+  color: var(--color-structure-text-secondary);
+  font-family: var(--font-sans);
+}
+.ds-bottom-nav:dir(rtl) { --_safe-start: env(safe-area-inset-right, 0px); --_safe-end: env(safe-area-inset-left, 0px); }
+/* translucent: material blur where the language allows it (L8); solid under reduced transparency */
+.ds-bottom-nav[data-variant="translucent"] {
+  background: var(--color-structure-surface-translucent);
+  -webkit-backdrop-filter: blur(var(--material-blur-md));
+  backdrop-filter: blur(var(--material-blur-md));
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ds-bottom-nav[data-variant="translucent"] { background: var(--color-structure-surface-base); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+/* phone only (catalog responsive): tablet = PrimaryNav rail, desktop = PrimaryNav fixed */
+@media (--bp-tablet-up) {
+  .ds-bottom-nav:not([data-static]) { display: none; }
+}
+/* the focused element is never hidden behind the bar (SC 2.4.11, UB8) */
+@media (--bp-tablet-down) {
+  html:has(.ds-bottom-nav:not([data-static], [data-keyboard-open], [data-unstick])) {
+    scroll-padding-block-end: calc(var(--layout-bar-height) + var(--space-4) + env(safe-area-inset-bottom, 0px));
+  }
+}
+/* hidden while the virtual keyboard is open or a step flow is active; its space goes back to the content */
+.ds-bottom-nav[data-keyboard-open],
+.ds-bottom-nav[data-state="hidden-for-keyboard"] { display: none; }
+/* 200% text: the bar stops being sticky when it would take more than a fifth of the viewport (BottomNav.js) */
+.ds-bottom-nav[data-unstick] { position: static; }
+
+.ds-bottom-nav__list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-bottom-nav__list > li { display: flex; min-inline-size: 0; }
+
+/* item: the whole cell is the click area; icon (in its pill) above the label */
+.ds-bottom-nav__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  inline-size: 100%;
+  min-inline-size: max(var(--target-min-touch), var(--target-current));
+  min-block-size: var(--_cell-h);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.ds-bottom-nav__label {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere; /* wraps to two lines at the longest locale; never truncated */
+  hyphens: auto;
+}
+/* icon pill: the current indicator and the state-layer surface */
+.ds-bottom-nav__icon {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: calc(var(--icon-md) + 2 * var(--space-4));
+  block-size: calc(var(--icon-md) + 2 * var(--space-1));
+  border-radius: var(--radius-full);
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), box-shadow var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-bottom-nav__icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-bottom-nav__icon > .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.ds-bottom-nav__lock {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--space-1));
+  inset-inline-start: calc(50% + var(--icon-md) / 4);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  color: var(--color-structure-text-secondary);
+}
+
+/* hover (pointer only) / pressed: state layer on the pill; the pill of the current item stays */
+@media (hover: hover) {
+  .ds-bottom-nav__item:not([aria-disabled="true"]):hover { color: var(--color-structure-text-primary); }
+  .ds-bottom-nav__item:not([aria-disabled="true"]):hover .ds-bottom-nav__icon { background: var(--color-interaction-subtle); }
+  .ds-bottom-nav__item:not([aria-disabled="true"]):hover .ds-bottom-nav__icon::before { opacity: var(--state-layer-hover-opacity); }
+  .ds-bottom-nav__item[aria-current="page"]:hover .ds-bottom-nav__icon { background: var(--nav-item-background-selected); }
+}
+.ds-bottom-nav__item[data-force~="hover"] { color: var(--color-structure-text-primary); }
+.ds-bottom-nav__item[data-force~="hover"] .ds-bottom-nav__icon { background: var(--color-interaction-subtle); }
+.ds-bottom-nav__item[data-force~="hover"] .ds-bottom-nav__icon::before { opacity: var(--state-layer-hover-opacity); }
+.ds-bottom-nav__item:not([aria-disabled="true"]):active .ds-bottom-nav__icon,
+.ds-bottom-nav__item[data-force~="pressed"] .ds-bottom-nav__icon { background: var(--color-interaction-subtle); }
+.ds-bottom-nav__item:not([aria-disabled="true"]):active .ds-bottom-nav__icon::before,
+.ds-bottom-nav__item[data-force~="pressed"] .ds-bottom-nav__icon::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* focus: inset ring inside the cell (external keyboard, switch access) */
+.ds-bottom-nav__item:focus-visible,
+.ds-bottom-nav__item[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+/* current: pill (selection background + indicator ring) + heavier icon stroke + heavier primary label */
+.ds-bottom-nav__item:is([aria-current="page"], [data-contains-current]) { color: var(--color-structure-text-primary); font-weight: var(--type-h3-weight); }
+.ds-bottom-nav__item:is([aria-current="page"], [data-contains-current]) .ds-bottom-nav__icon,
+.ds-bottom-nav__item[aria-current="page"][data-force~="hover"] .ds-bottom-nav__icon,
+.ds-bottom-nav__item[aria-current="page"][data-force~="pressed"] .ds-bottom-nav__icon {
+  background: var(--nav-item-background-selected);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--nav-item-indicator);
+  color: var(--nav-item-indicator);
+}
+.ds-bottom-nav__item:is([aria-current="page"], [data-contains-current]) .ds-bottom-nav__icon > .ds-icon { stroke-width: calc(max(var(--icon-stroke), 1.25) + 0.75); }
+
+/* badge (Badge, corner placement, attention tokens) keeps its colour; anchored to the pill's block-start/inline-end corner,
+   its ring follows the bar surface */
+.ds-bottom-nav__icon > .ds-badge[data-placement="corner"] {
+  --_ring: var(--color-structure-surface-base);
+  inset-block: calc(-1 * var(--space-2)) auto;
+  inset-inline-start: calc(50% + var(--icon-md) / 4);
+}
+
+/* blocked with reason: visible, focusable, lock glyph; tap shows the reason (Toast / announce); no hover feedback */
+.ds-bottom-nav__item[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-bottom-nav__reason { color: var(--color-structure-text-secondary); }
+
+/* short landscape viewport (BottomNav.js): label beside the icon */
+.ds-bottom-nav[data-layout="inline"] .ds-bottom-nav__item { flex-direction: row; gap: var(--space-2); min-block-size: max(var(--target-min-touch), var(--target-current)); }
+.ds-bottom-nav[data-layout="inline"] .ds-bottom-nav__icon { inline-size: calc(var(--icon-md) + 2 * var(--space-2)); }
+
+/* ---------- "More" sheet: modal <dialog> from the block-end edge with the remaining destinations ---------- */
+.ds-bottom-nav__sheet {
+  position: fixed;
+  inset-block: auto 0;
+  inset-inline: 0;
+  z-index: var(--z-modal);
+  inline-size: 100%;
+  max-inline-size: none;
+  max-block-size: calc(100dvh - var(--layout-bar-height));
+  margin: 0;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  border: 0;
+  border-start-start-radius: var(--radius-lg);
+  border-start-end-radius: var(--radius-lg);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ds-bottom-nav__sheet[open] { display: flex; flex-direction: column; animation: ds-bottom-nav-sheet-in var(--motion-base-duration) var(--motion-easing-enter); }
+.ds-bottom-nav__sheet::backdrop { background: var(--color-structure-scrim); }
+@keyframes ds-bottom-nav-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+:root:has(.ds-bottom-nav__sheet:modal) { overflow: hidden; }
+.ds-bottom-nav__sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-block-size: var(--layout-bar-height);
+  padding-inline: var(--space-4) var(--space-2);
+}
+.ds-bottom-nav__sheet-title {
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+}
+.ds-bottom-nav__sheet-close {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: max(var(--control-height-md), var(--target-current));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-bottom-nav__sheet-list { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0 var(--space-2) var(--space-3); list-style: none; }
+.ds-bottom-nav__sheet-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: max(var(--target-min-touch), var(--target-current));
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-decoration: none;
+}
+.ds-bottom-nav__sheet-item:focus-visible,
+.ds-bottom-nav__sheet-item[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+@media (hover: hover) {
+  .ds-bottom-nav__sheet-item:hover,
+  .ds-bottom-nav__sheet-close:hover { background: var(--row-background-hover); }
+}
+.ds-bottom-nav__sheet-item[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-bottom-nav__sheet-item[aria-current="page"] {
+  background: var(--nav-item-background-selected);
+  font-weight: var(--type-h3-weight);
+  box-shadow: inset var(--border-width-thick) 0 0 var(--nav-item-indicator);
+}
+[dir="rtl"] .ds-bottom-nav__sheet-item[aria-current="page"] { box-shadow: inset calc(-1 * var(--border-width-thick)) 0 0 var(--nav-item-indicator); }
+
+/* ---------- preview frames: a phone-sized screen with the bar at its block-end edge (any viewport width) ---------- */
+.ds-bottom-nav-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-inline-size: var(--layout-modal-sm);
+  min-block-size: calc(var(--layout-row-height) * 4);
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-structure-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-base);
+  justify-content: flex-end;
+}
+.ds-bottom-nav-frame[data-width="wide"] { max-inline-size: calc(var(--layout-modal-sm) * 1.25); }
+.ds-bottom-nav-frame__screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1 1 auto;
+  padding: var(--space-4);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-bottom-nav-frame > .ds-bottom-nav[data-static] { position: relative; z-index: var(--z-base); }
+/* translucent demo: content scrolls under the bar */
+.ds-bottom-nav-frame[data-overlap] { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; }
+.ds-bottom-nav-frame[data-overlap] > * { grid-area: 1 / 1; }
+.ds-bottom-nav-frame[data-overlap] > .ds-bottom-nav { align-self: end; }
+.ds-bottom-nav-frame__stripe { min-block-size: var(--layout-row-height); padding: var(--space-3); border-radius: var(--radius-sm); background: var(--color-interaction-subtle); color: var(--color-structure-text-primary); }
+.ds-bottom-nav-frame__stripe:nth-child(even) { background: var(--color-structure-surface-raised); }
+.ds-bottom-nav-frame[data-sheet] { background: var(--color-structure-scrim); justify-content: flex-end; }
+.ds-bottom-nav-frame[data-sheet] > .ds-bottom-nav__sheet[data-static] { position: relative; display: flex; flex-direction: column; z-index: var(--z-base); animation: none; }
+.ds-bottom-nav-frame__field { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-bottom-nav-frame__field input {
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+}
+.ds-bottom-nav-frame__keyboard {
+  display: grid;
+  place-items: center;
+  min-block-size: calc(var(--layout-row-height) * 3);
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-bottom-nav__icon { transition: none; }
+  .ds-bottom-nav__sheet[open] { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-bottom-nav { border-block-start-color: CanvasText; }
+  .ds-bottom-nav__item:is([aria-current="page"], [data-contains-current]) .ds-bottom-nav__icon { border: var(--border-width-thick) solid Highlight; forced-color-adjust: none; background: Canvas; color: Highlight; }
+  .ds-bottom-nav__item[aria-disabled="true"] { color: GrayText; }
+  .ds-bottom-nav__sheet { border: var(--border-width-thin) solid CanvasText; }
+  .ds-bottom-nav__sheet-item[aria-current="page"] { border: var(--border-width-thin) solid Highlight; }
+}

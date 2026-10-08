@@ -1,0 +1,670 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby plot ke title, aria-describedby ke summary",
+      "titik interaktif: aria-label \"{seri}, {x}, {y} {unit}\" dan roving tabindex",
+      "legenda: button aria-pressed per seri",
+      "toggle Show as table: aria-expanded + aria-controls ke data-table",
+      "elemen dekoratif svg (gridline, rail) aria-hidden",
+      "aria-busy saat loading",
+      "forced-colors: forced-color-adjust: none hanya bila data-table tersedia (§9.3); bentuk dan pola tetap membedakan seri"
+    ],
+    "focus_order": "title → plot (satu tab stop) → legenda → toggle tabel → data-table bila terbuka",
+    "native": {
+      "compose": "Tidak ada chart bawaan: Canvas dengan Modifier.semantics { contentDescription = judul + summary } dan node semantik per titik (Modifier.semantics { contentDescription }) untuk mode interaktif; tabel alternatif di LazyColumn",
+      "flutter": "Tidak ada chart bawaan: CustomPaint (atau pustaka chart ter-pin) dibungkus Semantics(label: judul + summary) dengan Semantics per titik untuk mode interaktif; DataTable sebagai alternatif data",
+      "swiftui": "Swift Charts: Chart { LineMark/BarMark … .accessibilityLabel(x).accessibilityValue(y) } dengan .foregroundStyle(by:) + .symbol(by:) dan .accessibilityChartDescriptor(_:) (AXChartDescriptorRepresentable, Audio Graphs)"
+    },
+    "politeness": "polite",
+    "role": "figure dengan figcaption; plot statis role=\"img\" berlabel judul + summary; plot interaktif role=\"group\" berlabel dengan titik data sebagai elemen ber-roving tabindex (bukan role=\"application\"); data-table sebagai Table setara",
+    "sr_label": "judul + takeaway + rentang nilai; detail lewat navigasi titik atau data-table",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.10",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.2.2",
+      "2.4.7",
+      "2.5.7",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "figure",
+      "role": "pembungkus figure berlabel judul; memuat plot, legenda, ringkasan, dan toggle tabel",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "space-4"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "judul yang menyatakan apa yang diukur dan periodenya; heading",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "summary",
+      "role": "satu kalimat takeaway (figcaption) + kesegaran data; juga nama aksesibel ringkas plot",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "plot",
+      "role": "area grafik (svg/canvas) dengan rasio token; teks tidak pernah langsung di atas fill",
+      "tokens": [
+        "aspect-video",
+        "aspect-photo",
+        "color-structure-surface-raised"
+      ]
+    },
+    {
+      "part": "axis",
+      "role": "sumbu dan label tick; angka tabular-nums; unit di judul sumbu",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary",
+        "color-structure-border-strong",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "gridline",
+      "role": "garis bantu tipis; tidak bersaing dengan data",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "series-categorical",
+      "role": "warna seri kategorikal berurutan tetap; kategori ke-6+ menjadi other; setiap seri juga dibedakan bentuk marker, pola garis, atau label langsung",
+      "tokens": [
+        "chart-cat-1",
+        "chart-cat-2",
+        "chart-cat-3",
+        "chart-cat-4",
+        "chart-cat-5",
+        "chart-cat-other"
+      ]
+    },
+    {
+      "part": "series-sequential",
+      "role": "skala sekuensial lima langkah untuk nilai berurut (heatmap, intensitas)",
+      "tokens": [
+        "chart-seq-100",
+        "chart-seq-300",
+        "chart-seq-500",
+        "chart-seq-700",
+        "chart-seq-900"
+      ]
+    },
+    {
+      "part": "series-diverging",
+      "role": "skala divergen dengan titik tengah netral untuk nilai di atas/di bawah acuan",
+      "tokens": [
+        "chart-div-neg-strong",
+        "chart-div-neg",
+        "chart-div-mid",
+        "chart-div-pos",
+        "chart-div-pos-strong"
+      ]
+    },
+    {
+      "part": "hatch",
+      "role": "pola diagonal 45° untuk data parsial, estimasi, atau proyeksi; tidak pernah diwarnai semantik",
+      "tokens": [
+        "chart-hatch-line"
+      ]
+    },
+    {
+      "part": "status-annotation",
+      "role": "ambang/target/anomali: garis atau kotak outline + ikon status terkunci + label teks di chip surface; tidak mengisi seri dengan warna semantik",
+      "tokens": [
+        "color-semantic-critical-strong",
+        "color-semantic-warning-strong",
+        "color-semantic-positive-strong",
+        "color-semantic-info-strong",
+        "icon-sm",
+        "border-width-thick",
+        "color-structure-surface-raised"
+      ]
+    },
+    {
+      "part": "data-label",
+      "role": "label nilai langsung pada seri atau ujung garis, di atas chip berlatar surface (bukan di atas fill)",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-primary",
+        "color-structure-surface-raised",
+        "radius-xs",
+        "space-1"
+      ]
+    },
+    {
+      "part": "legend",
+      "role": "daftar seri dengan swatch + bentuk marker + nama; dapat menyembunyikan/menampilkan seri",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-primary",
+        "icon-sm",
+        "space-2",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "crosshair-tooltip",
+      "role": "titik fokus/hover dengan Tooltip nilai semua seri pada posisi itu; pelengkap, bukan satu-satunya sumber nilai",
+      "tokens": [
+        "color-structure-surface-inverse",
+        "color-structure-text-oninverse",
+        "type-caption-size",
+        "z-tooltip",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "data-table",
+      "role": "Table setara dengan data yang sama; tampil lewat toggle \"Show as table\" atau di bawah chart",
+      "tokens": [
+        "type-body-size",
+        "color-structure-border"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onActivePointChange",
+        "payload": "{ seriesId: string; index: number } | null",
+        "when": "titik aktif berubah lewat keyboard, hover, atau tap"
+      },
+      {
+        "name": "onSeriesVisibilityChange",
+        "payload": "{ seriesId: string; visible: boolean }",
+        "when": "item legenda di-toggle"
+      },
+      {
+        "name": "onRetry",
+        "payload": "void",
+        "when": "Retry pada error"
+      }
+    ],
+    "parts": [
+      "Chart.Legend",
+      "Chart.Axis (orientation, label, unit)",
+      "Chart.Annotation (value, status, label)",
+      "Chart.DataTable"
+    ],
+    "props": [
+      {
+        "description": "Bentuk visualisasi.",
+        "name": "variant",
+        "required": true,
+        "type": "\"line\" | \"bar\" | \"stacked-bar\" | \"sparkline\" | \"heatmap\""
+      },
+      {
+        "description": "Ukuran + periode; nama aksesibel.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Satu kalimat takeaway; figcaption dan deskripsi aksesibel.",
+        "name": "summary",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Data mentah; sumber yang sama untuk plot dan data-table.",
+        "name": "data",
+        "required": true,
+        "type": "ChartDatum[]"
+      },
+      {
+        "description": "Definisi seri; warna ditetapkan otomatis berurutan dari chart-cat-*.",
+        "name": "series",
+        "required": true,
+        "type": "{ id: string; label: string; partial?: boolean }[]"
+      },
+      {
+        "default": "categorical",
+        "description": "Palet L10 yang dipakai.",
+        "name": "scale",
+        "required": false,
+        "type": "\"categorical\" | \"sequential\" | \"diverging\""
+      },
+      {
+        "description": "Unit nilai untuk sumbu dan nama aksesibel.",
+        "name": "unit",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Ambang atau target sebagai status-annotation.",
+        "name": "thresholds",
+        "required": false,
+        "type": "{ value: number; status: \"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\"; label: string }[]"
+      },
+      {
+        "description": "Controlled: data-table terlihat.",
+        "name": "showTable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: data-table terlihat awal.",
+        "name": "defaultShowTable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Waktu data untuk kesegaran.",
+        "name": "asOf",
+        "required": false,
+        "type": "string (ISO 8601)"
+      },
+      {
+        "default": "false",
+        "description": "Skeleton plot.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error muat.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke plot (satu tab stop), item legenda, dan toggle Show as table secara berurutan",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah titik aktif sepanjang sumbu kategori/waktu; ↑/↓ berpindah seri pada titik yang sama; Home/End ke titik pertama/terakhir; nilai diumumkan polite \"{seri}, {x}: {y}\"",
+      "trigger": "←/→ di plot; ↑/↓ antar seri; Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "menyembunyikan/menampilkan seri; minimal satu seri tetap tampil; perubahan diumumkan",
+      "trigger": "Enter atau Space pada item legenda"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup crosshair-tooltip; fokus tetap di plot",
+      "trigger": "Esc"
+    },
+    {
+      "input": "pointer",
+      "result": "crosshair mengikuti titik terdekat; Tooltip dapat di-hover dan ditutup Esc (SC 1.4.13)",
+      "trigger": "hover di plot"
+    },
+    {
+      "input": "pointer",
+      "result": "zoom ke rentang; alternatif tombol rentang preset dan DateRangePicker; Reset zoom selalu terlihat",
+      "trigger": "drag rentang (brush) bila ada"
+    },
+    {
+      "input": "touch",
+      "result": "titik terdekat aktif dengan Tooltip menetap sampai tap di luar; gulir halaman vertikal tidak dibajak",
+      "trigger": "tap atau geser di plot"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Requests per week, last 12 weeks",
+        "Volume rose 18% after week 6",
+        "Show as table",
+        "Estimated",
+        "Above limit",
+        "Other"
+      ],
+      "id-ID": [
+        "Permintaan per minggu, 12 minggu terakhir",
+        "Volume naik 18% setelah minggu ke-6",
+        "Tampilkan sebagai tabel",
+        "Estimasi",
+        "Melewati batas",
+        "Lainnya"
+      ]
+    },
+    "rules": [
+      "Judul menyatakan ukuran + periode (\"Requests per week, last 12 weeks\"); summary menyatakan takeaway dalam satu kalimat.",
+      "Label langsung pada seri lebih disukai daripada legenda saja; label tidak bergantung warna.",
+      "Unit di judul sumbu; angka terformat locale dengan tabular-nums; sumbu bar mulai dari nol.",
+      "Data parsial atau estimasi diberi label teks, bukan hanya pola.",
+      "Status di chart (ambang, target, anomali) memakai label kelas dari glosarium + ikon terkunci."
+    ]
+  },
+  "depends_on": [
+    "Table",
+    "Tooltip",
+    "StatusLabel",
+    "Skeleton",
+    "EmptyState",
+    "InlineAlert",
+    "Button",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Sertakan data-table setara untuk setiap chart.",
+    "Bedakan seri dengan warna dan bentuk/pola/label langsung sekaligus.",
+    "Tandai ambang dan anomali dengan outline + ikon + label, bukan mewarnai seri."
+  ],
+  "dont": [
+    {
+      "ref": "UB12",
+      "text": "Mengisi bar atau area dengan warna semantik untuk menyatakan status."
+    },
+    {
+      "ref": "UB2",
+      "text": "Membedakan seri hanya dengan warna atau legenda berwarna."
+    },
+    {
+      "ref": "UB4",
+      "text": "Meletakkan teks langsung di atas fill chart tanpa chip surface."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menaruh nilai hanya di tooltip hover tanpa data-table."
+    },
+    {
+      "text": "Animasi masuk lebih dari 5 detik atau yang tidak runtuh di reduced motion."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "bar beralih horizontal; label membungkus dua baris lalu ellipsis dengan nama lengkap di Tooltip dan data-table",
+      "case": "label kategori +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tick dikurangi (setiap n) agar tidak tumpang tindih; legenda pindah ke bawah; plot tumbuh tinggi",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "state empty; tidak menggambar garis nol",
+      "case": "0 titik data"
+    },
+    {
+      "behaviour": "agregasi per interval yang disebut di summary; data-table dipaginasi; navigasi keyboard per bucket",
+      "case": "10.000+ titik"
+    },
+    {
+      "behaviour": "5 terbesar + chart-cat-other; rincian Other di data-table",
+      "case": "lebih dari 5 kategori"
+    },
+    {
+      "behaviour": "garis nol tegas; skala divergen untuk di atas/bawah acuan; log scale hanya dengan label \"Log scale\" terlihat",
+      "case": "nilai negatif atau rentang ekstrem"
+    },
+    {
+      "behaviour": "Skeleton; offline menampilkan data tersimpan dengan \"As of {waktu}\" (I6)",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "celah ditandai hatch + label \"No data\"; garis tidak diinterpolasi melewati celah",
+      "case": "periode sebagian gagal dimuat"
+    },
+    {
+      "behaviour": "sumbu waktu mengikuti arah baca kecuali brief menetapkan lain (catat A-nn); angka tick diisolasi bidi; legenda di inline-end logis",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Opsional: disertakan bila journey atau surface di brief memerlukan tren, perbandingan, atau komposisi kuantitatif (dashboard, laporan); alasan dicatat. Selalu disertai tabel data sebagai alternatif.",
+  "lint": [
+    "Chart tanpa data-table ditolak",
+    "Token color-semantic-* sebagai fill seri ditolak (token-rule, I1)",
+    "Lebih dari 5 seri kategorikal tanpa chart-cat-other ditolak",
+    "Teks di atas fill chart tanpa latar surface ditolak (manual-review, STD-3)",
+    "Chart tanpa summary ditolak",
+    "Sumbu bar tidak mulai dari nol (manual-review)"
+  ],
+  "name": "Chart",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "loading+pressed (dicegah)",
+      "brush + preset rentang",
+      "grayscale (tanpa warna)",
+      "forced-colors",
+      "Show as table",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "loading",
+      "empty",
+      "error",
+      "partial",
+      "point-focus",
+      "series-hidden",
+      "series-emphasis",
+      "threshold-breached",
+      "stale"
+    ],
+    "variants": [
+      "line",
+      "bar",
+      "stacked-bar",
+      "sparkline",
+      "heatmap"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memvisualisasikan data kuantitatif (tren, perbandingan, komposisi, distribusi) dengan palet data-viz L10, label yang tidak bergantung warna, dan tabel data yang setara sebagai alternatif.",
+    "when_not_to_use": [
+      "Untuk satu sampai tiga angka tanpa dimensi waktu: pakai InlineMetrics.",
+      "Untuk nilai yang harus dibaca tepat atau dibandingkan baris per baris: pakai Table.",
+      "Untuk progres terhadap satu target: pakai ProgressBar.",
+      "Untuk status satu objek: pakai StatusLabel; Chart tidak menggantikan penanda status.",
+      "Untuk lebih dari 5 kategori pada satu chart: kelompokkan sisanya ke \"Other\" atau pakai Table."
+    ]
+  },
+  "related": [
+    "Table",
+    "InlineMetrics",
+    "ProgressBar",
+    "DateRangePicker"
+  ],
+  "responsive": [
+    {
+      "behaviour": "satu chart per lebar; seri dikurangi (≤ 3) atau small multiples; legenda di bawah sebagai daftar; label tick diringkas; tap untuk nilai; Show as table menonjol",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "rasio aspect-photo; legenda di bawah atau inline-end; target titik ≥ target-min-touch lewat zona deteksi, bukan ukuran marker",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "rasio aspect-video; legenda inline-end atau label langsung; crosshair hover; data-table di bawah lewat toggle",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "seri atau dimensi yang tidak boleh dilihat role tidak dirender dan tidak ada di data-table; total tidak membocorkan nilai tersembunyi"
+    },
+    {
+      "pattern": "read-only",
+      "when": "chart selalu baca-saja; aksi ekspor mengikuti izin ekspor role"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Posisi legenda dan judul sumbu memakai properti logis; arah sumbu waktu mengikuti arah baca sebagai default yang dicatat A-nn; ←/→ mengikuti arah visual sumbu; angka diisolasi bidi; ikon status tidak dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran plot mengikuti lebar kontainer dan rasio token aspect-*; tidak ada prop size (§6.8). Target interaktif (titik, legenda, toggle) mengikuti target-current."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "seri ditekankan + crosshair pada titik di bawah pointer",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "titik fokus keyboard + Tooltip nilai",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada Retry",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "legenda dan titik tidak interaktif saat memuat",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "brush/zoom rentang hanya bila ada; alternatif DateRangePicker atau tombol rentang preset (UB7)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "seri dengan palet L10; gridline tipis; legenda dan label langsung"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "plot": "color-structure-skeleton"
+      },
+      "treatment": "Skeleton plot dengan bentuk sumbu; judul tetap; aria-busy"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "tidak ada data di periode ini: sumbu kosong + EmptyState singkat di tengah (bukan garis nol palsu)"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "InlineAlert C1 + Retry menggantikan plot; judul tetap"
+    },
+    {
+      "name": "partial",
+      "token_swaps": {
+        "hatch": "chart-hatch-line"
+      },
+      "treatment": "titik/periode yang belum lengkap atau estimasi diberi hatch atau garis putus + label \"Partial\"/\"Estimated\" di legenda dan data-table"
+    },
+    {
+      "name": "point-focus",
+      "token_swaps": {
+        "crosshair-tooltip": "color-focus-ring"
+      },
+      "treatment": "titik aktif membesar dengan ring 2px focus-ring; crosshair-tooltip menampilkan nilai; nilai juga diumumkan"
+    },
+    {
+      "name": "series-hidden",
+      "token_swaps": {},
+      "treatment": "item legenda tidak aktif: swatch kosong (outline) + teks \"Hidden\" tersembunyi; aria-pressed=\"false\""
+    },
+    {
+      "name": "series-emphasis",
+      "token_swaps": {},
+      "treatment": "hover/fokus legenda menebalkan seri itu; seri lain tidak dipudarkan di bawah 3:1"
+    },
+    {
+      "name": "threshold-breached",
+      "token_swaps": {
+        "status-annotation": "color-semantic-critical-strong"
+      },
+      "treatment": "status-annotation C1/C2: outline + ikon terkunci + label teks; isi seri tetap warna kategorikal"
+    },
+    {
+      "name": "stale",
+      "token_swaps": {
+        "summary": "color-structure-text-secondary"
+      },
+      "treatment": "summary menyebut \"As of {waktu}\" + ikon jam; melewati batas kesegaran → StatusLabel C2 di header (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "Canvas dibungkus {Ns}Chart + {Ns}Table untuk data",
+    "flutter": "CustomPaint/pustaka ter-pin dibungkus {ns}_chart.dart + {ns}_table.dart untuk data",
+    "html": {
+      "element": "figure > svg + figcaption + table",
+      "notes": "svg role=img (statis) atau role=group dengan titik fokusabel (interaktif); tanpa JS: svg statis dirender server + data-table selalu tampil; pustaka chart di-bundle dan ter-pin"
+    },
+    "swiftui": "Swift Charts dibungkus {Ns}Chart"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Tren kontinu sepanjang waktu; maksimal 5 seri; setiap seri pola garis/marker berbeda + label langsung di ujung.",
+      "name": "line"
+    },
+    {
+      "description": "Perbandingan kategori; sumbu nilai mulai dari nol; horizontal bila label kategori panjang.",
+      "name": "bar"
+    },
+    {
+      "description": "Komposisi per kategori; segmen dipisah garis surface 1px; maksimal 5 segmen + other; total diberi label.",
+      "name": "stacked-bar"
+    },
+    {
+      "description": "Tren mini sebaris tanpa sumbu di dalam Table/Card; nama aksesibel menyebut nilai awal, akhir, min, max; tidak interaktif.",
+      "name": "sparkline"
+    },
+    {
+      "description": "Matriks nilai dengan skala sekuensial; setiap sel punya nilai di Tooltip dan di data-table; legenda skala bertitik angka.",
+      "name": "heatmap"
+    }
+  ]
+}

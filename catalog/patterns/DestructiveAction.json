@@ -1,0 +1,293 @@
+{
+  "name": "DestructiveAction",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Wajib bila ada aksi hapus, batal, atau yang tidak bisa dibalik (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna menjalankan aksi yang menghapus, membatalkan, atau mencabut sesuatu dengan gesekan yang sebanding dengan risikonya: aksi yang bisa dibalik dijalankan seketika dengan Undo, aksi yang tidak bisa dibalik dikonfirmasi lewat dialog yang menamai objek dan akibatnya, dan aksi berisiko tinggi meminta otorisasi tambahan.",
+    "when": [
+      "Hapus, arsipkan, batalkan, cabut akses, reset, keluarkan anggota, atau aksi lain yang menghilangkan data atau hak.",
+      "Aksi finansial, hukum, atau penghapusan data yang termasuk SC 3.3.4."
+    ],
+    "when_not": [
+      "Membuang perubahan form yang belum disimpan: konfirmasi discard milik FormFlow/CrudFlow.",
+      "Aksi yang sepenuhnya bisa dibalik di tempat dan hasilnya langsung terlihat (toggle, ubah urutan): jalankan tanpa dialog dan tanpa toast Undo.",
+      "Menghapus banyak item yang dipilih: BulkActions, yang menerapkan aturan pattern ini per batch."
+    ]
+  },
+  "composition": [
+    {
+      "component": "Button",
+      "role_in_pattern": "pemicu berlabel kata kerja + objek; variant destructive hanya untuk aksi destruktif, tidak pernah berdampingan langsung dengan aksi primer layar"
+    },
+    {
+      "component": "Menu",
+      "parts": [
+        "Menu.Item",
+        "Menu.Separator"
+      ],
+      "role_in_pattern": "item variant destructive selalu di grup terakhir, dipisah separator"
+    },
+    {
+      "component": "Modal",
+      "parts": [
+        "Modal.Title",
+        "Modal.Description",
+        "Modal.Body",
+        "Modal.Cancel",
+        "Modal.Action"
+      ],
+      "role_in_pattern": "variant destructive (alertdialog) untuk aksi tak terbalik: judul menamai aksi dan objek, deskripsi menyebut akibat dan data turunan"
+    },
+    {
+      "component": "StepUpDialog",
+      "role_in_pattern": "otorisasi tambahan untuk aksi finansial, hukum, atau berdampak luas; menggantikan Modal, bukan dialog kedua"
+    },
+    {
+      "component": "TextField",
+      "role_in_pattern": "konfirmasi dengan mengetik nama objek, hanya bila brief memintanya untuk risiko tertinggi; nama ditampilkan untuk disalin dan paste diizinkan"
+    },
+    {
+      "component": "Toast",
+      "role_in_pattern": "variant with-action berisi \"Urungkan\" ≥ 10 detik untuk aksi yang bisa dibalik; hasil aksi tak terbalik tanpa aksi"
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "gagal menjalankan aksi (C1 + Retry) di dalam Modal; dampak yang perlu diketahui sebelum memutuskan (C2)"
+    },
+    {
+      "component": "EmptyState",
+      "role_in_pattern": "daftar yang menjadi kosong setelah item terakhir dihapus"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "pengumuman hasil, ketersediaan Undo, dan pembatalan"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Pilih aksi",
+      "state_class": "C6",
+      "transition": "pemicu dicapai lewat Menu atau Button terpisah dari aksi primer; sistem menggolongkan aksi: bisa dibalik, tak terbalik, atau tak terbalik berisiko tinggi"
+    },
+    {
+      "step": "Aksi yang bisa dibalik",
+      "state_class": "C6",
+      "transition": "dijalankan seketika (soft delete atau optimistic); item hilang dari tampilan; Toast with-action \"Urungkan\" ≥ 10 detik yang berhenti saat hover/fokus; tanpa dialog konfirmasi"
+    },
+    {
+      "step": "Urungkan",
+      "state_class": "C6",
+      "transition": "item dipulihkan di posisi semula dengan relasinya; toast diganti \"{Aksi} diurungkan\"; Urungkan tetap tersedia di sampah/riwayat bila ada setelah toast hilang"
+    },
+    {
+      "step": "Konfirmasi aksi tak terbalik",
+      "state_class": "C2",
+      "transition": "Modal destructive: judul \"{Aksi} {nama objek}?\", deskripsi akibat (apa yang hilang, siapa terdampak, jumlah data turunan, bisa dipulihkan atau tidak); Esc dan scrim = Batal"
+    },
+    {
+      "step": "Otorisasi",
+      "state_class": "C2",
+      "transition": "aksi finansial, hukum, atau berdampak luas memakai StepUpDialog yang memuat ringkasan aksi; satu dialog, bukan Modal lalu StepUpDialog beruntun"
+    },
+    {
+      "step": "Menjalankan",
+      "state_class": "C5",
+      "transition": "Modal.Action loading, scrim dan klik ganda diabaikan; aksi yang lama (> ±10 detik) berjalan di latar dengan objek bertanda \"Sedang dihapus\""
+    },
+    {
+      "step": "Gagal",
+      "state_class": "C1",
+      "transition": "Modal tetap terbuka dengan InlineAlert C1 + Retry; objek tetap ada. Aksi optimistic yang ditolak: objek dikembalikan ke posisinya dan Toast menjelaskan apa yang dibatalkan (§12.3)"
+    },
+    {
+      "step": "Selesai",
+      "state_class": "C3",
+      "transition": "objek hilang; Toast hasil; fokus ke item berikutnya, judul daftar bila kosong, atau h1 induk bila halaman objek sendiri yang dihapus (§9.5)"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "pemicu di Menu (Sheet) atau di akhir halaman detail, tidak di action bar berdampingan dengan aksi primer; Modal destructive tetap center selebar layout-modal-sm dikurangi margin dengan tombol size lg bertumpuk (Batal di posisi yang biasa ditempati aksi primer); swipe-to-delete hanya pintasan untuk aksi yang bisa dibalik dan selalu ada padanan di Menu; Toast Urungkan di atas BottomNav"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "Modal center; pemicu di Menu atau Table.RowActions dengan area ≥ target-min-touch dan jarak ≥ 8 dari aksi lain; StepUpDialog naik di atas keyboard numerik"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "Modal center di z-modal; item destruktif di grup terakhir Menu; tombol Delete/Backspace pada item terpilih hanya untuk aksi yang bisa dibalik (dengan Urungkan), tidak pernah menjalankan aksi tak terbalik tanpa Modal"
+    }
+  ],
+  "states": {
+    "empty": "Setelah item terakhir dihapus, daftar berganti EmptyState (variant cleared atau first-use) dan fokus ke judulnya; tidak ada tabel tanpa baris.",
+    "loading": "Dampak yang dihitung server (jumlah turunan) dimuat sebelum keputusan: Modal.Action diblokir dengan alasan \"Menghitung dampak…\" sampai angka tersedia. Saat menjalankan: aksi loading, aria-busy pada content, Batal hanya aktif bila server mendukung pembatalan.",
+    "error": "InlineAlert C1 + Retry di dalam Modal; objek tidak dihapus dari tampilan. Rollback optimistic disertai Toast yang menyebut objek dipulihkan. Error tidak pernah hanya toast yang hilang sendiri.",
+    "partial": "Objek bertingkat atau batch terhapus sebagian: satu InlineAlert C2 atau Toast gabungan (\"8 dihapus, 2 tidak dapat dihapus\") dengan aksi Lihat yang menyebut alasan per item.",
+    "success": "Toast \"{Objek} dihapus\" (+ \"Urungkan\" bila bisa dibalik) tanpa \"Berhasil!\"; objek tidak lagi muncul di daftar, pencarian, atau hitungan."
+  },
+  "accessibility": [
+    {
+      "step": "Aksi yang bisa dibalik",
+      "focus": "pemicu hilang bersama item: fokus ke item berikutnya atau judul daftar; fokus tidak dipindah ke toast",
+      "announcement": "polite \"{Objek} dihapus. Urungkan tersedia.\"; Urungkan dapat dicapai lewat pintasan region notifikasi"
+    },
+    {
+      "step": "Urungkan",
+      "focus": "fokus ke item yang dipulihkan",
+      "announcement": "polite \"{Aksi} diurungkan\""
+    },
+    {
+      "step": "Konfirmasi aksi tak terbalik",
+      "focus": "alertdialog; fokus awal ke judul (tabindex −1), tidak pernah ke tombol destruktif; Tab: Batal lalu aksi destruktif; tidak ada Enter default; Esc = Batal dan fokus kembali ke pemicu",
+      "announcement": "judul dan deskripsi dibaca sebagai alertdialog"
+    },
+    {
+      "step": "Otorisasi",
+      "focus": "fokus ke field kredensial StepUpDialog; paste, autofill, dan passkey diizinkan (SC 3.3.8)",
+      "announcement": "batas waktu hanya diumumkan di ambang dan saat habis"
+    },
+    {
+      "step": "Gagal",
+      "focus": "fokus tetap di Modal.Action; Retry tepat sesudah judul alert",
+      "announcement": "InlineAlert C1 role alert (assertive)"
+    },
+    {
+      "step": "Selesai",
+      "focus": "§9.5: item berikutnya → judul daftar/EmptyState → h1 induk",
+      "announcement": "hasil diumumkan polite"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Judul berbentuk pertanyaan yang menamai aksi dan objek (\"Hapus 'Laporan Q3'?\"); deskripsi menyebut akibat konkret dan apakah bisa dipulihkan.",
+      "Tombol konfirmasi mengulang kata kerja dan objek dari judul (\"Hapus laporan\"), tidak pernah \"OK\", \"Ya\", atau \"Lanjut\".",
+      "Bedakan kata kerja permanen (\"Hapus\") dari yang dapat dipulihkan (\"Arsipkan\", \"Pindahkan ke sampah\"); label tidak boleh menyiratkan permanen bila tidak, atau sebaliknya.",
+      "Tombol batal netral (\"Batal\") atau kata kerja yang mempertahankan (\"Pertahankan\").",
+      "Toast hasil memakai kata kerja yang sama dalam bentuk lampau; aksi Undo berlabel \"Urungkan\" dari glosarium."
+    ],
+    "examples": {
+      "en-US": [
+        "Delete \"Q3 report\"?",
+        "This permanently deletes the report and its 12 comments. You can't undo this.",
+        "Delete report",
+        "Report moved to trash",
+        "Undo",
+        "Couldn't delete the report. Check your connection and try again."
+      ],
+      "id-ID": [
+        "Hapus \"Laporan Q3\"?",
+        "Laporan dan 12 komentarnya akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.",
+        "Hapus laporan",
+        "Laporan dipindahkan ke sampah",
+        "Urungkan",
+        "Laporan tidak dapat dihapus. Periksa koneksi Anda, lalu coba lagi."
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh menjalankan aksi: pemicu tampil dengan tingkat gesekan sesuai golongan aksi"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak pernah boleh menjalankan aksi: item Menu dan tombol tidak dirender"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi tidak diizinkan karena state objek (mis. masih dirujuk objek lain, periode terkunci): item aria-disabled + alasan yang menyebut cara membuka kunci"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi finansial, hukum, atau penghapusan data milik orang lain: StepUpDialog (SC 3.3.4, SC 3.3.8)"
+    }
+  ],
+  "do": [
+    "Pilih Undo untuk aksi yang bisa dibalik dan konfirmasi hanya untuk yang tak terbalik; jangan keduanya untuk aksi yang sama.",
+    "Sebut jumlah dan jenis data turunan yang ikut hilang di deskripsi Modal.",
+    "Sediakan jalur pemulihan selain toast (sampah, riwayat) karena toast bersifat sementara.",
+    "Pisahkan aksi destruktif secara spasial dari aksi primer dan dari aksi yang sering dipakai."
+  ],
+  "dont": [
+    {
+      "text": "Meminta konfirmasi Modal untuk aksi yang bisa diurungkan; konfirmasi berlebihan melatih pengguna menekan tanpa membaca.",
+      "ref": "§11.2"
+    },
+    {
+      "text": "Memberi fokus awal atau Enter default ke tombol destruktif.",
+      "ref": "SC 3.3.4"
+    },
+    {
+      "text": "Menandai aksi destruktif hanya dengan warna tanpa kata kerja yang jelas.",
+      "ref": "SC 1.4.1"
+    },
+    {
+      "text": "Toast Urungkan kurang dari 10 detik atau hilang saat fokus berada di dalamnya.",
+      "ref": "SC 2.2.1"
+    },
+    {
+      "text": "Melaporkan gagal hapus lewat toast yang hilang sendiri.",
+      "ref": "§12.2"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "aksi yang bisa dibalik dijalankan lokal bertanda \"Belum tersinkron\" dan Urungkan tetap tersedia sampai terkirim (I6); aksi tak terbalik diblokir dengan alasan \"Perlu koneksi\" dan tidak diantrekan, karena konfirmasi harus berdasarkan state server terkini"
+    },
+    {
+      "case": "timeout",
+      "behaviour": "hasil tidak diketahui: InlineAlert C1 \"Belum dapat dipastikan\"; status objek diperiksa ulang sebelum menawarkan Retry agar tidak menjalankan aksi dua kali"
+    },
+    {
+      "case": "data sangat banyak (objek dengan ribuan turunan)",
+      "behaviour": "deskripsi menyebut jumlah turunan; aksi berjalan sebagai pekerjaan latar (C5) dengan objek terkunci bertanda \"Sedang dihapus\"; hasil dikirim sebagai notifikasi"
+    },
+    {
+      "case": "data kosong (item terakhir dihapus)",
+      "behaviour": "EmptyState menggantikan daftar dan menerima fokus; Urungkan pada toast mengembalikan daftar semula"
+    },
+    {
+      "case": "aksi ganda (klik ganda pada Hapus, Enter berulang)",
+      "behaviour": "kiriman kedua diabaikan selama loading; menghapus objek yang sudah terhapus mengembalikan hasil idempoten, bukan error"
+    },
+    {
+      "case": "nama objek dan label +40% (locale terpanjang)",
+      "behaviour": "nama objek di judul Modal membungkus, tidak dipotong, agar pengguna yakin objeknya benar; tombol bertumpuk bila tidak muat sebaris"
+    },
+    {
+      "case": "Urungkan setelah pindah halaman",
+      "behaviour": "toast tetap selama aksinya masih berlaku; Urungkan memulihkan tanpa memindahkan pengguna"
+    },
+    {
+      "case": "objek sudah dihapus atau diubah pihak lain saat Modal terbuka",
+      "behaviour": "Modal menutup, \"{Objek} sudah tidak ada\" diumumkan polite, daftar disegarkan, fokus ke item berikutnya"
+    }
+  ],
+  "wcag": [
+    "1.4.1",
+    "2.1.2",
+    "2.2.1",
+    "2.4.3",
+    "3.3.4",
+    "3.3.8",
+    "4.1.2",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "CrudFlow",
+    "BulkActions",
+    "FormFlow",
+    "AsyncFeedback",
+    "Settings",
+    "AuthAndSession"
+  ],
+  "lint": [
+    "Modal variant destructive tidak menaruh initialFocus pada Modal.Action",
+    "Label Modal.Action destruktif memuat kata kerja dari judul, bukan OK/Ya/Lanjut",
+    "Toast dengan aksi Urungkan punya duration ≥ 10000",
+    "Menu.Item variant destructive berada di grup terakhir Menu"
+  ]
+}

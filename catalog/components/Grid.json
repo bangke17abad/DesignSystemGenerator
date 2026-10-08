@@ -1,0 +1,288 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tidak menambahkan aria-*; meneruskan id, className, data-* ke akar",
+      "bila item adalah kumpulan homogen (koleksi kartu), semantik daftar diberikan oleh List atau oleh elemen ul/li dari komponen pemanggil"
+    ],
+    "focus_order": "urutan sumber; urutan visual sama dengan urutan DOM pada semua jumlah kolom",
+    "native": {
+      "compose": "LazyVerticalGrid(columns = GridCells.Fixed(n)) dengan n dari BoxWithConstraints atau GridCells.Adaptive(minSize) untuk auto-fit; Arrangement.spacedBy untuk gutter",
+      "flutter": "LayoutBuilder yang menghitung kolom dari constraints.maxWidth + Wrap/Row bertingkat, atau GridView.builder dengan SliverGridDelegateWithMaxCrossAxisExtent untuk auto-fit; tanpa Semantics tambahan",
+      "swiftui": "Grid/GridRow untuk kolom tetap; LazyVGrid(columns: [GridItem(.adaptive(minimum:))]) untuk auto-fit; kelas lebar dari horizontalSizeClass hanya sebagai petunjuk, lebar nyata dari GeometryReader/containerRelativeFrame"
+    },
+    "role": "tidak ada (div generik); tidak pernah role=\"grid\" atau role=\"table\" karena tidak memberi navigasi sel",
+    "sr_label": "tidak punya nama aksesibel",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "2.4.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "wadah CSS grid / container query; tanpa latar, border, atau warna",
+      "tokens": [
+        "bp-tablet",
+        "bp-desktop",
+        "bp-wide"
+      ]
+    },
+    {
+      "part": "columns",
+      "role": "jumlah kolom per lebar kontainer: < bp-tablet 4, bp-tablet sampai < bp-desktop 8, ≥ bp-desktop 12 (§8.1)",
+      "tokens": [
+        "bp-tablet",
+        "bp-desktop"
+      ]
+    },
+    {
+      "part": "gutter",
+      "role": "jarak antar kolom dan antar baris dari tabel §8.1 per lebar (16 · 20 · 24); override hanya dengan token space-*",
+      "tokens": [
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "Grid.Item; menempati span kolom yang dijepit ke jumlah kolom aktif; tanpa margin luar",
+      "tokens": []
+    },
+    {
+      "part": "min-item",
+      "role": "lebar minimum item pada mode auto-fit; dinyatakan dalam satuan relatif teks agar ikut membesar saat teks 200%",
+      "tokens": [
+        "layout-content-min"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "Grid.Item (span: number | { phone, tablet, desktop }; default span penuh)"
+    ],
+    "props": [
+      {
+        "default": "columns",
+        "description": "Kolom §8.1 atau kolom dari lebar minimum item.",
+        "name": "variant",
+        "required": false,
+        "type": "\"columns\" | \"auto-fit\""
+      },
+      {
+        "description": "Override gutter §8.1; default mengikuti tabel §8.1 per lebar kontainer.",
+        "name": "gap",
+        "required": false,
+        "type": "\"space-2\" | \"space-3\" | \"space-4\" | \"space-6\" | \"space-8\""
+      },
+      {
+        "description": "Wajib untuk variant=\"auto-fit\"; lebar minimum item sebelum kolom berkurang.",
+        "name": "minItemWidth",
+        "required": false,
+        "type": "string (satuan relatif teks, mis. \"18rem\")"
+      },
+      {
+        "default": "stretch",
+        "description": "Perataan item pada sumbu blok di dalam baris.",
+        "name": "align",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\" | \"stretch\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus mengikuti urutan sumber baris demi baris; grid-auto-flow: dense dan penempatan eksplisit yang mengubah urutan baca dilarang (SC 1.3.2, 2.4.3)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada aksi; area klik item tidak meluas ke gutter",
+      "trigger": "klik di gutter"
+    },
+    {
+      "input": "touch",
+      "result": "kolom dihitung ulang dari lebar baru tanpa kehilangan state anak atau posisi gulir (§8.3)",
+      "trigger": "rotasi atau ubah ukuran jendela (foldable)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Profile",
+        "Security",
+        "Billing history",
+        "Connected apps"
+      ],
+      "id-ID": [
+        "Profil",
+        "Keamanan",
+        "Riwayat tagihan",
+        "Aplikasi terhubung"
+      ]
+    },
+    "rules": [
+      "Grid tidak memiliki string UI sendiri.",
+      "Isi item dengan panjang berbeda tidak boleh dipotong agar tingginya seragam; tinggi baris mengikuti item tertinggi.",
+      "Contoh di bawah adalah judul item tipikal untuk uji +40% dan teks 200%."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Hitung kolom dari lebar kontainer (container query, LayoutBuilder, BoxWithConstraints), bukan dari jenis perangkat.",
+    "Nyatakan lebar minimum item auto-fit dalam satuan relatif teks agar kolom berkurang saat teks membesar.",
+    "Jepit span item ke jumlah kolom aktif sehingga item tidak pernah melebihi kontainer."
+  ],
+  "dont": [
+    {
+      "text": "Memakai grid-auto-flow: dense atau order sehingga urutan visual berbeda dari urutan fokus."
+    },
+    {
+      "text": "Memberi role=\"grid\" pada Grid layout; pembaca layar akan mengharapkan navigasi sel yang tidak ada."
+    },
+    {
+      "ref": "UB1",
+      "text": "Menulis gutter atau margin dengan angka literal di komponen."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "item tumbuh tinggi; baris mengikuti item tertinggi; tidak ada line-clamp pada judul",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "lebar minimum item relatif teks membuat jumlah kolom berkurang (mis. 3 → 2 → 1) sehingga tidak ada gulir horizontal",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Grid tidak merender ruang; EmptyState lebar penuh ditampilkan oleh pemanggil",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "item tidak meregang lebar penuh di desktop; lebar maksimum = lebar satu kolom auto-fit",
+      "case": "1 item pada varian auto-fit"
+    },
+    {
+      "behaviour": "beralih ke grid lazy (GridView.builder, LazyVGrid, LazyVerticalGrid; virtualisasi di web) dengan paginasi atau \"Muat lagi\" yang menjaga posisi fokus",
+      "case": "jumlah item maksimum (ratusan)"
+    },
+    {
+      "behaviour": "span dijepit ke jumlah kolom (mis. span 6 di phone = 4)",
+      "case": "span lebih besar dari kolom aktif"
+    },
+    {
+      "behaviour": "Skeleton memakai span dan jumlah item perkiraan yang sama sehingga tidak ada pergeseran layout",
+      "case": "loading"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Grid tidak boleh memakai grid-auto-flow: dense atau order (css-pattern)",
+    "Grid tidak boleh memiliki role grid atau table (css-pattern)",
+    "Breakpoint Grid hanya dari token bp-* (token-rule, V8)",
+    "variant=\"auto-fit\" tanpa minItemWidth ditolak"
+  ],
+  "name": "Grid",
+  "preview": {
+    "combinations": [
+      "4/8/12 kolom berdampingan",
+      "span dijepit",
+      "teks 200% mengurangi kolom",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "reflowed",
+      "empty"
+    ],
+    "variants": [
+      "columns",
+      "auto-fit"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyusun anak dalam kolom yang mengikuti grid §8.1 (4 · 8 · 12 kolom) berdasarkan lebar kontainer yang tersedia, bukan jenis perangkat.",
+    "when_not_to_use": [
+      "Untuk data tabular yang dibaca per baris dan kolom: pakai Table (Grid layout bukan role grid ARIA).",
+      "Untuk satu kolom bertumpuk: pakai Stack.",
+      "Untuk deretan item berlebar intrinsik yang membungkus (Tag, aksi): pakai Inline.",
+      "Untuk kumpulan item yang bisa dipilih atau dinavigasi dengan panah: pakai List atau Table dengan pola keyboard-nya; Grid tidak memberi navigasi panah."
+    ]
+  },
+  "related": [
+    "Stack",
+    "Inline",
+    "Container",
+    "Card"
+  ],
+  "responsive": [
+    {
+      "behaviour": "4 kolom, gutter dan margin 16 (§8.1); span item umumnya penuh (4); varian auto-fit biasanya menjadi satu kolom",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "8 kolom, gutter 20, margin 24; formulir dua kolom diizinkan hanya bila field berpasangan secara makna",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "12 kolom, gutter 24, margin 32; ruang ekstra di atas bp-wide dipakai untuk pane kedua, bukan kolom yang makin sempit atau teks yang mengecil",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Grid tidak memuat aksi atau data; item yang tersembunyi karena role dihapus dari sumber sehingga grid mengalir ulang tanpa lubang."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Kolom 1 berada di tepi inline-start (kanan di RTL); span dan penempatan memakai garis logis sehingga seluruh grid dicerminkan tanpa mengubah urutan sumber."
+  },
+  "sizes": {
+    "not_applicable": "Grid tidak interaktif; ukuran kolom diturunkan dari lebar kontainer dan §8.1, bukan dari prop size."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "Tidak ada state visual; Grid tidak menerima fokus dan tidak menukar token."
+    },
+    {
+      "name": "reflowed",
+      "token_swaps": {},
+      "treatment": "Saat lebar kontainer melewati bp-tablet atau bp-desktop, jumlah kolom berubah dan item mengalir ulang menurut urutan sumber; tidak ada animasi posisi di bawah reduced motion."
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "0 item: Grid tidak merender ruang; komponen pemanggil menampilkan EmptyState lebar penuh."
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Grid membungkus LazyVerticalGrid atau Layout kustom; kolom dari BoxWithConstraints",
+    "flutter": "{ns}_grid.dart: LayoutBuilder menghitung kolom dan gutter dari maxWidth; Grid.Item sebagai widget anak dengan span",
+    "html": {
+      "element": "div",
+      "notes": "display:grid; container-type:inline-size; grid-template-columns dari @container sesuai bp-*; gap dari token; tanpa grid-auto-flow: dense"
+    },
+    "swiftui": "{Ns}Grid membungkus Grid atau LazyVGrid; kolom dari lebar kontainer"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Kolom §8.1 (4 · 8 · 12); setiap Grid.Item menyatakan span per kelas lebar. Dipakai untuk komposisi halaman dan formulir dua kolom.",
+      "name": "columns"
+    },
+    {
+      "description": "Jumlah kolom dihitung dari lebar minimum item (repeat(auto-fill, minmax(min, 1fr))). Dipakai untuk koleksi Card seragam; urutan tetap urutan sumber.",
+      "name": "auto-fit"
+    }
+  ]
+}

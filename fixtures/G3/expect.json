@@ -1,0 +1,68 @@
+{
+  "assertions": [
+    {
+      "eq": "soft-friendly",
+      "lang": "archetype"
+    },
+    {
+      "eq": {
+        "brand-led-tonal": 15,
+        "dense-console": 4,
+        "editorial-contrast": 11,
+        "immersive-glass": 14,
+        "ink-graphite": 6,
+        "neo-brutalist": 13,
+        "playful-vivid": 17,
+        "quiet-luxury": 12,
+        "soft-friendly": 20
+      },
+      "lang": "scores"
+    },
+    {
+      "assumptions_contain": "seed default archetype soft-friendly"
+    },
+    {
+      "approx": 145,
+      "family_hue": "positive",
+      "tol": 1
+    },
+    {
+      "no_adr": true
+    },
+    {
+      "eq": 17,
+      "token": "type-body-size"
+    },
+    {
+      "eq": 26,
+      "token": "type-body-line"
+    },
+    {
+      "eq": 18,
+      "token": "type-caption-line"
+    },
+    {
+      "eq": 40,
+      "token": "control-height-sm"
+    },
+    {
+      "eq": 56,
+      "token": "control-height-lg"
+    },
+    {
+      "eq": 24,
+      "token": "icon-md"
+    },
+    {
+      "token_absent": "target-min-extended"
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G3",
+  "run_only": [
+    "lifecycle.json Loan: terlambat C1/C2 dengan alasan; tanpa overlay stagnasi"
+  ],
+  "source": "golden-briefs.md G3"
+}

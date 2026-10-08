@@ -1,0 +1,72 @@
+/* StatusLabel · engine 1.8.0 reference (catalog/components/StatusLabel.json). Tokens only (I3); logical properties only (§12.4).
+   Treatment is never chosen here: every class reads its --attention-cN-* component tokens, which the design language
+   (L3) resolves to quiet / outline / tinted / filled. Geometry (padding, border width) is identical for every class so
+   rows line up and a state change never moves layout (I4). */
+.ds-status-label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-1) var(--space-2);
+  max-inline-size: 100%;
+  vertical-align: top;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+}
+.ds-status-label__container {
+  /* C6 (no status): L3 decides whether neutral gets a container at all */
+  --_bg: var(--attention-c6-background);
+  --_fg: var(--attention-c6-foreground);
+  --_border: var(--attention-c6-border);
+  --_icon: var(--attention-c6-icon);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-block: calc(var(--space-1) / 2);
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  overflow-wrap: break-word; /* never truncated: long labels wrap (+40% locales) */
+}
+.ds-status-label[data-status="critical"] > .ds-status-label__container { --_bg: var(--attention-c1-background); --_fg: var(--attention-c1-foreground); --_border: var(--attention-c1-border); --_icon: var(--attention-c1-icon); }
+.ds-status-label[data-status="warning"] > .ds-status-label__container { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-status-label[data-status="neutral-negative"] > .ds-status-label__container { --_bg: var(--attention-c3-background); --_fg: var(--attention-c3-foreground); --_border: var(--attention-c3-border); --_icon: var(--attention-c3-icon); }
+.ds-status-label[data-status="positive"] > .ds-status-label__container { --_bg: var(--attention-c4-background); --_fg: var(--attention-c4-foreground); --_border: var(--attention-c4-border); --_icon: var(--attention-c4-icon); }
+.ds-status-label[data-status="info"] > .ds-status-label__container { --_bg: var(--attention-c5-background); --_fg: var(--attention-c5-foreground); --_border: var(--attention-c5-border); --_icon: var(--attention-c5-icon); }
+
+/* locked status glyph (§5.7), aligned to the first line; never mirrored in RTL */
+.ds-status-label .ds-icon {
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-label-line) - var(--icon-md)) / 2);
+}
+.ds-status-label__container > .ds-icon { color: var(--_icon); }
+[dir="rtl"] .ds-status-label .ds-icon { transform: none; }
+
+/* detail: supporting text after the container; still body size (STD-2), secondary colour, numbers isolated with <bdi> */
+.ds-status-label__detail {
+  padding-block: calc(var(--space-1) / 2);
+  color: var(--color-structure-text-secondary);
+  font-weight: var(--type-body-weight);
+}
+/* stagnation overlay (C2 on top of any base state, not a new state) */
+.ds-status-label__overlay {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding-block: calc(var(--space-1) / 2);
+  color: var(--color-semantic-warning-strong);
+  font-weight: var(--type-label-weight);
+}
+.ds-status-label__overlay > .ds-icon { color: var(--color-semantic-warning); }
+
+@media (forced-colors: active) {
+  .ds-status-label[data-status] > .ds-status-label__container { border-color: CanvasText; }
+  .ds-status-label .ds-icon { color: CanvasText; }
+}

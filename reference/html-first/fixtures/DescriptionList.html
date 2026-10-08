@@ -1,0 +1,76 @@
+<!-- DescriptionList fixture · variants (stacked, columns, grid), states (default, loading, empty-value, error, changed, pending-sync),
+     mandatory combinations (error+focus on Retry, read-only, columns falling back to stacked, text 200%, RTL + numbers) and edge cases.
+     dl > div > dt + dd everywhere. Copy buttons are rendered hidden and revealed by DescriptionList.js (no-JS: copy by hand);
+     Edit is a link to the edit form, so it works without JS. Status, price and time wrap, never truncate. -->
+<section class="ds-demo" data-ds-demo="variants/stacked (default) · read-only detail with dividers">
+  <h3 class="ds-description-list__heading" id="dl-h1">Booking details</h3>
+  <dl class="ds-description-list" data-dividers aria-labelledby="dl-h1" data-ds-module="description-list" style="max-inline-size: 28rem">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Reference number</dt><dd class="ds-description-list__description"><bdi class="ds-description-list__value">BK-2026-004215</bdi><button type="button" class="ds-description-list__action" data-ds-copy hidden aria-label="Copy reference number"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg></button></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Status</dt><dd class="ds-description-list__description"><span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Confirmed</span></span></span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Booking slot</dt><dd class="ds-description-list__description"><time datetime="2026-10-11T07:20:00+07:00">Saturday 11 October 2026, 07:20 WIB</time></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Booking fee</dt><dd class="ds-description-list__description"><span>Rp <bdi>1.450.000</bdi> <span class="ds-description-list__secondary">for 4 guests</span></span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Assistant</dt><dd class="ds-description-list__description"><span class="ds-description-list__empty" aria-hidden="true">—</span><span class="ds-vh">No value</span></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="variants/columns (term ±1/3) · inline actions Copy + Edit">
+  <h3 class="ds-description-list__heading" id="dl-h2">Member</h3>
+  <dl class="ds-description-list" data-variant="columns" data-dividers aria-labelledby="dl-h2" data-ds-module="description-list" style="max-inline-size: 44rem">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Member ID</dt><dd class="ds-description-list__description"><bdi class="ds-description-list__value">MBR-00918</bdi><button type="button" class="ds-description-list__action" data-ds-copy hidden aria-label="Copy member ID"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg></button></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Name</dt><dd class="ds-description-list__description">Rina Wijaya</dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Address</dt><dd class="ds-description-list__description"><span class="ds-description-list__value">Jl. Pajajaran No. 12, Bogor 16143</span><a class="ds-description-list__action" href="#edit-address" data-force="hover">Edit<span class="ds-vh"> address</span></a></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Member level</dt><dd class="ds-description-list__description"><bdi>12.4</bdi></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Membership ends</dt><dd class="ds-description-list__description"><time datetime="2026-12-31">31 December 2026</time></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="variants/grid (2–3 pairs per row on desktop, stacked on phone)">
+  <dl class="ds-description-list" data-variant="grid" aria-label="Order summary">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Order</dt><dd class="ds-description-list__description"><bdi>PO-7781</bdi></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Created</dt><dd class="ds-description-list__description"><time datetime="2026-03-04">March 4, 2026</time></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Total</dt><dd class="ds-description-list__description"><span>Rp <bdi>18.600.000</bdi></span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Owner</dt><dd class="ds-description-list__description">Dina Kusuma</dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Status</dt><dd class="ds-description-list__description"><span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Awaiting approval</span></span></span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Supplier</dt><dd class="ds-description-list__description">PT Sinar Rumput Hijau</dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="states: loading (term stays, value Skeleton) · error + focus on Retry · changed · pending-sync · empty-value">
+  <div class="ds-stack" data-gap="6">
+    <dl class="ds-description-list" data-variant="columns" aria-label="Invoice details (loading)" aria-busy="true" style="max-inline-size: 44rem">
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Invoice</dt><dd class="ds-description-list__description"><span class="ds-description-list__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading</span></dd></div>
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Amount due</dt><dd class="ds-description-list__description"><span class="ds-description-list__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading</span></dd></div>
+    </dl>
+    <dl class="ds-description-list" data-variant="columns" data-dividers aria-label="Invoice details" style="max-inline-size: 44rem">
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Invoice</dt><dd class="ds-description-list__description"><bdi>INV-1042</bdi></dd></div>
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Payment history</dt><dd class="ds-description-list__description"><span class="ds-description-list__error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't load payment history.</span></span><button type="button" class="ds-button" data-size="sm" data-force="focus">Retry<span class="ds-vh"> loading payment history</span></button></dd></div>
+      <div class="ds-description-list__group" data-changed><dt class="ds-description-list__term">Amount due</dt><dd class="ds-description-list__description"><span>Rp <bdi>1.250.000</bdi></span><span class="ds-vh">Updated</span></dd></div>
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Note</dt><dd class="ds-description-list__description"><span>Paid at front desk</span><span class="ds-description-list__pending"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg>Pending</span></dd></div>
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Purchase order</dt><dd class="ds-description-list__description"><span class="ds-description-list__empty" aria-hidden="true">—</span><span class="ds-vh">No value</span></dd></div>
+    </dl>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason (inline action) · very long value without spaces (URL, ID) wraps">
+  <dl class="ds-description-list" data-variant="columns" data-dividers aria-label="Integration" style="max-inline-size: 44rem">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Webhook URL</dt><dd class="ds-description-list__description"><span class="ds-description-list__value">https://hooks.example.com/v2/venue/north-harbor/bookings/notify?token=7f3c9a12e0b44d1c9a8e2f7b6c5d4e3f</span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Signing secret</dt><dd class="ds-description-list__description"><span>Set</span><button type="button" class="ds-description-list__action" aria-disabled="true" aria-describedby="dl-r1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Edit<span class="ds-vh"> signing secret</span></span></button><span class="ds-description-list__reason" id="dl-r1">Only administrators can change the secret.</span></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="columns falls back to stacked (narrow container, +40% term)">
+  <dl class="ds-description-list" data-variant="columns" lang="id" aria-label="Detail pemesanan" style="max-inline-size: 18rem">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Nomor referensi pemesanan lapangan</dt><dd class="ds-description-list__description"><bdi>BK-2026-004215</bdi></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">Dibuat</dt><dd class="ds-description-list__description"><time datetime="2026-03-04">4 Maret 2026</time></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% (stacked automatically)">
+  <div style="zoom: 2">
+    <dl class="ds-description-list" data-variant="columns" aria-label="Booking (200%)">
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Booking slot</dt><dd class="ds-description-list__description"><time datetime="2026-10-11T07:20:00+07:00">11 Oct 2026, 07:20</time></dd></div>
+      <div class="ds-description-list__group"><dt class="ds-description-list__term">Booking fee</dt><dd class="ds-description-list__description"><span>Rp <bdi>1.450.000</bdi></span></dd></div>
+    </dl>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + numbers (term at inline-start; numbers, dates and IDs isolated)">
+  <dl class="ds-description-list" data-variant="columns" data-dividers dir="rtl" lang="ar" aria-label="تفاصيل الحجز" style="max-inline-size: 44rem">
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">رقم المرجع</dt><dd class="ds-description-list__description"><bdi>BK-2026-004215</bdi></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">المبلغ</dt><dd class="ds-description-list__description"><span><bdi>1.450.000</bdi> روبية</span></dd></div>
+    <div class="ds-description-list__group"><dt class="ds-description-list__term">التاريخ</dt><dd class="ds-description-list__description"><time datetime="2026-10-11"><bdi>11/10/2026</bdi></time></dd></div>
+  </dl>
+</section>

@@ -1,0 +1,447 @@
+{
+  "accessibility": {
+    "attributes": [
+      "alt=\"\" / aria-hidden=\"true\" bila nama tampil sebagai teks berdampingan",
+      "alt/aria-label = nama orang bila nama tidak tampil",
+      "presence ditulis sebagai teks dalam nama aksesibel (\"Name, away\"), indikator visual aria-hidden",
+      "AvatarGroup: role=\"group\" + aria-label (\"5 assignees\"); overflow-count tombol berlabel \"Show 3 more\""
+    ],
+    "focus_order": "non-interaktif: tidak ada; interaktif: urutan DOM bersama nama",
+    "native": {
+      "compose": "Image/AsyncImage (Coil) dengan Modifier.clip(CircleShape) dan contentDescription = null bila nama tampil, nama bila tidak; fallback Box + Text inisial",
+      "flutter": "CircleAvatar(foregroundImage, onForegroundImageError, child: Text(inisial)) dalam Semantics(label: nama, image: true) atau ExcludeSemantics bila nama tampil",
+      "swiftui": "AsyncImage dengan placeholder inisial + .clipShape(Circle()); .accessibilityHidden(true) bila nama tampil, selain itu .accessibilityLabel(nama)"
+    },
+    "politeness": "polite",
+    "role": "img dengan nama (bila berdiri sendiri) atau dekoratif (aria-hidden) bila nama terlihat di sampingnya; interaktif: button atau a",
+    "sr_label": "nama orang atau entitas; inisial tidak dibaca sebagai huruf terpisah",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "bentuk lingkaran (orang) atau persegi membulat (entitas); rasio square; ukuran dari token avatar-*",
+      "tokens": [
+        "avatar-sm",
+        "avatar-md",
+        "avatar-lg",
+        "avatar-xl",
+        "radius-full",
+        "radius-sm",
+        "aspect-square"
+      ]
+    },
+    {
+      "part": "image",
+      "role": "foto; object-fit cover; lazy; dekoratif bila nama sudah tampil di sampingnya",
+      "tokens": [
+        "aspect-square"
+      ]
+    },
+    {
+      "part": "initials",
+      "role": "fallback 1–2 huruf dari nama; latar netral (bukan warna status atau merek); kontras ≥ 4.5:1",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-text-primary",
+        "type-label-size",
+        "type-label-weight",
+        "font-sans"
+      ]
+    },
+    {
+      "part": "icon-fallback",
+      "role": "ikon orang/entitas generik bila nama tidak tersedia",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "border",
+      "role": "garis tipis pemisah dari latar dan antar avatar yang tumpang tindih di grup",
+      "tokens": [
+        "color-structure-border",
+        "color-structure-surface-base",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "presence",
+      "role": "indikator opsional di sudut block-end inline-end; bentuk berbeda per keadaan (bukan hanya warna) + teks di nama aksesibel",
+      "tokens": [
+        "icon-sm",
+        "color-structure-surface-base",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "overflow-count",
+      "role": "lingkaran \"+N\" di AvatarGroup; nama sisanya tersedia lewat Popover/daftar",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-text-primary",
+        "type-label-size"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px bila Avatar menjadi tombol (membuka profil)",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "Avatar interaktif diaktifkan"
+      }
+    ],
+    "parts": [
+      "Avatar.Group (max, label)",
+      "Avatar.Overflow"
+    ],
+    "props": [
+      {
+        "description": "Nama untuk inisial dan nama aksesibel; tanpa nama memakai ikon generik.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "URL foto.",
+        "name": "src",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "person",
+        "description": "Bentuk dan ikon fallback.",
+        "name": "variant",
+        "required": false,
+        "type": "\"person\" | \"entity\""
+      },
+      {
+        "default": "md",
+        "description": "Ukuran dari token avatar-*.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "true",
+        "description": "Disembunyikan dari teknologi bantu karena nama tampil di sampingnya.",
+        "name": "decorative",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Indikator presence; ikut nama aksesibel sebagai teks.",
+        "name": "presence",
+        "required": false,
+        "type": "\"online\" | \"away\" | \"busy\" | \"offline\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Avatar non-interaktif tidak menerima fokus; Avatar interaktif adalah tombol/tautan dengan nama orang",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka profil (Popover/halaman) atau daftar nama lengkap grup",
+      "trigger": "Enter atau Space pada Avatar interaktif atau overflow-count"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress pada pelepasan",
+      "trigger": "klik Avatar interaktif"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet/Popover berisi daftar nama; area ≥ target-min-touch",
+      "trigger": "tap overflow-count"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Alex Morgan",
+        "Show 3 more",
+        "5 assignees",
+        "Deactivated user"
+      ],
+      "id-ID": [
+        "Alex Morgan",
+        "Tampilkan 3 lainnya",
+        "5 penerima tugas",
+        "Pengguna nonaktif"
+      ]
+    },
+    "rules": [
+      "Inisial = huruf pertama nama depan + nama belakang sesuai aturan nama locale; satu huruf di size sm.",
+      "Tidak mengarang inisial dari email atau ID; pakai ikon generik.",
+      "Label grup menyebut jumlah dan peran (\"5 assignees\")."
+    ]
+  },
+  "depends_on": [
+    "Skeleton",
+    "Popover"
+  ],
+  "do": [
+    "Selalu tampilkan nama teks bersama Avatar.",
+    "Bedakan orang dan entitas dengan bentuk, bukan warna.",
+    "Siapkan fallback inisial dan ikon agar layout tidak bergeser."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Menandai presence atau status hanya dengan titik berwarna."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memberi warna latar inisial dari warna status atau merek."
+    },
+    {
+      "ref": "UB5",
+      "text": "Membuat Avatar interaktif dengan area klik sebesar avatar-sm di sentuh."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "nama membungkus atau ellipsis dengan nama lengkap di nama aksesibel; avatar tidak menyusut",
+      "case": "nama +40% (locale terpanjang) di samping avatar"
+    },
+    {
+      "behaviour": "inisial membesar sampai batas container lalu dibatasi; avatar boleh naik satu ukuran agar inisial terbaca",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "inisial satu karakter (grapheme penuh, bukan byte); aksara tanpa huruf kapital tetap ditampilkan apa adanya",
+      "case": "nama satu kata atau aksara non-Latin"
+    },
+    {
+      "behaviour": "maksimal 5 terlihat + \"+99\" lalu \"99+\"; daftar lengkap di Popover dengan pencarian",
+      "case": "grup 99+ anggota"
+    },
+    {
+      "behaviour": "inisial tampil langsung; foto menggantikan bila tersedia tanpa pergeseran",
+      "case": "foto lambat atau offline"
+    },
+    {
+      "behaviour": "fallback inisial; tidak ada ikon gambar rusak",
+      "case": "foto gagal dimuat"
+    },
+    {
+      "behaviour": "AvatarGroup menumpuk ke arah inline-end yang dicerminkan; presence di sudut inline-end logis",
+      "case": "RTL"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan (mis. produk tanpa entitas orang atau organisasi).",
+  "lint": [
+    "Avatar tanpa name dan tanpa decorative=false ditolak bila tidak ada nama di sampingnya (manual-review)",
+    "Latar inisial memakai color-semantic-* atau color-brand-* ditolak (token-rule)",
+    "Presence tanpa teks di nama aksesibel ditolak"
+  ],
+  "name": "Avatar",
+  "preview": {
+    "combinations": [
+      "hover+focus (interaktif)",
+      "selected (pemilih penugasan)",
+      "loading+pressed (dicegah)",
+      "grup +N",
+      "presence dengan teks",
+      "RTL"
+    ],
+    "states": [
+      "image",
+      "loading",
+      "fallback-initials",
+      "fallback-icon",
+      "hover",
+      "focus",
+      "inactive"
+    ],
+    "variants": [
+      "person",
+      "entity",
+      "group"
+    ]
+  },
+  "purpose": {
+    "purpose": "Representasi visual ringkas seseorang atau entitas (foto, inisial, atau ikon) yang selalu berdampingan dengan nama, untuk mempercepat pengenalan di daftar, Timeline, header, dan penugasan.",
+    "when_not_to_use": [
+      "Sebagai satu-satunya penanda identitas tanpa nama teks di dekatnya (kecuali grup dengan daftar nama yang dapat diakses).",
+      "Untuk gambar konten atau thumbnail objek: pakai Image.",
+      "Untuk status orang (hadir, sibuk) sebagai satu-satunya sinyal: tulis status sebagai teks atau StatusLabel.",
+      "Untuk logo merek produk di header: pakai Image/wordmark sesuai L9."
+    ]
+  },
+  "related": [
+    "Image",
+    "List",
+    "Timeline",
+    "PageHeader"
+  ],
+  "responsive": [
+    {
+      "behaviour": "size sm/md; AvatarGroup maksimal 3 terlihat + \"+N\"; Avatar interaktif area ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "size md; grup maksimal 4 terlihat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size sm di Table, md di List/Timeline, lg di panel; grup maksimal 5 terlihat",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Avatar tidak memuat aksi sendiri; visibilitas foto atau identitas mengikuti kebijakan privasi data di brief dan dicatat pada entitas, bukan komponen."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Posisi presence dan arah tumpukan grup memakai properti logis; foto dan inisial tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; bila interaktif dibungkus tombol dengan area max(avatar-sm, target-current), di sentuh target-min-touch",
+      "name": "sm",
+      "notes": "Sel Table, meta List, penugasan padat; inisial 1 huruf.",
+      "size_token": "avatar-sm"
+    },
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; bila interaktif max(avatar-md, target-current)",
+      "name": "md",
+      "notes": "Default di List, Timeline, komentar.",
+      "size_token": "avatar-md"
+    },
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; bila interaktif max(avatar-lg, target-current)",
+      "name": "lg",
+      "notes": "Header kartu dan panel profil. avatar-xl hanya dipakai oleh PageHeader profil (bukan nilai prop size, §6.8).",
+      "size_token": "avatar-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "Avatar interaktif: state-layer + ring di luar",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "dalam pemilih penugasan: centang overlay + ring border-thick, bukan warna saja",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak ada aksi saat foto atau data memuat",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "image",
+      "token_swaps": {},
+      "treatment": "foto berhasil dimuat"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "container": "color-structure-skeleton"
+      },
+      "treatment": "lingkaran Skeleton seukuran; tidak ada pergeseran layout"
+    },
+    {
+      "name": "fallback-initials",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "initials": "color-structure-text-primary"
+      },
+      "treatment": "foto tidak ada atau gagal: inisial di latar surface-sunken"
+    },
+    {
+      "name": "fallback-icon",
+      "token_swaps": {
+        "icon-fallback": "color-structure-text-secondary"
+      },
+      "treatment": "nama juga tidak ada: ikon generik"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-hover"
+      },
+      "treatment": "hanya bila interaktif, di (hover: hover): state-layer hover"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px (interaktif)"
+    },
+    {
+      "name": "inactive",
+      "token_swaps": {
+        "icon-fallback": "color-structure-text-tertiary"
+      },
+      "treatment": "akun nonaktif atau dihapus: ikon fallback + teks \"Deactivated\" di samping nama; tidak memakai opacity saja"
+    }
+  ],
+  "target_hints": {
+    "compose": "AsyncImage/Box dibungkus {Ns}Avatar",
+    "flutter": "CircleAvatar dibungkus {ns}_avatar.dart",
+    "html": {
+      "element": "span[role=img] atau img",
+      "notes": "img alt=\"\" bila dekoratif; fallback inisial dirender di server agar tanpa JS tetap tampil; interaktif dibungkus button"
+    },
+    "swiftui": "AsyncImage + inisial dibungkus {Ns}Avatar"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Lingkaran (radius-full); fallback inisial dari nama lalu ikon orang.",
+      "name": "person"
+    },
+    {
+      "description": "Organisasi, tim, atau objek: persegi membulat (radius-sm) agar berbeda bentuk dari orang; fallback inisial lalu ikon entitas.",
+      "name": "entity"
+    },
+    {
+      "description": "Tumpukan avatar tumpang tindih dengan overflow-count \"+N\"; maksimal 3–5 terlihat; seluruh nama dapat diakses.",
+      "name": "group"
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    },
+    "decision": {
+      "additionalProperties": false,
+      "properties": {
+        "overrides": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {},
+              "reason": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "baseline",
+                  "invariant",
+                  "archetype",
+                  "brief",
+                  "derived",
+                  "org",
+                  "adr"
+                ]
+              },
+              "to": {}
+            },
+            "required": [
+              "from",
+              "to",
+              "reason",
+              "source"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "rationale": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "baseline",
+            "invariant",
+            "archetype",
+            "brief",
+            "derived",
+            "org",
+            "adr"
+          ]
+        },
+        "testable_consequence": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "value": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "value",
+        "rationale",
+        "source",
+        "testable_consequence"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/design-language.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adr": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "archetype": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "baseline_adjustments": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "pattern": "^L(1[0-7]|[1-9])$",
+            "type": "string"
+          },
+          "from": {},
+          "rule": {
+            "enum": [
+              "STD-1",
+              "STD-2",
+              "STD-3",
+              "STD-4"
+            ]
+          },
+          "to": {}
+        },
+        "required": [
+          "decision",
+          "from",
+          "to",
+          "rule"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "decisions": {
+      "additionalProperties": false,
+      "properties": {
+        "L1": {
+          "$ref": "#/$defs/decision"
+        },
+        "L10": {
+          "$ref": "#/$defs/decision"
+        },
+        "L11": {
+          "$ref": "#/$defs/decision"
+        },
+        "L12": {
+          "$ref": "#/$defs/decision"
+        },
+        "L13": {
+          "$ref": "#/$defs/decision"
+        },
+        "L14": {
+          "$ref": "#/$defs/decision"
+        },
+        "L15": {
+          "$ref": "#/$defs/decision"
+        },
+        "L16": {
+          "$ref": "#/$defs/decision"
+        },
+        "L17": {
+          "$ref": "#/$defs/decision"
+        },
+        "L2": {
+          "$ref": "#/$defs/decision"
+        },
+        "L3": {
+          "$ref": "#/$defs/decision"
+        },
+        "L4": {
+          "$ref": "#/$defs/decision"
+        },
+        "L5": {
+          "$ref": "#/$defs/decision"
+        },
+        "L6": {
+          "$ref": "#/$defs/decision"
+        },
+        "L7": {
+          "$ref": "#/$defs/decision"
+        },
+        "L8": {
+          "$ref": "#/$defs/decision"
+        },
+        "L9": {
+          "$ref": "#/$defs/decision"
+        }
+      },
+      "required": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "L8",
+        "L9",
+        "L10",
+        "L11",
+        "L12",
+        "L13",
+        "L14",
+        "L15",
+        "L16",
+        "L17"
+      ],
+      "type": "object"
+    },
+    "engine_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "manual_notes": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "archetype",
+        "derive",
+        "custom",
+        "inherit"
+      ]
+    },
+    "org_language": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "version"
+      ],
+      "type": "object"
+    },
+    "scores": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "type": "object"
+    },
+    "vetoes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "archetype": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "archetype",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "engine_version",
+    "mode",
+    "decisions",
+    "baseline_adjustments",
+    "adr"
+  ],
+  "title": "design-language",
+  "type": "object"
+}

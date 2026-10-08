@@ -1,0 +1,88 @@
+<!-- EmptyState fixture · variants first-use / no-results / cleared / not-found / restricted and states default,
+     with-filters-active, cta-blocked, focus (CTA), offline-empty (replaced by InlineAlert C2, I6). CTAs are Button. -->
+<section class="ds-demo" data-ds-demo="first-use (default)">
+  <div class="ds-empty-state" data-variant="first-use">
+    <div class="ds-empty-state__illustration" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-file"/></svg></div>
+    <h3 class="ds-empty-state__title">No invoices yet</h3>
+    <p class="ds-empty-state__description">Invoices you create or import will appear here.</p>
+    <div class="ds-empty-state__actions">
+      <button type="button" class="ds-button ds-target" data-variant="primary">Create invoice</button>
+      <a class="ds-button ds-target" data-variant="tertiary" href="#import">Import from CSV</a>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="focus (CTA) · centred (L17 = center)">
+  <div class="ds-empty-state" data-variant="first-use" data-align="center">
+    <div class="ds-empty-state__illustration" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-user"/></svg></div>
+    <h3 class="ds-empty-state__title">No vendors yet</h3>
+    <p class="ds-empty-state__description">Vendors you add can be picked on purchase requests.</p>
+    <div class="ds-empty-state__actions">
+      <button type="button" class="ds-button ds-target" data-force="focus">Add vendor</button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="no-results · with-filters-active">
+  <div class="ds-empty-state" data-variant="no-results">
+    <h3 class="ds-empty-state__title">No results for “<bdi>invoice 2041</bdi>”</h3>
+    <p class="ds-empty-state__description">Active filters: Status is Overdue · Vendor is Sinar Jaya. Try a different number or clear the status filter.</p>
+    <div class="ds-empty-state__actions">
+      <button type="button" class="ds-button ds-target">Clear filters</button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="cleared (queue handled)">
+  <div class="ds-empty-state" data-variant="cleared">
+    <div class="ds-empty-state__illustration" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-check"/></svg></div>
+    <h3 class="ds-empty-state__title" tabindex="-1">All requests are handled</h3>
+    <p class="ds-empty-state__description">New requests that need your approval will appear here.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="cta-blocked (aria-disabled + visible reason)">
+  <div class="ds-empty-state" data-variant="first-use">
+    <h3 class="ds-empty-state__title">No vendors yet</h3>
+    <p class="ds-empty-state__description">Vendors you add can be picked on purchase requests.</p>
+    <div class="ds-empty-state__actions">
+      <button type="button" class="ds-button ds-target" aria-disabled="true" aria-describedby="es-reason-1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Add vendor</span></button>
+      <p class="ds-empty-state__reason" id="es-reason-1">Ask an admin to add vendors.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="not-found (page, way back)">
+  <div class="ds-empty-state" data-variant="not-found" data-size="page">
+    <h2 class="ds-empty-state__title">This item no longer exists</h2>
+    <p class="ds-empty-state__description">It may have been deleted or moved.</p>
+    <div class="ds-empty-state__actions">
+      <a class="ds-button ds-target" href="#requests"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to requests</span></a>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="restricted (no content leaked)">
+  <div class="ds-empty-state" data-variant="restricted">
+    <div class="ds-empty-state__illustration" aria-hidden="true"><svg class="ds-icon"><use href="#ds-i-restricted"/></svg></div>
+    <h2 class="ds-empty-state__title">You don't have access to this page</h2>
+    <p class="ds-empty-state__description">Ask a workspace admin to give you access.</p>
+    <div class="ds-empty-state__actions">
+      <a class="ds-button ds-target" href="#home"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to home</span></a>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="in a table cell">
+  <table class="ds-text-body" style="inline-size: 100%">
+    <thead><tr><th scope="col">Invoice</th><th scope="col">Amount</th></tr></thead>
+    <tbody><tr><td colspan="2">
+      <div class="ds-empty-state" data-variant="no-results" data-size="cell">
+        <h3 class="ds-empty-state__title">No overdue invoices</h3>
+        <p class="ds-empty-state__description">Invoices past their due date will be listed here.</p>
+      </div>
+    </td></tr></tbody>
+  </table>
+</section>
+<section class="ds-demo" data-ds-demo="offline-empty → InlineAlert C2 instead (I6)">
+  <div class="ds-inline-alert" data-status="warning" role="status">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-offline"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title">You're offline</p>
+      <p class="ds-inline-alert__body">Invoices can't be shown until you're back online. Nothing on this device is lost.</p>
+    </div>
+  </div>
+</section>

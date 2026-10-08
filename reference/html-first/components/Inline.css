@@ -1,0 +1,31 @@
+/* Inline · engine 1.8.0 reference (catalog/components/Inline.json). Extends .ds-inline from base.css (flex, wrap, gap 1–12).
+   Layout primitive: no colour or padding; source order only (no row-reverse/order). */
+.ds-inline { row-gap: var(--ds-row-gap, var(--ds-gap, var(--space-2))); }
+.ds-inline[data-row-gap="1"] { --ds-row-gap: var(--space-1); }
+.ds-inline[data-row-gap="2"] { --ds-row-gap: var(--space-2); }
+.ds-inline[data-row-gap="3"] { --ds-row-gap: var(--space-3); }
+.ds-inline[data-row-gap="4"] { --ds-row-gap: var(--space-4); }
+.ds-inline[data-row-gap="6"] { --ds-row-gap: var(--space-6); }
+
+.ds-inline[data-align="start"] { align-items: flex-start; }
+.ds-inline[data-align="center"] { align-items: center; }
+.ds-inline[data-align="end"] { align-items: flex-end; }
+.ds-inline[data-align="baseline"] { align-items: baseline; }
+.ds-inline[data-align="stretch"] { align-items: stretch; }
+.ds-inline[data-justify="start"] { justify-content: flex-start; }
+.ds-inline[data-justify="center"] { justify-content: center; }
+.ds-inline[data-justify="space-between"] { justify-content: space-between; }
+
+/* children: intrinsic width, no own inline margin, and an unbreakable child (URL, code) may break instead of forcing a scroll */
+:where(.ds-inline) > :where(*) { margin-inline: 0; min-inline-size: 0; overflow-wrap: anywhere; }
+
+.ds-inline:empty { display: none; }
+
+/* vertical Divider between children on the same row */
+.ds-inline > .ds-divider[data-orientation="vertical"] { align-self: stretch; }
+/* labelled dividers carry content (a section label), so they are never suppressed */
+.ds-inline > .ds-divider:not([data-variant="labelled"]):first-child,
+.ds-inline > .ds-divider:not([data-variant="labelled"]):last-child,
+.ds-inline > .ds-divider + .ds-divider:not([data-variant="labelled"]) { display: none; }
+/* Inline.js marks a vertical Divider that starts or ends a wrapped row; visibility keeps the layout stable (no re-wrap loop) */
+.ds-inline > .ds-divider[data-ds-orphan] { visibility: hidden; }

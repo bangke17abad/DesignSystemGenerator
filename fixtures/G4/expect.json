@@ -1,0 +1,43 @@
+{
+  "assertions": [
+    {
+      "eq": 0,
+      "token": "radius-sm"
+    },
+    {
+      "every_mode_border": true,
+      "token": "elevation-1"
+    },
+    {
+      "eq": "Source Serif 4",
+      "lang": "decisions.L4.value.families.display"
+    },
+    {
+      "eq": true,
+      "lang": "decisions.L7.value.flat"
+    },
+    {
+      "no_adr": true
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "site_lang": "en"
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V1",
+        "V2",
+        "VB2",
+        "V7"
+      ]
+    }
+  ],
+  "fixture": "G4",
+  "run_only": [
+    "Langkah 2 regenerate: semver minor, zona manual byte-identik (V15)"
+  ],
+  "source": "golden-briefs.md G4"
+}

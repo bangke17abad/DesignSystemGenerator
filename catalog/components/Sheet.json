@@ -1,0 +1,501 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke judul (wajib, juga bila judul disembunyikan secara visual)",
+      "handle: button dengan nama \"Expand sheet\"/\"Collapse sheet\" dan aria-expanded",
+      "konten di belakang inert pada variant modal; LiveAnnouncer di luar subtree inert",
+      "pemicu: aria-haspopup=\"dialog\" + aria-expanded + aria-controls",
+      "aria-busy saat loading",
+      "scroll-padding-block-end di body sebesar tinggi footer (SC 2.4.11)"
+    ],
+    "focus_order": "fokus awal (judul atau field pertama) → isi → footer → Close → handle (modal melingkar)",
+    "native": {
+      "compose": "ModalBottomSheet(onDismissRequest, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false), dragHandle = { BottomSheetDefaults.DragHandle() }); persistent: BottomSheetScaffold; confirmValueChange untuk dirty",
+      "flutter": "showModalBottomSheet(isScrollControlled: true, useSafeArea: true, showDragHandle: true, enableDrag: true) dengan DraggableScrollableSheet untuk detent; persistent: Scaffold.showBottomSheet atau BottomSheet; PopScope untuk dirty",
+      "swiftui": ".sheet(isPresented:) + .presentationDetents([.medium, .large]) + .presentationDragIndicator(.visible) + .interactiveDismissDisabled(dirty); persistent: .presentationBackgroundInteraction(.enabled(upThrough: .medium))"
+    },
+    "politeness": "polite",
+    "role": "modal: dialog aria-modal=\"true\"; persistent: region (complementary) berlabel tanpa aria-modal",
+    "sr_label": "\"{judul}, dialog\" (modal) atau \"{judul}, complementary\" (persistent); handle mengumumkan detent",
+    "wcag": [
+      "1.3.1",
+      "1.3.4",
+      "1.4.10",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.1",
+      "2.5.7",
+      "2.5.8",
+      "3.2.1",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "scrim",
+      "role": "lapisan penutup di z-overlay-scrim untuk variant modal; tidak ada pada variant persistent",
+      "tokens": [
+        "color-structure-scrim",
+        "z-overlay-scrim",
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "panel di z-modal menempel tepi bawah (atau inline-end); radius hanya di sudut yang menghadap konten; tinggi mengikuti detent",
+      "tokens": [
+        "z-modal",
+        "color-structure-surface-raised",
+        "elevation-2",
+        "radius-lg",
+        "layout-panel-width",
+        "layout-modal-md"
+      ]
+    },
+    {
+      "part": "handle",
+      "role": "pegangan drag di tepi atas; juga tombol berlabel \"Expand\"/\"Collapse\" sebagai alternatif drag (SC 2.5.7); area klik ≥ target-min-touch",
+      "tokens": [
+        "radius-full",
+        "color-structure-border-strong",
+        "target-min-touch",
+        "space-2"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "judul (h2) + tombol Close berlabel di inline-end; tetap terlihat",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "space-4"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "isi bergulir; gulir di body tidak memicu drag sheet sampai body di posisi atas",
+      "tokens": [
+        "space-4",
+        "type-body-size",
+        "type-body-line"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "action bar opsional dengan aksi primer di zona jempol; di atas safe-area dan keyboard",
+      "tokens": [
+        "space-3",
+        "space-4",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "list-item",
+      "role": "baris pilihan/aksi saat Sheet menyajikan Menu atau Select; ≥ target-min-touch, ring inset",
+      "tokens": [
+        "control-height-lg",
+        "color-structure-selection",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada kontrol; inset −2px pada list-item",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "safe-area",
+      "role": "padding block-end sebesar inset home indicator; tinggi maksimum = viewport − inset atas − jarak status bar",
+      "tokens": [
+        "space-2"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"scrim\" | \"swipe\" | \"close-button\" | \"system-back\" | \"action\" }",
+        "when": "Sheet dibuka atau ditutup"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "\"collapsed\" | \"medium\" | \"large\"",
+        "when": "detent berubah lewat drag atau handle"
+      }
+    ],
+    "parts": [
+      "Sheet.Trigger",
+      "Sheet.Content",
+      "Sheet.Handle",
+      "Sheet.Header",
+      "Sheet.Title",
+      "Sheet.Body",
+      "Sheet.Footer",
+      "Sheet.Close"
+    ],
+    "props": [
+      {
+        "description": "Controlled: Sheet terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "bottom",
+        "description": "Tepi dan modalitas.",
+        "name": "variant",
+        "required": false,
+        "type": "\"bottom\" | \"side\" | \"persistent\""
+      },
+      {
+        "description": "Judul; nama aksesibel.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: detent saat ini.",
+        "name": "value",
+        "required": false,
+        "type": "\"collapsed\" | \"medium\" | \"large\""
+      },
+      {
+        "default": "medium",
+        "description": "Uncontrolled: detent awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "\"collapsed\" | \"medium\" | \"large\""
+      },
+      {
+        "default": "false",
+        "description": "Ada perubahan belum tersimpan; menutup memerlukan konfirmasi.",
+        "name": "dirty",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Isi sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "touch",
+      "result": "Sheet terbuka di detent awal; fokus ke judul (tabindex −1) atau field pertama; TalkBack/VoiceOver mengumumkan judul",
+      "trigger": "tap pemicu"
+    },
+    {
+      "input": "touch",
+      "result": "berpindah detent; drag ke bawah melewati ambang menutup sebagai Cancel; drag selalu punya padanan tombol handle dan Close (SC 2.5.1, 2.5.7)",
+      "trigger": "drag handle atau header ke atas/bawah"
+    },
+    {
+      "input": "touch",
+      "result": "menutup sebagai Cancel (dirty → konfirmasi discard); fokus kembali ke pemicu",
+      "trigger": "tap scrim atau gestur back sistem"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup sebagai Cancel (variant modal dan persistent yang sedang diperluas → collapsed); fokus ke pemicu",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "modal: fokus terkunci melingkar di Sheet; persistent: Sheet adalah region biasa di urutan Tab",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "berpindah ke detent berikutnya (medium ↔ large); state diumumkan (\"Expanded\")",
+      "trigger": "Enter/Space pada handle"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antara main dan Sheet",
+      "trigger": "F6 (persistent)"
+    },
+    {
+      "input": "pointer",
+      "result": "menutup sebagai Cancel; drag handle dengan mouse diizinkan, tombol tetap tersedia",
+      "trigger": "klik scrim atau Close"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Sort by",
+        "Share file",
+        "Filters (3)",
+        "Apply filters",
+        "Close",
+        "Expand sheet"
+      ],
+      "id-ID": [
+        "Urutkan menurut",
+        "Bagikan berkas",
+        "Filter (3)",
+        "Terapkan filter",
+        "Tutup",
+        "Perluas panel"
+      ]
+    },
+    "rules": [
+      "Judul menyebut isi atau tugas (\"Sort by\", \"Share file\"); selalu ada walau pendek.",
+      "Pilihan berupa daftar label tunggal; aksi berupa kata kerja.",
+      "Close berlabel \"Close\"; Cancel hanya bila Sheet berisi form.",
+      "Tidak ada instruksi gestur sebagai satu-satunya petunjuk (\"Swipe down to close\")."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "InlineAlert",
+    "Skeleton"
+  ],
+  "do": [
+    "Sediakan tombol Close dan handle berlabel sebagai padanan setiap gestur drag.",
+    "Kembalikan fokus ke pemicu saat Sheet ditutup.",
+    "Jaga footer di atas keyboard virtual dan home indicator.",
+    "Konfirmasi sebelum swipe-down membuang perubahan form."
+  ],
+  "dont": [
+    {
+      "ref": "UB7",
+      "text": "Menutup Sheet hanya lewat swipe tanpa tombol."
+    },
+    {
+      "text": "Sheet di atas Sheet; navigasi bertingkat di dalam satu Sheet memakai drill-down dengan tombol Back."
+    },
+    {
+      "text": "Konten penting di bawah home indicator atau di belakang keyboard."
+    },
+    {
+      "ref": "UB8",
+      "text": "Footer sticky yang menutup field fokus."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "item dan judul membungkus; tidak dipotong; footer menumpuk aksi vertikal",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "Sheet membuka di detent large; body bergulir; header dan footer berhenti sticky bila bersama melebihi setengah tinggi Sheet",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "pemicu tidak dirender; hasil asinkron kosong menampilkan EmptyState singkat di body",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "> 7 pilihan: SearchField di header; > 20: Combobox penuh di detent large",
+      "case": "jumlah item maksimum"
+    },
+    {
+      "behaviour": "Skeleton + aria-busy saat memuat; aksi yang butuh server aria-disabled dengan reason \"Needs connection\"",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "membungkus maksimal dua baris; nama objek panjang dipotong di tengah, lengkap di nama aksesibel",
+      "case": "judul sangat panjang"
+    },
+    {
+      "behaviour": "Sheet naik ke detent large di atas keyboard; field fokus digulir ke tampilan; di landscape lebar maks layout-modal-md di tengah",
+      "case": "tinggi viewport kecil (keyboard terbuka, landscape phone)"
+    },
+    {
+      "behaviour": "detent dan isi dipertahankan; presentasi berpindah bottom ↔ side tanpa kehilangan fokus atau data",
+      "case": "rotasi atau perubahan ukuran jendela saat terbuka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Overlays",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; wajib bila ada surface ponsel karena Menu, Select, DatePicker, FilterChip, dan Popover memakai Sheet di phone (§6.5).",
+  "lint": [
+    "Sheet tanpa title ditolak",
+    "Sheet tanpa tombol Close (hanya swipe) ditolak (UB7)",
+    "Sheet bersarang di Sheet ditolak",
+    "Sheet tanpa padding safe-area block-end ditolak"
+  ],
+  "name": "Sheet",
+  "preview": {
+    "combinations": [
+      "keyboard terbuka + footer",
+      "dirty + swipe → discard",
+      "teks 200% → large",
+      "nested StepUpDialog",
+      "RTL side"
+    ],
+    "states": [
+      "closed",
+      "open-medium",
+      "open-large",
+      "collapsed",
+      "dragging",
+      "loading",
+      "dirty",
+      "error"
+    ],
+    "variants": [
+      "bottom",
+      "side",
+      "persistent"
+    ]
+  },
+  "purpose": {
+    "purpose": "Panel yang meluncur dari tepi bawah (phone) atau tepi inline-end (layar lebar) untuk pilihan, aksi, atau form singkat yang terkait konteks saat ini, dengan pegangan dan tinggi yang dapat diubah.",
+    "when_not_to_use": [
+      "Untuk konfirmasi destruktif atau keputusan yang memblokir: pakai Modal (confirmation/destructive).",
+      "Untuk detail objek yang dibaca berdampingan dengan daftar di desktop: pakai ContextPanel.",
+      "Untuk konten kecil yang menempel pada pemicu di pointer: pakai Popover.",
+      "Untuk form panjang atau alur multi-langkah: pakai halaman sendiri.",
+      "Untuk navigasi utama: pakai PrimaryNav (drawer) atau BottomNav."
+    ]
+  },
+  "related": [
+    "Modal",
+    "Menu",
+    "Select",
+    "Popover",
+    "ContextPanel",
+    "FilterChip"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant bottom; lebar penuh dengan safe-area kiri/kanan logis; tinggi maks viewport − inset atas; footer di atas home indicator dan keyboard",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "bottom dengan lebar maksimum layout-modal-md di tengah (portrait) atau side dari inline-end (landscape); area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "variant side selebar layout-panel-width bila diminta; pilihan dari Menu/Select kembali ke Popover; form singkat menjadi Modal",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi di dalam Sheet tidak diizinkan saat ini: item/aksi aria-disabled + reason"
+    },
+    {
+      "pattern": "hidden",
+      "when": "item tidak boleh diketahui role: tidak dirender; Sheet kosong tidak dibuka (pemicu tidak dirender)"
+    },
+    {
+      "pattern": "read-only",
+      "when": "Sheet berisi detail atau form untuk role baca: field read-only, footer hanya Close"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi berisiko di Sheet membuka StepUpDialog di atasnya; Sheet tetap terbuka di belakang (inert)"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Variant side meluncur dari inline-end (kiri di RTL); Close di inline-end header; drill-down Back memakai panah yang dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Tinggi Sheet ditentukan detent (medium, large, collapsed) dan isi, lebar dari viewport atau layout-panel-width; kontrol di dalamnya memakai size masing-masing."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "tidak dirender; pemicu aria-expanded=\"false\""
+    },
+    {
+      "name": "open-medium",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "scrim": "color-structure-scrim"
+      },
+      "treatment": "detent medium; scrim tampil (modal); halaman di belakang inert dan gulirnya terkunci; fokus dipindah ke judul atau field pertama"
+    },
+    {
+      "name": "open-large",
+      "token_swaps": {},
+      "treatment": "detent large; header tetap terlihat; safe-area atas dihormati"
+    },
+    {
+      "name": "collapsed",
+      "token_swaps": {},
+      "treatment": "persistent saja: hanya header + handle terlihat; isi tidak di urutan fokus"
+    },
+    {
+      "name": "dragging",
+      "token_swaps": {},
+      "treatment": "mengikuti jari; fade scrim proporsional; lepas di bawah ambang menutup; di reduced motion perpindahan detent instan"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "isi dimuat: Skeleton di body, aria-busy; judul dan Close tersedia"
+    },
+    {
+      "name": "dirty",
+      "token_swaps": {},
+      "treatment": "form berubah: swipe-down, Esc, scrim, atau back membuka konfirmasi \"Discard changes?\" (Modal confirmation)"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "InlineAlert di atas body atau error per field; Sheet tidak menutup; data dipertahankan"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Sheet: ModalBottomSheet / BottomSheetScaffold",
+    "flutter": "{ns}_sheet.dart: showModalBottomSheet / DraggableScrollableSheet",
+    "html": {
+      "element": "dialog (showModal()) diposisikan di block-end",
+      "notes": "persistent memakai aside tanpa showModal; env(safe-area-inset-bottom) untuk padding; visualViewport untuk keyboard; drag lewat pointer events dengan tombol padanan; tanpa JS isi Sheet tersedia sebagai halaman"
+    },
+    "swiftui": "{Ns}Sheet: .sheet + presentationDetents"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default di phone. Meluncur dari bawah, modal dengan scrim; detent medium (±setengah) dan large (hampir penuh).",
+      "name": "bottom"
+    },
+    {
+      "description": "Tablet dan desktop: meluncur dari inline-end selebar layout-panel-width, modal dengan scrim; dipakai bila Sheet dipertahankan di layar lebar (bila tidak, presentasi berpindah ke Modal atau Popover).",
+      "name": "side"
+    },
+    {
+      "description": "Non-modal: tanpa scrim dan tanpa kunci fokus, konten di belakang tetap dapat dipakai (mis. daftar di atas peta). Detent collapsed (header saja) sampai large; dicapai lewat landmark dan pintasan F6.",
+      "name": "persistent"
+    }
+  ]
+}

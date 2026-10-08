@@ -1,0 +1,242 @@
+/* Card · engine 1.8.0 reference (catalog/components/Card.json). Tokens only (I3); logical properties only (§12.4).
+   A container only: the L6 container rule is carried by the tokens it reads (radius-md, border-width-thin, elevation-*), so
+   ink-graphite renders flat and bordered, soft-friendly rounded, neo-brutalist square with a thick line.
+   static: no primary target. interactive: ONE title link stretched over the card (::after), footer actions sit above it.
+   selectable: a Checkbox labelled by the title, its label stretched over the card; selected = check + thick ring + selection fill. */
+.ds-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--layout-measure) / 2.4)), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding: var(--space-4);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-0);
+  list-style: none;
+  transition: box-shadow var(--motion-fast-duration) var(--motion-easing-standard), background-color var(--motion-fast-duration) var(--motion-easing-standard), transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* state layer (L16): opacity tokens are 0 in token-swap languages */
+.ds-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--color-structure-text-primary);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* media: Image frame at the block-start, bleeding to the card edge; never carries essential text */
+.ds-card__media {
+  margin-block-start: calc(-1 * var(--space-4));
+  margin-inline: calc(-1 * var(--space-4));
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
+.ds-card__media .ds-image__frame { border-radius: 0; }
+
+.ds-card__header { display: flex; align-items: flex-start; gap: var(--space-2) var(--space-3); flex-wrap: wrap; }
+.ds-card__heading { display: flex; flex-direction: column; gap: var(--space-1); min-inline-size: 0; }
+.ds-card__header > .ds-card__heading { flex: 1 1 12em; }
+.ds-card__title,
+.ds-card__link {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* two lines, then ellipsis; the full name stays the accessible name and on the object page */
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.ds-card__title:has(.ds-card__link) { display: block; overflow: visible; }
+.ds-card__title {
+  margin: 0;
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  color: var(--color-structure-text-primary);
+}
+.ds-card__meta {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-variant-numeric: tabular-nums;
+}
+.ds-card__meta time, .ds-card__meta bdi { unicode-bidi: isolate; }
+.ds-card__status { flex: none; } /* StatusLabel wraps, never truncates */
+
+.ds-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-card__body > p { margin: 0; }
+.ds-card__price { color: var(--color-structure-text-primary); font-variant-numeric: tabular-nums; font-weight: var(--type-label-weight); }
+
+/* footer actions: max two, each its own target above the stretched link */
+.ds-card__footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-block-start: auto;
+  padding-block-start: var(--space-2);
+}
+
+/* ---------- interactive: stretched title link (one target, one name) ---------- */
+.ds-card__link {
+  /* the link box itself is >= target-current (the stretched ::after makes the whole card clickable) */
+  min-block-size: var(--target-current);
+  padding-block: max(0px, calc((var(--target-current) - var(--type-h3-line)) / 2));
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-md);
+}
+/* text that must stay selectable (IDs, amounts to copy) opts out of the stretched area */
+.ds-card__selectable-text { position: relative; z-index: 2; }
+@media (hover: hover) {
+  .ds-card[data-variant="interactive"]:hover .ds-card__link { text-decoration: underline; text-underline-offset: 0.2em; }
+}
+.ds-card[data-variant="interactive"][data-force~="hover"] .ds-card__link { text-decoration: underline; text-underline-offset: 0.2em; }
+
+/* focus: the ring surrounds the whole card; the link keeps an outline style (drawn transparent) for forced colours */
+.ds-card__link:focus-visible,
+.ds-card__select .ds-checkbox__input:focus-visible { outline-color: transparent; }
+.ds-card:has(.ds-card__link:focus-visible),
+.ds-card:has(.ds-card__select .ds-checkbox__input:focus-visible),
+.ds-card[data-force~="focus"] {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---------- selectable: Checkbox at inline-start, label stretched over the card ---------- */
+.ds-card__select.ds-checkbox {
+  position: static;
+  flex: none;
+  justify-content: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-block: calc((var(--type-h3-line) - var(--target-current)) / 2);
+  margin-inline-start: calc((var(--icon-md) - var(--target-current)) / 2);
+  padding-block: 0;
+  align-items: center;
+}
+.ds-card__select.ds-checkbox::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.ds-card__select .ds-checkbox__control { z-index: 2; }
+.ds-card[data-variant="selectable"] .ds-card__header { flex-wrap: nowrap; }
+/* selected: check (non-colour) + thick interaction ring + selection fill; ring drawn on top so the elevation stays */
+.ds-card[data-variant="selectable"]:has(.ds-checkbox__input:checked) {
+  background: var(--color-structure-selection);
+  border-color: var(--color-interaction-default);
+}
+.ds-card[data-variant="selectable"]:has(.ds-checkbox__input:checked)::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: 2;
+  border: var(--border-width-thick) solid var(--color-interaction-default);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.ds-card__selected-note { display: none; align-items: center; gap: var(--space-1); color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); }
+.ds-card__selected-note .ds-icon { color: var(--color-interaction-default); }
+.ds-card[data-variant="selectable"]:has(.ds-checkbox__input:checked) .ds-card__selected-note { display: inline-flex; }
+
+/* ---------- hover / pressed (interactive + selectable only) ---------- */
+@media (hover: hover) {
+  .ds-card:is([data-variant="interactive"], [data-variant="selectable"]):not(:has([aria-disabled="true"]), [aria-busy="true"]):hover {
+    box-shadow: var(--elevation-1);
+    background: var(--row-background-hover);
+  }
+  .ds-card[data-variant="selectable"]:has(.ds-checkbox__input:checked):not(:has([aria-disabled="true"])):hover { background: var(--row-background-selected); }
+  .ds-card:is([data-variant="interactive"], [data-variant="selectable"]):not(:has([aria-disabled="true"]), [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-card[data-force~="hover"] { box-shadow: var(--elevation-1); background: var(--row-background-hover); }
+.ds-card[data-variant="selectable"][data-force~="hover"]:has(.ds-checkbox__input:checked) { background: var(--row-background-selected); }
+.ds-card[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-card:is([data-variant="interactive"], [data-variant="selectable"]):not(:has([aria-disabled="true"]), [aria-busy="true"]):has(.ds-card__link:active, .ds-card__select:active),
+.ds-card[data-force~="pressed"]:not([aria-busy="true"]) {
+  background: var(--color-interaction-subtle);
+  transform: var(--state-press-transform);
+}
+.ds-card:is([data-variant="interactive"], [data-variant="selectable"]):not(:has([aria-disabled="true"]), [aria-busy="true"]):has(.ds-card__link:active, .ds-card__select:active)::before,
+.ds-card[data-force~="pressed"]:not([aria-busy="true"])::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* ---------- blocked with reason (selectable): lock + reason in the body, title disabled colour, still focusable ---------- */
+.ds-card:has(.ds-card__select [aria-disabled="true"]) { background: var(--color-structure-surface-sunken); }
+.ds-card:has(.ds-card__select [aria-disabled="true"]) .ds-card__title { color: var(--color-structure-text-disabled); }
+.ds-card:has(.ds-card__select [aria-disabled="true"]) .ds-card__select::after { cursor: not-allowed; }
+.ds-card:has(.ds-card__select [aria-disabled="true"]):has(.ds-checkbox__input:checked) { background: var(--color-structure-surface-sunken); border-color: var(--color-structure-border-strong); }
+.ds-card:has(.ds-card__select [aria-disabled="true"]):has(.ds-checkbox__input:checked)::after { border-color: var(--color-structure-text-disabled); }
+.ds-card__reason { display: flex; align-items: flex-start; gap: var(--space-1); margin: 0; color: var(--color-structure-text-primary); }
+.ds-card__reason .ds-icon { margin-block: calc((var(--type-body-line) - var(--icon-md)) / 2); color: var(--color-structure-text-secondary); }
+
+/* ---------- loading: Skeleton shaped like the card; not pressable ---------- */
+.ds-card[aria-busy="true"] { gap: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.ds-card[aria-busy="true"] .ds-skeleton__card { background: var(--color-structure-surface-raised); }
+
+/* ---------- error: same size; critical icon + text + Retry in the body ---------- */
+.ds-card__error { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+.ds-card__error-text { display: flex; align-items: flex-start; gap: var(--space-2); margin: 0; color: var(--color-semantic-critical-strong); font-weight: var(--type-label-weight); }
+.ds-card__error-text .ds-icon { margin-block: calc((var(--type-body-line) - var(--icon-md)) / 2); }
+
+[dir="rtl"] .ds-card .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* tablet up: media may sit at inline-start in data-layout="horizontal" (photos are never mirrored) */
+@media (--bp-tablet-up) {
+  .ds-card[data-layout="horizontal"] { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: var(--space-4); }
+  .ds-card[data-layout="horizontal"] > .ds-card__media {
+    grid-row: 1 / span 4;
+    margin-block-end: calc(-1 * var(--space-4));
+    margin-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-start-radius: inherit;
+  }
+  .ds-card[data-layout="horizontal"] > .ds-card__media .ds-image__frame { block-size: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-card { transition: none; }
+  .ds-card:has(.ds-card__link:active, .ds-card__select:active), .ds-card[data-force~="pressed"] { transform: none; }
+}
+@media (forced-colors: active) {
+  .ds-card { border-color: CanvasText; }
+  .ds-card[data-variant="selectable"]:has(.ds-checkbox__input:checked)::after { border-color: Highlight; }
+  .ds-card__link:focus-visible, .ds-card__select .ds-checkbox__input:focus-visible { outline-color: Highlight; }
+}

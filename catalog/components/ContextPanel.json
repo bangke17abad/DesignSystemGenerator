@@ -1,0 +1,486 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke judul panel",
+      "pemicu/baris: aria-expanded dan aria-controls ke panel bila panel dibuka dari kontrol eksplisit",
+      "tidak memakai aria-modal dan tidak mengunci fokus (non-modal) pada docked maupun overlay",
+      "aria-busy saat loading",
+      "resize-handle: role=\"separator\" dengan aria-orientation=\"vertical\", aria-valuenow/min/max, aria-controls, tabindex=\"0\"",
+      "pembaruan isi akibat seleksi diumumkan polite lewat LiveAnnouncer, bukan region live di seluruh panel",
+      "overlay tablet: memastikan elemen fokus di main tidak tertutup panel (SC 2.4.11) dengan scroll-padding-inline-end atau menutup panel saat fokus pindah ke elemen yang tertutup"
+    ],
+    "focus_order": "nav → main (daftar) → panel (header → body → footer); urutan DOM sama dengan urutan visual; panel tidak menyisipkan diri di tengah daftar",
+    "native": {
+      "compose": "ListDetailPaneScaffold dengan rememberListDetailPaneScaffoldNavigator (material3-adaptive); pane detail tampil berdampingan di expanded dan menjadi tujuan navigasi di compact; Modifier.semantics { paneTitle = … }",
+      "flutter": "tidak ada list-detail adaptif di inti; LayoutBuilder: Row(daftar, VerticalDivider, panel) di lebar besar dengan Semantics(container: true, label) dan FocusTraversalGroup; Navigator.push halaman detail di phone",
+      "swiftui": "NavigationSplitView kolom detail, atau .inspector(isPresented:) { … } dengan .inspectorColumnWidth(min:ideal:max:); di compact width inspector otomatis menjadi sheet/halaman"
+    },
+    "politeness": "polite",
+    "role": "aside (complementary) berlabel judul panel; phone: halaman dengan main sendiri",
+    "sr_label": "\"{judul item}, complementary\"; Close = \"Close details\"; Back phone = \"Back to {list}\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.10",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.1",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.7",
+      "3.2.1",
+      "3.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "landmark complementary di slot aside AppShell; docked selebar layout-panel-width di inline-end; overlay di z-panel pada tablet",
+      "tokens": [
+        "layout-panel-width",
+        "z-panel",
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin",
+        "elevation-0",
+        "elevation-1"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "judul objek (h2) + aksi panel (Menu) + Close berlabel; tetap terlihat saat isi menggulir",
+      "tokens": [
+        "layout-bar-height",
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "isi bergulir independen: StatusLabel, DescriptionList, Tabs ringkas, Timeline",
+      "tokens": [
+        "space-4",
+        "space-6",
+        "type-body-size",
+        "type-body-line"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "action bar opsional dengan satu aksi primer; tidak menutup fokus",
+      "tokens": [
+        "space-3",
+        "space-4",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "resize-handle",
+      "role": "pemisah opsional yang dapat diseret untuk mengubah lebar; juga fokusabel dan diubah dengan panah (alternatif drag)",
+      "tokens": [
+        "border-width-thick",
+        "color-interaction-default",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "back-bar",
+      "role": "presentasi phone: top bar halaman dengan Back berlabel \"Back to {list}\"",
+      "tokens": [
+        "layout-bar-height",
+        "icon-md"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada kontrol; judul yang menerima fokus program juga bercincin",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"close-button\" | \"selection-cleared\" | \"resize\" | \"system-back\" }",
+        "when": "panel dibuka atau ditutup"
+      },
+      {
+        "name": "onWidthChange",
+        "payload": "number",
+        "when": "lebar panel diubah lewat drag atau panah"
+      }
+    ],
+    "parts": [
+      "ContextPanel.Header",
+      "ContextPanel.Title",
+      "ContextPanel.Actions",
+      "ContextPanel.Body",
+      "ContextPanel.Footer",
+      "ContextPanel.Close",
+      "ContextPanel.ResizeHandle"
+    ],
+    "props": [
+      {
+        "description": "Controlled: panel terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "detail",
+        "description": "Peran isi panel.",
+        "name": "variant",
+        "required": false,
+        "type": "\"detail\" | \"edit\" | \"inspector\""
+      },
+      {
+        "description": "Nama objek; nama aksesibel.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan resize-handle dengan alternatif keyboard.",
+        "name": "resizable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Perubahan belum tersimpan (variant edit).",
+        "name": "dirty",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Isi sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "panel terbuka; fokus ke judul panel (tabindex −1) dengan ring; judul diumumkan",
+      "trigger": "Enter pada baris daftar atau pemicu \"Details\""
+    },
+    {
+      "input": "keyboard",
+      "result": "seleksi dan isi panel berganti tanpa memindah fokus dari daftar; nama item baru diumumkan polite",
+      "trigger": "↑/↓ di daftar saat panel terbuka"
+    },
+    {
+      "input": "keyboard",
+      "result": "overlay (tablet) dan docked: panel menutup, fokus kembali ke baris/pemicu; dirty: konfirmasi discard",
+      "trigger": "Esc di dalam panel"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antar region (nav, main, panel) tanpa menutup panel",
+      "trigger": "F6 / Shift+F6"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengubah lebar per langkah token; Home/End ke lebar minimum/maksimum; nilai diumumkan",
+      "trigger": "←/→ pada resize-handle, Home/End"
+    },
+    {
+      "input": "pointer",
+      "result": "isi panel berganti; drag mengubah lebar (padanan panah dan Menu \"Reset width\"); klik di main pada overlay tidak menutup panel kecuali brief memintanya",
+      "trigger": "klik baris; drag resize-handle; klik di main saat overlay"
+    },
+    {
+      "input": "touch",
+      "result": "membuka halaman detail; kembali ke daftar dengan posisi gulir dan fokus pada baris semula",
+      "trigger": "tap baris (phone); tombol back/gestur kembali"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Close details",
+        "Back to list",
+        "Select an item to see details",
+        "This item was updated",
+        "Reload",
+        "Panel width"
+      ],
+      "id-ID": [
+        "Tutup detail",
+        "Kembali ke daftar",
+        "Pilih item untuk melihat detail",
+        "Item ini telah diperbarui",
+        "Muat ulang",
+        "Lebar panel"
+      ]
+    },
+    "rules": [
+      "Judul panel = nama objek, bukan \"Details\".",
+      "Status objek ditampilkan dengan StatusLabel di bawah judul; tidak di header saja sebagai warna.",
+      "Aksi panel memakai kata kerja yang sama dengan aksi baris di daftar.",
+      "EmptyState menyebut cara memunculkan isi (\"Select an item to see details\")."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Skeleton",
+    "EmptyState",
+    "InlineAlert",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Dorong konten di desktop alih-alih menutupinya.",
+    "Pindahkan fokus ke judul panel hanya saat panel dibuka secara eksplisit; pergantian seleksi tidak memindah fokus.",
+    "Sediakan panah keyboard dan reset untuk setiap resize lewat drag.",
+    "Kembalikan fokus ke baris atau pemicu saat panel ditutup."
+  ],
+  "dont": [
+    {
+      "text": "Scrim atau kunci fokus pada ContextPanel; itu Modal."
+    },
+    {
+      "ref": "UB8",
+      "text": "Panel overlay yang menutup elemen fokus di main."
+    },
+    {
+      "ref": "UB7",
+      "text": "Resize hanya lewat drag."
+    },
+    {
+      "text": "Membuang perubahan form panel saat pengguna memilih item lain tanpa konfirmasi."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul dan label DescriptionList membungkus; lebar panel tidak bertambah otomatis; aksi header masuk ke Menu bila tidak muat",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "di desktop panel beralih ke overlay atau halaman bila main akan di bawah layout-content-min; header berhenti sticky bila melebihi sepertiga tinggi panel",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "panel tidak dibuka; main menampilkan EmptyState",
+      "case": "0 item di daftar"
+    },
+    {
+      "behaviour": "body bergulir independen; bagian panjang dikelompokkan dengan Tabs ringkas atau Accordion; tautan \"Open full page\" tersedia",
+      "case": "konten maksimum"
+    },
+    {
+      "behaviour": "Skeleton saat memuat; offline menampilkan data tersimpan dengan penanda stale (\"Last updated 10:42\") dan aksi server aria-disabled dengan reason",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "membungkus maksimal dua baris lalu ellipsis; nama lengkap di nama aksesibel dan Tooltip",
+      "case": "judul item sangat panjang"
+    },
+    {
+      "behaviour": "footer panel naik di atas keyboard atau ikut menggulir; field fokus tetap terlihat",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    },
+    {
+      "behaviour": "panel menutup atau menampilkan state stale; fokus ke baris berikutnya di daftar (§9.5)",
+      "case": "item dihapus saat panel terbuka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Overlays",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak dipakai di surface sentuh-sarung-tangan bila brief tidak memintanya (§8.2).",
+  "lint": [
+    "ContextPanel dengan scrim atau aria-modal ditolak",
+    "aside ContextPanel tanpa label ditolak",
+    "resize-handle tanpa role separator dan alternatif keyboard ditolak (UB7)",
+    "Properti fisik (right, border-left) pada panel ditolak (V6)"
+  ],
+  "name": "ContextPanel",
+  "preview": {
+    "combinations": [
+      "docked + nav rail",
+      "overlay tablet + Esc",
+      "dirty + ganti seleksi → discard",
+      "resize via keyboard",
+      "teks 200% → overlay",
+      "RTL"
+    ],
+    "states": [
+      "closed",
+      "open-docked",
+      "open-overlay",
+      "open-page",
+      "empty",
+      "loading",
+      "error",
+      "stale",
+      "dirty"
+    ],
+    "variants": [
+      "detail",
+      "edit",
+      "inspector"
+    ]
+  },
+  "purpose": {
+    "purpose": "Panel detail, bukti, atau aksi untuk item yang dipilih, berdampingan dengan daftar kerja: docked di desktop (mendorong konten), overlay tanpa scrim di tablet (Esc menutup), dan halaman penuh di phone.",
+    "when_not_to_use": [
+      "Untuk keputusan yang memblokir atau konfirmasi: pakai Modal.",
+      "Untuk pilihan singkat di phone: pakai Sheet.",
+      "Untuk info kecil yang menempel pada satu kontrol: pakai Popover atau Tooltip.",
+      "Untuk tugas utama yang butuh seluruh lebar (editor, form panjang): pakai halaman sendiri.",
+      "Untuk navigasi: pakai PrimaryNav."
+    ]
+  },
+  "related": [
+    "AppShell",
+    "Modal",
+    "Sheet",
+    "Table",
+    "List",
+    "DescriptionList"
+  ],
+  "responsive": [
+    {
+      "behaviour": "halaman penuh (rute) dengan back-bar; tidak ada overlay; posisi daftar dipulihkan saat kembali",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "overlay dari inline-end di z-panel tanpa scrim; Esc dan Close menutup; main tetap dapat dipakai; landscape lebar boleh docked bila nav rail + panel + layout-content-min muat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "docked di aside selebar layout-panel-width, mendorong main; PrimaryNav menciut ke rail bila ruang tidak cukup; lebar dapat diubah bila resizable dan diingat per pengguna",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role baca: variant detail tanpa aksi edit; field ditampilkan sebagai teks penuh"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi panel terlihat tetapi tidak diizinkan sekarang; Button aria-disabled + reason"
+    },
+    {
+      "pattern": "hidden",
+      "when": "bagian atau field yang tidak boleh diketahui role tidak dirender (mis. data finansial)"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi berisiko dari panel membuka StepUpDialog; panel tetap terbuka dan menerima fokus kembali setelahnya"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right",
+      "panel-open",
+      "panel-close"
+    ],
+    "notes": "Panel di inline-end (kiri di RTL); resize-handle di inline-start panel dan ←/→ ditukar; ikon buka/tutup panel dan Back dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Lebar dari layout-panel-width (dapat diubah pengguna dalam batas token bila resizable); tinggi mengikuti region aside, bukan prop size."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "aside tidak dirender; main memakai lebar penuh; pemicu aria-expanded=\"false\""
+    },
+    {
+      "name": "open-docked",
+      "token_swaps": {
+        "container": "color-structure-surface-base"
+      },
+      "treatment": "desktop: kolom inline-end mendorong main (main menyempit sampai layout-content-min, lalu PrimaryNav menciut ke rail); tanpa scrim; elevation-0 dengan border"
+    },
+    {
+      "name": "open-overlay",
+      "token_swaps": {
+        "container": "color-structure-surface-raised"
+      },
+      "treatment": "tablet: panel menutup sebagian main di z-panel dengan elevation-1, TANPA scrim; main tetap dapat dipakai; Esc menutup; fokus tidak dikunci"
+    },
+    {
+      "name": "open-page",
+      "token_swaps": {},
+      "treatment": "phone: rute halaman penuh dengan back-bar; tombol back sistem kembali ke daftar"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "desktop tanpa seleksi: EmptyState \"Select an item to see details\" atau panel ditutup (keputusan per surface)"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "header dengan nama item segera; body Skeleton + aria-busy"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "gagal memuat: InlineAlert C1 + Retry di body; header tetap"
+    },
+    {
+      "name": "stale",
+      "token_swaps": {},
+      "treatment": "item berubah atau dihapus oleh pihak lain saat panel terbuka: Banner/InlineAlert \"This item was updated\" + Reload; dihapus: EmptyState + tutup"
+    },
+    {
+      "name": "dirty",
+      "token_swaps": {},
+      "treatment": "variant edit dengan perubahan: memilih item lain, Close, atau Esc membuka Modal confirmation \"Discard changes?\""
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}ContextPanel: ListDetailPaneScaffold",
+    "flutter": "{ns}_context_panel.dart: Row adaptif via LayoutBuilder; halaman detail di phone",
+    "html": {
+      "element": "aside[aria-labelledby]",
+      "notes": "di grid AppShell area aside; tablet: position fixed di inline-end pada z-panel tanpa backdrop; resize memakai div[role=separator] + pointer dan keyboard; phone: rute terpisah"
+    },
+    "swiftui": "{Ns}ContextPanel: .inspector atau kolom detail NavigationSplitView"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Detail read-first dari item terpilih dengan aksi kontekstual.",
+      "name": "detail"
+    },
+    {
+      "description": "Form edit inline untuk item terpilih; punya state dirty dan action bar Save/Cancel.",
+      "name": "edit"
+    },
+    {
+      "description": "Properti objek pada kanvas atau editor; isi berganti mengikuti seleksi tanpa memindah fokus.",
+      "name": "inspector"
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+/* Modal · engine 1.8.0 reference (catalog/components/Modal.json). Tokens only (I3); logical properties only (§12.4).
+   Native <dialog> opened with showModal(): top layer + inert background + Esc (cancel event) + ::backdrop scrim.
+   Modal.js adds the initial-focus rule, focus return, Esc/scrim = Cancel with the dirty "Discard changes?" guard.
+   Scroll lock is pure CSS (:has). No-JS: the trigger is a link to a confirmation page (see fixture). */
+.ds-modal {
+  --_w: var(--layout-modal-md);
+  --_pad: var(--space-6);
+  z-index: var(--z-modal);
+  box-sizing: border-box;
+  inline-size: min(var(--_w), calc(100% - 2 * var(--space-4)));
+  max-inline-size: none;
+  max-block-size: calc(100dvh - 2 * var(--space-4));
+  margin: auto;
+  padding: 0;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  overflow: hidden;
+  font-family: var(--font-sans);
+}
+.ds-modal[data-size="sm"] { --_w: var(--layout-modal-sm); }
+.ds-modal[data-size="lg"] { --_w: var(--layout-modal-lg); }
+.ds-modal[open] { display: flex; flex-direction: column; animation: ds-modal-in var(--motion-base-duration) var(--motion-easing-enter); }
+.ds-modal::backdrop { background: var(--color-structure-scrim); animation: ds-modal-fade var(--motion-base-duration) var(--motion-easing-enter); }
+@keyframes ds-modal-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes ds-modal-fade { from { opacity: 0; } to { opacity: 1; } }
+:root:has(.ds-modal:modal) { overflow: hidden; } /* scroll lock while a modal is open */
+.ds-modal[aria-busy="true"] { cursor: progress; }
+
+.ds-modal__form { display: flex; flex-direction: column; flex: 1 1 auto; min-block-size: 0; margin: 0; }
+
+/* header: title (h2) + labelled Close at inline-end; stays visible while the body scrolls */
+.ds-modal__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex: none;
+  padding-block: var(--space-4) var(--space-2);
+  padding-inline: var(--_pad) var(--space-3);
+}
+.ds-modal__title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  padding-block-start: var(--space-2);
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  overflow-wrap: anywhere;
+}
+/* programmatic initial focus on the title always shows the ring (§6.9.4), also after a pointer-opened dialog */
+.ds-modal__title[tabindex="-1"]:focus, .ds-modal__title[data-force~="focus"] { outline: var(--border-width-thick) solid var(--color-focus-ring); outline-offset: var(--border-width-thick); border-radius: var(--radius-xs); }
+.ds-modal__close {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: max(var(--control-height-md), var(--target-current));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-modal__close::before,
+.ds-modal__action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-modal__description {
+  flex: none;
+  padding-inline: var(--_pad);
+  color: var(--color-structure-text-secondary);
+}
+
+/* body: the only scroll area; boundaries show while scrolled (data-scroll-start/-end from JS) */
+.ds-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: var(--space-4);
+  padding-inline: var(--_pad);
+  border-block: var(--border-width-thin) solid transparent;
+  scroll-padding-block: var(--space-4);
+}
+.ds-modal__body[data-scroll-start] { border-block-start-color: var(--color-structure-border); }
+.ds-modal__body[data-scroll-end] { border-block-end-color: var(--color-structure-border); }
+.ds-modal__body:focus-visible { outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-modal__body > p { max-inline-size: var(--layout-measure); }
+
+/* footer: Cancel before the primary action (reading order); wraps with the primary last (bottom on phone) */
+.ds-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-3);
+  flex: none;
+  padding-block: var(--space-3) var(--space-6);
+  padding-inline: var(--_pad);
+}
+.ds-modal__footer-reason { flex: 1 1 100%; color: var(--color-structure-text-secondary); text-align: end; }
+
+/* action buttons (Modal.Cancel / Modal.Action); Button composes here when present, same tokens */
+.ds-modal__action {
+  --_bg: var(--button-secondary-container-background);
+  --_bg-hover: var(--button-secondary-container-background-hover);
+  --_bg-pressed: var(--button-secondary-container-background-pressed);
+  --_fg: var(--button-secondary-label-color);
+  --_border: var(--button-secondary-container-border);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: var(--target-current);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  box-shadow: var(--button-container-shadow);
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-modal__action[data-variant="primary"] {
+  --_bg: var(--button-primary-container-background);
+  --_bg-hover: var(--button-primary-container-background-hover);
+  --_bg-pressed: var(--button-primary-container-background-pressed);
+  --_fg: var(--button-primary-label-color);
+  --_border: var(--button-primary-container-background);
+}
+.ds-modal__action[data-variant="destructive"] {
+  --_bg: var(--button-destructive-container-background);
+  --_bg-hover: var(--button-destructive-container-background-hover);
+  --_bg-pressed: var(--button-destructive-container-background-pressed);
+  --_fg: var(--button-destructive-label-color);
+  --_border: var(--button-destructive-container-background);
+}
+@media (hover: hover) {
+  .ds-modal__action:not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--_bg-hover); }
+  .ds-modal__action:not([aria-disabled="true"], [aria-busy="true"]):hover::before,
+  .ds-modal__close:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+  .ds-modal__close:not([aria-disabled="true"]):hover { background: var(--row-background-hover); color: var(--color-structure-text-primary); }
+}
+.ds-modal__action[data-force~="hover"] { background: var(--_bg-hover); }
+.ds-modal__action[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-modal__close[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-modal__close[data-force~="hover"] { background: var(--row-background-hover); color: var(--color-structure-text-primary); }
+.ds-modal__action:not([aria-disabled="true"], [aria-busy="true"]):active,
+.ds-modal__action[data-force~="pressed"] { background: var(--_bg-pressed); transform: var(--state-press-transform); }
+.ds-modal__action[aria-disabled="true"] {
+  --_bg: var(--color-structure-surface-sunken);
+  --_fg: var(--color-structure-text-disabled);
+  --_border: var(--color-structure-border);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.ds-modal__action[aria-busy="true"] { cursor: progress; }
+.ds-modal__action[aria-busy="true"] > :not(.ds-modal__spinner) { opacity: 0; }
+.ds-modal__spinner {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: calc(var(--icon-md) / -2);
+  margin-inline-start: calc(var(--icon-md) / -2);
+  border: var(--border-width-thick) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  animation: ds-modal-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+@keyframes ds-modal-spin { to { transform: rotate(360deg); } }
+
+/* simple fields used inside dialog bodies (TextField stand-in, same control tokens) */
+.ds-modal__field { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-modal__label { font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+.ds-modal__input {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-modal__input[aria-invalid="true"] { border-color: var(--control-container-border-invalid); border-width: var(--border-width-thick); }
+.ds-modal__input[readonly] { background: var(--control-container-background-readonly); }
+.ds-modal__field-error { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--color-semantic-critical-strong); }
+.ds-modal__field-error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: var(--space-1); }
+.ds-modal__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--layout-modal-sm) / 2)), 1fr)); gap: var(--space-4); }
+
+/* ErrorSummary / InlineAlert (attention C1) above the body content; receives focus on validation error */
+.ds-modal__alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width-thin) solid var(--attention-c1-border);
+  border-radius: var(--radius-md);
+  background: var(--attention-c1-background);
+  color: var(--attention-c1-foreground);
+}
+.ds-modal__alert > .ds-icon { color: var(--attention-c1-icon); margin-block-start: var(--space-1); }
+.ds-modal__alert a { display: inline-flex; align-items: center; min-block-size: var(--target-current); color: inherit; }
+.ds-modal__alert ul { margin: 0; padding-inline-start: var(--space-4); }
+.ds-modal__skeleton {
+  display: block;
+  block-size: var(--type-body-line);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-modal-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) infinite alternate;
+}
+.ds-modal__skeleton:nth-child(2n) { inline-size: 70%; }
+@keyframes ds-modal-pulse { from { opacity: 1; } to { opacity: 0.55; } }
+
+/* fullscreen (phone presentation of dialog forms): fills the viewport with safe-area insets */
+.ds-modal[data-variant="fullscreen"] { --_w: 100%; }
+@media (--bp-tablet-down) {
+  .ds-modal { --_pad: var(--space-4); }
+  .ds-modal:not([data-variant="confirmation"], [data-variant="destructive"]) { --_w: 100%; }
+  .ds-modal:is([data-variant="dialog"], [data-variant="fullscreen"], :not([data-variant])) {
+    inline-size: 100%;
+    block-size: 100%;
+    max-block-size: 100dvh;
+    border: 0;
+    border-radius: 0;
+    padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  }
+  .ds-modal:is([data-variant="dialog"], [data-variant="fullscreen"], :not([data-variant])) .ds-modal__header { border-block-end: var(--border-width-thin) solid var(--color-structure-border); padding-block-end: var(--space-3); }
+  .ds-modal__footer .ds-modal__action { min-block-size: max(var(--control-height-lg), var(--target-current)); flex: 1 1 auto; }
+}
+
+/* Static preview twin: a non-modal <dialog open> in flow inside a framed scrim region (no top layer, no inert). */
+.ds-modal-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-scrim);
+  overflow: hidden;
+}
+.ds-modal-frame > .ds-modal[data-static],
+.ds-modal-frame > .ds-modal-stack > .ds-modal[data-static] {
+  position: relative;
+  inset: auto;
+  z-index: var(--z-base);
+  max-block-size: none;
+  margin: 0;
+  animation: none;
+}
+.ds-modal-frame[data-height="short"] > .ds-modal[data-static] { max-block-size: calc(var(--layout-row-height) * 7); }
+.ds-modal-frame[data-device="phone"] { padding: 0; max-inline-size: calc(var(--layout-modal-sm) - var(--space-4)); margin-inline: auto; border: var(--border-width-thin) solid var(--color-structure-border-strong); }
+.ds-modal-frame[data-device="phone"] > .ds-modal[data-static] { inline-size: 100%; border: 0; border-radius: 0; }
+/* nested: the discard confirmation sits above the (inert-looking) first dialog with its own scrim */
+.ds-modal-stack { position: relative; display: grid; place-items: center; inline-size: 100%; }
+.ds-modal-stack > * { grid-area: 1 / 1; }
+.ds-modal-stack > .ds-modal[data-static]:first-child { inline-size: min(var(--_w), 100%); }
+.ds-modal-stack__scrim { align-self: stretch; justify-self: stretch; background: var(--color-structure-scrim); border-radius: var(--radius-lg); z-index: 1; }
+.ds-modal-stack > .ds-modal[data-static][data-nested] { z-index: 2; inline-size: min(var(--layout-modal-sm), calc(100% - 2 * var(--space-4))); }
+@media (--bp-tablet-down) {
+  .ds-modal-frame { padding: var(--space-3) 0; }
+  .ds-modal-frame > .ds-modal[data-static]:is([data-variant="dialog"], [data-variant="fullscreen"], :not([data-variant])),
+  .ds-modal-stack > .ds-modal[data-static]:first-child { block-size: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-modal[open], .ds-modal::backdrop { animation: none; }
+  .ds-modal__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; }
+  .ds-modal__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-modal { border: var(--border-width-thin) solid CanvasText; }
+  .ds-modal__action { border-color: ButtonText; }
+  .ds-modal__action[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+  .ds-modal__alert { border-color: CanvasText; }
+}

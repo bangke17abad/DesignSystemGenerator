@@ -1,0 +1,109 @@
+<!-- InlineAlert fixture · five classes (always tinted: -subtle background, -strong title, solid icon + 1px border), focus on an
+     action, retry loading, updated, compact, stacked C1 + C2 and offline with queued actions. Actions are Button (secondary /
+     tertiary), never the page primary. role=alert only for critical; role=status for the rest. -->
+<section class="ds-demo" data-ds-demo="critical (C1) · System error with Retry">
+  <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="ia-t1" data-ds-module="inline-alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title" id="ia-t1">We couldn't load invoices</p>
+      <p class="ds-inline-alert__body">Check your connection, then try again. Reference <bdi>ERR-5031</bdi>.</p>
+      <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target">Try again</button></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="warning (C2) · Policy">
+  <div class="ds-inline-alert" data-status="warning" role="status" aria-labelledby="ia-t2" data-ds-module="inline-alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title" id="ia-t2">This amount exceeds the approval limit of <bdi>5,000</bdi></p>
+      <p class="ds-inline-alert__body">Split the request or ask a manager to approve it.</p>
+      <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target">Review rules</button></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="neutral-negative (C3) · dismissible">
+  <div class="ds-inline-alert" data-status="neutral-negative" role="status" data-ds-module="inline-alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-neutral-negative"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title">This request was withdrawn</p>
+      <p class="ds-inline-alert__body">Dina withdrew it on <time datetime="2026-10-06"><bdi>6 Oct 2026</bdi></time>. No further action is needed.</p>
+    </div>
+    <button type="button" class="ds-inline-alert__dismiss" aria-label="Dismiss: This request was withdrawn"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="positive (C4) · dismiss hover">
+  <div class="ds-inline-alert" data-status="positive" role="status" data-ds-module="inline-alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-positive"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title"><bdi>12</bdi> rows were imported</p>
+      <p class="ds-inline-alert__body"><bdi>3</bdi> rows were skipped because the date is missing.</p>
+      <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target" data-variant="tertiary">View skipped rows</button></div>
+    </div>
+    <button type="button" class="ds-inline-alert__dismiss" data-force="hover" aria-label="Dismiss: 12 rows were imported"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="info (C5) · dismiss pressed + focus">
+  <div class="ds-inline-alert" data-status="info" role="status" data-ds-module="inline-alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-info"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title">Finance is reviewing this request</p>
+      <p class="ds-inline-alert__body">You can still edit attachments. Amount and vendor are locked until the review ends.</p>
+    </div>
+    <button type="button" class="ds-inline-alert__dismiss" data-force="pressed focus" aria-label="Dismiss: Finance is reviewing this request"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="focus on action + loading (retry running)">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="ia-t6">
+      <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+      <div class="ds-inline-alert__content">
+        <p class="ds-inline-alert__title" id="ia-t6">We couldn't save the payment run</p>
+        <p class="ds-inline-alert__body">The bank did not respond. Your changes are kept on this page.</p>
+        <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target" data-force="focus">Try again</button><a class="ds-button ds-target" data-variant="tertiary" href="#status">See bank status</a></div>
+      </div>
+    </div>
+    <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="ia-t7">
+      <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+      <div class="ds-inline-alert__content">
+        <p class="ds-inline-alert__title" id="ia-t7">We couldn't save the payment run</p>
+        <p class="ds-inline-alert__body">Trying again…</p>
+        <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target" aria-busy="true"><span>Try again</span><span class="ds-button__spinner" aria-hidden="true"></span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="updated + C1 and C2 stacked">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline-alert" data-status="critical" role="alert">
+      <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+      <div class="ds-inline-alert__content">
+        <p class="ds-inline-alert__title"><bdi>7</bdi> payments failed</p>
+        <p class="ds-inline-alert__body">Updated just now: 2 more failed since you opened this page.</p>
+      </div>
+    </div>
+    <div class="ds-inline-alert" data-status="warning" role="status">
+      <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg>
+      <div class="ds-inline-alert__content">
+        <p class="ds-inline-alert__title"><bdi>3</bdi> payments need a second approver</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="offline (C2) + queued actions">
+  <div class="ds-inline-alert" data-status="warning" role="status">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-offline"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title">You're offline</p>
+      <p class="ds-inline-alert__body">Changes are saved on this device and will be sent when you're back online. <bdi>3</bdi> changes waiting to send.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant compact (all classes)">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline-alert" data-variant="compact" data-status="critical" role="alert"><svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><div class="ds-inline-alert__content"><p class="ds-inline-alert__body">We couldn't load the activity feed.</p><div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target" data-variant="tertiary">Try again</button></div></div></div>
+    <div class="ds-inline-alert" data-variant="compact" data-status="warning" role="status"><svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><div class="ds-inline-alert__content"><p class="ds-inline-alert__body">Two fields need review before you submit.</p></div></div>
+    <div class="ds-inline-alert" data-variant="compact" data-status="neutral-negative" role="status"><svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-neutral-negative"/></svg><div class="ds-inline-alert__content"><p class="ds-inline-alert__body">This vendor was archived.</p></div></div>
+    <div class="ds-inline-alert" data-variant="compact" data-status="positive" role="status"><svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><div class="ds-inline-alert__content"><p class="ds-inline-alert__body">All receipts are attached.</p></div></div>
+    <div class="ds-inline-alert" data-variant="compact" data-status="info" role="status"><svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-info"/></svg><div class="ds-inline-alert__content"><p class="ds-inline-alert__body">Exchange rates refresh daily at <time datetime="06:00"><bdi>06:00</bdi></time>.</p></div></div>
+  </div>
+</section>

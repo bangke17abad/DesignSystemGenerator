@@ -1,0 +1,201 @@
+/* SegmentedControl · engine 1.8.0 reference (catalog/components/SegmentedControl.json). Tokens only (I3); logical properties only (§12.4).
+   single: fieldset[role=radiogroup] > legend + span.segment > input[type=radio] + label[for] (native radios: arrows, one Tab stop
+   and forms work without JS).
+   multiple: the same markup with input[type=checkbox] (native toggles keep working without JS; see fixture note).
+   The input is stretched over its segment (appearance: none), so the whole segment is the target and the input itself draws
+   the inset focus ring. Selected = raised surface + interaction border + check glyph + heavier label (never colour alone, UB2).
+   SegmentedControl.js adds blocked segments (reachable, never selected, reason announced), icon-only Tooltips and the phone
+   Select fallback sync. */
+.ds-segmented-control {
+  --_ctl: var(--control-height-md);
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-sans);
+}
+.ds-segmented-control[data-size="sm"] { --_ctl: var(--control-height-sm); }
+.ds-segmented-control[data-size="lg"] { --_ctl: max(var(--control-height-lg), var(--target-min-touch)); }
+.ds-segmented-control:not([data-full-width]) { align-self: flex-start; } /* intrinsic width inside stacks */
+.ds-segmented-control[data-full-width] { display: flex; inline-size: 100%; align-self: stretch; }
+
+.ds-segmented-control__legend {
+  float: none;
+  margin-block-end: var(--space-1);
+  padding: 0;
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+}
+
+/* group: sunken track with a control border; equal-width segments; wraps to a vertical stack at 200% text (same arrow order) */
+.ds-segmented-control__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-segmented-control[data-stack] .ds-segmented-control__track { grid-auto-flow: row; }
+
+.ds-segmented-control__segment {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-inline-size: var(--target-current);
+  min-block-size: max(calc(var(--_ctl) - 2 * var(--space-1)), var(--target-current));
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-align: center;
+  overflow-wrap: anywhere; /* labels wrap (equal heights in the row); never an ellipsis */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), box-shadow var(--motion-fast-duration) var(--motion-easing-standard), transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-segmented-control[data-size="sm"] .ds-segmented-control__segment { padding-inline: var(--space-2); }
+/* state layer (L16) */
+.ds-segmented-control__segment::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+/* decorative divider between two unselected segments (hidden next to the selected one) */
+.ds-segmented-control__segment + .ds-segmented-control__segment::after {
+  content: "";
+  position: absolute;
+  inset-block: var(--space-2);
+  inset-inline-start: calc(-1 * (var(--space-1) + var(--border-width-thin)) / 2);
+  border-inline-start: var(--border-width-thin) solid var(--color-structure-border);
+  pointer-events: none;
+}
+.ds-segmented-control__segment:has(> input:checked)::after,
+.ds-segmented-control__segment:has(> input:checked) + .ds-segmented-control__segment::after,
+.ds-segmented-control[data-stack] .ds-segmented-control__segment::after { display: none; }
+
+.ds-segmented-control__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  cursor: inherit;
+}
+/* the native input covers the segment: it is the target, the focus owner and the accessible control */
+.ds-segmented-control__input {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: inherit;
+}
+.ds-segmented-control__input:focus-visible,
+.ds-segmented-control__input[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-segmented-control__segment .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+[dir="rtl"] .ds-segmented-control__segment .ds-icon[data-mirror] { transform: scaleX(-1); }
+.ds-segmented-control__check { display: none; }
+.ds-segmented-control__segment .ds-segmented-control__check { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+[dir="rtl"] .ds-segmented-control__check { transform: none; } /* the check never mirrors */
+
+/* hover (pointer only) / pressed */
+@media (hover: hover) {
+  .ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):hover { color: var(--color-structure-text-primary); background: var(--color-interaction-subtle); }
+  .ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):hover::before { opacity: var(--state-layer-hover-opacity); }
+  .ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):has(> input:checked):hover { background: var(--color-structure-surface-raised); }
+}
+.ds-segmented-control__segment[data-force~="hover"] { color: var(--color-structure-text-primary); background: var(--color-interaction-subtle); }
+.ds-segmented-control__segment[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):has(> input:active),
+.ds-segmented-control__segment[data-force~="pressed"] { color: var(--color-structure-text-primary); background: var(--color-interaction-subtle); transform: var(--state-press-transform); }
+.ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):has(> input:active)::before,
+.ds-segmented-control__segment[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* selected: raised surface + interaction border + check + heavier primary label */
+.ds-segmented-control__segment:has(> input:checked),
+.ds-segmented-control__segment:has(> input:checked)[data-force~="hover"] {
+  background: var(--color-structure-surface-raised);
+  box-shadow: var(--elevation-1), inset 0 0 0 var(--border-width-thin) var(--color-interaction-border);
+  color: var(--color-structure-text-primary);
+  font-weight: var(--type-h3-weight);
+}
+.ds-segmented-control__segment:has(> input:checked) .ds-segmented-control__check { display: block; }
+
+/* blocked segment (aria-disabled + reason): reachable by arrows, never selected; lock glyph; no hover feedback */
+.ds-segmented-control__segment:has(> input[aria-disabled="true"]) { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-segmented-control__segment:has(> input[aria-disabled="true"]) .ds-icon[data-icon="restricted"] { inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--color-structure-text-secondary); }
+/* whole control blocked (disabled + selected): selection stays readable, check muted */
+.ds-segmented-control[data-blocked] .ds-segmented-control__track { background: var(--color-structure-surface-sunken); border-color: var(--color-structure-border); }
+.ds-segmented-control[data-blocked] .ds-segmented-control__segment:has(> input:checked) { box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-structure-border-strong); color: var(--color-structure-text-secondary); }
+.ds-segmented-control[data-blocked] .ds-segmented-control__check { color: var(--color-structure-text-disabled); }
+.ds-segmented-control__reason { color: var(--color-structure-text-secondary); }
+
+/* read-only: the choice as full-contrast text, no control */
+.ds-segmented-control__readonly {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  color: var(--color-structure-text-primary);
+}
+.ds-segmented-control__readonly-label { font-weight: var(--type-label-weight); }
+
+/* loading: the controlled region is busy (Skeleton); the control is never locked */
+.ds-segmented-control__region { display: flex; flex-direction: column; gap: var(--space-2); padding-block: var(--space-3); }
+.ds-segmented-control__skeleton {
+  display: block;
+  block-size: var(--type-body-line);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-segmented-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) infinite alternate;
+}
+.ds-segmented-control__skeleton:nth-child(2) { inline-size: 80%; }
+.ds-segmented-control__skeleton:nth-child(3) { inline-size: 60%; }
+@keyframes ds-segmented-pulse { from { opacity: 1; } to { opacity: 0.55; } }
+
+/* phone: full width, size lg; long labels with > 3 segments switch to a labelled Select (data-phone="select") */
+.ds-segmented-control__responsive { display: flex; flex-direction: column; gap: var(--space-2); min-inline-size: 0; }
+.ds-segmented-control__responsive > .ds-segmented-control__fallback { display: none; }
+@media (--bp-tablet-down) {
+  .ds-segmented-control, .ds-segmented-control:not([data-full-width]) { display: flex; inline-size: 100%; align-self: stretch; }
+  .ds-segmented-control:not([data-size="lg"]) { --_ctl: max(var(--control-height-lg), var(--target-min-touch)); }
+  .ds-segmented-control__responsive > .ds-segmented-control { display: none; }
+  .ds-segmented-control__responsive > .ds-segmented-control__fallback { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-segmented-control__segment { transition: none; }
+  .ds-segmented-control__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-segmented-control__track { border-color: CanvasText; }
+  .ds-segmented-control__segment:has(> input:checked) { border: var(--border-width-thick) solid Highlight; }
+  .ds-segmented-control__segment:has(> input[aria-disabled="true"]) { color: GrayText; }
+}

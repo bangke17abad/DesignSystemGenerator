@@ -1,0 +1,271 @@
+<!-- AppShell fixture · variants standard / focused / kiosk × states default, nav-collapsed, nav-drawer-open, panel-open, loading, offline, plus RTL and 200% text (catalog preview, §6.9). Shells use data-contained so overlays stay inside the demo box; in a page the root is <body class="ds-app-shell">. -->
+<section class="ds-demo" data-ds-demo="variant standard · state default (landmarks, SkipLink first, JS drawer below bp-desktop)">
+  <div class="ds-stack" data-gap="3">
+  <div class="ds-app-shell" data-contained data-ds-module="app-shell">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell1-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header">
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell1-help">Help</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell1-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell1-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell1-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell1-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell1-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell1-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">Projects</h2>
+          <p class="ds-text-secondary">12 active projects · 3 need review this week.</p>
+          <p>Pick a project to see its budget, owners and open approvals.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ds-app-shell__bottom-bar"><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+  <p class="ds-text-secondary">Landmarks in DOM order: <code class="ds-text-code">header</code> (banner) → <code class="ds-text-code">nav</code> “Main navigation” → <code class="ds-text-code">main#main</code> → <code class="ds-text-code">aside</code> (when a panel is open) → bottom bar (phone). Tab once inside the box to reveal the skip link.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="nav-collapsed + panel-open (desktop: rail + docked panel; tablet: overlay panel; phone: panel below main)">
+  <div class="ds-app-shell" data-contained data-nav="collapsed">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell2-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header">
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell2-help">Help</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell2-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell2-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell2-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell2-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell2-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell2-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">Projects</h2>
+          <p class="ds-text-secondary">12 active projects · 3 need review this week.</p>
+          <p>Pick a project to see its budget, owners and open approvals.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="ds-app-shell__aside" id="shell2-panel" aria-label="Project details">
+      <div class="ds-stack" data-gap="2">
+        <h2 class="ds-text-h3">Website refresh</h2>
+        <p class="ds-text-secondary">Owner: Dana Pratama · Budget 82% used</p>
+        <a class="ds-link" data-variant="standalone" href="#shell2-open">Open project</a>
+      </div>
+    </aside>
+    <div class="ds-app-shell__bottom-bar"><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state nav-drawer-open (static: background inert, scrim; drawer applies below bp-desktop)">
+  <div class="ds-app-shell" data-contained data-ds-enhanced data-nav="open">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell3-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header" inert>
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell3-help">Help</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell3-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell3-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell3-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell3-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell3-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell3-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content" inert>
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">Projects</h2>
+          <p class="ds-text-secondary">12 active projects · 3 need review this week.</p>
+          <p>Pick a project to see its budget, owners and open approvals.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ds-app-shell__bottom-bar" inert><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="nav-drawer-open + text 200%">
+  <div data-ds-zoom="200">
+  <div class="ds-app-shell" data-contained data-ds-enhanced data-nav="open">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell4-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header" inert>
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell4-help">Help</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell4-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell4-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell4-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell4-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell4-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell4-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content" inert>
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">Projects</h2>
+          <p class="ds-text-secondary">12 active projects · 3 need review this week.</p>
+          <p>Pick a project to see its budget, owners and open approvals.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ds-app-shell__bottom-bar" inert><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state loading (shell renders at once, main aria-busy with placeholders)">
+  <div class="ds-app-shell" data-contained>
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell5-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header">
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell5-help">Help</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell5-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell5-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell5-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell5-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell5-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell5-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content" aria-busy="true">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3"><span class="ds-vh">Loading projects…</span><span class="ds-page-header__placeholder" aria-hidden="true"></span></h2>
+          <span class="ds-page-header__placeholder" aria-hidden="true" style="inline-size: 100%"></span>
+          <span class="ds-page-header__placeholder" aria-hidden="true" style="inline-size: 80%"></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-app-shell__bottom-bar"><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state offline (system banner below the global bar)">
+  <div class="ds-app-shell" data-contained>
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell6-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header">
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">Ledger</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell6-help">Help</a></div>
+    </header>
+    <div class="ds-app-shell__banner"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-offline"/></svg><p>You’re offline. Changes are saved on this device and sync when you reconnect.</p></div>
+    <nav class="ds-app-shell__nav" id="shell6-nav" aria-label="Main navigation">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell6-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">Home</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell6-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">Projects</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell6-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">Notifications</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell6-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">Settings</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell6-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">Projects</h2>
+          <p class="ds-text-secondary">12 active projects · 3 need review this week.</p>
+          <p>Pick a project to see its budget, owners and open approvals.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ds-app-shell__bottom-bar"><button type="button" class="ds-button ds-target" data-variant="primary">New project</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant focused (no navigation, labelled exit)">
+  <div class="ds-app-shell" data-contained data-variant="focused">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell7-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header">
+      <span class="ds-app-shell__brand">Checkout</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell7-exit">Exit checkout</a></div>
+    </header>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell7-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <p class="ds-text-secondary">Step 2 of 3</p>
+          <h2 class="ds-text-h3">Payment details</h2>
+          <p>Your card is charged only after you confirm the order on the next step.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant kiosk (no navigation, no full global bar)">
+  <div class="ds-app-shell" data-contained data-variant="kiosk">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell8-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell8-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3" data-align="center">
+          <h2 class="ds-text-h2">Scan your ticket</h2>
+          <p class="ds-text-secondary">Hold the code under the light. Ask staff if the gate stays closed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (nav at inline-start = right, panel at inline-end)" dir="rtl" lang="ar">
+  <div class="ds-app-shell" data-contained>
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#shell9-main" data-ds-module="skip-link">تخطَّ إلى المحتوى الرئيسي</a></div>
+    <header class="ds-app-shell__header">
+      <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="فتح التنقل" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+      <span class="ds-app-shell__brand">دفتر</span>
+      <div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#shell9-help">مساعدة</a></div>
+    </header>
+    <nav class="ds-app-shell__nav" id="shell9-nav" aria-label="التنقل الرئيسي">
+      <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="إغلاق التنقل"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <ul class="ds-app-shell__nav-list" role="list">
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell9-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-app-shell__nav-label">الرئيسية</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell9-projects" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-app-shell__nav-label">المشاريع</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell9-notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-app-shell__nav-label">الإشعارات</span></a></li>
+        <li><a class="ds-link ds-app-shell__nav-item" data-variant="standalone" href="#shell9-settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-app-shell__nav-label">الإعدادات</span></a></li>
+      </ul>
+    </nav>
+    <!-- In a page this is <main class="ds-app-shell__main" id="main" tabindex="-1">; the preview page already owns <main>, so the demo uses a labelled region. -->
+    <div class="ds-app-shell__main" id="shell9-main" tabindex="-1" data-ds-focus-target role="region" aria-label="المحتوى الرئيسي">
+      <div class="ds-container">
+        <div class="ds-stack" data-gap="3">
+          <h2 class="ds-text-h3">المشاريع</h2>
+          <p class="ds-text-secondary">١٢ مشروعًا نشطًا · ٣ تحتاج إلى مراجعة هذا الأسبوع.</p>
+          <p>اختر مشروعًا لعرض الميزانية والمالكين والموافقات المفتوحة.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="ds-app-shell__aside" id="shell9-panel" aria-label="تفاصيل المشروع">
+      <div class="ds-stack" data-gap="2">
+        <h2 class="ds-text-h3">تحديث الموقع</h2>
+        <p class="ds-text-secondary">المالك: دانا · استُخدم ٨٢٪ من الميزانية</p>
+        <a class="ds-link" data-variant="standalone" href="#shell9-open">فتح المشروع</a>
+      </div>
+    </aside>
+    <div class="ds-app-shell__bottom-bar"><button type="button" class="ds-button ds-target" data-variant="primary">مشروع جديد</button></div>
+    <div class="ds-app-shell__scrim"></div>
+  </div>
+</section>

@@ -1,0 +1,99 @@
+/* Link · engine 1.8.0 reference (catalog/components/Link.json). Tokens only (I3); logical properties only (§12.4).
+   inline: an <a href> in running text. Plain anchors without a class get the inline treatment too, so CMS/prose links are never
+   colour-only (UB6). Inline links keep the SC 2.5.8 inline exception: their hit area is the text line.
+   standalone: <a class="ds-link" data-variant="standalone"> outside a sentence, hit area >= target-current.
+   Always underlined (non-colour marker); hover thickens the underline; current = aria-current="page" (weight + text colour);
+   blocked = role="link" aria-disabled="true" tabindex="0" without href + visible reason (UB10). */
+.ds-link,
+:where(a[href]:not([class]), a[role="link"]:not([class])) {
+  --_fg: var(--color-interaction-default);
+  --_fg-hover: var(--color-interaction-hover);
+  --_fg-pressed: var(--color-interaction-pressed);
+  color: var(--_fg);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  text-decoration-skip-ink: auto;
+  border-radius: var(--radius-xs);
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone; /* focus ring and underline follow every line fragment of a wrapped inline link */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--motion-fast-duration) var(--motion-easing-standard), text-decoration-thickness var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* inline icons (external, download) sit on the text line */
+:is(.ds-link:not([data-variant="standalone"]), :where(a[href]:not([class]))) .ds-icon {
+  display: inline-block;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  vertical-align: -0.125em;
+  margin-inline-start: var(--space-1);
+}
+
+.ds-link[data-variant="standalone"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  max-inline-size: 100%;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding-block: var(--space-1);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  vertical-align: middle;
+}
+.ds-link[data-variant="standalone"] .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+.ds-link[data-variant="standalone"] .ds-icon[data-size="sm"] { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-link__label { min-inline-size: 0; }
+/* the external marker never wraps onto its own line away from the last word */
+.ds-link__tail { white-space: nowrap; }
+.ds-link__tail .ds-icon,
+.ds-link[data-variant="standalone"] .ds-link__tail .ds-icon {
+  display: inline-block;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  vertical-align: -0.125em;
+  margin-inline-start: var(--space-1);
+}
+
+@media (hover: hover) {
+  :is(.ds-link, :where(a[href]:not([class]))):not([aria-disabled="true"]):hover { color: var(--_fg-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-link[data-force~="hover"], :where(a[href]:not([class]))[data-force~="hover"] { color: var(--_fg-hover); text-decoration-thickness: var(--border-width-thick); }
+:is(.ds-link, :where(a[href]:not([class]))):not([aria-disabled="true"]):active,
+.ds-link[data-force~="pressed"], :where(a[href]:not([class]))[data-force~="pressed"] { color: var(--_fg-pressed); }
+
+/* current: weight + primary text colour + underline kept, so it is never colour-only */
+:is(.ds-link, :where(a[href]:not([class])))[aria-current]:not([aria-current="false"]) {
+  --_fg: var(--color-structure-text-primary);
+  --_fg-hover: var(--color-structure-text-primary);
+  --_fg-pressed: var(--color-structure-text-primary);
+  font-weight: bolder;
+}
+
+/* blocked with reason: focusable, no underline, lock icon, visible reason linked via aria-describedby */
+:is(.ds-link, :where(a[role="link"]:not([class])))[aria-disabled="true"] {
+  --_fg: var(--color-structure-text-disabled);
+  --_fg-hover: var(--color-structure-text-disabled);
+  --_fg-pressed: var(--color-structure-text-disabled);
+  text-decoration-line: none;
+  cursor: not-allowed;
+}
+.ds-link[aria-disabled="true"] .ds-icon[data-icon="restricted"] { color: var(--color-structure-text-secondary); }
+.ds-link__reason { display: block; color: var(--color-structure-text-secondary); }
+
+/* on surface-inverse the link uses the inverse text colour; base.css switches the ring to focus-ring-inverse */
+[data-ds-on="inverse"] :is(.ds-link, a[href]:not([class])) {
+  --_fg: var(--color-structure-text-oninverse);
+  --_fg-hover: var(--color-structure-text-oninverse);
+  --_fg-pressed: var(--color-structure-text-oninverse);
+}
+
+@media (prefers-reduced-motion: reduce) { .ds-link, :where(a[href]:not([class])) { transition: none; } }
+@media (forced-colors: active) {
+  .ds-link, :where(a[href]:not([class])) { color: LinkText; }
+  :is(.ds-link, a[role="link"])[aria-disabled="true"] { color: GrayText; }
+}

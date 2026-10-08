@@ -1,0 +1,427 @@
+{
+  "accessibility": {
+    "attributes": [
+      "label + nilai + unit + delta dibaca sebagai satu kalimat per metrik (\"Open items, 24, up 3 from last week\")",
+      "ikon panah delta aria-hidden; arah ditulis sebagai kata (VisuallyHidden) bukan hanya simbol",
+      "aria-busy=\"true\" saat loading",
+      "pembaruan live tidak memakai aria-live pada setiap tick; ringkasan diumumkan lewat LiveAnnouncer polite hanya saat refresh diminta atau ambang dilewati"
+    ],
+    "focus_order": "tidak ada tab stop kecuali info-trigger dan Retry dalam urutan DOM metrik",
+    "native": {
+      "compose": "Row/FlowRow dengan Modifier.semantics(mergeDescendants = true) per metrik; TextStyle(fontFeatureSettings = \"tnum\"); ikon contentDescription = null",
+      "flutter": "Row/Wrap berisi Semantics(label: label, value: nilai terformat) per metrik dengan ExcludeSemantics pada ikon; TextStyle(fontFeatures: [FontFeature.tabularFigures()])",
+      "swiftui": "LabeledContent(label) { Text(value, format: .number) } atau VStack + .accessibilityElement(children: .combine); .monospacedDigit()"
+    },
+    "politeness": "polite",
+    "role": "dl dengan dt (label) dan dd (nilai, unit, delta) per metrik; native: satu elemen gabungan per metrik",
+    "sr_label": "label metrik + nilai terformat locale + unit tertulis penuh (bukan simbol saja) + delta dengan kata arah dan periode",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "dl sebaris (Inline yang boleh wrap) dengan pemisah opsional antar item",
+      "tokens": [
+        "space-4",
+        "space-6",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "dt; nama metrik singkat di atas atau sebelum nilai",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "dd; angka utama dengan tabular-nums; tidak pernah dipotong",
+      "tokens": [
+        "type-h2-size",
+        "type-h2-line",
+        "type-h2-weight",
+        "type-h2-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "unit",
+      "role": "unit atau mata uang sesuai locale (sebelum atau sesudah nilai)",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "delta",
+      "role": "perubahan terhadap pembanding: ikon panah arah + tanda + angka + periode; warna netral (bukan status)",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "freshness",
+      "role": "\"As of {waktu}\" bila data live atau tersimpan (I6)",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-tertiary"
+      ]
+    },
+    {
+      "part": "info-trigger",
+      "role": "IconButton opsional yang membuka Popover definisi metrik",
+      "tokens": [
+        "icon-sm",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "skeleton",
+      "role": "Skeleton selebar angka tipikal per item",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-xs"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onRetry",
+        "payload": "{ metricId: string }",
+        "when": "Retry pada item yang gagal"
+      }
+    ],
+    "parts": [
+      "InlineMetrics.Item (metricId, label, value, unit, format, delta: { direction: \"up\" | \"down\" | \"flat\"; amount: number; period: string }, unavailable, errorText, definition)"
+    ],
+    "props": [
+      {
+        "default": "default",
+        "description": "Susunan label dan nilai.",
+        "name": "variant",
+        "required": false,
+        "type": "\"default\" | \"inline\" | \"with-delta\""
+      },
+      {
+        "description": "Nama aksesibel grup metrik bila tidak ada heading di dekatnya.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Waktu data untuk freshness.",
+        "name": "asOf",
+        "required": false,
+        "type": "string (ISO 8601)"
+      },
+      {
+        "default": "false",
+        "description": "Skeleton pada semua nilai.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "metrik tidak fokusabel; hanya info-trigger dan Retry yang menerima fokus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka Popover definisi metrik; Esc menutup dan fokus kembali",
+      "trigger": "Enter atau Space pada info-trigger"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka definisi atau memuat ulang item tersebut",
+      "trigger": "klik info-trigger atau Retry"
+    },
+    {
+      "input": "touch",
+      "result": "Popover (phone: Sheet) definisi; area ≥ target-min-touch",
+      "trigger": "tap info-trigger"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Open items 24",
+        "Average time 3.4 h",
+        "Up 12% vs last week",
+        "As of 09:30",
+        "Not available"
+      ],
+      "id-ID": [
+        "Item terbuka 24",
+        "Waktu rata-rata 3,4 jam",
+        "Naik 12% dari minggu lalu",
+        "Per 09.30",
+        "Tidak tersedia"
+      ]
+    },
+    "rules": [
+      "Maksimal 3 metrik; lebih dari itu pilih yang menjawab keputusan layar (I9).",
+      "Label = kata benda singkat dari glosarium; unit tertulis jelas; periode delta selalu disebut.",
+      "Delta memakai tanda dan kata arah (\"up\", \"down\"), tidak dinilai baik/buruk lewat warna.",
+      "Angka dibulatkan konsisten; singkatan ribuan/jutaan mengikuti locale dan nilai penuh ada di nama aksesibel.",
+      "Nilai tidak tersedia ditulis \"Not available\", tidak pernah 0."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Popover",
+    "Skeleton",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Batasi pada tiga angka yang mendukung keputusan di layar ini.",
+    "Tulis periode pembanding untuk setiap delta.",
+    "Tampilkan kesegaran data untuk nilai live atau tersimpan."
+  ],
+  "dont": [
+    {
+      "ref": "UB12",
+      "text": "Mewarnai nilai atau delta hijau/merah sebagai penanda baik/buruk."
+    },
+    {
+      "text": "Menampilkan lebih dari tiga metrik sebaris."
+    },
+    {
+      "ref": "I6",
+      "text": "Menampilkan 0 untuk nilai yang belum tersedia."
+    },
+    {
+      "ref": "UB3",
+      "text": "Mengecilkan angka agar muat; pakai wrap."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus dua baris; nilai tetap utuh; item membungkus ke baris baru",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "item menjadi satu kolom bertumpuk; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "komponen tidak dirender",
+      "case": "0 metrik"
+    },
+    {
+      "behaviour": "disingkat sesuai locale dengan nilai penuh di nama aksesibel; negatif dengan tanda minus dan kata \"minus\" di nama aksesibel",
+      "case": "nilai sangat besar (99.999.999+) atau negatif"
+    },
+    {
+      "behaviour": "skeleton per nilai; label tetap",
+      "case": "loading"
+    },
+    {
+      "behaviour": "nilai tersimpan dengan \"As of {waktu}\"; tidak tampil seolah live (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "hanya item gagal menampilkan error + Retry",
+      "case": "satu metrik gagal, lainnya berhasil"
+    },
+    {
+      "behaviour": "urutan item dicerminkan; angka, persen, dan unit diisolasi bidi; panah delta naik/turun tidak dicerminkan",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "Lebih dari 3 InlineMetrics.Item ditolak",
+    "Nilai tanpa font-variant-numeric: tabular-nums ditolak (css-pattern)",
+    "Token color-semantic-* pada value atau delta ditolak (token-rule, I1)",
+    "Delta tanpa period ditolak"
+  ],
+  "name": "InlineMetrics",
+  "preview": {
+    "combinations": [
+      "error+focus (Retry)",
+      "stale + StatusLabel C2",
+      "3 item wrap di phone",
+      "teks 200%",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "loading",
+      "updating",
+      "stale",
+      "unavailable",
+      "error"
+    ],
+    "variants": [
+      "default",
+      "inline",
+      "with-delta"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan maksimal tiga angka kunci sebaris (label, nilai, unit, perubahan opsional) di header halaman, kartu, atau panel, agar pengguna menangkap ringkasan tanpa membuka laporan.",
+    "when_not_to_use": [
+      "Untuk lebih dari tiga angka: pakai DescriptionList atau Table.",
+      "Untuk tren atau perbandingan sepanjang waktu: pakai Chart (dengan tabel data).",
+      "Untuk status atau peringatan: pakai StatusLabel atau InlineAlert; InlineMetrics tidak mewarnai nilai sebagai status.",
+      "Untuk progres terhadap target: pakai ProgressBar dengan teks nilai.",
+      "Untuk jumlah belum dibaca pada navigasi: pakai Badge."
+    ]
+  },
+  "related": [
+    "DescriptionList",
+    "Chart",
+    "Card",
+    "PageHeader",
+    "ProgressBar"
+  ],
+  "responsive": [
+    {
+      "behaviour": "item membungkus ke baris baru atau menjadi grid 2 kolom; label di atas nilai; tidak ada ellipsis pada nilai",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "satu baris bila muat; pemisah antar item",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "satu baris di header halaman atau kartu; variant inline di toolbar",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "metrik yang tidak boleh diketahui role tidak dirender; metrik lain tidak digeser ke posisinya dengan label menyesatkan"
+    },
+    {
+      "pattern": "read-only",
+      "when": "selalu read-only; perbedaan role hanya menentukan metrik mana yang tampil"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Urutan item mengikuti arah baca; panah delta naik/turun tidak dicerminkan; posisi simbol mata uang dan unit mengikuti locale, bukan arah; angka diisolasi bidi."
+  },
+  "sizes": {
+    "not_applicable": "InlineMetrics tidak interaktif; ukuran dari skala tipe (type-h2 untuk nilai, type-label untuk label) dan sumbu kepadatan, bukan prop size; info-trigger mengikuti ukuran IconButton."
+  },
+  "state_combinations": [
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "label tetap, nilai skeleton",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada Retry item yang gagal",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "metrik tidak interaktif; hanya info-trigger yang punya hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "nilai text-primary, label text-secondary"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "skeleton": "color-structure-skeleton"
+      },
+      "treatment": "skeleton per item; container aria-busy; label tetap tampil"
+    },
+    {
+      "name": "updating",
+      "token_swaps": {},
+      "treatment": "nilai lama tetap; perubahan diumumkan polite hanya bila pengguna meminta refresh atau melewati ambang yang ditetapkan brief; tanpa animasi angka berputar di reduced motion"
+    },
+    {
+      "name": "stale",
+      "token_swaps": {
+        "freshness": "color-structure-text-secondary"
+      },
+      "treatment": "freshness menampilkan \"As of {waktu}\" + ikon jam; bila melewati batas kesegaran, StatusLabel C2 di samping (bukan mewarnai nilai)"
+    },
+    {
+      "name": "unavailable",
+      "token_swaps": {
+        "value": "color-structure-text-secondary"
+      },
+      "treatment": "nilai tidak tersedia: tanda pisah + teks \"Not available\" (aksesibel) + alasan singkat di freshness; bukan 0"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "value": "color-semantic-critical-strong"
+      },
+      "treatment": "gagal memuat: ikon kritis + \"Couldn't load\" + Retry menggantikan nilai item itu saja"
+    }
+  ],
+  "target_hints": {
+    "compose": "FlowRow dibungkus {Ns}InlineMetrics",
+    "flutter": "Wrap + Semantics dibungkus {ns}_inline_metrics.dart",
+    "html": {
+      "element": "dl",
+      "notes": "div pembungkus per pasangan dt/dd diperbolehkan; tabular-nums pada dd; tanpa JS berfungsi penuh"
+    },
+    "swiftui": "HStack/ViewThatFits + LabeledContent dibungkus {Ns}InlineMetrics"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Label di atas nilai; untuk header halaman dan kartu ringkasan.",
+      "name": "default"
+    },
+    {
+      "description": "Label dan nilai satu baris (\"Items 24\"); untuk toolbar dan header Table.",
+      "name": "inline"
+    },
+    {
+      "description": "Menambahkan delta netral dengan arah, tanda, angka, dan periode; arah baik/buruk tidak diwarnai (I1).",
+      "name": "with-delta"
+    }
+  ]
+}

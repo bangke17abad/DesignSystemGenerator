@@ -1,0 +1,232 @@
+/* Pagination · engine 1.8.0 reference (catalog/components/Pagination.json). Tokens only (I3); logical properties only (§12.4).
+   nav[aria-label] > summary + ul > li > a[href="?page=n"] (URL based, works without JS: each link reloads the page).
+   Current = filled interaction-default + on-solid label + border + heavier weight + aria-current="page" (never colour alone, UB2).
+   Previous/Next are labelled; at a boundary they stay visible and focusable with aria-disabled + reason (layout never shifts).
+   Desktop: first, …, current ±2, …, last + Rows per page + Go to page. Tablet: current ±1. Phone: compact (Previous / "Page 3 of 16"
+   / Next, full width, size lg; tools hidden). Pagination.js: fetch-style page change with focus to the collection heading,
+   polite range announcement, jump validation, page-size change; module "pagination-load-more" for the load-more variant. */
+.ds-pagination {
+  --_h: max(var(--control-height-md), var(--target-current));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  min-inline-size: 0;
+  color: var(--color-structure-text-primary);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+.ds-pagination[data-size="sm"] { --_h: max(var(--control-height-sm), var(--target-current)); }
+.ds-pagination[data-size="lg"] { --_h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+
+.ds-pagination__summary { color: var(--color-structure-text-secondary); font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-pagination__summary > * { unicode-bidi: isolate; }
+.ds-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-pagination__item { display: flex; }
+
+/* page item + Previous/Next share the geometry; equal minimum width, tabular numerals */
+.ds-pagination__page,
+.ds-pagination__step,
+.ds-pagination__go,
+.ds-pagination__more {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-block-size: var(--_h);
+  min-inline-size: var(--_h);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-primary);
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-pagination__step,
+.ds-pagination__go,
+.ds-pagination__more {
+  padding-inline: var(--space-3);
+  border-color: var(--button-secondary-container-border);
+  background: var(--button-secondary-container-background);
+  color: var(--button-secondary-label-color);
+  box-shadow: var(--button-container-shadow);
+}
+.ds-pagination__step .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+[dir="rtl"] .ds-pagination__step .ds-icon[data-mirror] { transform: scaleX(-1); }
+/* state layer (L16) */
+.ds-pagination__page::before,
+.ds-pagination__step::before,
+.ds-pagination__go::before,
+.ds-pagination__more::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .ds-pagination__page:not([aria-current="page"], [aria-busy="true"]):hover { background: var(--color-interaction-subtle); }
+  .ds-pagination__page:not([aria-current="page"], [aria-busy="true"]):hover::before,
+  :is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more):not([aria-disabled="true"], [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+  :is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more):not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--button-secondary-container-background-hover); }
+}
+.ds-pagination__page:not([aria-current="page"])[data-force~="hover"] { background: var(--color-interaction-subtle); }
+.ds-pagination__page:not([aria-current="page"])[data-force~="hover"]::before,
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[data-force~="hover"] { background: var(--button-secondary-container-background-hover); }
+.ds-pagination__page:not([aria-current="page"], [aria-busy="true"]):active,
+.ds-pagination__page[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+.ds-pagination__page:not([aria-current="page"], [aria-busy="true"]):active::before,
+.ds-pagination__page[data-force~="pressed"]::before,
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more):not([aria-disabled="true"], [aria-busy="true"]):active::before,
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more):not([aria-disabled="true"], [aria-busy="true"]):active,
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[data-force~="pressed"] { background: var(--button-secondary-container-background-pressed); }
+
+/* current: filled + border + heavier label; stays a focusable link that does not reload */
+.ds-pagination__page[aria-current="page"] {
+  border-color: var(--color-interaction-border);
+  background: var(--color-interaction-default);
+  color: var(--color-interaction-on-solid);
+  font-weight: var(--type-h3-weight);
+  cursor: default;
+}
+/* focus on the filled current item: inverse ring inside the fill + regular ring outside */
+.ds-pagination__page[aria-current="page"]:focus-visible,
+.ds-pagination__page[aria-current="page"][data-force~="focus"] {
+  outline-color: var(--color-focus-ring-inverse);
+  outline-offset: calc(-2 * var(--focus-ring-width));
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--color-focus-ring);
+}
+
+/* boundary: Previous on page 1 / Next on the last page: aria-disabled + reason, still focusable */
+:is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[aria-disabled="true"] {
+  border-color: var(--color-structure-border);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* gap marker: non-interactive, hidden from AT (range is in the summary) */
+.ds-pagination__gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--_h);
+  min-block-size: var(--_h);
+  color: var(--color-structure-text-tertiary);
+}
+.ds-pagination__item[data-kind="status"] { display: none; }
+.ds-pagination__status { display: inline-flex; align-items: center; padding-inline: var(--space-2); font-size: var(--type-body-size); line-height: var(--type-body-line); white-space: nowrap; }
+
+/* Rows per page + Go to page */
+.ds-pagination__tools { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-4); margin: 0; }
+.ds-pagination__field { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-pagination__field-row { display: flex; align-items: flex-start; gap: var(--space-2); }
+.ds-pagination__label { color: var(--color-structure-text-secondary); font-size: var(--type-label-size); line-height: var(--type-label-line); }
+.ds-pagination__control {
+  box-sizing: border-box;
+  min-block-size: var(--_h);
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-variant-numeric: tabular-nums;
+}
+input.ds-pagination__control { inline-size: calc(var(--space-12) * 2); }
+.ds-pagination__control[aria-invalid="true"] { border-color: var(--control-container-border-invalid); border-width: var(--border-width-thick); }
+.ds-pagination__error { display: flex; align-items: flex-start; gap: var(--space-1); max-inline-size: calc(var(--space-12) * 5); color: var(--color-semantic-critical-strong); }
+.ds-pagination__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); flex: none; margin-block-start: var(--space-1); }
+.ds-pagination__error[hidden] { display: none; }
+
+/* loading: the pressed control shows a spinner at its locked width; other presses are ignored */
+.ds-pagination [aria-busy="true"] { cursor: progress; }
+.ds-pagination [aria-busy="true"] > :not(.ds-pagination__spinner) { opacity: 0; }
+.ds-pagination__spinner {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: calc(var(--icon-md) / -2);
+  margin-inline-start: calc(var(--icon-md) / -2);
+  border: var(--border-width-thick) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--shape-circle);
+  animation: ds-pagination-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+@keyframes ds-pagination-spin { to { transform: rotate(360deg); } }
+.ds-pagination[aria-busy="true"] .ds-pagination__page:not([aria-busy]),
+.ds-pagination[aria-busy="true"] .ds-pagination__step:not([aria-busy]) { pointer-events: none; }
+
+/* collection shown with the demos (heading receives focus after a page change) */
+.ds-pagination-collection { display: flex; flex-direction: column; gap: var(--space-2); margin-block-end: var(--space-3); }
+.ds-pagination-collection__heading { font-family: var(--type-h3-family); font-size: var(--type-h3-size); line-height: var(--type-h3-line); font-weight: var(--type-h3-weight); border-radius: var(--radius-xs); }
+.ds-pagination-collection__heading[tabindex="-1"]:focus { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+.ds-pagination-collection__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border: var(--border-width-thin) solid var(--color-structure-border); border-radius: var(--radius-md); }
+.ds-pagination-collection__list > li { display: flex; align-items: center; min-block-size: var(--layout-row-height); padding-inline: var(--space-4); }
+.ds-pagination-collection__list > li + li { border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+.ds-pagination-collection__list > li[tabindex="-1"]:focus { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-pagination-collection[aria-busy="true"] { cursor: progress; }
+
+/* compact: Previous / "Page 3 of 16" / Next */
+.ds-pagination[data-variant="compact"] .ds-pagination__item[data-kind="status"] { display: flex; flex: 1 1 auto; justify-content: center; }
+.ds-pagination[data-variant="compact"] .ds-pagination__item:is([data-kind="page"], [data-kind="gap"]) { display: none; }
+/* load-more: one full-width button + summary */
+.ds-pagination[data-variant="load-more"] { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+.ds-pagination[data-variant="load-more"] .ds-pagination__summary { text-align: center; }
+.ds-pagination__more { inline-size: 100%; min-block-size: max(var(--control-height-lg), var(--target-current)); }
+
+/* tablet: current ±1 */
+@media (--bp-desktop-down) {
+  .ds-pagination__item[data-near="2"] { display: none; }
+}
+/* phone: numbered becomes compact; summary on its own line above the buttons; tools hidden */
+@media (--bp-tablet-down) {
+  .ds-pagination { --_h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+  .ds-pagination__summary { flex: 1 1 100%; }
+  .ds-pagination:not([data-variant="load-more"]) .ds-pagination__list { flex: 1 1 100%; }
+  .ds-pagination__item:is([data-kind="page"], [data-kind="gap"]) { display: none; }
+  .ds-pagination__item[data-kind="status"], .ds-pagination[data-variant] .ds-pagination__item[data-kind="status"] { display: flex; order: -1; flex: 1 1 100%; justify-content: center; }
+  .ds-pagination__item[data-kind="step"] { flex: 1 1 0; }
+  .ds-pagination__item[data-kind="step"] .ds-pagination__step { inline-size: 100%; }
+  .ds-pagination__tools { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-pagination__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; }
+}
+@media (forced-colors: active) {
+  .ds-pagination__page[aria-current="page"] { border: var(--border-width-thick) solid Highlight; forced-color-adjust: none; background: Highlight; color: HighlightText; }
+  :is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more) { border-color: ButtonText; }
+  :is(.ds-pagination__step, .ds-pagination__go, .ds-pagination__more)[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+}

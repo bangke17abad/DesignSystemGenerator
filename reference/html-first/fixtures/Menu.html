@@ -1,0 +1,161 @@
+<!-- Menu fixture · variants dropdown / context, states closed / open / item-hover / item-focus / item-pressed / selected /
+     disabled-with-reason / loading / empty, combinations, submenu + RTL, Sheet on phone, long labels, live demos.
+     Static demos render the open content in flow (data-static, role=menu, items tabindex -1). Live demos are a <details> disclosure
+     with real buttons and links (the no-JS fallback) that Menu.js upgrades to button + role=menu in the top layer.
+     Destructive items are always in the last group, after a separator. -->
+<section class="ds-demo" data-ds-demo="variants/dropdown · open (icon start, shortcut, groups, destructive last)">
+  <div class="ds-menu-demo">
+    <button type="button" class="ds-button ds-menu__trigger" aria-haspopup="menu" aria-expanded="true" id="mn-s1-t"><span>Booking actions</span><svg class="ds-icon" data-chevron aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+    <div class="ds-menu__content" role="menu" aria-labelledby="mn-s1-t" data-static>
+      <div class="ds-menu__group" role="group" aria-labelledby="mn-s1-g1">
+        <p class="ds-menu__group-label" id="mn-s1-g1" role="presentation">Booking</p>
+        <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-keyshortcuts="Control+E"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-menu__label">Edit</span><kbd class="ds-kbd ds-menu__shortcut" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus E</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">E</kbd></span></kbd></button>
+        <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-keyshortcuts="Control+D"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg><span class="ds-menu__label">Duplicate</span><kbd class="ds-kbd ds-menu__shortcut" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus D</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">D</kbd></span></kbd></button>
+        <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-menu__label">Move to…</span><svg class="ds-icon" data-sub data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button>
+        <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-link"/></svg><span class="ds-menu__label">Share link</span></button>
+      </div>
+      <hr class="ds-menu__separator">
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-variant="destructive"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg><span class="ds-menu__label">Delete booking</span></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="closed (trigger: Button with chevron, IconButton “More actions”)">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-menu__trigger" aria-haspopup="menu" aria-expanded="false"><span>Booking actions</span><svg class="ds-icon" data-chevron aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+    <button type="button" class="ds-icon-button ds-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="More actions"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button>
+    <button type="button" class="ds-icon-button ds-menu__trigger" aria-haspopup="menu" aria-expanded="true" aria-label="More actions"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="item states (hover, focus, pressed) · selected+hover · selected+focus · disabled+selected">
+  <div class="ds-menu__content" role="menu" aria-label="View options" data-static>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-force="hover"><span class="ds-menu__check" aria-hidden="true"></span><span class="ds-menu__label">Hover</span></button>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-force="focus"><span class="ds-menu__check" aria-hidden="true"></span><span class="ds-menu__label">Focus (inset ring)</span></button>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-force="pressed"><span class="ds-menu__check" aria-hidden="true"></span><span class="ds-menu__label">Pressed</span></button>
+    <hr class="ds-menu__separator">
+    <div class="ds-menu__group" role="group" aria-labelledby="mn-s3-g">
+      <p class="ds-menu__group-label" id="mn-s3-g" role="presentation">Show</p>
+      <button type="button" class="ds-menu__item" role="menuitemcheckbox" aria-checked="true" tabindex="-1"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__label">Weekends</span></button>
+      <button type="button" class="ds-menu__item" role="menuitemcheckbox" aria-checked="true" tabindex="-1" data-force="hover"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__label">Cancelled bookings (hover)</span></button>
+      <button type="button" class="ds-menu__item" role="menuitemcheckbox" aria-checked="true" tabindex="-1" data-force="focus"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__label">Waiting list (focus)</span></button>
+      <button type="button" class="ds-menu__item" role="menuitemcheckbox" aria-checked="true" aria-disabled="true" tabindex="-1" aria-describedby="mn-s3-r"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__text"><span class="ds-menu__label">Member prices</span><span class="ds-menu__reason" id="mn-s3-r" aria-hidden="true">Set by the club admin</span></span></button>
+      <button type="button" class="ds-menu__item" role="menuitemcheckbox" aria-checked="false" tabindex="-1"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__label">Past booking slots</span></button>
+    </div>
+    <hr class="ds-menu__separator">
+    <div class="ds-menu__group" role="group" aria-labelledby="mn-s3-g2">
+      <p class="ds-menu__group-label" id="mn-s3-g2" role="presentation">Density</p>
+      <button type="button" class="ds-menu__item" role="menuitemradio" aria-checked="true" tabindex="-1"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-dot"/></svg><span class="ds-menu__label">Comfortable</span></button>
+      <button type="button" class="ds-menu__item" role="menuitemradio" aria-checked="false" tabindex="-1"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-dot"/></svg><span class="ds-menu__label">Compact</span></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason (lock + reason line, focusable; Enter announces it)">
+  <div class="ds-menu__content" role="menu" aria-label="Venue actions" data-static>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg><span class="ds-menu__label">Export scorecards</span></button>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-disabled="true" aria-describedby="mn-s4-r1" data-force="focus"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-menu__text"><span class="ds-menu__label">Publish results</span><span class="ds-menu__reason" id="mn-s4-r1" aria-hidden="true">Needs connection</span></span></button>
+    <hr class="ds-menu__separator">
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-disabled="true" aria-describedby="mn-s4-r2" data-variant="destructive"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-menu__text"><span class="ds-menu__label">Delete venue</span><span class="ds-menu__reason" id="mn-s4-r2" aria-hidden="true">Only venue owners can delete a venue</span></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading · empty · loading+pressed prevented">
+  <div class="ds-inline" data-gap="6">
+    <div class="ds-menu__content" role="menu" aria-label="Row actions" aria-busy="true" data-static>
+      <div class="ds-menu__status" role="none"><span class="ds-menu__spinner" aria-hidden="true"></span><span>Loading actions…</span></div>
+    </div>
+    <div class="ds-menu__content" role="menu" aria-label="Row actions" data-static>
+      <div class="ds-menu__item" role="menuitem" tabindex="-1" aria-disabled="true" data-static-row><span class="ds-menu__label">No actions available</span></div>
+    </div>
+  </div>
+  <p class="ds-text-secondary">Items cannot be pressed while the menu loads; focus moves to the first item once ready, without closing.</p>
+</section>
+<section class="ds-demo" data-ds-demo="variants/context (right click, long press, Shift+F10 — always with a visible trigger)">
+  <div class="ds-menu-demo__pair">
+    <div class="ds-menu-target" tabindex="0" aria-describedby="mn-s6-hint">Booking BK-20481 · 07:40 · 4 guests</div>
+    <div class="ds-menu__content" role="menu" aria-label="Booking BK-20481" data-static>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-force="focus"><span class="ds-menu__label">Check in</span></button>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><span class="ds-menu__label">Move to…</span></button>
+      <hr class="ds-menu__separator">
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-variant="destructive"><span class="ds-menu__label">Cancel booking</span></button>
+    </div>
+  </div>
+  <p class="ds-text-secondary" id="mn-s6-hint">The same actions are in the row’s “More actions” button.</p>
+</section>
+<section class="ds-demo" data-ds-demo="submenu + RTL (opens to inline-end = left; ← opens in RTL)" dir="rtl" lang="ar">
+  <div class="ds-menu-demo__pair">
+    <div class="ds-menu__content" role="menu" aria-label="إجراءات الحجز" data-static>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><span class="ds-menu__label">تعديل</span></button>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="true" id="mn-s7-st"><span class="ds-menu__label">نقل إلى…</span><svg class="ds-icon" data-sub data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button>
+    </div>
+    <div class="ds-menu__content" role="menu" aria-labelledby="mn-s7-st" data-static>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-force="focus"><span class="ds-menu__label">السبت</span></button>
+      <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><span class="ds-menu__label">الأحد</span></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="Sheet on phone (labelled dialog, plain buttons ≥ target-min-touch, no shortcuts)">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" aria-labelledby="mn-sh-title" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="mn-sh-title">Booking actions</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body">
+        <div class="ds-menu__content" data-sheet>
+          <button type="button" class="ds-menu__item"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-menu__label">Edit</span></button>
+          <button type="button" class="ds-menu__item"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg><span class="ds-menu__label">Duplicate</span></button>
+          <button type="button" class="ds-menu__item"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-menu__label">Move to…</span><svg class="ds-icon" data-sub data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button>
+          <hr class="ds-menu__separator">
+          <button type="button" class="ds-menu__item" data-variant="destructive"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg><span class="ds-menu__label">Delete booking</span></button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long labels (+40%): widens to layout-modal-sm, labels wrap (no ellipsis)">
+  <div class="ds-menu__content" role="menu" aria-label="Tindakan pemesanan" data-static>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><span class="ds-menu__label">Pindahkan pemesanan ke lapangan lain di klub yang sama</span></button>
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1"><span class="ds-menu__label">Kirim ulang konfirmasi ke semua pemain</span></button>
+    <hr class="ds-menu__separator">
+    <button type="button" class="ds-menu__item" role="menuitem" tabindex="-1" data-variant="destructive"><span class="ds-menu__label">Hapus pemesanan dan kembalikan deposit</span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (details fallback → button + role=menu; arrows, typeahead, Esc, Tab, submenu, context, async)">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-inline" data-gap="3">
+      <details class="ds-menu" id="mn-live-1" data-ds-module="menu" data-ds-label="Booking actions">
+        <summary class="ds-button ds-menu__trigger"><span>Booking actions</span><svg class="ds-icon" data-chevron aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+        <div class="ds-menu__content">
+          <button type="button" class="ds-menu__item" data-ds-announce="Editing booking" aria-keyshortcuts="Control+E"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-menu__label">Edit</span><kbd class="ds-kbd ds-menu__shortcut" data-ds-module="kbd" data-keys="Mod+E" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus E</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">E</kbd></span></kbd></button>
+          <button type="button" class="ds-menu__item" data-ds-announce="Booking duplicated"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg><span class="ds-menu__label">Duplicate</span></button>
+          <details class="ds-menu__sub">
+            <summary class="ds-menu__item"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-menu__label">Move to…</span><svg class="ds-icon" data-sub data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></summary>
+            <div class="ds-menu__content">
+              <button type="button" class="ds-menu__item" data-ds-announce="Moved to Saturday"><span class="ds-menu__label">Saturday 11 Oct</span></button>
+              <button type="button" class="ds-menu__item" data-ds-announce="Moved to Sunday"><span class="ds-menu__label">Sunday 12 Oct</span></button>
+            </div>
+          </details>
+          <a class="ds-menu__item" href="#mn-share"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-link"/></svg><span class="ds-menu__label">Share link</span></a>
+          <div class="ds-menu__group" role="group" aria-labelledby="mn-live-1-g">
+            <p class="ds-menu__group-label" id="mn-live-1-g">Show</p>
+            <button type="button" class="ds-menu__item" data-type="checkbox" aria-pressed="true"><svg class="ds-icon ds-menu__check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-menu__label">Weekends</span></button>
+          </div>
+          <button type="button" class="ds-menu__item" aria-disabled="true" aria-describedby="mn-live-1-r"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-menu__text"><span class="ds-menu__label">Publish results</span><span class="ds-menu__reason" id="mn-live-1-r" aria-hidden="true">Needs connection</span></span></button>
+          <hr class="ds-menu__separator">
+          <button type="button" class="ds-menu__item" data-variant="destructive" data-opens-dialog><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg><span class="ds-menu__label">Delete booking</span></button>
+        </div>
+      </details>
+      <details class="ds-menu" id="mn-live-2" data-ds-module="menu" data-align="end" data-ds-async-template="mn-live-2-tpl" data-ds-label="Row actions">
+        <summary class="ds-icon-button ds-menu__trigger" aria-label="More actions"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></summary>
+        <div class="ds-menu__content">
+          <div class="ds-menu__status" role="none"><span class="ds-menu__spinner" aria-hidden="true"></span><span>Loading actions…</span></div>
+          <a class="ds-menu__item" href="#mn-actions-page"><span class="ds-menu__label">All actions</span></a>
+        </div>
+      </details>
+      <template id="mn-live-2-tpl">
+        <button type="button" class="ds-menu__item" data-ds-announce="Checked in"><span class="ds-menu__label">Check in</span></button>
+        <button type="button" class="ds-menu__item"><span class="ds-menu__label">Message guests</span></button>
+        <hr class="ds-menu__separator">
+        <button type="button" class="ds-menu__item" data-variant="destructive"><span class="ds-menu__label">Cancel booking</span></button>
+      </template>
+    </div>
+    <div class="ds-menu-target" tabindex="0" data-ds-menu-context="mn-live-1" aria-describedby="mn-live-ctx-hint">Booking BK-20481 · 07:40 · 4 guests</div>
+    <p class="ds-text-secondary" id="mn-live-ctx-hint">Right click, long press, Shift+F10 or the Menu key opens “Booking actions” here too.</p>
+  </div>
+</section>

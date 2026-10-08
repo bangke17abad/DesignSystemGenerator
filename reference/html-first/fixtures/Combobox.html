@@ -1,0 +1,40 @@
+<!-- Combobox fixture · editable combobox; works without JS via <datalist>. Static listbox demos show option states. -->
+<section class="ds-demo" data-ds-demo="default">
+  <div class="ds-text-field ds-combobox" data-ds-module="combobox" data-count-text="{n} results" data-empty-text="No city matches. Check the spelling or type fewer letters.">
+    <label class="ds-text-field__label" for="cb-1">Delivery city</label>
+    <div class="ds-text-field__group">
+      <input class="ds-text-field__input" id="cb-1" name="city" type="text" list="cb-1-list" autocomplete="address-level2" aria-describedby="cb-1-help">
+      <button type="button" class="ds-combobox__toggle" tabindex="-1" aria-label="Show cities"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+    </div>
+    <datalist id="cb-1-list"><option value="Bandung"></option><option value="Bekasi"></option><option value="Bogor"></option><option value="Denpasar"></option><option value="Jakarta Selatan"></option><option value="Makassar"></option><option value="Medan"></option><option value="Surabaya"></option><option value="Yogyakarta"></option></datalist>
+    <p class="ds-text-field__helper" id="cb-1-help">Type to search, or choose from the list.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="open/option-states">
+  <div class="ds-text-field ds-combobox" data-open>
+    <label class="ds-text-field__label" for="cb-2">Assign to team</label>
+    <div class="ds-text-field__group">
+      <input class="ds-text-field__input" id="cb-2" type="text" value="Fin" role="combobox" aria-expanded="true" aria-controls="cb-2-lb" aria-autocomplete="list" aria-activedescendant="cb-2-o2" data-force="focus">
+      <button type="button" class="ds-combobox__toggle" tabindex="-1" aria-label="Show teams"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+    </div>
+    <ul class="ds-combobox__listbox" id="cb-2-lb" role="listbox" aria-label="Assign to team" data-static>
+      <li class="ds-combobox__option" role="option" id="cb-2-o1" aria-selected="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span><mark>Fin</mark>ance operations</span></li>
+      <li class="ds-combobox__option" role="option" id="cb-2-o2" aria-selected="false" data-active><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span><mark>Fin</mark>ance reporting</span></li>
+      <li class="ds-combobox__option" role="option" id="cb-2-o3" aria-selected="false" aria-disabled="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span><mark>Fin</mark>tech partnerships (full, 0 seats left)</span></li>
+    </ul>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="no-results+error">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-text-field ds-combobox">
+      <label class="ds-text-field__label" for="cb-3">Product category</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="cb-3" type="text" value="Xyz" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-describedby="cb-3-empty"></div>
+      <div class="ds-combobox__listbox" data-static><p class="ds-combobox__empty" id="cb-3-empty" role="status">No category matches “Xyz”. Check the spelling or type fewer letters.</p></div>
+    </div>
+    <div class="ds-text-field ds-combobox">
+      <label class="ds-text-field__label" for="cb-4">Country</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="cb-4" type="text" value="Indonsia" aria-invalid="true" aria-describedby="cb-4-err"></div>
+      <p class="ds-text-field__error" id="cb-4-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Choose a country from the list, for example Indonesia.</span></p>
+    </div>
+  </div>
+</section>

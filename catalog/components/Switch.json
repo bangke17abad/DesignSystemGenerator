@@ -1,0 +1,593 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-checked=\"true\"/\"false\"; nilai \"mixed\" tidak didukung role switch (tidak ada indeterminate)",
+      "label terlihat terhubung (aria-labelledby/label for); nama tidak berubah saat state berubah",
+      "aria-describedby ke description, reason, atau pesan gagal",
+      "aria-busy saat konfirmasi server",
+      "aria-disabled + pencegahan toggle untuk diblokir",
+      "aria-readonly + pencegahan toggle untuk read-only",
+      "pengumuman hasil (berhasil/gagal) lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "urutan DOM; fokus tetap di switch setelah toggle dan setelah rollback",
+    "native": {
+      "compose": "Row(Modifier.toggleable(value, role = Role.Switch, onValueChange, enabled)) { Text(label); Switch(checked = value, onCheckedChange = null, thumbContent = { if (value) Icon(Icons.Filled.Check, null) }) }",
+      "flutter": "SwitchListTile(value, onChanged, title, subtitle, thumbIcon: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? Icon(Icons.check) : null)) sehingga label menjadi target; Semantics(toggled: value, enabled:, hint: reason)",
+      "swiftui": "Toggle(label, isOn: $value) (gaya .switch); .accessibilityHint(reason) untuk diblokir; nilai on/off diumumkan otomatis; Differentiate Without Color dihormati lewat ikon on/off bila sistem menyalakannya"
+    },
+    "politeness": "polite",
+    "role": "switch (<button role=\"switch\" aria-checked> atau <input type=\"checkbox\" role=\"switch\">)",
+    "sr_label": "label + \"switch\" + \"on\"/\"off\" + description; contoh: \"Email alerts, switch, on, Sends a message when a task is overdue\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.2.2",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.7",
+      "2.5.8",
+      "3.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "track",
+      "role": "lintasan; off = border kontrol ≥ 3:1 di atas surface; on = fill interaction-default",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-full",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "thumb",
+      "role": "kenop yang berpindah ke inline-end saat on; posisi adalah penanda utama; transisi dari motion-fast-duration (runtuh di reduced motion)",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-shadow",
+        "elevation-1",
+        "radius-full",
+        "motion-fast-duration",
+        "motion-easing-standard"
+      ]
+    },
+    {
+      "part": "thumb-icon",
+      "role": "ikon centang (on) di dalam thumb sebagai penanda non-warna tambahan; off tanpa ikon atau ikon minus",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "nama pengaturan (≥ 16) di inline-start; bagian dari target; tidak berubah saat state berubah",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "space-3"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "baris kedua: efek pengaturan",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "state-text",
+      "role": "teks \"On\"/\"Off\" opsional di samping track bila L-bahasa atau brief memintanya (diperlukan bila track tidak memakai thumb-icon)",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "spinner",
+      "role": "Spinner di dalam thumb saat perubahan sedang dikonfirmasi server",
+      "tokens": [
+        "icon-sm",
+        "motion-slow-duration"
+      ]
+    },
+    {
+      "part": "hit-area",
+      "role": "baris penuh label + track; ≥ target-current",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch",
+        "space-2"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di sekitar track",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "boolean",
+        "when": "Space, Enter, klik, tap, atau seret melewati tengah; dipanggil sebelum konfirmasi server (optimistic)"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Nama pengaturan; tidak berubah dengan state.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: on/off.",
+        "name": "value",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Efek pengaturan saat on.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "default",
+        "description": "Dengan label terlihat atau track saja (label tersembunyi).",
+        "name": "variant",
+        "required": false,
+        "type": "\"default\" | \"standalone\""
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan teks On/Off dari glosarium.",
+        "name": "showStateText",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "md",
+        "description": "Ukuran track dan baris.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Perubahan sedang dikonfirmasi; input diabaikan.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan bila perubahan gagal disimpan (rollback).",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Tidak bisa diubah; kontras penuh.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "toggle; perubahan berlaku seketika dan onValueChange dipanggil; tidak memindah fokus",
+      "trigger": "Space (dan Enter pada elemen button)"
+    },
+    {
+      "input": "keyboard",
+      "result": "setiap switch satu tab stop",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle pada pelepasan (SC 2.5.2)",
+      "trigger": "klik track atau label"
+    },
+    {
+      "input": "touch",
+      "result": "toggle; seret melewati tengah track mengubah state, dilepas sebelum tengah membatalkan; haptic-selection di native",
+      "trigger": "tap baris atau seret thumb"
+    },
+    {
+      "input": "pointer",
+      "result": "optimistic: posisi berubah + Spinner; berhasil diumumkan polite (\"Alerts on\"); gagal: rollback + pesan + Retry, diumumkan polite",
+      "trigger": "toggle saat perubahan butuh server"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak berubah; reason diumumkan polite",
+      "trigger": "klik pada switch aria-disabled"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Email alerts",
+        "Sends a message when a task is overdue.",
+        "Dark appearance",
+        "Couldn't turn on email alerts. Check your connection and try again.",
+        "Only admins can change this setting.",
+        "On",
+        "Off"
+      ],
+      "id-ID": [
+        "Notifikasi email",
+        "Mengirim pesan saat tugas melewati tenggat.",
+        "Tampilan gelap",
+        "Notifikasi email belum berhasil diaktifkan. Periksa koneksi lalu coba lagi.",
+        "Hanya admin yang dapat mengubah pengaturan ini.",
+        "Aktif",
+        "Nonaktif"
+      ]
+    },
+    "rules": [
+      "Label menyebut pengaturan sebagai kata benda atau frasa netral (\"Email alerts\"), bukan pertanyaan atau perintah (\"Turn on alerts?\").",
+      "Label tidak berubah antara on dan off; state dibawa oleh posisi, ikon, dan teks opsional \"On\"/\"Off\".",
+      "Description menjelaskan apa yang terjadi saat on.",
+      "Pesan gagal menyebut apa yang tidak tersimpan dan cara mencoba lagi."
+    ]
+  },
+  "depends_on": [
+    "Spinner",
+    "LiveAnnouncer",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Terapkan perubahan seketika dan konfirmasi hasilnya (atau rollback dengan alasan).",
+    "Tampilkan ikon di thumb atau teks On/Off agar state tidak hanya dibawa warna.",
+    "Jadikan seluruh baris (label + track) area klik."
+  ],
+  "dont": [
+    {
+      "text": "Memakai Switch di dalam form yang baru berlaku setelah tombol Simpan."
+    },
+    {
+      "ref": "UB2",
+      "text": "State on/off hanya dibedakan warna track."
+    },
+    {
+      "text": "Mengubah label sesuai state (\"Alerts on\" ↔ \"Alerts off\") sehingga nama aksesibel berubah."
+    },
+    {
+      "text": "Menampilkan state tersimpan sebelum server mengonfirmasi tanpa penanda loading dan rollback (I6)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus; track tetap di inline-end sejajar baris pertama; tanpa ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "track dan thumb membesar proporsional; baris tumbuh; jarak label–track tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik (\"No settings available for your role\"), bukan daftar kosong",
+      "case": "daftar pengaturan kosong (0 switch untuk role)"
+    },
+    {
+      "behaviour": "input diabaikan selama loading; nilai akhir yang dikirim = state terakhir yang dikonfirmasi",
+      "case": "toggle cepat berulang"
+    },
+    {
+      "behaviour": "pengaturan lokal tetap seketika; pengaturan server aria-disabled dengan reason \"Needs connection\" atau diantrekan dengan penanda \"Will save when online\" (tidak ditampilkan sebagai tersimpan, I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "state diperbarui tanpa memindah fokus; diumumkan polite hanya bila switch sedang fokus",
+      "case": "server mengubah state dari perangkat lain"
+    },
+    {
+      "behaviour": "Spinner tetap di thumb, description menyebut \"Saving…\"; setelah batas waktu, rollback + pesan gagal + Retry",
+      "case": "loading lebih dari 2 detik"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Switch di dalam Form yang punya tombol submit ditandai (manual-review: gunakan Checkbox)",
+    "Switch tanpa label (terlihat atau tersembunyi) ditolak",
+    "aria-checked=\"mixed\" pada role switch ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "Switch",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "error (rollback)+focus",
+      "RTL on/off",
+      "reduced motion"
+    ],
+    "states": [
+      "off",
+      "on",
+      "hover",
+      "pressed",
+      "focus",
+      "loading",
+      "error",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "default",
+      "standalone"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyalakan atau mematikan satu pengaturan yang berlaku seketika tanpa tombol simpan; posisi thumb (dan ikon di thumb) adalah penanda state, bukan hanya warna.",
+    "when_not_to_use": [
+      "Untuk pilihan yang baru berlaku saat Form dikirim: pakai Checkbox.",
+      "Untuk lebih dari dua state atau pilihan bernama: pakai RadioGroup atau SegmentedControl.",
+      "Untuk menjalankan aksi sekali jalan (kirim, hapus): pakai Button.",
+      "Untuk pengaturan berisiko tinggi yang perlu konfirmasi atau dapat merusak data: pakai Button yang membuka Modal konfirmasi."
+    ]
+  },
+  "related": [
+    "Checkbox",
+    "SegmentedControl",
+    "List",
+    "StepUpDialog"
+  ],
+  "responsive": [
+    {
+      "behaviour": "baris List penuh lebar: label di inline-start, track di inline-end; baris ≥ target-min-touch; size lg",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama dengan phone di daftar pengaturan; ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "baris pengaturan dengan lebar dibatasi layout-measure agar label dan track tidak berjauhan; size md/sm",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role melihat pengaturan tanpa mengubah"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "pengaturan dikunci kebijakan atau role; reason terlihat"
+    },
+    {
+      "pattern": "step-up",
+      "when": "pengaturan keamanan (mis. menonaktifkan verifikasi dua langkah) membuka StepUpDialog sebelum berlaku; switch tidak berpindah sampai dikonfirmasi"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu pengaturan ada"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Track dicerminkan: on = thumb di inline-end (kiri di RTL); label di inline-start; ikon centang di thumb tidak dicerminkan; animasi thumb mengikuti arah logis."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "track kecil; area klik baris ≥ target-current (24 pointer, 44 sentuh)",
+      "name": "sm",
+      "notes": "Tabel padat pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current) mencakup label",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "on + hover: track interaction-hover; thumb dan ikon tetap",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "on + ring di luar track",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "thumb tetap di posisi on (diredam) + reason; state tetap diumumkan",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak bisa di-toggle lagi selama perubahan sebelumnya dikonfirmasi",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "setelah rollback fokus tetap di switch; pesan error terbaca lewat aria-describedby",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "state terbaca, tidak bisa diubah",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "thumb boleh diseret di sentuh, tetapi tap dan Space adalah jalur utama (SC 2.5.7)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "off",
+      "token_swaps": {
+        "thumb": "color-structure-surface-raised",
+        "track": "color-structure-border-control"
+      },
+      "treatment": "thumb di inline-start, track border-control di atas surface-sunken; aria-checked=\"false\""
+    },
+    {
+      "name": "on",
+      "token_swaps": {
+        "thumb-icon": "color-interaction-default",
+        "track": "color-interaction-default"
+      },
+      "treatment": "thumb di inline-end dengan ikon centang, track interaction-default; aria-checked=\"true\""
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "track": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover di sekitar thumb; atau track ke interaction-hover saat on; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "track": "color-interaction-pressed"
+      },
+      "treatment": "thumb melebar sedikit lewat state-press-transform tanpa menggeser layout; track ke interaction-pressed saat on"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px di sekitar track"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "spinner": "color-interaction-default"
+      },
+      "treatment": "thumb sudah berpindah (optimistic) dengan Spinner di dalamnya; aria-busy=\"true\"; input diabaikan sampai server menjawab; bila gagal, thumb kembali dan alasan tampil di description + diumumkan"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "description": "color-semantic-critical-strong"
+      },
+      "treatment": "perubahan gagal disimpan: state dikembalikan (rollback), ikon + teks error di description (\"Couldn't turn on alerts. Try again.\") dengan Retry; aria-invalid tidak dipakai karena nilai tidak salah"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "label": "color-structure-text-disabled",
+        "track": "color-structure-surface-sunken"
+      },
+      "treatment": "aria-disabled=\"true\", toggle dicegah, tetap fokusabel; track surface-sunken, label text-disabled; reason di description; posisi thumb tetap menunjukkan state"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "label": "color-structure-text-primary",
+        "track": "color-structure-border-strong"
+      },
+      "treatment": "aria-readonly=\"true\"; toggle dicegah; track dan thumb kontras penuh tanpa hover; alternatif: teks \"On\"/\"Off\" saja"
+    }
+  ],
+  "target_hints": {
+    "compose": "Row.toggleable + Switch(thumbContent) dibungkus {Ns}Switch",
+    "flutter": "SwitchListTile dibungkus {ns}_switch.dart dengan thumbIcon",
+    "html": {
+      "element": "button[role=switch] | input[type=checkbox][role=switch]",
+      "notes": "input checkbox memberi fallback tanpa JS dalam Form; button dipakai untuk pengaturan seketika dengan modul JS; forced-colors: thumb CanvasText, track border ButtonText"
+    },
+    "swiftui": "Toggle dibungkus {Ns}Switch"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Label di inline-start, track di inline-end, dalam daftar pengaturan (List).",
+      "name": "default"
+    },
+    {
+      "description": "Track saja di dalam baris tabel atau toolbar; nama aksesibel dari label tersembunyi (VisuallyHidden) yang menyebut objek (\"Enable alerts for Site A\").",
+      "name": "standalone"
+    }
+  ]
+}

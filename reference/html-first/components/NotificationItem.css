@@ -1,0 +1,243 @@
+/* NotificationItem · engine 1.8.0 reference (catalog/components/NotificationItem.json). Tokens only (I3); logical properties only (§12.4).
+   Markup: section.ds-notification-list > (h3.ds-notification-group__heading + ul.ds-notification-group) per day >
+   li.ds-notification-item[data-unread] > a.__link (marker · leading · body: hidden "Unread." + title + status + time) +
+   button.__menu-button (≥ target-current, separate target, popover menu: Mark as read/unread, Mute this type).
+   Unread is never colour only (UB2): a shaped dot (interaction colour, not status) + label weight + hidden "Unread." text; read
+   items keep text-primary (no dimming below 4.5:1). Rows use the shared row tokens and an inset focus ring. A status event
+   adds the locked glyph as leading + a composed StatusLabel (L3 treatment); a critical event is only the history record here —
+   its real treatment (Banner / overlay) happens where it occurred (I5). */
+.ds-notification-list { display: flex; flex-direction: column; gap: var(--space-2); max-inline-size: var(--layout-modal-md); color: var(--color-structure-text-primary); }
+.ds-notification-list__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-3); }
+.ds-notification-list__title {
+  margin: 0;
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+}
+.ds-notification-group__heading {
+  margin: 0;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-4);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+}
+.ds-notification-group { margin: 0; padding: 0; list-style: none; }
+.ds-notification-group + .ds-notification-group__heading { margin-block-start: var(--space-2); }
+
+.ds-notification-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+}
+.ds-notification-group > .ds-notification-item:first-child { border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+
+.ds-notification-item__link {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: max(var(--layout-row-height), var(--target-current));
+  padding-block: var(--space-3);
+  padding-inline: var(--space-2) var(--space-1);
+  color: inherit;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-notification-item__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .ds-notification-item__link:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+  .ds-notification-item__link:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+  .ds-notification-item[data-selected] .ds-notification-item__link:hover { background: var(--row-background-selected); }
+}
+.ds-notification-item__link[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-notification-item__link[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-notification-item__link:not([aria-disabled="true"], [aria-busy="true"]):active,
+.ds-notification-item__link[data-force~="pressed"]:not([aria-busy="true"]) { background: var(--color-interaction-subtle); }
+.ds-notification-item__link:not([aria-disabled="true"], [aria-busy="true"]):active::before,
+.ds-notification-item__link[data-force~="pressed"]:not([aria-busy="true"])::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-notification-item__link[aria-busy="true"] { cursor: progress; }
+/* inset ring: the row is full width, an outside ring would be clipped by the panel */
+.ds-notification-item__link:focus-visible,
+.ds-notification-item__link[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+/* selected (bulk mode): checkbox + selection background */
+.ds-notification-item[data-selected] { background: var(--row-background-selected); }
+.ds-notification-item[data-selected] .ds-notification-item__link::before { opacity: var(--state-layer-selected-opacity); }
+.ds-notification-item[data-selected] .ds-notification-item__link[data-force~="hover"] { background: var(--row-background-selected); }
+.ds-notification-item[data-selected] .ds-notification-item__link[data-force~="hover"]::before { opacity: calc(var(--state-layer-selected-opacity) + var(--state-layer-hover-opacity)); }
+.ds-notification-item__select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  align-self: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-inline-start: var(--space-2);
+  cursor: pointer;
+}
+.ds-notification-item__select input { inline-size: var(--icon-md); block-size: var(--icon-md); margin: 0; accent-color: var(--control-checked-background); cursor: inherit; }
+
+/* unread marker: shaped dot (circle via --shape-circle) in a fixed slot so read/unread never shifts layout */
+.ds-notification-item__marker {
+  flex: none;
+  inline-size: var(--space-2);
+  block-size: var(--space-2);
+  margin-block: calc((var(--type-body-line) - var(--space-2)) / 2);
+  border-radius: var(--shape-circle);
+  background: transparent;
+}
+.ds-notification-item[data-unread] .ds-notification-item__marker { background: var(--color-interaction-default); }
+.ds-notification-item__leading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-inline-size: var(--avatar-md);
+  min-block-size: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+}
+.ds-notification-item__leading > .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+/* a status glyph standing alone (no container) uses the solid semantic colour, like InlineAlert's icon */
+.ds-notification-item__leading > .ds-icon[data-status="critical"] { color: var(--color-semantic-critical); }
+.ds-notification-item__leading > .ds-icon[data-status="warning"] { color: var(--color-semantic-warning); }
+.ds-notification-item__leading > .ds-icon[data-status="neutral-negative"] { color: var(--color-semantic-neutral-negative); }
+.ds-notification-item__leading > .ds-icon[data-status="positive"] { color: var(--color-semantic-positive); }
+.ds-notification-item__leading > .ds-icon[data-status="info"] { color: var(--color-semantic-info); }
+[dir="rtl"] .ds-notification-item__leading > .ds-icon[data-status] { transform: none; }
+
+.ds-notification-item__body { display: flex; flex-direction: column; gap: var(--space-1); flex: 1 1 auto; min-inline-size: 0; }
+.ds-notification-item__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* three lines then ellipsis; full sentence stays in the accessible name and on the object */
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+.ds-notification-item[data-unread] .ds-notification-item__title { font-weight: var(--type-label-weight); }
+.ds-notification-item__status { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ds-notification-item__time {
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-variant-numeric: tabular-nums;
+}
+.ds-notification-item[data-state="target-gone"] .ds-notification-item__title { color: var(--color-structure-text-secondary); }
+
+/* row actions: separate target ≥ target-current, visible at rest (never hover-only, UB9) */
+.ds-notification-item__menu-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  align-self: center;
+  min-block-size: max(var(--control-height-sm), var(--target-current));
+  min-inline-size: max(var(--control-height-sm), var(--target-current));
+  margin-inline-end: var(--space-2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-notification-item__menu-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-notification-item__menu-button .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+@media (hover: hover) {
+  .ds-notification-item__menu-button:hover { color: var(--color-structure-text-primary); background: var(--row-background-hover); }
+  .ds-notification-item__menu-button:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-notification-item__menu-button[data-force~="hover"] { color: var(--color-structure-text-primary); background: var(--row-background-hover); }
+.ds-notification-item__menu-button[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-notification-item__menu-button:active::before,
+.ds-notification-item__menu-button[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* menu: native popover (top layer, light dismiss, Esc; works without JS); NotificationItem.js anchors it to the button */
+.ds-notification-item__menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  min-inline-size: calc(var(--layout-modal-sm) / 2);
+  padding: var(--space-1);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+}
+.ds-notification-item__menu:not(:popover-open) { display: none; }
+.ds-notification-item__menu-item {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-block: 0;
+  padding-inline: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-align: start;
+  cursor: pointer;
+}
+.ds-notification-item__menu-item::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; }
+@media (hover: hover) {
+  .ds-notification-item__menu-item:hover { background: var(--row-background-hover); }
+  .ds-notification-item__menu-item:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-notification-item__menu-item[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-notification-item__menu-item[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-notification-item__menu-item:focus-visible,
+.ds-notification-item__menu-item[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+/* "Show 12 new" holder: new items wait above the list while the user reads; scroll and focus never jump */
+.ds-notification-list__new { align-self: center; }
+
+/* phone: day headings stay visible while scrolling the full-page list */
+@media (--bp-tablet-down) {
+  .ds-notification-group__heading { position: sticky; inset-block-start: 0; z-index: var(--z-sticky); background: var(--color-structure-surface-base); }
+  .ds-notification-list { max-inline-size: none; }
+}
+
+@media (forced-colors: active) {
+  .ds-notification-item[data-unread] .ds-notification-item__marker { background: CanvasText; forced-color-adjust: none; }
+  .ds-notification-item__menu { border-color: CanvasText; }
+  .ds-notification-item[data-selected] { outline: var(--border-width-thick) solid Highlight; outline-offset: calc(-1 * var(--border-width-thick)); }
+}

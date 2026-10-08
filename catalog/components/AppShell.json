@@ -1,0 +1,397 @@
+{
+  "accessibility": {
+    "attributes": [
+      "main id sebagai target SkipLink dengan tabindex=\"-1\"",
+      "aria-label pada setiap nav dan aside (mis. \"Main navigation\") bila ada lebih dari satu landmark sejenis",
+      "inert (atau aria-hidden + penguncian fokus) pada konten di belakang drawer modal; region LiveAnnouncer berada di luar subtree yang di-inert",
+      "aria-busy=\"true\" pada main saat muat pertama",
+      "scroll-padding-block-start = tinggi header sticky dan scroll-padding-block-end = tinggi bottom bar (SC 2.4.11)",
+      "aria-expanded dan aria-controls pada tombol pembuka drawer"
+    ],
+    "focus_order": "SkipLink → header → nav → main → aside → bottom bar; urutan DOM sama dengan urutan visual di semua kelas lebar",
+    "native": {
+      "compose": "Scaffold(topBar, bottomBar) atau NavigationSuiteScaffold; Modifier.windowInsetsPadding(WindowInsets.safeDrawing); Modifier.semantics { isTraversalGroup = true; paneTitle = … } per region",
+      "flutter": "Scaffold(appBar, drawer, body, bottomNavigationBar) atau NavigationRail berdasarkan LayoutBuilder; SafeArea; FocusTraversalGroup per region; Semantics(namesRoute: true, header: true) pada judul layar",
+      "swiftui": "NavigationSplitView (desktop/iPad) atau NavigationStack + TabView (iPhone); safe area otomatis, .safeAreaInset untuk bar kustom; .navigationTitle diumumkan saat layar berganti"
+    },
+    "politeness": "polite",
+    "role": "landmark: header (banner, tepat satu), nav (navigation, berlabel bila lebih dari satu), main (tepat satu), aside (complementary, berlabel), footer (contentinfo) bila ada",
+    "sr_label": "landmark diumumkan dengan perannya dan label dari glosarium; judul rute baru diumumkan polite bila fokus tidak dipindah ke h1",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.3.4",
+      "1.4.10",
+      "2.1.2",
+      "2.4.1",
+      "2.4.2",
+      "2.4.3",
+      "2.4.11",
+      "3.2.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "header",
+      "role": "global bar (landmark banner); tinggi minimum layout-bar-height, sticky di z-sticky",
+      "tokens": [
+        "layout-bar-height",
+        "z-sticky",
+        "color-structure-surface-base",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "nav",
+      "role": "slot PrimaryNav (landmark navigation): lebar layout-nav-width, menciut ke layout-rail-width; di phone menjadi drawer di z-nav-overlay dengan scrim z-nav-scrim",
+      "tokens": [
+        "layout-nav-width",
+        "layout-rail-width",
+        "z-nav-overlay",
+        "z-nav-scrim",
+        "color-structure-scrim",
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    },
+    {
+      "part": "main",
+      "role": "konten utama (landmark main, id target SkipLink, tabindex -1); menjadi gulir dokumen, bukan kontainer overflow bersarang",
+      "tokens": [
+        "layout-content-min",
+        "color-structure-surface-base"
+      ]
+    },
+    {
+      "part": "aside",
+      "role": "slot ContextPanel (landmark complementary): docked selebar layout-panel-width di desktop, overlay di tablet",
+      "tokens": [
+        "layout-panel-width",
+        "z-panel",
+        "elevation-1",
+        "color-structure-border"
+      ]
+    },
+    {
+      "part": "bottom-bar",
+      "role": "slot BottomNav atau action bar di phone; di atas home indicator dengan safe-area inset",
+      "tokens": [
+        "layout-bar-height",
+        "z-sticky",
+        "color-structure-surface-base",
+        "color-structure-border"
+      ]
+    },
+    {
+      "part": "skip-link",
+      "role": "SkipLink sebagai elemen fokus pertama dokumen",
+      "tokens": [
+        "z-tooltip"
+      ]
+    },
+    {
+      "part": "safe-area",
+      "role": "inset platform di tepi yang bersinggungan dengan notch, kamera, home indicator, dan bar sistem",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"toggle\" | \"escape\" | \"scrim\" | \"route\" | \"resize\" }",
+        "when": "nav dibuka/ditutup oleh pengguna, Esc, scrim, pindah rute, atau perubahan lebar"
+      }
+    ],
+    "parts": [
+      "AppShell.Header",
+      "AppShell.Nav",
+      "AppShell.Main",
+      "AppShell.Aside",
+      "AppShell.BottomBar"
+    ],
+    "props": [
+      {
+        "default": "standard",
+        "description": "Komposisi region sesuai §8.2.",
+        "name": "variant",
+        "required": false,
+        "type": "\"standard\" | \"focused\" | \"kiosk\""
+      },
+      {
+        "default": "main",
+        "description": "id landmark main; target SkipLink.",
+        "name": "mainId",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Target SkipLink tambahan (mis. pencarian) selain main; maks 3 total.",
+        "name": "skipTargets",
+        "required": false,
+        "type": "Array<{ label: string; targetId: string }>"
+      },
+      {
+        "description": "Controlled: nav terbuka (drawer di phone, lebar penuh di desktop; false = rail).",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "true",
+        "description": "Uncontrolled: state awal nav; di phone selalu false.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "SkipLink tampil dan menerima fokus; Enter memindah fokus ke main",
+      "trigger": "Tab pertama setelah halaman dimuat"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup overlay dan mengembalikan fokus ke pemicunya (tombol menu atau pemicu panel)",
+      "trigger": "Esc saat drawer nav atau panel overlay terbuka"
+    },
+    {
+      "input": "keyboard",
+      "result": "judul dokumen diperbarui, fokus dipindah ke h1 PageHeader (tabindex -1) dengan ring fokus, posisi gulir dipulihkan saat kembali (§9.5)",
+      "trigger": "pindah rute (SPA)"
+    },
+    {
+      "input": "pointer",
+      "result": "drawer menutup; fokus kembali ke tombol menu",
+      "trigger": "klik scrim drawer"
+    },
+    {
+      "input": "touch",
+      "result": "gestur native tetap bekerja (§14.3); drawer juga bisa ditutup lewat tombol berlabel (SC 2.5.1)",
+      "trigger": "gestur kembali sistem atau swipe drawer"
+    },
+    {
+      "input": "touch",
+      "result": "bottom bar disembunyikan selama mengetik; field fokus tetap terlihat di atas keyboard (§8.3)",
+      "trigger": "keyboard virtual muncul"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Main navigation",
+        "Open menu",
+        "Close menu",
+        "Skip to main content"
+      ],
+      "id-ID": [
+        "Navigasi utama",
+        "Buka menu",
+        "Tutup menu",
+        "Lewati ke konten utama"
+      ]
+    },
+    "rules": [
+      "Label landmark dan tombol shell dari glosarium; sama di setiap halaman (SC 3.2.3, 3.2.4).",
+      "Label nav tidak menyebut kata \"navigation\" dua kali (pembaca layar sudah menyebut perannya).",
+      "Judul dokumen: \"{judul halaman} · {nama aplikasi}\"; judul halaman lebih dulu."
+    ]
+  },
+  "depends_on": [
+    "SkipLink",
+    "LiveAnnouncer",
+    "PrimaryNav"
+  ],
+  "do": [
+    "Render shell lebih dulu dan isi main dengan Skeleton saat muat pertama.",
+    "Pindahkan fokus ke h1 atau umumkan judul pada setiap pindah rute.",
+    "Beri padding gulir sebesar tinggi bar sticky agar elemen fokus tidak tertutup."
+  ],
+  "dont": [
+    {
+      "text": "Membuat main sebagai kontainer overflow bersarang dengan tinggi tetap; zoom, gulir native, dan Find-in-page terganggu."
+    },
+    {
+      "ref": "UB8",
+      "text": "Header atau bottom bar sticky yang menutup elemen yang sedang fokus."
+    },
+    {
+      "text": "Menempatkan region LiveAnnouncer di dalam subtree yang di-inert saat drawer terbuka; pengumuman menjadi bisu."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label nav membungkus dua baris; di rail label muncul di bawah ikon atau sebagai Tooltip + nama aksesibel, tidak terpotong tanpa jalan baca",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "header tumbuh dari layout-bar-height; bila header + bottom bar melebihi sepertiga tinggi viewport, keduanya berhenti sticky agar konten dan fokus tetap terlihat",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "variant focused atau kiosk dipakai; tidak merender nav kosong atau tombol menu tanpa isi",
+      "case": "0 item navigasi"
+    },
+    {
+      "behaviour": "BottomNav maks 5 tujuan, sisanya ke \"More\"; nav desktop menggulir di dalam region nav dengan grup berjudul",
+      "case": "jumlah item navigasi maksimum"
+    },
+    {
+      "behaviour": "Banner persisten di bawah global bar; navigasi ke halaman yang tidak tersimpan menampilkan state offline di main, bukan halaman kosong",
+      "case": "offline"
+    },
+    {
+      "behaviour": "shell tampil segera; main aria-busy dengan Skeleton; fokus tidak dipindah sampai konten siap",
+      "case": "loading muat pertama"
+    },
+    {
+      "behaviour": "region dihitung ulang dari lebar baru; engsel tidak membelah kontrol; state drawer dan posisi gulir dipertahankan",
+      "case": "foldable atau jendela diubah ukuran"
+    },
+    {
+      "behaviour": "safe-area inset kiri/kanan fisik dipetakan ke sisi logis sesuai arah tulisan",
+      "case": "landscape pada ponsel ber-notch"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Halaman tanpa tepat satu main dan satu h1 ditolak (V5)",
+    "Header atau bottom bar sticky tanpa scroll-padding yang sesuai ditolak (css-pattern, SC 2.4.11)",
+    "Landmark sejenis lebih dari satu tanpa aria-label ditolak",
+    "Properti fisik (left, right) pada region AppShell ditolak (V6)"
+  ],
+  "name": "AppShell",
+  "preview": {
+    "combinations": [
+      "nav-collapsed + panel-open di desktop",
+      "drawer terbuka + teks 200%",
+      "RTL",
+      "zoom 400%"
+    ],
+    "states": [
+      "default",
+      "nav-collapsed",
+      "nav-drawer-open",
+      "panel-open",
+      "loading",
+      "offline"
+    ],
+    "variants": [
+      "standard",
+      "focused",
+      "kiosk"
+    ]
+  },
+  "purpose": {
+    "purpose": "Kerangka aplikasi yang menyusun region §8.2 (global bar, navigasi, konten, panel konteks, bar bawah) sebagai landmark, memasang SkipLink, menerapkan safe-area inset, dan mengelola fokus saat pindah rute.",
+    "when_not_to_use": [
+      "Untuk membatasi lebar konten di dalam region: pakai Container.",
+      "Untuk judul dan aksi halaman: pakai PageHeader di dalam region main.",
+      "Untuk isi navigasi (item, ikon, state terpilih): pakai PrimaryNav atau BottomNav; AppShell hanya menyediakan slot dan perilaku region.",
+      "Untuk overlay yang memblokir (konfirmasi, form singkat): pakai Modal atau Sheet, bukan region baru di AppShell."
+    ]
+  },
+  "related": [
+    "PrimaryNav",
+    "BottomNav",
+    "ContextPanel",
+    "PageHeader",
+    "Container",
+    "Banner"
+  ],
+  "responsive": [
+    {
+      "behaviour": "global bar + main + BottomNav (atau tombol menu yang membuka drawer); ContextPanel menjadi halaman penuh; aksi utama di zona jempol; safe-area inset di semua tepi",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "rail di inline-start; ContextPanel overlay tanpa scrim (Esc menutup); satu kolom konten maks 600 di portrait",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "nav tetap selebar layout-nav-width, menciut ke rail bila nav + panel + layout-content-min melebihi lebar; ContextPanel docked mendorong konten (dua pane daftar · kerja)",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "AppShell tidak memuat aksi; izin diterapkan di PrimaryNav, ContextPanel, dan konten region. Region yang seluruh isinya tersembunyi untuk role tidak dirender."
+  },
+  "rtl": {
+    "mirrored_icons": [
+      "menu-open",
+      "menu-close",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Nav dan rail berada di inline-start (kanan di RTL), aside di inline-end; drawer meluncur dari inline-start; ikon ciut/buka nav dicerminkan; safe-area fisik dipetakan ke sisi logis."
+  },
+  "sizes": {
+    "not_applicable": "AppShell mengisi viewport; ukuran region berasal dari token layout-* dan breakpoint, bukan prop size."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "region sesuai kelas lebar; nav tetap (desktop), rail (tablet), bottom nav atau menu (phone)"
+    },
+    {
+      "name": "nav-collapsed",
+      "token_swaps": {},
+      "treatment": "nav menciut ke rail bila layout-nav-width + layout-panel-width + layout-content-min melebihi lebar tersedia, atau atas pilihan pengguna; label nav tetap terbaca lewat nama aksesibel"
+    },
+    {
+      "name": "nav-drawer-open",
+      "token_swaps": {
+        "scrim": "color-structure-scrim"
+      },
+      "treatment": "phone/tablet: drawer modal di z-nav-overlay dengan scrim; konten di belakang inert; fokus ke item pertama drawer"
+    },
+    {
+      "name": "panel-open",
+      "token_swaps": {},
+      "treatment": "desktop: aside docked mendorong main (main tidak tertutup); tablet: overlay tanpa scrim, Esc menutup; phone: ContextPanel menjadi halaman penuh"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "muat pertama: shell (header, nav) dirender segera; main berisi Skeleton dan aria-busy=\"true\"; tidak ada spinner layar penuh"
+    },
+    {
+      "name": "offline",
+      "token_swaps": {},
+      "treatment": "Banner tingkat sistem di bawah global bar dan ConnectionStatus di header; region lain tidak berubah"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}AppShell: NavigationSuiteScaffold atau Scaffold + PermanentNavigationDrawer/NavigationRail sesuai WindowSizeClass",
+    "flutter": "{ns}_app_shell.dart: LayoutBuilder memilih Scaffold + NavigationBar (phone), NavigationRail (tablet), atau nav tetap (desktop); SafeArea",
+    "html": {
+      "element": "body > a.skip + header + nav + main + aside",
+      "notes": "landmark HTML asli, bukan role pada div; grid-template-areas dengan nama logis; scroll-padding dari token; env(safe-area-inset-*) dipetakan per dir"
+    },
+    "swiftui": "{Ns}AppShell: NavigationSplitView / TabView sesuai horizontalSizeClass dan lebar"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Global bar + navigasi + main (+ aside bila surface punya panel konteks).",
+      "name": "standard"
+    },
+    {
+      "description": "Global bar ringkas + main tanpa navigasi; untuk alur langkah (onboarding, checkout, form panjang) agar pengguna tidak keluar tak sengaja. Tetap punya jalan keluar berlabel.",
+      "name": "focused"
+    },
+    {
+      "description": "Tanpa navigasi dan tanpa global bar penuh; untuk surface kios atau berbasis state (§8.2). Orientasi boleh terkunci hanya dengan asumsi A-nn.",
+      "name": "kiosk"
+    }
+  ]
+}

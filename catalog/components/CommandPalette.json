@@ -1,0 +1,555 @@
+{
+  "accessibility": {
+    "attributes": [
+      "dialog aria-labelledby ke judul terlihat",
+      "input: role=\"combobox\", aria-expanded=\"true\", aria-controls=listbox, aria-autocomplete=\"list\", aria-activedescendant ke opsi aktif",
+      "opsi: aria-selected=\"true\" pada opsi aktif, aria-disabled + aria-describedby ke reason pada opsi diblokir",
+      "aria-setsize dan aria-posinset bila daftar divirtualisasi",
+      "aria-busy pada listbox saat memuat",
+      "aria-keyshortcuts pada tombol pembuka; pintasan tiap perintah dibaca dari Kbd",
+      "fallback tanpa JavaScript: tautan ke halaman \"All commands\" berisi daftar tautan bertingkat (§6.4)"
+    ],
+    "focus_order": "input → (Tab) elemen interaktif di list seperti Retry → tombol Close → kembali ke input; opsi dinavigasi dengan panah, bukan Tab",
+    "native": {
+      "compose": "Modifier.onPreviewKeyEvent (Ctrl/Meta + K) membuka Dialog berisi TextField + LazyColumn, atau SearchBar Material 3; liveRegion polite untuk jumlah hasil",
+      "flutter": "Shortcuts/CallbackShortcuts dengan SingleActivator(LogicalKeyboardKey.keyK, control: true) atau meta: true membuka showDialog berisi TextField + ListView; SearchAnchor sebagai alternatif bawaan; jumlah hasil lewat SemanticsService.announce",
+      "swiftui": "tombol pembuka dengan .keyboardShortcut(\"k\", modifiers: .command); .sheet berisi TextField + List atau .searchable; AccessibilityNotification.Announcement untuk jumlah hasil"
+    },
+    "politeness": "polite",
+    "role": "dialog (aria-modal=\"true\") berisi combobox (input) yang mengendalikan listbox; opsi role=\"option\"; grup role=\"group\"",
+    "sr_label": "dialog dan combobox dinamai judul terlihat (\"Search and commands\"); opsi dibaca: label, deskripsi, pintasan, state diblokir",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "2.1.1",
+      "2.1.2",
+      "2.1.4",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "scrim",
+      "role": "lapisan di belakang dialog; klik menutup",
+      "tokens": [
+        "color-structure-scrim",
+        "z-overlay-scrim"
+      ]
+    },
+    {
+      "part": "dialog",
+      "role": "kontainer modal di tengah atas viewport; lebar layout-modal-md",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "elevation-2",
+        "radius-lg",
+        "layout-modal-md",
+        "z-modal",
+        "motion-fast-duration",
+        "motion-easing-enter"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "judul terlihat yang juga menjadi label combobox",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "combobox teks dengan ikon cari di inline-start",
+      "tokens": [
+        "type-body-lg-size",
+        "type-body-lg-line",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder",
+        "color-structure-border",
+        "icon-md",
+        "control-height-lg"
+      ]
+    },
+    {
+      "part": "list",
+      "role": "listbox bergulir dengan grup berjudul",
+      "tokens": [
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "group-label",
+      "role": "judul grup (Recent, Pages, Actions)",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "option",
+      "role": "baris perintah: ikon, label, deskripsi, pintasan di inline-end; tinggi ≥ target-current",
+      "tokens": [
+        "layout-row-height",
+        "type-body-size",
+        "color-structure-text-primary",
+        "color-structure-text-secondary",
+        "icon-md",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "option-active",
+      "role": "opsi aktif (aria-activedescendant): latar selection + ring inset −2px + penanda di inline-start (non-warna)",
+      "tokens": [
+        "color-structure-selection",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "match",
+      "role": "bagian label yang cocok dengan kueri: bobot tebal + highlight (bukan hanya warna)",
+      "tokens": [
+        "color-structure-highlight"
+      ]
+    },
+    {
+      "part": "shortcut",
+      "role": "Kbd untuk pintasan perintah; simbol mengikuti OS",
+      "tokens": [
+        "type-code-size",
+        "type-code-family",
+        "font-mono"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "petunjuk tombol (↑↓ navigasi, Enter jalankan, Esc tutup); teks pendukung",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary",
+        "color-structure-border"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"shortcut\" | \"trigger\" | \"escape\" | \"scrim\" | \"command\" }",
+        "when": "palet dibuka atau ditutup"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "kueri berubah (setelah komposisi IME selesai)"
+      },
+      {
+        "name": "onPress",
+        "payload": "{ commandId: string; event: PressEvent }",
+        "when": "CommandPalette.Item dijalankan lewat Enter atau pelepasan pointer"
+      }
+    ],
+    "parts": [
+      "CommandPalette.Input",
+      "CommandPalette.List",
+      "CommandPalette.Group (label)",
+      "CommandPalette.Item (label, description, iconStart, shortcut, keywords, disabled, reason, onPress)",
+      "CommandPalette.Empty",
+      "CommandPalette.Loading",
+      "CommandPalette.Footer"
+    ],
+    "props": [
+      {
+        "description": "Controlled: palet terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Controlled: kueri.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"\"",
+        "description": "Uncontrolled: kueri awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Judul terlihat dialog; juga label combobox.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Contoh kueri; tidak menggantikan label.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"Mod+K\"",
+        "description": "Pintasan pembuka bermodifier; Mod = ⌘ atau Ctrl sesuai OS; dapat diubah pengguna.",
+        "name": "shortcut",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Sumber hasil sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "membuka palet; fokus ke input; elemen yang sebelumnya fokus disimpan. Bila fokus ada di editor teks kaya yang memakai pintasan sama, editor didahulukan dan palet tersedia lewat tombol terlihat",
+      "trigger": "Ctrl+K / ⌘K (default, dapat diubah pengguna)"
+    },
+    {
+      "input": "keyboard",
+      "result": "filter lokal seketika; sumber jarak jauh di-debounce ≥ 300 ms; jumlah hasil diumumkan polite lewat LiveAnnouncer; hasil basi dibuang berdasarkan id permintaan",
+      "trigger": "mengetik"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah opsi aktif (melingkar) lewat aria-activedescendant; Home/End tetap memindah caret di input",
+      "trigger": "↓/↑, Page Down/Page Up"
+    },
+    {
+      "input": "keyboard",
+      "result": "menjalankan opsi aktif (onPress), palet menutup, fokus ke hasil (h1 halaman baru, dialog baru, atau kembali ke elemen sebelumnya untuk perintah di tempat). Enter selama komposisi IME tidak menjalankan apa pun",
+      "trigger": "Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup palet dan mengembalikan fokus ke elemen sebelum dibuka",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus terkunci di dialog (input, Retry, tombol Close); tidak keluar ke halaman (SC 2.1.2 tetap terpenuhi lewat Esc)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka; menjalankan opsi pada pelepasan; menutup tanpa aksi",
+      "trigger": "klik tombol pembuka terlihat di global bar; klik opsi; klik scrim"
+    },
+    {
+      "input": "touch",
+      "result": "palet layar penuh dengan keyboard virtual; tap opsi menjalankan",
+      "trigger": "tap tombol pencarian di header (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Search and commands",
+        "Search or run a command",
+        "Go to settings",
+        "Create item",
+        "No results for \"report\""
+      ],
+      "id-ID": [
+        "Cari dan perintah",
+        "Cari atau jalankan perintah",
+        "Buka pengaturan",
+        "Buat item",
+        "Tidak ada hasil untuk \"laporan\""
+      ]
+    },
+    "rules": [
+      "Nama perintah = kata kerja + objek dari glosarium, sama dengan label tombol atau item Menu padanannya.",
+      "Placeholder memberi contoh, tidak menggantikan judul terlihat yang menjadi label.",
+      "Hasil menyebut jenisnya (Page, Action, Setting) lewat grup, bukan prefiks di setiap label.",
+      "Pesan tanpa hasil menyebut kueri dan menawarkan jalan lain; tidak menyalahkan pengguna.",
+      "Pintasan ditulis dengan simbol OS (⌘ atau Ctrl) sesuai L14."
+    ]
+  },
+  "depends_on": [
+    "Modal",
+    "Kbd",
+    "Spinner",
+    "EmptyState",
+    "InlineAlert",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Sediakan tombol pembuka terlihat selain pintasan, dan biarkan pintasan diubah.",
+    "Buang hasil basi dan jangan jalankan Enter saat komposisi IME.",
+    "Kembalikan fokus ke elemen sebelumnya atau ke hasil perintah setelah menutup."
+  ],
+  "dont": [
+    {
+      "text": "Menjadikan palet satu-satunya jalan ke sebuah aksi."
+    },
+    {
+      "text": "Pintasan satu karakter tanpa modifier untuk membuka palet (SC 2.1.4)."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai opsi aktif hanya dengan warna latar."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus dua baris; deskripsi membungkus; pintasan tetap di inline-end atau turun ke baris baru; tidak ada pemotongan label",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "dialog menjadi layar penuh; opsi tumbuh; footer membungkus",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "kueri kosong menampilkan Recent dan Suggested (bila belum ada riwayat, hanya Suggested); 0 hasil menampilkan EmptyState + saran, diumumkan polite",
+      "case": "kueri kosong / 0 hasil"
+    },
+    {
+      "behaviour": "maks 50 per grup dengan tautan \"Show all results\"; daftar divirtualisasi dengan aria-setsize/aria-posinset",
+      "case": "jumlah hasil maksimum"
+    },
+    {
+      "behaviour": "hasil lokal tampil dulu; baris \"Searching…\" setelah 300 ms; Enter menjalankan opsi aktif yang stabil saja",
+      "case": "loading sumber lambat"
+    },
+    {
+      "behaviour": "perintah lokal tetap jalan; grup jarak jauh diganti baris \"Search needs connection\"; perintah yang butuh server diblokir dengan reason",
+      "case": "offline"
+    },
+    {
+      "behaviour": "pengguna dapat mengubah pintasan di pengaturan; pintasan tidak aktif di dalam editor yang memakainya",
+      "case": "pintasan bentrok dengan browser, OS, atau editor"
+    },
+    {
+      "behaviour": "Enter saat isComposing tidak menjalankan perintah",
+      "case": "komposisi IME (CJK)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Opsional: wajib untuk archetype dense-console atau bila L1 memuat prinsip keyboard-first; selain itu disertakan bila journey, entitas, atau surface di brief memerlukannya (alasan dicatat).",
+  "lint": [
+    "Perintah di CommandPalette tanpa padanan UI terlihat ditolak (manual-review)",
+    "shortcut tanpa modifier ditolak (SC 2.1.4)",
+    "CommandPalette.Item aria-disabled tanpa reason ditolak",
+    "aksi primer desktop tanpa pintasan bermodifier ditandai untuk dense-console (manual-review)"
+  ],
+  "name": "CommandPalette",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "error+focus",
+      "phone layar penuh",
+      "RTL"
+    ],
+    "states": [
+      "closed",
+      "open-empty-query",
+      "option-active",
+      "option-hover",
+      "loading",
+      "no-results",
+      "disabled-with-reason",
+      "error"
+    ],
+    "variants": [
+      "default"
+    ]
+  },
+  "purpose": {
+    "purpose": "Dialog modal yang dibuka pintasan bermodifier untuk mencari dan menjalankan perintah atau berpindah tujuan dengan keyboard; berisi combobox dan listbox, menampilkan pintasan tiap aksi, dan menghormati izin.",
+    "when_not_to_use": [
+      "Sebagai satu-satunya jalan ke sebuah aksi: setiap perintah juga tersedia di UI terlihat (Button, Menu, nav).",
+      "Untuk mencari konten atau data di satu halaman: pakai SearchField.",
+      "Untuk memilih nilai field form: pakai Combobox.",
+      "Untuk sedikit aksi kontekstual pada satu objek: pakai Menu."
+    ]
+  },
+  "related": [
+    "Menu",
+    "SearchField",
+    "Combobox",
+    "Kbd",
+    "Modal"
+  ],
+  "responsive": [
+    {
+      "behaviour": "layar penuh; dibuka dari tombol cari di header; opsi ≥ target-min-touch; pintasan disembunyikan; footer petunjuk keyboard disembunyikan kecuali keyboard fisik terdeteksi",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "dialog layout-modal-md di tengah; pintasan aktif bila ada keyboard fisik; opsi ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "dialog di sepertiga atas viewport; tinggi list maksimal ±60% viewport; pintasan dan footer ditampilkan",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh menjalankan atau mengetahui perintah: perintah tidak dimuat ke indeks pencarian sama sekali (tidak bocor lewat hasil)"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "perintah terlihat oleh role tetapi tidak diizinkan saat ini; gembok + reason"
+    },
+    {
+      "pattern": "step-up",
+      "when": "perintah berisiko tinggi; palet menutup lalu StepUpDialog terbuka dengan fokus di dialog"
+    },
+    {
+      "pattern": "read-only",
+      "when": "hanya perintah navigasi dan non-mutasi yang diindeks"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-right",
+      "chevron-left",
+      "arrow-right",
+      "arrow-left"
+    ],
+    "notes": "Ikon cari di inline-start, pintasan di inline-end; chevron \"go to\" dicerminkan; simbol tombol keyboard di Kbd mengikuti OS dan tidak dicerminkan; kueri campuran memakai dir=\"auto\"."
+  },
+  "sizes": {
+    "not_applicable": "Lebar dari layout-modal-md dan tinggi opsi dari layout-row-height (≥ target-current); tidak ada prop size."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "opsi aktif yang di-hover; satu opsi aktif saja",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus DOM di input; opsi aktif diberi ring inset sebagai fokus virtual",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "opsi aktif yang diblokir menampilkan reason",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "opsi yang sedang dimuat ulang tidak bisa dijalankan; Enter menunggu hasil stabil",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "tombol Retry di InlineAlert fokusabel dengan Tab",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "tidak dirender; pintasan global aktif"
+    },
+    {
+      "name": "open-empty-query",
+      "token_swaps": {},
+      "treatment": "menampilkan grup Recent dan Suggested; opsi pertama aktif"
+    },
+    {
+      "name": "option-active",
+      "token_swaps": {
+        "option": "color-structure-selection",
+        "option-active": "color-focus-ring"
+      },
+      "treatment": "opsi aktif dengan latar selection + ring inset + penanda; fokus DOM tetap di input"
+    },
+    {
+      "name": "option-hover",
+      "token_swaps": {
+        "option": "color-structure-selection"
+      },
+      "treatment": "pointer bergerak di atas opsi menjadikannya aktif; hanya di (hover: hover); hover tidak memindah aktif saat daftar menggulir karena keyboard"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "sumber jarak jauh: baris Spinner \"Searching…\" setelah 300 ms; listbox aria-busy=\"true\"; hasil lokal tetap tampil"
+    },
+    {
+      "name": "no-results",
+      "token_swaps": {},
+      "treatment": "EmptyState ringkas menyebut kueri + saran (\"Search all content\") ; diumumkan polite"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "option": "color-structure-text-disabled"
+      },
+      "treatment": "opsi aria-disabled=\"true\": ikon gembok + reason di baris deskripsi; Enter mengumumkan reason dan palet tetap terbuka"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "list": "color-semantic-critical-subtle"
+      },
+      "treatment": "sumber gagal: InlineAlert C1 di dalam list dengan Retry; perintah lokal tetap bisa dijalankan"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}CommandPalette: Dialog + TextField + LazyColumn dengan onPreviewKeyEvent",
+    "flutter": "{ns}_command_palette.dart: CallbackShortcuts + showDialog + TextField + ListView",
+    "html": {
+      "element": "dialog",
+      "notes": "dialog modal + input[role=combobox] + ul[role=listbox]; modul JS wajib, fallback tautan ke halaman daftar perintah"
+    },
+    "swiftui": "{Ns}CommandPalette: .sheet + TextField + List dengan .keyboardShortcut pada pembuka"
+  },
+  "tier": "O",
+  "variants": {
+    "not_applicable": "CommandPalette adalah satu dialog modal per aplikasi; cakupan (halaman, aksi, pengaturan) dinyatakan lewat grup, bukan varian visual."
+  }
+}

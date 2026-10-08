@@ -1,0 +1,92 @@
+/* CountdownTimer · engine 1.8.0 reference (catalog/components/CountdownTimer.json). Tokens only (I3); logical properties only (§12.4).
+   div.ds-countdown-timer[role=timer][aria-labelledby][data-state] > .__container > status glyph + clock glyph + label + value.
+   running: neutral (C6 semantics but no container, no semantic colour); below-threshold: C2 with the locked warning glyph added
+   and the label changed (never colour only, UB2); expired: C1; ended: C3; paused/unknown: C2 + absolute deadline.
+   Container treatment reads --attention-cN-* (L3). Geometry is identical in every state (transparent border and padding in
+   running), so crossing the threshold never moves layout. Digits are tabular so the width never wobbles. No flip, pulse or
+   blink animation at the threshold in any motion setting: meaning comes from glyph + label. */
+.ds-countdown-timer {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  max-inline-size: 100%;
+  vertical-align: middle;
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-countdown-timer__container {
+  --_bg: transparent;
+  --_fg: var(--color-structure-text-primary);
+  --_border: transparent;
+  --_icon: var(--color-structure-text-secondary);
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 0 var(--space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-block: calc(var(--space-1) / 2);
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+}
+.ds-countdown-timer:is([data-state="below-threshold"], [data-state="paused"]) .ds-countdown-timer__container { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-countdown-timer[data-state="expired"] .ds-countdown-timer__container { --_bg: var(--attention-c1-background); --_fg: var(--attention-c1-foreground); --_border: var(--attention-c1-border); --_icon: var(--attention-c1-icon); }
+.ds-countdown-timer[data-state="ended"] .ds-countdown-timer__container { --_bg: var(--attention-c3-background); --_fg: var(--attention-c3-foreground); --_border: var(--attention-c3-border); --_icon: var(--attention-c3-icon); }
+
+.ds-countdown-timer__container > .ds-icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-label-line) - var(--icon-md)) / 2);
+  color: var(--_icon);
+}
+/* the clock means time, not status: secondary when neutral, content colour once the container carries a class */
+.ds-countdown-timer[data-state="running"] .ds-countdown-timer__clock { color: var(--color-structure-text-secondary); }
+.ds-countdown-timer__status { display: none; }
+.ds-countdown-timer:not([data-state="running"]) .ds-countdown-timer__status { display: block; }
+/* at zero the digits are replaced by the outcome text; the clock goes with them */
+.ds-countdown-timer:is([data-state="expired"], [data-state="ended"]) .ds-countdown-timer__clock { display: none; }
+[dir="rtl"] .ds-countdown-timer .ds-icon { transform: none; }
+
+.ds-countdown-timer__label { flex: 0 1 auto; min-inline-size: 0; overflow-wrap: break-word; }
+.ds-countdown-timer__value { flex: none; }
+.ds-countdown-timer__value {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap; /* the number is never split across lines */
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+.ds-countdown-timer__deadline { color: var(--color-structure-text-secondary); font-variant-numeric: tabular-nums; }
+
+/* prominent: label above, large tabular digits (type-h2) — still text, not an image */
+.ds-countdown-timer[data-variant="prominent"] .ds-countdown-timer__container {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-2);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+}
+.ds-countdown-timer[data-variant="prominent"] .ds-countdown-timer__value {
+  grid-column: 1 / -1;
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  font-weight: var(--type-h2-weight);
+}
+
+@media (forced-colors: active) {
+  .ds-countdown-timer:not([data-state="running"]) .ds-countdown-timer__container { border-color: CanvasText; }
+  .ds-countdown-timer .ds-icon { color: CanvasText; }
+}

@@ -1,0 +1,237 @@
+/* Stepper · engine 1.8.0 reference (catalog/components/Stepper.json). Tokens only (I3); logical properties only (§12.4).
+   nav[aria-label="Progress"] > ol > li.step[data-status] > (a | span).target > marker + text. display variant: div[role=group].
+   States differ by shape and text, never by colour alone (UB2): upcoming = outlined circle + number, current = filled circle with a
+   separated outer ring + number + heavier label + aria-current="step", complete = outlined circle + check, error = critical glyph;
+   every step carries hidden "Step n of N: … , completed/current/not started/has errors" text. Connectors: solid after a
+   completed step, dashed before upcoming ones (shape, not only colour). Horizontal on desktop; vertical below bp-tablet
+   (orientation auto) or with data-orientation="vertical". Phone with > 5 steps (data-compact): a details/summary
+   "Step 2 of 6 · Address" + bar opens the vertical list (no JS needed). Stepper.js: step navigation stand-in (focus to the step
+   heading, announcement, document title). */
+.ds-stepper {
+  --_m: var(--control-height-sm);
+  --_gap: var(--space-2);
+  min-inline-size: 0;
+  color: var(--color-structure-text-secondary);
+  font-family: var(--font-sans);
+}
+.ds-stepper[data-size="sm"] { --_m: calc(var(--icon-md) + var(--space-1)); }
+.ds-stepper[data-size="lg"] { --_m: var(--control-height-md); }
+
+.ds-stepper__list {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-stepper__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+/* the step row: marker + label; interactive steps are links (whole row = target) */
+.ds-stepper__target {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--_gap);
+  max-inline-size: 100%;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: var(--target-current);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+a.ds-stepper__target { cursor: pointer; }
+a.ds-stepper__target::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-stepper__marker {
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--_m);
+  block-size: var(--_m);
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--shape-circle);
+  background: var(--color-structure-surface-base);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: 1;
+  font-weight: var(--type-label-weight);
+  font-variant-numeric: tabular-nums;
+}
+.ds-stepper__marker .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); stroke-width: max(var(--icon-stroke), 2); }
+[dir="rtl"] .ds-stepper__marker .ds-icon { transform: none; } /* check and error glyphs never mirror */
+.ds-stepper__text { display: flex; flex-direction: column; align-items: inherit; min-inline-size: 0; }
+.ds-stepper__label {
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  overflow-wrap: anywhere; /* wraps (two lines under the marker); never an ellipsis */
+}
+.ds-stepper__desc {
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  overflow-wrap: anywhere;
+}
+
+/* connector between this marker and the next: dashed (upcoming) / solid + thick (after a completed step); decorative */
+.ds-stepper__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-block-start: calc(var(--space-1) + var(--_m) / 2);
+  inset-inline-start: calc(50% + var(--_m) / 2 + var(--space-2));
+  inline-size: calc(100% - var(--_m) - 2 * var(--space-2));
+  border-block-start: var(--border-width-thin) dashed var(--color-structure-border-strong);
+  pointer-events: none;
+}
+.ds-stepper__step[data-status="complete"]:not(:last-child)::after {
+  border-block-start: var(--border-width-thick) solid var(--color-interaction-default);
+  margin-block-start: calc(var(--border-width-thin) - var(--border-width-thick));
+}
+
+/* complete: check in an interaction-coloured outline */
+.ds-stepper__step[data-status="complete"] .ds-stepper__marker { border-color: var(--color-interaction-default); border-width: var(--border-width-thick); color: var(--color-interaction-default); }
+.ds-stepper__step[data-status="complete"] .ds-stepper__label { color: var(--color-structure-text-primary); }
+/* current: filled + separated outer ring + heavier primary label */
+.ds-stepper__step[data-status="current"] .ds-stepper__marker {
+  border: var(--border-width-thick) solid var(--color-interaction-default);
+  background: var(--color-interaction-default);
+  color: var(--color-interaction-on-solid);
+  box-shadow: 0 0 0 var(--border-width-thick) var(--color-structure-surface-base), 0 0 0 calc(2 * var(--border-width-thick)) var(--color-interaction-default);
+  font-weight: var(--type-h3-weight);
+}
+.ds-stepper__step[data-status="current"] .ds-stepper__label { color: var(--color-structure-text-primary); font-weight: var(--type-h3-weight); }
+/* error: locked critical glyph + "Has errors" (text, part of the name) */
+.ds-stepper__step[data-status="error"] .ds-stepper__marker { border: var(--border-width-thick) solid var(--color-semantic-critical-strong); color: var(--color-semantic-critical-strong); }
+.ds-stepper__step[data-status="error"] .ds-stepper__label { color: var(--color-structure-text-primary); }
+.ds-stepper__step[data-status="error"] .ds-stepper__desc { color: var(--color-semantic-critical-strong); }
+/* blocked (non-linear prerequisite): focusable, reason readable */
+.ds-stepper__target[aria-disabled="true"] { cursor: not-allowed; }
+.ds-stepper__target[aria-disabled="true"] .ds-stepper__label { color: var(--color-structure-text-disabled); }
+.ds-stepper__target[aria-disabled="true"] .ds-stepper__marker { border-style: dashed; color: var(--color-structure-text-disabled); }
+
+/* hover / pressed: interactive steps only (the current step is not interactive) */
+@media (hover: hover) {
+  a.ds-stepper__target:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+  a.ds-stepper__target:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+  a.ds-stepper__target:not([aria-disabled="true"]):hover .ds-stepper__label { color: var(--color-interaction-hover); text-decoration-line: underline; text-underline-offset: var(--border-width-thick); }
+}
+a.ds-stepper__target[data-force~="hover"] { background: var(--row-background-hover); }
+a.ds-stepper__target[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+a.ds-stepper__target[data-force~="hover"] .ds-stepper__label { color: var(--color-interaction-hover); text-decoration-line: underline; text-underline-offset: var(--border-width-thick); }
+a.ds-stepper__target:not([aria-disabled="true"]):active,
+a.ds-stepper__target[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+a.ds-stepper__target:not([aria-disabled="true"]):active::before,
+a.ds-stepper__target[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+a.ds-stepper__target:not([aria-disabled="true"]):active .ds-stepper__label,
+a.ds-stepper__target[data-force~="pressed"] .ds-stepper__label { color: var(--color-interaction-pressed); }
+/* interactive label keeps an underline marker so a visitable step never relies on colour (UB6) */
+a.ds-stepper__target .ds-stepper__label { text-decoration-line: underline; text-decoration-thickness: var(--border-width-thin); text-underline-offset: var(--border-width-thick); }
+/* focus: ring around marker + label (outside, offset from base.css); also on the current step when it is focusable */
+.ds-stepper__target[tabindex="-1"]:focus { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+
+/* ---------- vertical: phone (auto) or data-orientation="vertical" ---------- */
+.ds-stepper[data-orientation="vertical"] .ds-stepper__list { flex-direction: column; align-items: stretch; }
+.ds-stepper[data-orientation="vertical"] .ds-stepper__step { flex: none; align-items: stretch; }
+.ds-stepper[data-orientation="vertical"] .ds-stepper__target { flex-direction: row; align-items: flex-start; gap: var(--space-3); text-align: start; padding-block: var(--space-1) var(--space-3); }
+.ds-stepper[data-orientation="vertical"] .ds-stepper__text { align-items: flex-start; padding-block-start: max(0px, calc((var(--_m) - var(--type-label-line)) / 2)); }
+.ds-stepper[data-orientation="vertical"] .ds-stepper__step:not(:last-child)::after {
+  inset-block: calc(2 * var(--space-1) + var(--_m)) var(--space-1);
+  inset-inline-start: calc(var(--space-2) + var(--_m) / 2 - var(--border-width-thin) / 2);
+  inline-size: 0;
+  margin: 0;
+  border-block-start: 0;
+  border-inline-start: var(--border-width-thin) dashed var(--color-structure-border-strong);
+}
+.ds-stepper[data-orientation="vertical"] .ds-stepper__step[data-status="complete"]:not(:last-child)::after {
+  inset-inline-start: calc(var(--space-2) + var(--_m) / 2 - var(--border-width-thick) / 2);
+  border-inline-start: var(--border-width-thick) solid var(--color-interaction-default);
+}
+@media (--bp-tablet-down) {
+  .ds-stepper:not([data-orientation="vertical"]) { --_m: var(--control-height-md); }
+  .ds-stepper .ds-stepper__list { flex-direction: column; align-items: stretch; }
+  .ds-stepper .ds-stepper__step { flex: none; align-items: stretch; }
+  .ds-stepper .ds-stepper__target { flex-direction: row; align-items: flex-start; gap: var(--space-3); text-align: start; padding-block: var(--space-1) var(--space-3); min-block-size: max(var(--control-height-lg), var(--target-current)); }
+  .ds-stepper .ds-stepper__text { align-items: flex-start; padding-block-start: max(0px, calc((var(--_m) - var(--type-label-line)) / 2)); }
+  .ds-stepper .ds-stepper__step:not(:last-child)::after {
+    inset-block: calc(2 * var(--space-1) + var(--_m)) var(--space-1);
+    inset-inline-start: calc(var(--space-2) + var(--_m) / 2 - var(--border-width-thin) / 2);
+    inline-size: 0;
+    margin: 0;
+    border-block-start: 0;
+    border-inline-start: var(--border-width-thin) dashed var(--color-structure-border-strong);
+  }
+  .ds-stepper .ds-stepper__step[data-status="complete"]:not(:last-child)::after {
+    inset-inline-start: calc(var(--space-2) + var(--_m) / 2 - var(--border-width-thick) / 2);
+    border-inline-start: var(--border-width-thick) solid var(--color-interaction-default);
+  }
+}
+
+/* ---------- compact summary (phone, > 5 steps): details/summary opens the vertical list ---------- */
+.ds-stepper__compact { display: none; }
+.ds-stepper__compact > summary {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--radius-md);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  list-style: none;
+  cursor: pointer;
+}
+.ds-stepper__compact > summary::-webkit-details-marker { display: none; }
+.ds-stepper__compact > summary .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); transition: transform var(--motion-fast-duration) var(--motion-easing-standard); }
+.ds-stepper__compact[open] > summary .ds-icon { transform: rotate(180deg); }
+.ds-stepper__progress { grid-column: 1 / -1; display: block; block-size: var(--space-1); border-radius: var(--radius-full); background: var(--color-structure-surface-sunken); box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-structure-border); overflow: hidden; }
+.ds-stepper__progress > span { display: block; inline-size: var(--ds-progress, 0%); block-size: 100%; background: var(--color-interaction-default); }
+@media (hover: hover) {
+  .ds-stepper__compact > summary:hover { background: var(--row-background-hover); }
+}
+.ds-stepper__compact > summary[data-force~="hover"] { background: var(--row-background-hover); }
+@media (--bp-tablet-down) {
+  .ds-stepper[data-compact] .ds-stepper__compact { display: block; margin-block-end: var(--space-2); }
+  .ds-stepper[data-compact] .ds-stepper__compact:not([open]) + .ds-stepper__list { display: none; }
+}
+
+/* loading (validation on Next): the Stepper does not change; a note shows the step is being checked */
+.ds-stepper__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-3); margin-block-start: var(--space-4); }
+.ds-stepper__heading { margin-block-start: var(--space-4); font-family: var(--type-h3-family); font-size: var(--type-h3-size); line-height: var(--type-h3-line); font-weight: var(--type-h3-weight); color: var(--color-structure-text-primary); border-radius: var(--radius-xs); }
+.ds-stepper__heading[tabindex="-1"]:focus { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-stepper__compact > summary .ds-icon { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-stepper__marker { border-color: CanvasText; }
+  .ds-stepper__step[data-status="current"] .ds-stepper__marker { forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; box-shadow: 0 0 0 var(--border-width-thick) Canvas, 0 0 0 calc(2 * var(--border-width-thick)) Highlight; }
+  .ds-stepper__step:not(:last-child)::after { border-color: CanvasText; }
+  .ds-stepper__target[aria-disabled="true"] .ds-stepper__label { color: GrayText; }
+  .ds-stepper__progress > span { background: Highlight; forced-color-adjust: none; }
+}

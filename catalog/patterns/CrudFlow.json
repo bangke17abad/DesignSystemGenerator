@@ -1,0 +1,362 @@
+{
+  "name": "CrudFlow",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Wajib bila ada entitas yang dibuat atau diubah pengguna (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna menemukan, membuka, membuat, mengubah, dan menghapus record sebuah entitas dalam satu siklus yang dapat diprediksi (daftar → detail → buat/ubah → hapus) tanpa kehilangan posisi di daftar, tanpa kehilangan perubahan yang belum disimpan, dan dengan hasil setiap operasi yang terlihat serta diumumkan.",
+    "when": [
+      "Setiap entitas brief yang punya operasi buat, ubah, atau hapus oleh setidaknya satu role.",
+      "Koleksi record yang dipindai lalu dibuka satu per satu (daftar kerja, katalog, direktori, riwayat yang bisa dikoreksi)."
+    ],
+    "when_not": [
+      "Entitas tunggal tanpa koleksi (profil sendiri, preferensi): pakai Settings atau FormFlow langsung.",
+      "Membuat record lewat lebih dari satu layar atau lebih dari 12 field: langkah buat memakai Wizard; CrudFlow tetap mengatur daftar dan detail.",
+      "Data hanya-baca untuk dianalisis (metrik, laporan): pakai Dashboard atau DataStory.",
+      "Operasi pada banyak record sekaligus: BulkActions di atas daftar CrudFlow."
+    ]
+  },
+  "composition": [
+    {
+      "component": "PageHeader",
+      "parts": [
+        "PageHeader.Breadcrumb",
+        "PageHeader.Back",
+        "PageHeader.Title",
+        "PageHeader.Actions"
+      ],
+      "role_in_pattern": "daftar: h1 nama koleksi + satu aksi primer \"Buat {objek}\"; detail: h1 nama record, breadcrumb/back-link ke daftar, aksi Ubah + Menu aksi sekunder"
+    },
+    {
+      "component": "Table",
+      "parts": [
+        "Table.Toolbar",
+        "Table.Body",
+        "Table.RowHeader",
+        "Table.RowActions",
+        "Table.Empty",
+        "Table.Footer"
+      ],
+      "role_in_pattern": "daftar record dengan atribut sebanding; row-header berisi tautan nyata (href) ke detail"
+    },
+    {
+      "component": "List",
+      "role_in_pattern": "pengganti Table untuk record dengan satu-dua atribut yang dibaca berurutan; aria-current pada item yang sedang dibuka"
+    },
+    {
+      "component": "Card",
+      "role_in_pattern": "stacked-card pengganti baris Table di bawah bp-tablet"
+    },
+    {
+      "component": "StatusLabel",
+      "role_in_pattern": "state lifecycle per record di baris, kartu, dan header detail"
+    },
+    {
+      "component": "Pagination",
+      "role_in_pattern": "posisi di koleksi besar; ?page=n di URL web; load-more di phone"
+    },
+    {
+      "component": "ContextPanel",
+      "parts": [
+        "ContextPanel.Header",
+        "ContextPanel.Title",
+        "ContextPanel.Body",
+        "ContextPanel.Footer",
+        "ContextPanel.Close"
+      ],
+      "role_in_pattern": "detail atau ubah cepat berdampingan dengan daftar (variant detail/edit); halaman penuh di phone"
+    },
+    {
+      "component": "DescriptionList",
+      "role_in_pattern": "atribut record di tampilan detail (baca)"
+    },
+    {
+      "component": "Form",
+      "parts": [
+        "Form.Header",
+        "Form.Section",
+        "Form.Actions"
+      ],
+      "role_in_pattern": "buat/ubah mengikuti FormFlow; variant page di rute sendiri atau embedded di ContextPanel; confirmDiscard aktif"
+    },
+    {
+      "component": "Button",
+      "role_in_pattern": "aksi primer Buat/Simpan dan aksi sekunder Batal"
+    },
+    {
+      "component": "Menu",
+      "parts": [
+        "Menu.Trigger",
+        "Menu.Item",
+        "Menu.Separator"
+      ],
+      "role_in_pattern": "aksi sekunder per record (duplikat, arsipkan, hapus); item destruktif di grup terakhir"
+    },
+    {
+      "component": "Modal",
+      "role_in_pattern": "konfirmasi buang perubahan (variant confirmation) dan hapus tak terbalik (variant destructive, lewat DestructiveAction)"
+    },
+    {
+      "component": "Toast",
+      "role_in_pattern": "hasil buat/simpan/hapus yang bisa diabaikan; Undo untuk hapus yang dapat dibalik"
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "gagal muat atau gagal simpan (C1 + Retry); konflik versi dan simpan sebagian (C2)"
+    },
+    {
+      "component": "EmptyState",
+      "role_in_pattern": "first-use (koleksi kosong), not-found (record terhapus), restricted (tautan langsung tanpa izin)"
+    },
+    {
+      "component": "Skeleton",
+      "role_in_pattern": "muat pertama daftar dan detail meniru tata letak"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "pengumuman hasil simpan/hapus dan jumlah record setelah muat lambat"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Daftar",
+      "state_class": "C6",
+      "transition": "Skeleton saat muat pertama; halaman, urutan, dan filter dibaca dari URL; row-header adalah tautan sehingga detail bisa dibuka di tab baru"
+    },
+    {
+      "step": "Buka detail",
+      "state_class": "C6",
+      "transition": "desktop: ContextPanel docked dan baris diberi aria-current; phone dan tablet portrait: rute detail; baris asal dan posisi gulir dicatat untuk dipulihkan"
+    },
+    {
+      "step": "Buat / ubah",
+      "state_class": "C6",
+      "transition": "Form (FormFlow) di rute sendiri atau ContextPanel variant edit; nilai awal mode ubah dimuat dengan Skeleton; state dirty dilacak sejak perubahan pertama"
+    },
+    {
+      "step": "Simpan",
+      "state_class": "C5",
+      "transition": "Button primer loading dengan lebar terkunci; klik ganda diabaikan; permintaan membawa versi record dan idempotency key"
+    },
+    {
+      "step": "Simpan gagal",
+      "state_class": "C1",
+      "transition": "InlineAlert C1 + Retry di atas form; seluruh isian dipertahankan; tidak memakai toast"
+    },
+    {
+      "step": "Konflik versi",
+      "state_class": "C2",
+      "transition": "server menolak karena record sudah diubah pihak lain: InlineAlert C2 menyebut kapan (dan siapa, bila role boleh tahu) dengan pilihan \"Muat versi terbaru\" atau \"Timpa\" (hanya bila role boleh); isian tetap"
+    },
+    {
+      "step": "Keluar dengan perubahan belum disimpan",
+      "state_class": "C2",
+      "transition": "navigasi, Esc, Batal, atau gestur kembali saat dirty membuka Modal confirmation \"Buang perubahan?\"; Esc pada dialog = Lanjut mengedit"
+    },
+    {
+      "step": "Tersimpan",
+      "state_class": "C4",
+      "transition": "Toast \"{Objek} disimpan\"; kembali ke detail (atau daftar bila dibuat dari daftar) dengan record tampil di posisinya; bila record baru tidak lolos filter aktif, toast menyebutnya dengan aksi Lihat"
+    },
+    {
+      "step": "Hapus",
+      "state_class": "C3",
+      "transition": "mengikuti DestructiveAction; record keluar dari daftar; dari rute detail kembali ke daftar dengan posisi sebelumnya"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "daftar sebagai stacked-card atau List lebar penuh dengan load-more; detail dan form adalah rute sendiri dengan back-link ke daftar; \"Buat {objek}\" di action bar zona jempol (tidak menutup konten terakhir); Menu aksi record menjadi Sheet; kembali memulihkan posisi gulir dan fokus pada kartu asal"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "Table dengan kolom sekunder dilipat ke baris ekspansi; detail di ContextPanel overlay tanpa scrim (portrait sempit: rute sendiri); form ubah di rute sendiri atau Modal fullscreen bila lebih dari ±6 field"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "dua pane daftar · detail: Table + ContextPanel docked; ↑/↓ di daftar mengganti isi panel tanpa memindah fokus; ubah cepat di ContextPanel variant edit, form panjang di rute sendiri; paginasi bernomor di footer"
+    }
+  ],
+  "states": {
+    "empty": "Koleksi kosong: EmptyState first-use spesifik (\"Belum ada {objek}\") dengan CTA \"Buat {objek}\" hanya bila role boleh membuat. Kosong karena pencarian/filter memakai variant no-results (SearchAndFilter). Record yang terhapus dibuka lewat tautan: variant not-found dengan jalan kembali ke daftar.",
+    "loading": "Muat pertama: Skeleton meniru Table/kartu dan DescriptionList. Refresh, ganti halaman, atau ganti urutan mempertahankan data lama dengan aria-busy, bukan skeleton ulang.",
+    "error": "Gagal muat daftar/detail: InlineAlert C1 + Retry di wilayah itu (bukan EmptyState). Gagal simpan: InlineAlert C1 di atas form, isian dipertahankan. Konflik versi: InlineAlert C2 dengan pilihan penyelesaian.",
+    "partial": "Record tersimpan tetapi bagian turunan gagal (lampiran, relasi): InlineAlert C2 di detail menyebut bagian yang gagal dan aksi untuk mengulang bagian itu saja; record tidak ditampilkan seolah lengkap (I6).",
+    "success": "Toast C4 dengan kata kerja yang sama dengan tombol (\"Simpan perubahan\" → \"Perubahan disimpan\"); record baru atau terubah terlihat di posisinya; fokus ke judul detail atau ke baris asal."
+  },
+  "accessibility": [
+    {
+      "step": "Daftar",
+      "focus": "Table/List berlabel ke h1; tautan utama di row-header; kembali dari detail memulihkan fokus ke baris asal dan posisi gulir (§9.5)",
+      "announcement": "bila muat lebih dari 2 detik, jumlah record diumumkan polite (\"24 item\")"
+    },
+    {
+      "step": "Buka detail",
+      "focus": "rute: fokus ke h1 dan judul dokumen \"{nama record} · {aplikasi}\"; ContextPanel: fokus ke judul panel (tabindex −1) dengan ring",
+      "announcement": "judul dibaca karena fokus; pergantian isi panel lewat ↑/↓ diumumkan polite tanpa memindah fokus"
+    },
+    {
+      "step": "Buat / ubah",
+      "focus": "rute form: fokus ke h1; form di panel: fokus ke field pertama; validasi mengikuti FormFlow"
+    },
+    {
+      "step": "Konflik versi",
+      "focus": "fokus tetap di tombol Simpan; aksi penyelesaian tepat sesudah judul alert dalam urutan fokus",
+      "announcement": "InlineAlert C2 (role status) diumumkan polite"
+    },
+    {
+      "step": "Keluar dengan perubahan belum disimpan",
+      "focus": "Modal alertdialog dengan fokus awal di judul; Tab: Lanjut mengedit lalu Buang perubahan; menutup mengembalikan fokus ke pemicu",
+      "announcement": "judul dan akibatnya dibaca sebagai alertdialog"
+    },
+    {
+      "step": "Tersimpan",
+      "focus": "kembali ke detail: fokus ke h1/judul panel; tetap di form bila pengguna tetap di layar",
+      "announcement": "pesan berhasil diumumkan polite lewat Toast/LiveAnnouncer"
+    },
+    {
+      "step": "Hapus",
+      "focus": "fokus ke baris berikutnya, atau ke judul daftar/EmptyState bila daftar kosong (§9.5)",
+      "announcement": "\"{Objek} dihapus\" polite, ditambah \"Urungkan tersedia\" bila ada undo"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Satu nama objek dari glosarium dipakai konsisten di h1 daftar, tombol, toast, empty state, dan judul dokumen.",
+      "Aksi primer daftar adalah kata kerja + objek (\"Buat item\"), bukan \"Tambah baru\" atau ikon + saja.",
+      "Judul detail adalah nama record; judul form ubah \"Ubah {objek}\" dengan nama record di breadcrumb atau back-link.",
+      "Konfirmasi buang perubahan menyebut akibatnya dengan kata kerja eksplisit (\"Buang perubahan\" / \"Lanjut mengedit\"), bukan Ya/Tidak.",
+      "Pesan konflik menyebut kapan record diubah dan apa yang bisa dilakukan, tanpa menyalahkan pengguna."
+    ],
+    "examples": {
+      "en-US": [
+        "Create item",
+        "Item created",
+        "Discard changes?",
+        "Your changes to this item haven't been saved. Discard them or keep editing.",
+        "This item was changed by someone else at 10:42. Load the latest version, then apply your changes again.",
+        "Couldn't load items. Check your connection and try again."
+      ],
+      "id-ID": [
+        "Buat item",
+        "Item dibuat",
+        "Buang perubahan?",
+        "Perubahan pada item ini belum disimpan. Buang perubahan atau lanjut mengedit.",
+        "Item ini diubah orang lain pada 10.42. Muat versi terbaru, lalu terapkan perubahan Anda lagi.",
+        "Item tidak dapat dimuat. Periksa koneksi Anda, lalu coba lagi."
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh membuat, mengubah, dan menghapus: semua aksi tampil"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role hanya melihat: daftar dan detail lengkap berkontras penuh, tanpa Buat/Ubah/Hapus; rute form tidak tersedia"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu entitas ada: tujuan nav dan rute tidak dirender; tautan langsung → EmptyState restricted atau not-found tanpa menyebut isi (SystemPages)"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "Ubah/Hapus dikunci oleh state record (mis. sudah final atau sedang dipakai): aksi aria-disabled + alasan terlihat yang menyebut cara membukanya"
+    },
+    {
+      "pattern": "step-up",
+      "when": "mengubah atau menghapus record finansial atau hukum: StepUpDialog sebelum simpan (SC 3.3.4)"
+    }
+  ],
+  "do": [
+    "Pertahankan halaman, urutan, filter, posisi gulir, dan baris terakhir yang dibuka saat kembali dari detail atau form.",
+    "Beri setiap record URL detail yang stabil agar bisa dibuka di tab baru, dibagikan, dan dipulihkan oleh tombol back.",
+    "Tampilkan record baru di posisi yang benar menurut urutan aktif dan beri tahu bila record itu tersaring keluar.",
+    "Kirim versi record saat simpan dan tangani konflik secara eksplisit, bukan menimpa diam-diam."
+  ],
+  "dont": [
+    {
+      "text": "Kembali ke halaman 1 atau ke atas daftar setelah menyimpan atau menutup detail.",
+      "ref": "§9.5"
+    },
+    {
+      "text": "Menampilkan record sebagai tersimpan sebelum server mengonfirmasi, atau \"tersimpan\" padahal sebagian gagal.",
+      "ref": "I6"
+    },
+    {
+      "text": "Menampilkan gagal muat sebagai daftar kosong.",
+      "ref": "§12.2"
+    },
+    {
+      "text": "Menyembunyikan atau menonaktifkan Ubah/Hapus tanpa alasan bagi role yang boleh setelah syarat terpenuhi.",
+      "ref": "UB10"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "daftar dan detail yang pernah dimuat tetap tampil dengan \"Terakhir diperbarui {waktu}\" (I6); Simpan diantrekan dengan StatusLabel unconfirmed bila OfflineSync dipilih, selain itu diblokir dengan alasan \"Perlu koneksi\"; InlineAlert C2 persisten"
+    },
+    {
+      "case": "timeout saat simpan",
+      "behaviour": "InlineAlert C1 \"Belum dapat dipastikan tersimpan\"; sebelum Retry, status diperiksa ulang lewat idempotency key agar tidak membuat record ganda"
+    },
+    {
+      "case": "data sangat banyak (puluhan ribu record)",
+      "behaviour": "paginasi server atau Table virtualized dengan aria-rowcount total; total boleh perkiraan (\"lebih dari 10.000\"); tidak ada pilih-semua lintas halaman tanpa konfirmasi jumlah"
+    },
+    {
+      "case": "data kosong",
+      "behaviour": "EmptyState first-use dengan CTA sesuai role; tanpa Pagination dan tanpa header tabel kosong"
+    },
+    {
+      "case": "aksi ganda (klik ganda Buat/Simpan, Enter berulang)",
+      "behaviour": "kiriman kedua diabaikan selama loading; server memakai idempotency key sehingga tidak ada dua record"
+    },
+    {
+      "case": "nama record dan label kolom +40% (locale terpanjang)",
+      "behaviour": "nama boleh ellipsis dengan nama lengkap di nama aksesibel dan Tooltip/tekan lama; status, harga, dan waktu tidak dipotong (§8.2); h1 detail membungkus"
+    },
+    {
+      "case": "record dihapus pihak lain saat sedang dibuka atau diubah",
+      "behaviour": "detail berganti EmptyState not-found dengan tautan ke daftar; form ubah menahan isian dan menawarkan membuat record baru dari isian itu"
+    },
+    {
+      "case": "tautan langsung ke detail tanpa riwayat",
+      "behaviour": "back-link/breadcrumb menuju daftar induk, bukan history.back yang keluar dari aplikasi"
+    },
+    {
+      "case": "teks 200%",
+      "behaviour": "dua pane runtuh menjadi rute detail; ContextPanel dan action bar tidak menutupi elemen yang fokus (SC 2.4.11)"
+    }
+  ],
+  "wcag": [
+    "1.3.1",
+    "1.4.10",
+    "2.4.2",
+    "2.4.3",
+    "2.4.6",
+    "2.4.11",
+    "3.3.1",
+    "3.3.4",
+    "4.1.2",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "FormFlow",
+    "DestructiveAction",
+    "SearchAndFilter",
+    "BulkActions",
+    "MasterDetail",
+    "DetailView",
+    "AsyncFeedback"
+  ],
+  "lint": [
+    "Halaman daftar punya tepat satu aksi primer Buat di PageHeader bila role boleh membuat",
+    "Row-header Table di daftar CrudFlow adalah tautan dengan href ke detail",
+    "Form ubah di CrudFlow memakai confirmDiscard",
+    "Setiap operasi simpan dan hapus menghasilkan Toast atau InlineAlert hasil"
+  ]
+}

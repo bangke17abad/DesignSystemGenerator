@@ -1,0 +1,168 @@
+/* Toast · engine 1.8.0 reference (catalog/components/Toast.json). Tokens only (I3); logical properties only (§12.4).
+   The card is surface-raised + elevation-2; a status toast paints its --attention-cN-* treatment on a ::before layer above
+   that surface, so quiet (transparent) treatments keep the raised card and filled ones cover it. Critical (C1) is never a
+   toast: there is deliberately no [data-status="critical"] rule (§12.2). Content on a status toast uses currentColor for the
+   action, dismiss and focus ring, so they stay legible on whatever treatment L3 picks. */
+.ds-toast-region {
+  position: fixed;
+  inset-block-end: var(--space-4);
+  inset-inline: var(--space-4);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.ds-toast-region:empty { display: none; }
+/* static stack for previews and docs (not a landmark, not fixed) */
+.ds-toast-region[data-static] { position: static; inset: auto; align-items: flex-start; }
+.ds-toast-region[data-static] > .ds-toast { animation: none; }
+
+.ds-toast {
+  --_bg: transparent;
+  --_fg: var(--color-structure-text-primary);
+  --_border: transparent;
+  --_icon: var(--color-structure-text-secondary);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  inline-size: 100%;
+  max-inline-size: var(--layout-modal-sm);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4) var(--space-2);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-raised);
+  color: var(--_fg);
+  box-shadow: var(--elevation-2);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  pointer-events: auto;
+  animation: ds-toast-enter var(--motion-base-duration) var(--motion-easing-enter) both;
+}
+.ds-toast::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: inherit;
+  background: var(--_bg);
+  pointer-events: none;
+}
+.ds-toast[data-status="warning"] { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-toast[data-status="neutral-negative"] { --_bg: var(--attention-c3-background); --_fg: var(--attention-c3-foreground); --_border: var(--attention-c3-border); --_icon: var(--attention-c3-icon); }
+.ds-toast[data-status="positive"] { --_bg: var(--attention-c4-background); --_fg: var(--attention-c4-foreground); --_border: var(--attention-c4-border); --_icon: var(--attention-c4-icon); }
+.ds-toast[data-status="info"] { --_bg: var(--attention-c5-background); --_fg: var(--attention-c5-foreground); --_border: var(--attention-c5-border); --_icon: var(--attention-c5-icon); }
+
+.ds-toast__icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block: calc((var(--type-body-line) - var(--icon-md)) / 2);
+  color: var(--_icon);
+}
+[dir="rtl"] .ds-toast__icon { transform: none; }
+.ds-toast__message {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+.ds-toast__controls {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-block: calc((var(--type-body-line) - var(--target-current)) / 2);
+}
+
+/* action (Undo, View) and dismiss share one quiet button treatment drawn in currentColor */
+.ds-toast__action,
+.ds-toast__dismiss {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  padding: 0;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-toast__action { padding-inline: var(--space-3); border-color: currentColor; }
+.ds-toast:not([data-status]) .ds-toast__action { color: var(--color-interaction-default); }
+.ds-toast__dismiss .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+.ds-toast__action::before,
+.ds-toast__dismiss::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .ds-toast__action:not([aria-busy="true"]):hover { text-decoration: underline; }
+  .ds-toast__dismiss:hover { border-color: currentColor; }
+  .ds-toast__action:not([aria-busy="true"]):hover::before,
+  .ds-toast__dismiss:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-toast__action[data-force~="hover"]:not([aria-busy="true"]) { text-decoration: underline; }
+.ds-toast__dismiss[data-force~="hover"] { border-color: currentColor; }
+.ds-toast__action[data-force~="hover"]:not([aria-busy="true"])::before,
+.ds-toast__dismiss[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-toast__action:not([aria-busy="true"]):active,
+.ds-toast__action:not([aria-busy="true"])[data-force~="pressed"] { text-decoration: underline; transform: var(--state-press-transform); }
+.ds-toast__dismiss:active,
+.ds-toast__dismiss[data-force~="pressed"] { border-color: currentColor; transform: var(--state-press-transform); }
+.ds-toast__action:not([aria-busy="true"]):active::before,
+.ds-toast__action:not([aria-busy="true"])[data-force~="pressed"]::before,
+.ds-toast__dismiss:active::before,
+.ds-toast__dismiss[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-toast__action[aria-busy="true"] { cursor: progress; }
+
+/* focus ring: on a status toast the ring takes the content colour, which L3 guarantees against that toast's fill */
+.ds-toast[data-status] :focus-visible,
+.ds-toast[data-status] [data-force~="focus"] { outline-color: currentColor; }
+
+/* exiting: slide + fade with the exit easing; the frozen preview frame keeps full opacity (contrast is still checked) */
+.ds-toast[data-state="exiting"] { animation: ds-toast-exit var(--motion-base-duration) var(--motion-easing-exit) both; }
+.ds-toast[data-force~="exiting"] { animation: none; transform: translateY(var(--space-2)); }
+@keyframes ds-toast-enter { from { opacity: 0; transform: translateY(var(--space-4)); } }
+@keyframes ds-toast-exit { to { opacity: 0; transform: translateY(var(--space-4)); } }
+
+/* phone: full width minus the gutter, above BottomNav / action bars (products add their bar height to --ds-toast-offset) */
+@media (--bp-tablet-down) {
+  .ds-toast-region:not([data-static]) {
+    inset-block-end: calc(var(--ds-toast-offset, 0px) + max(var(--space-4), env(safe-area-inset-bottom)));
+    align-items: stretch;
+  }
+  .ds-toast { max-inline-size: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-toast, .ds-toast[data-state="exiting"] { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-toast { border-color: CanvasText; }
+  .ds-toast::before { border-color: transparent; }
+  .ds-toast__icon { color: CanvasText; }
+  .ds-toast__action, .ds-toast__dismiss { color: ButtonText; }
+  .ds-toast__action { border-color: ButtonText; }
+}

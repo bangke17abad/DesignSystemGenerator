@@ -1,0 +1,117 @@
+{
+  "name": "Wizard",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila brief memiliki form lebih dari satu layar atau lebih dari 12 field.",
+  "problem": {
+    "problem": "Pengguna menyelesaikan tugas input panjang dalam langkah berurutan yang dapat dipahami, tahu posisinya dan sisa langkahnya, dapat maju-mundur tanpa kehilangan isian, dan meninjau semuanya sebelum mengirim.",
+    "when": [
+      "Form dengan lebih dari 12 field atau yang secara alami terbagi ke 3-7 tahap (pendaftaran, pengajuan, checkout, penyiapan integrasi).",
+      "Input bercabang, ketika jawaban di satu langkah menentukan langkah berikutnya."
+    ],
+    "when_not": [
+      "Form ≤ 12 field di satu layar: pakai FormFlow.",
+      "Pengaturan independen yang bisa diubah kapan saja dan dalam urutan apa pun: pakai Settings.",
+      "Pengenalan produk tanpa input yang diproses: pakai Onboarding."
+    ]
+  },
+  "composition": [
+    { "component": "PageHeader", "parts": ["PageHeader.Back", "PageHeader.Title"], "role_in_pattern": "judul tugas tetap (\"Ajukan klaim\"); Back menuju asal wizard, bukan langkah sebelumnya" },
+    { "component": "Stepper", "parts": ["Stepper.Step"], "role_in_pattern": "3-7 langkah; linear default, non-linear bila langkah independen; langkah selesai dapat dikunjungi ulang" },
+    { "component": "Form", "parts": ["Form.Header", "Form.Section", "Form.Actions", "Form.Submit", "Form.Cancel"], "role_in_pattern": "satu Form per langkah; heading langkah sebagai target fokus; Actions = Kembali (sekunder) + Lanjut (primer), langkah akhir = kata kerja kirim spesifik" },
+    { "component": "ErrorSummary", "role_in_pattern": "error validasi langkah saat menekan Lanjut, dan error lintas langkah di ringkasan" },
+    { "component": "TextField", "role_in_pattern": "field isian per langkah; autocomplete untuk data pribadi" },
+    { "component": "RadioGroup", "role_in_pattern": "pilihan yang menentukan cabang; perubahan nilai memperbarui daftar langkah di Stepper" },
+    { "component": "Select", "role_in_pattern": "pilihan dari daftar tetap" },
+    { "component": "DatePicker", "role_in_pattern": "tanggal yang selalu dapat diketik" },
+    { "component": "DescriptionList", "parts": ["DescriptionList.Item", "DescriptionList.Term", "DescriptionList.Description", "DescriptionList.Action"], "role_in_pattern": "ringkasan sebelum kirim, dikelompokkan per langkah dengan aksi \"Ubah\" yang membuka langkah itu" },
+    { "component": "Button", "role_in_pattern": "Lanjut, Kembali, Simpan draf, dan kirim akhir" },
+    { "component": "InlineAlert", "role_in_pattern": "error System C1 + Retry saat validasi server atau kirim gagal; Policy C2 untuk aturan lintas langkah" },
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Description", "Modal.Cancel", "Modal.Action"], "role_in_pattern": "konfirmasi keluar dengan isian belum tersimpan (Simpan draf / Buang / Batal)" },
+    { "component": "ProgressBar", "role_in_pattern": "pendamping compact-summary Stepper di phone untuk > 5 langkah (\"Langkah 3 dari 6\")" },
+    { "component": "Toast", "role_in_pattern": "konfirmasi \"Draf disimpan\"" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman pindah langkah, perubahan jumlah langkah, dan hasil kirim" }
+  ],
+  "flow": [
+    { "step": "Mulai", "state_class": "C6", "transition": "langkah pertama dengan Stepper menyebut seluruh langkah; bila ada draf, tawarkan \"Lanjutkan draf\" atau \"Mulai baru\"; data yang sudah diketahui sistem diisi otomatis (SC 3.3.7)" },
+    { "step": "Isi langkah", "state_class": "C6", "transition": "validasi field saat blur seperti FormFlow; isian disimpan per langkah (lokal, dan draf server bila brief menetapkan)" },
+    { "step": "Lanjut", "state_class": "C5", "transition": "validasi langkah (klien lalu server bila perlu) dengan tombol Lanjut loading; Stepper tidak berubah sampai langkah berikut siap" },
+    { "step": "Validasi langkah gagal", "state_class": "C2", "transition": "tetap di langkah; ErrorSummary + error inline; tidak maju; isian dipertahankan" },
+    { "step": "Kembali atau lompat ke langkah selesai", "state_class": "C6", "transition": "tanpa validasi yang memblokir; isian langkah sekarang dipertahankan walau belum valid; tombol Back peramban = langkah sebelumnya" },
+    { "step": "Cabang berubah", "state_class": "C6", "transition": "jawaban baru menambah/menghapus langkah di Stepper; isian langkah yang tidak lagi relevan tidak ikut dikirim dan tidak tampil di ringkasan, tetapi disimpan sampai kirim bila pengguna kembali memilih cabang itu" },
+    { "step": "Ringkasan", "state_class": "C6", "transition": "semua jawaban per langkah dengan \"Ubah\"; setelah mengubah, tombol \"Kembali ke ringkasan\" menggantikan Lanjut; field kosong opsional ditulis \"Tidak diisi\"" },
+    { "step": "Kirim", "state_class": "C5", "transition": "tombol kirim loading; klik ganda diabaikan; aksi finansial/hukum didahului StepUpDialog bila brief mensyaratkan (SC 3.3.4)" },
+    { "step": "Error server", "state_class": "C1", "transition": "InlineAlert C1 + Retry di ringkasan; semua isian dipertahankan; error per field menautkan ke langkahnya dan menandai langkah itu error di Stepper" },
+    { "step": "Berhasil", "state_class": "C4", "transition": "halaman hasil dengan judul berkata kerja sama (\"Klaim diajukan\"), nomor referensi, langkah selanjutnya, dan tautan ke DetailView entitas; draf dihapus" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "Stepper vertikal bila ≤ 5 langkah, selain itu compact-summary + ProgressBar yang membuka daftar langkah; satu kolom; Kembali/Lanjut di action bar sticky zona jempol yang naik di atas keyboard; Select dan DatePicker menjadi Sheet" },
+    { "device_class": "tablet", "behaviour": "Stepper horizontal bila semua label muat tanpa terpotong, selain itu compact-summary (portrait) atau vertikal di samping (landscape); form satu kolom maks 600dp di tengah" },
+    { "device_class": "desktop", "behaviour": "Stepper horizontal di atas form, atau vertikal di kolom inline-start untuk alur panjang dengan ringkasan nilai langkah selesai; form satu atau dua kolom per fieldset; action bar di akhir form" }
+  ],
+  "states": {
+    "empty": "Langkah pertama kosong dengan label, helper format, dan penanda opsional; Stepper menyebut semua langkah dan perkiraan isi (\"Data diri, Alamat, Dokumen, Tinjau\").",
+    "loading": "Memuat draf atau data awal: Skeleton meniru field langkah; pindah langkah yang memvalidasi ke server memakai tombol Lanjut loading, bukan Spinner halaman.",
+    "error": "Validasi langkah: ErrorSummary + error inline di langkah itu. Error server saat kirim: InlineAlert C1 + Retry di ringkasan, langkah dengan error bertanda di Stepper.",
+    "partial": "Draf tersimpan sebagian (mis. unggah lampiran di satu langkah gagal): langkah itu bertanda error di Stepper dan ringkasan menyebut bagian yang gagal dengan aksi ulang khusus bagian itu; langkah lain tetap valid.",
+    "success": "Halaman hasil C4 dengan nomor referensi, apa yang terjadi berikutnya dan kapan, serta tautan ke entitas; fokus ke h1 halaman hasil."
+  },
+  "accessibility": [
+    { "step": "Lanjut", "focus": "fokus ke heading langkah baru (tabindex −1, dengan ring); judul dokumen diawali \"Langkah 2 dari 5: Alamat\"", "announcement": "\"Langkah 2 dari 5: Alamat\" diumumkan polite" },
+    { "step": "Validasi langkah gagal", "focus": "mengikuti aturan §6.5 Form/ErrorSummary", "announcement": "jumlah error diumumkan assertive" },
+    { "step": "Kembali atau lompat ke langkah selesai", "focus": "fokus ke heading langkah tujuan; langkah selesai di Stepper adalah tautan/tombol dalam urutan Tab, langkah mendatang linear tidak", "announcement": "nama langkah diumumkan polite" },
+    { "step": "Cabang berubah", "focus": "fokus tetap di kontrol yang diubah", "announcement": "\"Langkah ditambahkan: Dokumen pendukung\" atau jumlah langkah baru diumumkan polite" },
+    { "step": "Error server", "focus": "fokus ke InlineAlert (role alert) lalu tautan error membawa ke field di langkahnya", "announcement": "pesan error assertive" },
+    { "step": "Berhasil", "focus": "fokus ke h1 halaman hasil", "announcement": "judul hasil dibaca; tidak ada toast tambahan" }
+  ],
+  "content": {
+    "rules": [
+      "Label langkah berupa kata benda pendek tentang isinya (\"Alamat\"), bukan \"Langkah 2\".",
+      "Tombol maju \"Lanjut\"; tombol akhir memakai kata kerja spesifik tugas (\"Ajukan klaim\"), sama dengan judul halaman hasil (\"Klaim diajukan\").",
+      "Posisi selalu tertulis \"Langkah {n} dari {total}\" dengan ICU plural; tidak hanya lewat Stepper visual.",
+      "Ringkasan memakai label field yang sama dengan langkahnya.",
+      "Pesan keluar menyebut apa yang terjadi pada isian (\"Isian Anda disimpan sebagai draf selama 30 hari\")."
+    ],
+    "examples": {
+      "en-US": ["Step 2 of 5: Address", "Continue", "Back", "Save draft", "Review your answers", "Submit claim", "Claim submitted"],
+      "id-ID": ["Langkah 2 dari 5: Alamat", "Lanjut", "Kembali", "Simpan draf", "Tinjau jawaban Anda", "Ajukan klaim", "Klaim diajukan"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role pembuat mengisi semua langkah dan mengirim" },
+    { "pattern": "read-only", "when": "peninjau membuka wizard yang sudah dikirim: ringkasan read-only tanpa tombol kirim" },
+    { "pattern": "disabled-with-reason", "when": "langkah non-linear yang belum dapat dibuka karena prasyarat: Stepper.Step aria-disabled + reason (\"Selesaikan Data diri dulu\")" },
+    { "pattern": "step-up", "when": "pengiriman berdampak finansial atau hukum: StepUpDialog sebelum kirim akhir (SC 3.3.4, SC 3.3.8)" }
+  ],
+  "do": [
+    "Simpan isian setiap langkah saat Lanjut, Kembali, dan berpindah langkah; tawarkan draf bila tugas panjang.",
+    "Tampilkan ringkasan yang bisa diubah per langkah sebelum kirim.",
+    "Isi otomatis data yang sudah diberikan di langkah lain atau di sesi sebelumnya (SC 3.3.7).",
+    "Jaga jumlah langkah 3-7; kelompokkan field yang dipahami pengguna sebagai satu topik."
+  ],
+  "dont": [
+    { "text": "Menghapus isian saat pengguna menekan Kembali atau tombol Back peramban.", "ref": "SC 3.3.7" },
+    { "text": "Mengirim tanpa langkah tinjau untuk data finansial, hukum, atau yang sulit diubah.", "ref": "SC 3.3.4" },
+    { "text": "Menonaktifkan Lanjut sampai langkah valid tanpa alasan terlihat.", "ref": "UB10" },
+    { "text": "Posisi langkah yang hanya dibedakan warna di Stepper.", "ref": "UB2" },
+    { "text": "Batas waktu langkah tanpa peringatan dan opsi perpanjang.", "ref": "SC 2.2.1" }
+  ],
+  "edge_cases": [
+    { "case": "offline di tengah wizard", "behaviour": "isian tetap disimpan lokal; validasi server ditunda dengan InlineAlert C2 persisten; kirim akhir diblokir dengan alasan atau diantrekan bila OfflineSync dipilih, tidak tampil terkirim sebelum konfirmasi (I6)" },
+    { "case": "timeout validasi langkah atau kirim", "behaviour": "InlineAlert C1 + Retry; kirim yang timeout dicek statusnya (idempotency key) sebelum Retry agar tidak ada pengajuan ganda" },
+    { "case": "langkah berisi daftar berulang yang sangat panjang (puluhan anggota, ratusan baris)", "behaviour": "editor daftar di dalam langkah dengan tambah/hapus dan ringkasan jumlah; data massal diarahkan ke ImportExport; ringkasan menampilkan jumlah + tautan, bukan semua baris" },
+    { "case": "langkah opsional dilewati (data kosong)", "behaviour": "Stepper menandai \"Dilewati\" dengan teks; ringkasan menulis \"Tidak diisi\" + Ubah" },
+    { "case": "Lanjut atau Kirim ditekan ganda", "behaviour": "kiriman kedua diabaikan selama loading; Lanjut ganda tidak melompati satu langkah" },
+    { "case": "label langkah dan field +40% (locale terpanjang)", "behaviour": "Stepper beralih ke vertikal atau compact-summary daripada memotong label; label field membungkus" },
+    { "case": "sesi habis di tengah wizard", "behaviour": "draf disimpan; setelah masuk kembali, pengguna kembali ke langkah terakhir dengan isian utuh (AuthAndSession)" },
+    { "case": "deep link ke langkah yang prasyaratnya belum selesai", "behaviour": "diarahkan ke langkah pertama yang belum selesai dengan InlineAlert C2 yang menjelaskan alasannya" }
+  ],
+  "wcag": ["1.3.1", "1.3.5", "2.2.1", "2.4.2", "2.4.3", "2.4.6", "2.4.11", "3.2.2", "3.3.1", "3.3.3", "3.3.4", "3.3.7", "3.3.8", "4.1.3"],
+  "related_patterns": ["FormFlow", "AuthAndSession", "AsyncFeedback", "FileUpload", "OfflineSync", "DetailView"],
+  "lint": [
+    "Wizard memakai tepat satu Stepper dengan 3-7 Stepper.Step",
+    "Setiap langkah adalah Form dengan heading yang menjadi target fokus program",
+    "Langkah terakhir sebelum kirim adalah ringkasan DescriptionList dengan aksi Ubah per langkah",
+    "Tombol kirim akhir tidak memakai label generik \"Submit\" atau \"Lanjut\""
+  ]
+}

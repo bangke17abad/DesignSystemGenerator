@@ -1,0 +1,81 @@
+{
+  "brief_schema_version": "1.5",
+  "components": {
+    "pack_config": {
+      "P04": {
+        "fees": "none",
+        "official_domain": "go.id",
+        "operator_type": "regional_government",
+        "service_phase": "beta"
+      }
+    },
+    "packs": [
+      "P04-b2g-public-service"
+    ]
+  },
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "Application"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "editorial-contrast",
+    "brands": [
+      {
+        "id": "default"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      }
+    ]
+  },
+  "namespace": "IZK",
+  "product_name": "Izinku",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel, desktop",
+      "input_modality": [
+        "touch",
+        "pointer",
+        "keyboard"
+      ],
+      "name": "public-web",
+      "os_runtime": "web",
+      "surface_type": "public"
+    },
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard"
+      ],
+      "name": "officer-web",
+      "os_runtime": "web",
+      "surface_type": "operational"
+    }
+  ],
+  "targets": {
+    "primary_web_reference": "html-first"
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

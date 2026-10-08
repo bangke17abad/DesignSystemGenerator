@@ -1,0 +1,120 @@
+<!-- CopyButton fixture · variants labeled / icon / inline, states default / hover / pressed / focus / success / error /
+     disabled-with-reason / loading, mandatory combinations, long labels, RTL inline, live demos. The copied value is always visible
+     and selectable next to the button (manual path without JS). Success and failure are announced politely (DS.announce), never by
+     the icon alone; the announcement never reads the value. Width is locked to the longest of "Copy …" / "… copied". -->
+<section class="ds-demo" data-ds-demo="variants (labeled, icon, inline)">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-inline" data-gap="3">
+      <button type="button" class="ds-button ds-copy-button" data-variant="secondary"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy link</span><span class="ds-copy-button__label" data-success>Link copied</span></span></button>
+      <button type="button" class="ds-icon-button ds-copy-button" aria-label="Copy booking code"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+    </div>
+    <div class="ds-copy-field">
+      <label class="ds-copy-field__label" for="cb-v-src">Invite link</label>
+      <div class="ds-copy-field__group">
+        <input class="ds-copy-field__value" id="cb-v-src" readonly dir="ltr" value="https://club.example/i/RH-7Q2K">
+        <button type="button" class="ds-button ds-copy-button" data-variant="tertiary"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy<span class="ds-vh"> invite link</span></span><span class="ds-copy-button__label" data-success>Copied</span></span></button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (hover, pressed, focus) · hover+focus">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-copy-button" data-force="hover"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy code</span><span class="ds-copy-button__label" data-success>Code copied</span></span></button>
+    <button type="button" class="ds-button ds-copy-button" data-force="pressed"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy code</span><span class="ds-copy-button__label" data-success>Code copied</span></span></button>
+    <button type="button" class="ds-button ds-copy-button" data-force="focus"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy code</span><span class="ds-copy-button__label" data-success>Code copied</span></span></button>
+    <button type="button" class="ds-button ds-copy-button" data-force="hover focus"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy code</span><span class="ds-copy-button__label" data-success>Code copied</span></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="success+focus (check + “… copied”, width locked, focus stays) · icon success with Tooltip">
+  <div class="ds-inline" data-gap="6">
+    <button type="button" class="ds-button ds-copy-button" data-state="success" data-force="focus"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy link</span><span class="ds-copy-button__label" data-success>Link copied</span></span></button>
+    <span class="ds-tooltip-demo" data-side="block-end">
+      <button type="button" class="ds-icon-button ds-copy-button" data-state="success" data-force="focus" aria-label="Copy booking code"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="block-end" aria-hidden="true">Copied</span>
+    </span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error+focus (clipboard denied: value selected, fallback hint with OS shortcut)">
+  <div class="ds-copy-field">
+    <label class="ds-copy-field__label" for="cb-e-src">Booking code</label>
+    <div class="ds-copy-field__group">
+      <input class="ds-copy-field__value" id="cb-e-src" readonly dir="ltr" value="BK-20481">
+      <button type="button" class="ds-button ds-copy-button" data-variant="tertiary" data-state="error" data-force="focus" aria-describedby="cb-e-hint"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy<span class="ds-vh"> booking code</span></span><span class="ds-copy-button__label" data-success>Copied</span></span></button>
+    </div>
+    <p class="ds-copy-button__hint" id="cb-e-hint"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't copy. Select the text and press <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Control plus C</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">C</kbd></span></kbd>.</span></p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason+focus (nothing to copy yet) · offline">
+  <div class="ds-inline" data-gap="6">
+    <div>
+      <button type="button" class="ds-button ds-copy-button" aria-disabled="true" aria-describedby="cb-d-r1" data-force="focus"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy invoice number</span><span class="ds-copy-button__label" data-success>Invoice number copied</span></span></button>
+      <span class="ds-copy-button__reason" id="cb-d-r1">Nothing to copy yet. The number appears after payment.</span>
+    </div>
+    <div>
+      <button type="button" class="ds-button ds-copy-button" aria-disabled="true" aria-describedby="cb-d-r2"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy share link</span><span class="ds-copy-button__label" data-success>Share link copied</span></span></button>
+      <span class="ds-copy-button__reason" id="cb-d-r2">Needs connection.</span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (async value: spinner, aria-busy) · loading+pressed prevented">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-copy-button" aria-busy="true"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy invite link</span><span class="ds-copy-button__label" data-success>Invite link copied</span></span><span class="ds-button__spinner" aria-hidden="true"></span></button>
+    <button type="button" class="ds-icon-button ds-copy-button" data-variant="secondary" aria-busy="true" aria-label="Copy API key"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-icon-button__spinner" aria-hidden="true"></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm in table rows on pointer, md, lg)">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-copy-button" data-size="sm"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy ID</span><span class="ds-copy-button__label" data-success>ID copied</span></span></button>
+    <button type="button" class="ds-button ds-copy-button"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy ID</span><span class="ds-copy-button__label" data-success>ID copied</span></span></button>
+    <button type="button" class="ds-button ds-copy-button" data-size="lg"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy ID</span><span class="ds-copy-button__label" data-success>ID copied</span></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="inline on a code block (wraps; very long value)">
+  <div class="ds-copy-field">
+    <span class="ds-copy-field__label" id="cb-code-label">Install command</span>
+    <div class="ds-copy-field__group">
+      <pre class="ds-copy-field__value" id="cb-code-src" dir="ltr"><code>npx @north-harbor/cli link --club RH --token rh_live_8f2c1a9d7e3b4c6a5f0e2d1c9b8a7f6e</code></pre>
+      <button type="button" class="ds-icon-button ds-copy-button" aria-label="Copy install command"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long labels (+40%): width locked to the longer label">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-copy-button"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Salin tautan</span><span class="ds-copy-button__label" data-success>Tautan berhasil disalin</span></span></button>
+    <button type="button" class="ds-button ds-copy-button" data-state="success"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Salin tautan</span><span class="ds-copy-button__label" data-success>Tautan berhasil disalin</span></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL inline (button at inline-end = left; value isolated LTR)" dir="rtl" lang="ar">
+  <div class="ds-copy-field">
+    <label class="ds-copy-field__label" for="cb-rtl-src">رابط الدعوة</label>
+    <div class="ds-copy-field__group">
+      <input class="ds-copy-field__value" id="cb-rtl-src" readonly dir="ltr" value="https://club.example/i/RH-7Q2K">
+      <button type="button" class="ds-button ds-copy-button" data-variant="tertiary"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">نسخ<span class="ds-vh"> رابط الدعوة</span></span><span class="ds-copy-button__label" data-success>تم النسخ</span></span></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (Clipboard API, polite announcement, async value, denied → fallback)">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-copy-field">
+      <label class="ds-copy-field__label" for="cb-live-src">Invite link</label>
+      <div class="ds-copy-field__group">
+        <input class="ds-copy-field__value" id="cb-live-src" readonly dir="ltr" value="https://club.example/i/RH-7Q2K">
+        <button type="button" class="ds-button ds-copy-button" data-variant="tertiary" data-ds-module="copy-button" data-ds-copy-from="cb-live-src" data-ds-success="Invite link copied" data-ds-hint="cb-live-hint"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy<span class="ds-vh"> invite link</span></span><span class="ds-copy-button__label" data-success>Copied</span></span></button>
+      </div>
+      <p class="ds-copy-button__hint" id="cb-live-hint" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't copy. Select the text and press <kbd class="ds-kbd" data-keys="Mod+C" dir="ltr"><span class="ds-vh">Control plus C</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">C</kbd></span></kbd>.</span></p>
+    </div>
+    <div class="ds-inline" data-gap="3">
+      <span class="ds-text-code" dir="ltr" id="cb-live-code">BK-20481</span>
+      <button type="button" class="ds-icon-button ds-copy-button" data-ds-module="icon-button copy-button" data-ds-copy-from="cb-live-code" data-ds-success="Booking code copied" aria-label="Copy booking code"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+      <button type="button" class="ds-button ds-copy-button" data-ds-module="copy-button" data-ds-copy-text="RH-INV-0099-4471" data-ds-copy-delay="800" data-ds-success="Invite code copied"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy new invite code</span><span class="ds-copy-button__label" data-success>Invite code copied</span></span></button>
+    </div>
+    <div class="ds-copy-field">
+      <label class="ds-copy-field__label" for="cb-live-src2">Payment reference (clipboard denied demo)</label>
+      <div class="ds-copy-field__group">
+        <input class="ds-copy-field__value" id="cb-live-src2" readonly dir="ltr" value="PAY-2026-10-08-7731">
+        <button type="button" class="ds-button ds-copy-button" data-variant="tertiary" data-ds-module="copy-button" data-ds-copy-from="cb-live-src2" data-ds-copy-simulate="denied" data-ds-success="Payment reference copied" data-ds-hint="cb-live-hint2"><span class="ds-copy-button__icon"><svg class="ds-icon" data-icon="copy" aria-hidden="true"><use href="#ds-i-copy"/></svg><svg class="ds-icon" data-icon="check" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-copy-button__labels"><span class="ds-copy-button__label">Copy<span class="ds-vh"> payment reference</span></span><span class="ds-copy-button__label" data-success>Copied</span></span></button>
+      </div>
+      <p class="ds-copy-button__hint" id="cb-live-hint2" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't copy. Select the text and press <kbd class="ds-kbd" data-keys="Mod+C" dir="ltr"><span class="ds-vh">Control plus C</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">C</kbd></span></kbd>.</span></p>
+    </div>
+  </div>
+</section>

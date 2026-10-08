@@ -1,0 +1,466 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-disabled (bukan disabled native) saat diblokir",
+      "aria-describedby ke teks alasan",
+      "aria-busy saat loading",
+      "aria-haspopup dan aria-expanded bila membuka Menu"
+    ],
+    "focus_order": "mengikuti urutan DOM; tombol primer tidak dipindah ke awal urutan secara visual saja",
+    "native": {
+      "compose": "Button dengan Modifier.semantics { disabled(); stateDescription = alasan }",
+      "flutter": "FilledButton / OutlinedButton / TextButton dengan Semantics(button: true, enabled: …, hint: alasan)",
+      "swiftui": "Button dengan .accessibilityHint(alasan) dan .disabled hanya bila tidak relevan"
+    },
+    "politeness": "polite",
+    "role": "button (elemen <button type=\"button\">; <a> hanya lewat asChild untuk navigasi)",
+    "sr_label": "label terlihat = nama aksesibel (SC 2.5.3); IconButton wajib label tersembunyi",
+    "wcag": [
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "bidang klik dan latar tombol",
+      "tokens": [
+        "color-interaction-default",
+        "color-structure-surface-raised",
+        "color-semantic-critical",
+        "radius-sm",
+        "control-height-md",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "kata kerja aksi",
+      "tokens": [
+        "color-interaction-on-solid",
+        "color-structure-text-primary",
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "font-sans"
+      ]
+    },
+    {
+      "part": "icon-start",
+      "role": "ikon opsional sebelum label",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "icon-end",
+      "role": "ikon opsional setelah label (mis. chevron menu)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "spinner",
+      "role": "pengganti label saat loading; lebar tombol terkunci",
+      "tokens": [
+        "icon-md",
+        "motion-slow-duration"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "indikator fokus di luar container",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "pelepasan pointer, Enter, atau Space"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "default": "secondary",
+        "description": "Bobot visual aksi.",
+        "name": "variant",
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"tertiary\" | \"destructive\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol; area klik selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Kata kerja aksi; juga nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Ikon sebelum label dari set L9.",
+        "name": "iconStart",
+        "required": false,
+        "type": "IconName"
+      },
+      {
+        "description": "Ikon sesudah label.",
+        "name": "iconEnd",
+        "required": false,
+        "type": "IconName"
+      },
+      {
+        "default": "false",
+        "description": "Mengganti label dengan spinner dan mengunci lebar.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya untuk aksi yang benar-benar tidak relevan; selain itu pakai reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan aksi diblokir; wajib bila aksi diblokir (aria-disabled).",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Merender sebagai Link untuk navigasi.",
+        "name": "asChild",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "onPress dipanggil satu kali (Space pada pelepasan tombol)",
+      "trigger": "Enter atau Space saat fokus"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah; tombol aria-disabled tetap menerima fokus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress dipanggil; menyeret keluar sebelum melepas membatalkan (SC 2.5.2)",
+      "trigger": "klik (pelepasan pointer di dalam area)"
+    },
+    {
+      "input": "touch",
+      "result": "onPress pada pelepasan; tidak ada hover yang menempel",
+      "trigger": "tap"
+    },
+    {
+      "input": "pointer",
+      "result": "diabaikan; untuk diblokir, alasan diumumkan polite",
+      "trigger": "klik saat loading atau diblokir"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Save changes",
+        "Approve request",
+        "Delete 3 items"
+      ],
+      "id-ID": [
+        "Simpan perubahan",
+        "Setujui permintaan",
+        "Hapus 3 item"
+      ]
+    },
+    "rules": [
+      "Kata kerja spesifik + objek bila perlu (\"Simpan perubahan\", bukan \"OK\" atau \"Submit\").",
+      "Kata kerja sama dari tombol sampai toast konfirmasi.",
+      "Sentence case; tanpa tanda seru; maksimal 3 kata bila memungkinkan.",
+      "Label tidak berubah saat loading; status diumumkan terpisah."
+    ]
+  },
+  "depends_on": [
+    "Spinner"
+  ],
+  "do": [
+    "Pakai satu tombol primer per tampilan dan letakkan di urutan baca terakhir grup aksi.",
+    "Tulis alasan yang terlihat untuk tombol yang diblokir.",
+    "Kunci lebar tombol saat loading agar layout tidak bergeser."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "Memakai atribut disabled native untuk aksi yang diblokir sementara; pengguna tidak tahu alasannya."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai warna semantik (warning, positive) untuk tombol non-destruktif."
+    },
+    {
+      "ref": "UB3",
+      "text": "Membuat tombol dengan teks lebih kecil dari type-label-size."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tombol melebar; di phone label boleh dua baris, tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi tumbuh mengikuti teks; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "onPress kedua diabaikan selama loading",
+      "case": "klik ganda cepat"
+    },
+    {
+      "behaviour": "aksi yang butuh server diblokir dengan alasan \"butuh koneksi\" atau diantrekan sesuai pattern OfflineSync",
+      "case": "offline"
+    },
+    {
+      "behaviour": "ring fokus memakai focus-ring-inverse",
+      "case": "tombol di atas surface-inverse atau fill semantik"
+    },
+    {
+      "behaviour": "satu diturunkan ke secondary; catat di tinjauan",
+      "case": "dua aksi primer diminta desain"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Maksimal satu Button variant=primary per tampilan (manual-review)",
+    "Button tanpa label ditolak (gunakan IconButton)",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "Button",
+  "preview": {
+    "combinations": [
+      "hover+focus",
+      "disabled+focus",
+      "loading+pressed (dicegah)"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "primary",
+      "secondary",
+      "tertiary",
+      "destructive"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memicu satu aksi pada halaman atau data saat ini, dengan label kata kerja spesifik.",
+    "when_not_to_use": [
+      "Untuk berpindah ke halaman atau tujuan lain: pakai Link (atau Button dengan asChild bila tampilannya harus tombol).",
+      "Untuk aksi hanya-ikon tanpa label terlihat: pakai IconButton.",
+      "Untuk memilih satu dari beberapa opsi yang saling eksklusif: pakai SegmentedControl atau RadioGroup.",
+      "Untuk lebih dari dua aksi sekunder pada satu baris atau kartu: kelompokkan di Menu."
+    ]
+  },
+  "related": [
+    "IconButton",
+    "Link",
+    "Menu"
+  ],
+  "responsive": [
+    {
+      "behaviour": "aksi primer lebar penuh di action bar bawah zona jempol; ukuran lg; area klik ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar intrinsik; ukuran md; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar intrinsik; sm boleh di toolbar dan baris tabel",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi terlihat oleh role tetapi tidak diizinkan saat ini; ikon gembok + alasan"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak pernah boleh menjalankan aksi ini"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi berisiko tinggi; membuka StepUpDialog sebelum onPress"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "iconStart/iconEnd mengikuti arah inline; ikon berarah dicerminkan"
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh area klik diperluas ke target-min-touch",
+      "name": "sm",
+      "notes": "Untuk toolbar padat dan baris tabel pada pointer. Tidak dipakai sebagai satu-satunya aksi di surface sentuh.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Ukuran default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-current, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Aksi primer di surface sentuh, glove, atau in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring fokus ditambahkan di luar; fill tetap hover",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak bisa ditekan saat loading",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "aria-disabled tetap fokusabel agar alasan bisa dibaca",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tidak ada umpan balik hover pada tombol diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-interaction-default",
+        "label": "color-interaction-on-solid"
+      },
+      "treatment": "fill dan label varian"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-hover"
+      },
+      "treatment": "token-swap: container ke interaction-hover; state-layer: lapisan state-layer-hover-opacity di atas fill. Hanya di (hover: hover)."
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "container": "color-interaction-pressed"
+      },
+      "treatment": "container ke interaction-pressed atau lapisan pressed; transform state-press-transform tanpa mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px; di atas fill gelap/semantik memakai focus-ring-inverse"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; tampilan diredam (text-disabled pada label, latar surface-sunken); alasan tampil di helper atau tooltip yang juga terbaca saat fokus"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "label": "color-interaction-on-solid"
+      },
+      "treatment": "spinner menggantikan label, lebar terkunci, aria-busy=\"true\", klik diabaikan"
+    }
+  ],
+  "target_hints": {
+    "compose": "Button/OutlinedButton/TextButton dibungkus {Ns}Button",
+    "flutter": "FilledButton/OutlinedButton/TextButton dibungkus {ns}_button.dart",
+    "html": {
+      "element": "button",
+      "notes": "type=\"button\" default; type=\"submit\" hanya di Form"
+    },
+    "swiftui": "Button + ButtonStyle sistem"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Aksi utama tampilan; maksimal satu per tampilan. Fill interaction-default, label on-solid.",
+      "name": "primary"
+    },
+    {
+      "description": "Aksi pendamping. Latar surface-raised, border border-control, label text-primary.",
+      "name": "secondary"
+    },
+    {
+      "description": "Aksi berbobot rendah di dalam konten. Tanpa border; label interaction-default; latar interaction-subtle saat hover.",
+      "name": "tertiary"
+    },
+    {
+      "description": "Aksi yang menghapus atau membatalkan. Fill semantic-critical, label on-critical. Selalu didahului DestructiveAction pattern bila tidak bisa dibalik.",
+      "name": "destructive"
+    }
+  ]
+}

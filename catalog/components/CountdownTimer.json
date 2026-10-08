@@ -1,0 +1,442 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer, hanya dua kali: saat melewati ambang (polite, \"1 minute left to complete your booking\") dan saat nol (assertive bila expired C1, polite bila ended C3); tidak pernah per detik",
+      "nilai yang dibaca saat navigasi memakai kalimat (\"4 minutes 59 seconds left\"), bukan \"4:59\"; aria-label diperbarui paling sering tiap 10 detik agar navigasi tidak tersendat",
+      "bila tenggat membatasi pengguna (SC 2.2.1): peringatan minimal 20 detik sebelum habis dengan aksi Extend yang cukup satu tindakan, kecuali tenggat adalah kejadian nyata (lelang) yang dicatat sebagai pengecualian",
+      "waktu dihitung dari waktu server dan tenggat absolut (ISO 8601), bukan dari jam lokal yang bisa salah",
+      "ikon jam dan ikon status aria-hidden; label + nilai membawa makna"
+    ],
+    "focus_order": "tidak fokusabel; aksi Extend tepat sesudahnya dalam urutan DOM; peringatan ambang tidak mencuri fokus kecuali pola StepUpDialog/Modal sesi dipakai sesuai brief",
+    "native": {
+      "compose": "Text(value, style = LocalTextStyle.current.copy(fontFeatureSettings = \"tnum\"), modifier = Modifier.semantics { contentDescription = \"…\" }) tanpa liveRegion; ambang dan nol lewat {Ns}Announcer. Not verified against the pinned version",
+      "flutter": "Text(value, style: TextStyle(fontFeatures: [FontFeature.tabularFigures()])) di dalam Semantics(label: 'Hold expires in 4 minutes 59 seconds'); ambang dan nol lewat SemanticsService.announce (Assertiveness.assertive untuk expired). Not verified against the pinned version",
+      "swiftui": "Text(timerInterval: now...deadline, countsDown: true).monospacedDigit() (iOS 16+) dengan .accessibilityLabel; ambang dan nol lewat AccessibilityNotification.Announcement (prioritas .high untuk expired). Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "timer (role=\"timer\", aria-live implisit off) dengan aria-labelledby ke label",
+    "sr_label": "label + sisa waktu dalam kalimat (\"Hold expires in 4 minutes 59 seconds\"); di nol: \"Hold expired\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "2.2.1",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "wadah inline; tanpa latar saat normal; perlakuan L3 per kelas di bawah ambang dan di nol",
+      "tokens": [
+        "color-semantic-warning-subtle",
+        "color-semantic-critical-subtle",
+        "color-semantic-neutral-negative-subtle",
+        "color-semantic-warning",
+        "color-semantic-critical",
+        "color-semantic-neutral-negative",
+        "radius-sm",
+        "border-width-thin",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "clock-icon",
+      "role": "glyph jam terkunci (makna waktu, bukan status §5.7); mewarisi warna teks",
+      "tokens": [
+        "icon-sm",
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph status terkunci (warning di bawah ambang; critical atau neutral-negative di nol) ditambahkan di depan agar perubahan tidak hanya warna (I2)",
+      "tokens": [
+        "icon-sm",
+        "icon-md",
+        "color-semantic-warning",
+        "color-semantic-critical",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "konteks (\"Hold expires in\", \"Ending soon\"); teks isi",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary",
+        "color-semantic-warning-strong",
+        "color-semantic-critical-strong",
+        "color-semantic-neutral-negative-strong"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "sisa waktu dengan angka tabular (font-variant-numeric: tabular-nums) agar lebar tidak bergoyang; format dari B1",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-h2-size",
+        "type-h2-line",
+        "font-sans"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "konten di atas fill solid bila L3 memberi filled untuk C1/C2",
+      "tokens": [
+        "color-semantic-on-warning",
+        "color-semantic-on-critical",
+        "color-semantic-on-neutral-negative"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onThreshold",
+        "payload": "{ remaining: number }",
+        "when": "sisa waktu melewati ambang (sekali)"
+      },
+      {
+        "name": "onExpire",
+        "payload": "{ endsAt: string }",
+        "when": "sisa waktu mencapai nol"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "default": "inline",
+        "description": "Ukuran tampilan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"inline\" | \"prominent\""
+      },
+      {
+        "description": "Apa yang berakhir; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Tenggat absolut dari server.",
+        "name": "endsAt",
+        "required": true,
+        "type": "Date | string (ISO 8601)"
+      },
+      {
+        "description": "Sisa waktu saat beralih ke C2 dan mengumumkan; dari brief (selain itu A-nn).",
+        "name": "threshold",
+        "required": true,
+        "type": "number (detik)"
+      },
+      {
+        "default": "critical",
+        "description": "Kelas di nol: critical (expired, perlu diulang) atau neutral-negative (berakhir sah). Kelas di bawah ambang selalu warning. positive dan info tidak dipakai: hitung mundur tidak pernah berakhir berhasil, dan kelas di atas ambang tenang tanpa warna status.",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "default": "0",
+        "description": "Selisih jam server − jam lokal untuk perhitungan akurat.",
+        "name": "serverOffset",
+        "required": false,
+        "type": "number (ms)"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "timer tidak fokusabel; fokus ke aksi perpanjang bila ada; nilai dibaca saat pembaca layar menavigasi ke timer",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "tenggat diperpanjang lewat server; hasil diumumkan polite",
+      "trigger": "Enter pada \"Extend\" (dari InlineAlert atau Modal peringatan)"
+    },
+    {
+      "input": "pointer",
+      "result": "Tooltip opsional berisi waktu tenggat absolut; bukan satu-satunya tempat info itu (label prominent juga menyebutnya)",
+      "trigger": "hover pada timer"
+    },
+    {
+      "input": "touch",
+      "result": "tidak ada aksi; waktu absolut ditampilkan di bawah atau di panel detail",
+      "trigger": "tap pada timer"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Hold expires in 4:59",
+        "Ending soon · 0:59",
+        "1 minute left to complete your booking. Extend the hold to keep your seats.",
+        "Extend hold",
+        "Hold expired. Your seats were released; choose seats again to continue.",
+        "Registration closed",
+        "Time may be out of date. The hold ends at 10:45."
+      ],
+      "id-ID": [
+        "Penahanan berakhir dalam 4:59",
+        "Segera berakhir · 0:59",
+        "Tersisa 1 menit untuk menyelesaikan pemesanan. Perpanjang penahanan agar kursi tetap tersimpan.",
+        "Perpanjang penahanan",
+        "Penahanan berakhir. Kursi Anda dilepas; pilih kursi lagi untuk melanjutkan.",
+        "Pendaftaran ditutup",
+        "Waktu mungkin tidak akurat. Penahanan berakhir pukul 10.45."
+      ]
+    },
+    "rules": [
+      "Label menyebut apa yang berakhir (\"Hold expires in\"), bukan \"Time left\" saja.",
+      "Format: m:ss di bawah 1 jam, h:mm:ss di bawah 24 jam; di atas itu tanggal dan jam absolut dengan zona waktu B1.",
+      "Peringatan ambang menyebut sisa waktu dan cara memperpanjang.",
+      "Di nol: apa yang terjadi + langkah berikutnya; tanpa \"Oops\" atau tanda seru.",
+      "Tidak memakai hitung mundur untuk urgensi pemasaran palsu."
+    ]
+  },
+  "depends_on": [
+    "LiveAnnouncer",
+    "Button",
+    "Tooltip"
+  ],
+  "do": [
+    "Hitung dari waktu server dan tenggat absolut.",
+    "Umumkan hanya di ambang dan di nol.",
+    "Tambahkan ikon status dan ubah label saat beralih kelas, tidak hanya warna.",
+    "Sediakan perpanjangan satu tindakan bila tenggat membatasi pengguna."
+  ],
+  "dont": [
+    {
+      "text": "Mengumumkan sisa waktu setiap detik atau memakai aria-live pada angka."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai ambang hanya dengan perubahan warna angka."
+    },
+    {
+      "text": "Memakai angka proporsional sehingga lebar bergoyang tiap detik."
+    },
+    {
+      "text": "Animasi kedip atau pulse saat ambang (terutama di bawah reduced motion); makna ambang datang dari ikon dan label."
+    },
+    {
+      "text": "Hitung mundur untuk tenggat yang tidak nyata."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus di atas angka; angka tidak pernah dipotong atau dipisah barisnya",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "prominent turun ke dua baris (label, angka); inline tumbuh tinggi; angka tetap tabular",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "langsung state expired/ended tanpa pengumuman ambang; satu pengumuman hasil",
+      "case": "0 (sudah lewat saat dimuat)"
+    },
+    {
+      "behaviour": "menampilkan tanggal dan jam absolut, bukan h:mm:ss panjang; berubah menjadi hitung mundur saat < 24 jam",
+      "case": "nilai maksimum (tenggat > 24 jam)"
+    },
+    {
+      "behaviour": "state paused/unknown dengan waktu absolut; perpanjangan diblokir dengan alasan \"needs connection\"",
+      "case": "offline"
+    },
+    {
+      "behaviour": "nilai diperbarui; pengumuman extended di-debounce; ambang dihitung ulang dari tenggat baru",
+      "case": "pembaruan beruntun cepat (tenggat diperpanjang berkali-kali)"
+    },
+    {
+      "behaviour": "masing-masing berlabel unik; pengumuman ambang digabung (\"2 holds end in under 1 minute\")",
+      "case": "beberapa timer bersamaan (beberapa penahanan)"
+    },
+    {
+      "behaviour": "saat kembali, nilai dihitung ulang dari waktu server; tidak ada lompatan pengumuman yang terlewat selain state terkini",
+      "case": "tab latar belakang / perangkat tidur"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Opsional: disertakan bila journey, entitas, atau surface di brief memuat batas waktu yang terlihat pengguna (penahanan reservasi, sesi yang akan berakhir, tenggat penawaran, SLA); alasan dicatat. Ambang peringatan berasal dari brief; bila kosong dicatat A-nn.",
+  "lint": [
+    "aria-live pada CountdownTimer ditolak (pengumuman hanya lewat LiveAnnouncer)",
+    "CountdownTimer tanpa threshold ditolak",
+    "Timer yang membatasi pengguna tanpa aksi perpanjang atau pengecualian tercatat ditandai (SC 2.2.1, manual-review)",
+    "Angka tanpa tabular-nums ditolak (css-pattern)"
+  ],
+  "name": "CountdownTimer",
+  "preview": {
+    "combinations": [
+      "ambang × perlakuan L3",
+      "expired + InlineAlert langkah berikutnya",
+      "dua timer bersamaan",
+      "teks 200% prominent"
+    ],
+    "states": [
+      "running (C6)",
+      "below-threshold (C2 warning)",
+      "expired (C1 critical)",
+      "ended (C3 neutral-negative)",
+      "extended",
+      "paused / unknown",
+      "reduced-motion"
+    ],
+    "variants": [
+      "inline",
+      "prominent"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan sisa waktu menuju tenggat dengan ikon jam + angka tabular; beralih ke C2 di bawah ambang dan ke kelas hasil (C1 atau C3) di nol; diumumkan hanya di ambang dan di nol. Bila tenggat membatasi pengguna, dipasangkan dengan cara memperpanjang (SC 2.2.1).",
+    "when_not_to_use": [
+      "Untuk menampilkan waktu kejadian atau durasi yang sudah lewat: pakai teks waktu (elemen time) atau Timeline.",
+      "Untuk kemajuan proses: pakai ProgressBar.",
+      "Untuk stagnasi entitas (melewati batas waktu): pakai overlay stagnasi StatusLabel C2.",
+      "Untuk menciptakan urgensi palsu (penawaran yang tidak benar-benar berakhir): dilarang.",
+      "Untuk tenggat yang jauh (lebih dari ±24 jam): tulis tanggal dan jam absolut, bukan hitung mundur detik."
+    ]
+  },
+  "related": [
+    "InlineAlert",
+    "StatusLabel",
+    "Modal",
+    "ProgressBar"
+  ],
+  "responsive": [
+    {
+      "behaviour": "inline di action bar atau header checkout agar terlihat tanpa gulir; prominent hanya di layar sesi/checkout; angka tidak dipotong",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "inline di header atau panel ringkasan",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "inline di PageHeader atau panel ringkasan; prominent di panel checkout",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "pemilik tenggat: melihat timer dan bisa memperpanjang bila kebijakan mengizinkan"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role lain yang memantau (mis. petugas melihat sisa waktu penahanan pelanggan): timer tanpa aksi perpanjang"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "batas perpanjangan tercapai: Extend aria-disabled dengan alasan (\"You can extend once\")"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon jam dan status tidak dicerminkan (§12.4); angka waktu diisolasi LTR dengan bdi; label mengikuti arah inline."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran dari variant (type-label untuk inline, type-h2 untuk prominent); tinggi mengikuti teks. Non-interaktif; aksi perpanjang adalah Button terpisah."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "running (C6)",
+      "token_swaps": {
+        "clock-icon": "color-structure-text-secondary",
+        "label": "color-structure-text-primary",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "netral: ikon jam + label text-primary + angka; tanpa wadah dan tanpa warna semantik"
+    },
+    {
+      "name": "below-threshold (C2 warning)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "label": "color-semantic-warning-strong",
+        "status-icon": "color-semantic-warning"
+      },
+      "treatment": "sisa waktu ≤ ambang: perlakuan C2 dari L3 (quiet / outline / tinted / filled); ikon warning ditambahkan dan label berubah (\"Ending soon\"); diumumkan sekali, polite; aksi perpanjang ditampilkan bila tenggat membatasi pengguna"
+    },
+    {
+      "name": "expired (C1 critical)",
+      "token_swaps": {
+        "border-outline": "color-semantic-critical",
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "label": "color-semantic-critical-strong",
+        "status-icon": "color-semantic-critical"
+      },
+      "treatment": "nol dan pengguna kehilangan sesuatu yang harus diulang (penahanan dilepas, sesi berakhir): angka diganti teks \"Expired\"; perlakuan C1 dari L3; diumumkan assertive lewat LiveAnnouncer; langkah berikutnya di InlineAlert C1"
+    },
+    {
+      "name": "ended (C3 neutral-negative)",
+      "token_swaps": {
+        "border-outline": "color-semantic-neutral-negative",
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "label": "color-semantic-neutral-negative-strong",
+        "status-icon": "color-semantic-neutral-negative"
+      },
+      "treatment": "nol sebagai akhir sah tanpa tindakan (lelang ditutup, periode pendaftaran berakhir): perlakuan C3 dari L3; diumumkan polite"
+    },
+    {
+      "name": "extended",
+      "token_swaps": {
+        "label": "color-structure-text-primary"
+      },
+      "treatment": "pengguna memperpanjang: kembali ke running dengan tenggat baru; diumumkan polite (\"Hold extended to 10:45\")"
+    },
+    {
+      "name": "paused / unknown",
+      "token_swaps": {
+        "label": "color-semantic-warning-strong",
+        "status-icon": "color-semantic-warning"
+      },
+      "treatment": "jam server tidak terjangkau (offline): angka dibekukan dengan label \"Time may be out of date\" (C2) dan waktu tenggat absolut ditampilkan; tidak menghitung dari jam lokal seolah pasti (I6)"
+    },
+    {
+      "name": "reduced-motion",
+      "token_swaps": {},
+      "treatment": "angka tetap berganti tiap detik (perubahan teks, bukan gerak); tidak ada animasi flip, pulse, atau kedip saat ambang; transisi warna instan"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}CountdownTimer: LaunchedEffect loop 1 detik dengan derivedStateOf dari endsAt",
+    "flutter": "{ns}_countdown_timer.dart: Ticker/Timer.periodic 1 detik dengan perhitungan dari endsAt + serverOffset",
+    "html": {
+      "element": "div",
+      "notes": "div[role=timer][aria-labelledby] berisi span angka dengan font-variant-numeric: tabular-nums; time[datetime] untuk tenggat absolut; pengumuman lewat window.{NS}.announce()"
+    },
+    "swiftui": "{Ns}CountdownTimer: Text(timerInterval:) atau TimelineView(.periodic(from:by: 1))"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Di dalam kalimat, baris, atau header (\"Hold expires in 4:59\"). Default.",
+      "name": "inline"
+    },
+    {
+      "description": "Angka besar (type-h2) di panel checkout atau sesi; label di atasnya. Tetap teks isi, bukan gambar.",
+      "name": "prominent"
+    }
+  ]
+}

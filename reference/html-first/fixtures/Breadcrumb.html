@@ -1,0 +1,135 @@
+<!-- Breadcrumb fixture · variants, states, mandatory combinations (catalog preview) + edge cases.
+     nav[aria-label] > ol > li > a; current = span[aria-current="page"]; CSS chevrons (never read); Tab between links, no arrows.
+     Phone (below bp-tablet): the trail is replaced by one "Back to {parent}" link (variant parent); data-phone="full" keeps the trail.
+     Breadcrumb.js collapses the middle items behind a labelled "…" button when there are more than maxItems (default 4). -->
+<section class="ds-demo" data-ds-demo="variants/full (phone: Back to parent)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb" data-ds-module="breadcrumb">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Projects</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Q3 planning</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Tasks</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Design review</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Tasks</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="variants/parent (direct ancestor only)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (parent)" data-variant="parent">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Projects</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Tasks</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Design review</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Tasks</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="states (default · hover · pressed · focus · current)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (states)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Default</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#" data-force="hover"><span class="ds-breadcrumb__label">Hover</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#" data-force="pressed"><span class="ds-breadcrumb__label">Pressed</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#" data-force="focus"><span class="ds-breadcrumb__label">Focus</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Current page</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Focus</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="hover+focus">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (hover and focus)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Members</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#" data-force="hover focus"><span class="ds-breadcrumb__label">Rina Wijaya</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Visit history</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Rina Wijaya</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="collapsed (live: 7 levels → root, “…”, two nearest, current)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (deep)" data-ds-module="breadcrumb">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Clubs</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">North Harbor</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Events</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">2026 season</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Club championship</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Flights</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Group A</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Flights</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="collapsed + Popover open (focus on the first hidden level)">
+  <div style="min-block-size: calc(var(--layout-row-height) * 4)"><nav class="ds-breadcrumb" aria-label="Breadcrumb (collapsed, open)" data-phone="full">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Clubs</span></a></li>
+      <li class="ds-breadcrumb__item" data-overflow><button type="button" class="ds-breadcrumb__overflow" aria-label="Show 3 more levels" aria-expanded="true" aria-controls="bc6-menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><ul class="ds-breadcrumb__menu" id="bc6-menu"><li><a class="ds-breadcrumb__menu-link" href="#" data-force="focus">North Harbor</a></li><li><a class="ds-breadcrumb__menu-link" href="#">Events</a></li><li><a class="ds-breadcrumb__menu-link" href="#">2026 season</a></li></ul></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Club championship</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Flights</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Group A</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Flights</span></a>
+  </nav></div>
+</section>
+<section class="ds-demo" data-ds-demo="read-only ancestor (role cannot open it: plain text, hierarchy intact)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (read-only level)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Finance</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__text"><span class="ds-breadcrumb__label">Payroll</span></span></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Reports</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">October payouts</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Reports</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="loading (label Skeleton; link active once its URL is known)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (loading)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Projects</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading level name</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Design review</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Projects</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="label +40% (longest locale): wraps to a second line before collapsing" lang="id">
+  <nav class="ds-breadcrumb" aria-label="Remah roti">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Proyek</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Perencanaan kuartal ketiga</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Tugas tim desain</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Tinjauan desain antarmuka</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Kembali ke Tugas tim desain</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="very long ancestor title (ellipsis on desktop; full name in title + accessible name)">
+  <nav class="ds-breadcrumb" aria-label="Breadcrumb (long title)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Projects</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#" title="North Harbor plumbing renewal and facade resurfacing programme 2026–2028"><span class="ds-breadcrumb__label">North Harbor plumbing renewal and facade resurfacing programme 2026–2028</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Budget</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to North Harbor plumbing renewal and facade resurfacing programme 2026–2028</span></a>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="text 200%">
+  <div style="--type-body-size: 2em; --type-body-line: 1.4; --type-label-size: 2em; --type-label-line: 1.3;"><nav class="ds-breadcrumb" aria-label="Breadcrumb (text 200%)">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Projects</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">Tasks</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">Design review</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back to Tasks</span></a>
+  </nav></div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (chevrons and back arrow mirrored)" dir="rtl" lang="ar">
+  <nav class="ds-breadcrumb" aria-label="مسار التنقل">
+    <ol class="ds-breadcrumb__list">
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">المشاريع</span></a></li>
+      <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="#"><span class="ds-breadcrumb__label">المهام</span></a></li>
+      <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__current" aria-current="page"><span class="ds-breadcrumb__label">مراجعة التصميم</span></span></li>
+    </ol>
+    <a class="ds-breadcrumb__back" href="#"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>العودة إلى المهام</span></a>
+  </nav>
+</section>

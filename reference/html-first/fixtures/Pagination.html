@@ -1,0 +1,225 @@
+<!-- Pagination fixture · variants, states, mandatory combinations (catalog preview) + edge cases.
+     URL based: every page / Previous / Next is a relative link (?page=n) and the tools form submits with GET, so it works without JS.
+     Desktop: first, …, current ±2, …, last + Rows per page + Go to page. Tablet: current ±1. Phone: compact (Previous · Page n of N · Next).
+     Pagination.js (live demos): in-place page change, focus to the collection heading, polite range announcement, jump validation. -->
+<section class="ds-demo" data-ds-demo="variants/numbered (live: focus moves to the collection heading, range announced)">
+  <div class="ds-pagination-collection" id="pg1-col" data-row-label="Booking"><h2 class="ds-pagination-collection__heading">Bookings</h2><ul class="ds-pagination-collection__list"><li data-row>Booking 16</li><li data-row>Booking 17</li><li data-row>Booking 18</li><li data-row>Booking 19</li><li data-row>Booking 20</li></ul></div>
+  <nav class="ds-pagination" aria-label="Bookings pagination" data-ds-module="pagination" data-total="312" data-page-size="5" data-page="4" data-href="?page={page}" data-controls="pg1-col">
+    <p class="ds-pagination__summary">16–20 of 312</p>
+    <span class="ds-vh" id="pg1-first">You are on the first page</span><span class="ds-vh" id="pg1-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg1-first" href="?page=3"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4" aria-current="page"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=6"><span class="ds-vh">Page </span><span>6</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=63"><span class="ds-vh">Page </span><span>63</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 4 of 63</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg1-last" href="?page=5"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+    <form class="ds-pagination__tools" method="get" action="">
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg1-size">Rows per page</label><select class="ds-pagination__control" id="pg1-size" name="size"><option value="5" selected>5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100">100</option></select></div>
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg1-jump">Go to page</label><div class="ds-pagination__field-row"><input class="ds-pagination__control" id="pg1-jump" name="page" inputmode="numeric" autocomplete="off" aria-describedby="pg1-err" value=""><button type="submit" class="ds-pagination__go">Go</button></div><p class="ds-pagination__error" id="pg1-err" hidden data-template="Enter a page from 1 to {n}"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-text></span></p></div>
+    </form>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="variants/compact (ContextPanel, phone, unknown total)">
+  <div class="ds-stack" data-gap="4"><nav class="ds-pagination" aria-label="Compact pagination" data-variant="compact">
+    
+    <span class="ds-vh" id="pg2-first">You are on the first page</span><span class="ds-vh" id="pg2-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg2-first" href="?page=2"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3" aria-current="page"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=16"><span class="ds-vh">Page </span><span>16</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 3 of 16</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg2-last" href="?page=4"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+  <nav class="ds-pagination" aria-label="Results pagination (cursor)" data-variant="compact">
+    <span class="ds-vh" id="pg3-last">No more results</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" href="?cursor=b"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 3</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" role="link" tabindex="0" aria-disabled="true" aria-describedby="pg3-last"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav></div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/load-more (live: focus to the first new item, count announced)">
+  <ul class="ds-pagination-collection__list" id="pg4-list" data-row-label="News item"><li>News item 1</li><li>News item 2</li><li>News item 3</li></ul>
+  <div class="ds-pagination" data-variant="load-more" data-ds-module="pagination-load-more" data-controls="pg4-list" data-total="9" data-page-size="3" data-summary="Showing {n} of {total}" data-announce="{n} more items loaded">
+    <p class="ds-pagination__summary">Showing 3 of 9</p>
+    <a class="ds-pagination__more" href="?limit=6">Load 3 more</a>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default · hover · pressed · focus · current)">
+  <nav class="ds-pagination" aria-label="Pagination (states)">
+    <p class="ds-pagination__summary">81–100 of 200</p>
+    <span class="ds-vh" id="pg5-first">You are on the first page</span><span class="ds-vh" id="pg5-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg5-first" href="?page=4"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4" data-force="hover"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5" aria-current="page"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=6" data-force="pressed"><span class="ds-vh">Page </span><span>6</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=7" data-force="focus"><span class="ds-vh">Page </span><span>7</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=10"><span class="ds-vh">Page </span><span>10</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 5 of 10</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg5-last" href="?page=6" data-force="hover"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="selected+hover · selected+focus (inverse ring inside the fill)">
+  <div class="ds-stack" data-gap="4"><nav class="ds-pagination" aria-label="Pagination (current hover)">
+    <p class="ds-pagination__summary">21–40 of 100</p>
+    <span class="ds-vh" id="pg6-first">You are on the first page</span><span class="ds-vh" id="pg6-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg6-first" href="?page=1"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2" aria-current="page" data-force="hover"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 2 of 5</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg6-last" href="?page=3"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav><nav class="ds-pagination" aria-label="Pagination (current focus)">
+    <p class="ds-pagination__summary">21–40 of 100</p>
+    <span class="ds-vh" id="pg7-first">You are on the first page</span><span class="ds-vh" id="pg7-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg7-first" href="?page=1"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2" aria-current="page" data-force="focus"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 2 of 5</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg7-last" href="?page=3"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav></div>
+</section>
+<section class="ds-demo" data-ds-demo="boundary: disabled+focus (Previous on page 1 stays focusable, reason announced)">
+  <nav class="ds-pagination" aria-label="Pagination (first page)">
+    <p class="ds-pagination__summary">1–20 of 100</p>
+    <span class="ds-vh" id="pg8-first">You are on the first page</span><span class="ds-vh" id="pg8-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg8-first" role="link" tabindex="0" aria-disabled="true" aria-describedby="pg8-first" data-force="focus"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1" aria-current="page"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 1 of 5</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg8-last" href="?page=2"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="loading (collection aria-busy; pressed page shows a spinner at locked width; loading+pressed is prevented)">
+  <div class="ds-pagination-collection" id="pg9-col" data-row-label="Booking" aria-busy="true"><h2 class="ds-pagination-collection__heading">Bookings</h2><ul class="ds-pagination-collection__list"><li data-row>Booking 6</li><li data-row>Booking 7</li><li data-row>Booking 8</li></ul></div>
+  <nav class="ds-pagination" aria-label="Pagination (loading)" aria-busy="true">
+    <p class="ds-pagination__summary">6–10 of 60</p>
+    <span class="ds-vh" id="pg9-first">You are on the first page</span><span class="ds-vh" id="pg9-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg9-first" href="?page=1"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2" aria-current="page"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3" aria-busy="true"><span class="ds-vh">Page </span><span>3</span><span class="ds-pagination__spinner" aria-hidden="true"></span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=12"><span class="ds-vh">Page </span><span>12</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 2 of 12</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg9-last" href="?page=3"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="error (InlineAlert + Retry above the collection; numbers back on the last good page)">
+  <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="pg10-t">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+    <div class="ds-inline-alert__content"><p class="ds-inline-alert__title" id="pg10-t">Page 3 couldn’t load</p><p class="ds-inline-alert__body">Page 2 is still shown. Check your connection, then try again.</p><div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target">Retry</button></div></div>
+  </div>
+  <nav class="ds-pagination" aria-label="Pagination (error)">
+    <p class="ds-pagination__summary">6–10 of 60</p>
+    <span class="ds-vh" id="pg10-first">You are on the first page</span><span class="ds-vh" id="pg10-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg10-first" href="?page=1"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2" aria-current="page"><span class="ds-vh">Page </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=12"><span class="ds-vh">Page </span><span>12</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 2 of 12</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg10-last" href="?page=3"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="thousands of pages (tabular numerals, locale separators, Go to page required) + jump error">
+  <nav class="ds-pagination" aria-label="Ledger pagination">
+    <p class="ds-pagination__summary">123,301–123,400 of 123,400</p>
+    <span class="ds-vh" id="pg11-first">You are on the first page</span><span class="ds-vh" id="pg11-last">You are on the last page</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg11-first" href="?page=1233"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Page </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=1232"><span class="ds-vh">Page </span><span>1,232</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1233"><span class="ds-vh">Page </span><span>1,233</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1234" aria-current="page"><span class="ds-vh">Page </span><span>1,234</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 1,234 of 1,234</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg11-last" role="link" tabindex="0" aria-disabled="true" aria-describedby="pg11-last"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+    <form class="ds-pagination__tools" method="get" action="">
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg11-size">Rows per page</label><select class="ds-pagination__control" id="pg11-size" name="size"><option value="10">10</option><option value="20">20</option><option value="50">50</option><option value="100" selected>100</option></select></div>
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg11-jump">Go to page</label><div class="ds-pagination__field-row"><input class="ds-pagination__control" id="pg11-jump" name="page" inputmode="numeric" autocomplete="off" aria-describedby="pg11-err" aria-invalid="true" value="9999"><button type="submit" class="ds-pagination__go">Go</button></div><p class="ds-pagination__error" id="pg11-err" data-template="Enter a page from 1 to {n}"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-text>Enter a page from 1 to 1,234</span></p></div>
+    </form>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="longest locale (+40%)" lang="id">
+  <nav class="ds-pagination" aria-label="Paginasi" data-label-page="Halaman" data-label-of="dari">
+    <p class="ds-pagination__summary">41–60 dari 312</p>
+    <span class="ds-vh" id="pg12-first">Anda di halaman pertama</span><span class="ds-vh" id="pg12-last">Anda di halaman terakhir</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg12-first" href="?page=2"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Sebelumnya</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">Halaman </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Halaman </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3" aria-current="page"><span class="ds-vh">Halaman </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Halaman </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Halaman </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=16"><span class="ds-vh">Halaman </span><span>16</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Halaman 3 dari 16</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg12-last" href="?page=4"><span>Berikutnya</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+    <form class="ds-pagination__tools" method="get" action="">
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg12-size">Baris per halaman</label><select class="ds-pagination__control" id="pg12-size" name="size"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
+      <div class="ds-pagination__field"><label class="ds-pagination__label" for="pg12-jump">Ke halaman</label><div class="ds-pagination__field-row"><input class="ds-pagination__control" id="pg12-jump" name="page" inputmode="numeric" autocomplete="off" aria-describedby="pg12-err" value=""><button type="submit" class="ds-pagination__go">Buka</button></div><p class="ds-pagination__error" id="pg12-err" hidden data-template="Enter a page from 1 to {n}"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-text></span></p></div>
+    </form>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (Previous at inline-start, chevrons mirrored, digits not reversed)" dir="rtl" lang="ar">
+  <nav class="ds-pagination" aria-label="ترقيم الصفحات" data-label-page="صفحة" data-label-of="من">
+    <p class="ds-pagination__summary">41–60 من 312</p>
+    <span class="ds-vh" id="pg13-first">أنت في الصفحة الأولى</span><span class="ds-vh" id="pg13-last">أنت في الصفحة الأخيرة</span>
+    <ul class="ds-pagination__list">
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="prev" data-reason-id="pg13-first" href="?page=2"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>السابق</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1"><span class="ds-vh">صفحة </span><span>1</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">صفحة </span><span>2</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3" aria-current="page"><span class="ds-vh">صفحة </span><span>3</span></a></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">صفحة </span><span>4</span></a></li>
+      <li class="ds-pagination__item" data-kind="page" data-near="2"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">صفحة </span><span>5</span></a></li>
+      <li class="ds-pagination__item" data-kind="gap" aria-hidden="true"><span class="ds-pagination__gap">…</span></li>
+      <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=16"><span class="ds-vh">صفحة </span><span>16</span></a></li>
+      <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">صفحة 3 من 16</span></li>
+      <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" data-reason-id="pg13-last" href="?page=4"><span>التالي</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+    </ul>
+  </nav>
+</section>

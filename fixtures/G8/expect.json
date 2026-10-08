@@ -1,0 +1,43 @@
+{
+  "assertions": [
+    {
+      "assumptions_contain": "seed default archetype playful-vivid"
+    },
+    {
+      "no_semantic_shift": true
+    },
+    {
+      "eq": 48,
+      "token": "target-min-extended"
+    },
+    {
+      "eq": "scale(0.97)",
+      "token": "state-press-transform"
+    },
+    {
+      "css_contains": "--state-press-transform: none"
+    },
+    {
+      "eq": "success",
+      "token": "haptic-success"
+    },
+    {
+      "eq": "none",
+      "token": "sound-success"
+    },
+    {
+      "eq": 44,
+      "token": "control-height-sm"
+    },
+    {
+      "eq": 60,
+      "token": "control-height-lg"
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G8",
+  "run_only": [],
+  "source": "golden-briefs.md G8"
+}

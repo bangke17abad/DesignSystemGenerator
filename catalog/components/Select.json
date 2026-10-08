@@ -1,0 +1,729 @@
+{
+  "accessibility": {
+    "attributes": [
+      "label for/id atau aria-labelledby pada trigger",
+      "aria-expanded, aria-controls, aria-haspopup=\"listbox\" pada trigger custom",
+      "aria-activedescendant ke opsi aktif selama listbox terbuka",
+      "aria-selected=\"true\" pada opsi terpilih",
+      "aria-disabled + aria-describedby ke alasan pada opsi tidak tersedia",
+      "aria-invalid, aria-required, aria-describedby (error, helper) pada trigger",
+      "aria-readonly pada trigger read-only; aria-disabled + reason pada trigger diblokir",
+      "autocomplete pada <select> untuk data pribadi (country, bday-month, sex bila diminta brief) (SC 1.3.5)",
+      "presentasi Sheet di phone: dialog aria-modal berlabel label field; fokus kembali ke trigger saat tutup"
+    ],
+    "focus_order": "label → trigger; saat terbuka fokus logis di listbox (activedescendant) atau di Sheet; kembali ke trigger saat menutup",
+    "native": {
+      "compose": "ExposedDropdownMenuBox { OutlinedTextField(readOnly = true, value = label, isError, supportingText, modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)); ExposedDropdownMenu { DropdownMenuItem } }; di compact width ModalBottomSheet berisi Modifier.selectable(role = Role.RadioButton)",
+      "flutter": "DropdownMenu<T>(label, dropdownMenuEntries, initialSelection, onSelected, errorText, enabled) atau DropdownButtonFormField; di phone trigger membuka showModalBottomSheet berisi RadioListTile per opsi; Semantics(button: true, value: selectedLabel, hint: reason)",
+      "swiftui": "Picker(label, selection: $value) { ForEach … }.pickerStyle(.menu) di iPad/macOS; di iPhone .pickerStyle(.navigationLink) atau .sheet dengan List + .presentationDetents([.medium, .large]); .accessibilityHint(reason) untuk diblokir"
+    },
+    "politeness": "polite",
+    "role": "native: combobox implisit dari <select>; custom: trigger role=\"combobox\" (select-only) + listbox + option, group untuk grup opsi",
+    "sr_label": "label + nilai terpilih + state; contoh: \"Country, combo box, Indonesia, required\"; opsi: label + \"selected\" + posisi (3 of 12)",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.7",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label tampak di atas (≥ 16); nama aksesibel trigger",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "optional-marker",
+      "role": "teks \"(optional)\" bila tidak wajib",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "trigger",
+      "role": "kontrol yang menampilkan nilai terpilih; border kontrol ≥ 3:1; tinggi dari size",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-3"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "label opsi terpilih atau placeholder \"Select …\" (bukan opsi yang bisa dikirim)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "chevron",
+      "role": "ikon chevron-down di inline-end; penanda non-warna bahwa kontrol membuka daftar",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "listbox",
+      "role": "daftar opsi di portal pada z-popover (desktop/tablet) atau di dalam Sheet (phone); max-block-size dengan gulir internal",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-1"
+      ]
+    },
+    {
+      "part": "option",
+      "role": "baris opsi; tinggi dari size; ≥ target-min-touch di sentuh",
+      "tokens": [
+        "control-height-md",
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "space-3"
+      ]
+    },
+    {
+      "part": "option-highlight",
+      "role": "opsi aktif (hover atau aktif-keyboard): latar selection + ring inset −2px",
+      "tokens": [
+        "color-structure-selection",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "option-check",
+      "role": "ikon centang pada opsi terpilih (penanda non-warna) di inline-start atau inline-end",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "group-label",
+      "role": "judul grup opsi non-interaktif",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "sheet",
+      "role": "presentasi phone: Sheet dari bawah berjudul label field, berisi daftar opsi dan tombol tutup berlabel",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-scrim",
+        "z-modal",
+        "z-overlay-scrim"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "bantuan di bawah field",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon + teks error terhubung aria-describedby",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar trigger",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string | null",
+        "when": "opsi dipilih (Enter, Space, Tab pada opsi aktif, klik, tap)"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"outside\" | \"select\" | \"tab\" }",
+        "when": "daftar dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "Select.Option (value, label, description, disabled, reason, iconStart)",
+      "Select.Group (label)",
+      "Select.Separator"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat dan nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: nilai opsi terpilih.",
+        "name": "value",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "default": "null",
+        "description": "Uncontrolled: nilai awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "description": "Controlled: daftar terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state buka awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "native",
+        "description": "Native <select> atau select-only combobox.",
+        "name": "variant",
+        "required": false,
+        "type": "\"native\" | \"custom\""
+      },
+      {
+        "default": "glosarium \"Select …\"",
+        "description": "Teks saat belum ada nilai; bukan opsi yang dikirim.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Nama field untuk Form dan ErrorSummary.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Token autocomplete untuk data pribadi.",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bantuan di bawah field.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi trigger dan opsi.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Nilai sebagai teks kontras penuh.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Opsi sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "membuka listbox; opsi aktif = opsi terpilih (atau pertama); fokus DOM tetap di trigger dengan aria-activedescendant",
+      "trigger": "Enter, Space, Alt+↓, atau ↓ pada trigger"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah opsi aktif; mengetik huruf melompat ke opsi berawalan sama (beberapa huruf dalam 500 ms); opsi aria-disabled dilewati sebagai pilihan tetapi tetap terbaca",
+      "trigger": "↑/↓, Home/End, PageUp/PageDown, huruf"
+    },
+    {
+      "input": "keyboard",
+      "result": "memilih opsi, menutup, fokus di trigger, onValueChange dipanggil; Tab memilih opsi aktif lalu memindah fokus (sesuai pola APG select-only)",
+      "trigger": "Enter atau Space pada opsi; Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup tanpa mengubah nilai; fokus kembali ke trigger",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "perilaku OS; tidak memicu perubahan konteks (SC 3.2.2) — perubahan nilai tidak pernah langsung menavigasi atau mengirim",
+      "trigger": "↑/↓ pada trigger tertutup (varian native di desktop)"
+    },
+    {
+      "input": "pointer",
+      "result": "membuka; memilih pada pelepasan (SC 2.5.2); klik di luar menutup tanpa mengubah nilai",
+      "trigger": "klik trigger; klik opsi; klik di luar"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet dari bawah berjudul label field; opsi ≥ target-min-touch; tap opsi memilih dan menutup; daftar > 8 opsi menampilkan opsi terpilih di viewport",
+      "trigger": "tap trigger (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Country",
+        "Select a country",
+        "Department (optional)",
+        "Choose the team that will review this request.",
+        "Select a country to continue",
+        "Not available for your region"
+      ],
+      "id-ID": [
+        "Negara",
+        "Pilih negara",
+        "Departemen (opsional)",
+        "Pilih tim yang akan meninjau permintaan ini.",
+        "Pilih negara untuk melanjutkan",
+        "Tidak tersedia untuk wilayah Anda"
+      ]
+    },
+    "rules": [
+      "Label = kata benda dari glosarium (\"Country\"), bukan instruksi (\"Select a country\").",
+      "Placeholder \"Select …\" bukan opsi yang bisa dikirim; field wajib tanpa pilihan menghasilkan error.",
+      "Opsi sentence case, diurutkan secara bermakna (frekuensi, urutan alami) atau alfabetis menurut collation locale; \"Other\" selalu terakhir.",
+      "Opsi tidak tersedia menyebut alasannya pada baris kedua, bukan hanya diredam.",
+      "Error kosong: \"Select a …\"; tidak menyalahkan pengguna."
+    ]
+  },
+  "depends_on": [
+    "Popover",
+    "Sheet",
+    "Spinner"
+  ],
+  "do": [
+    "Pakai RadioGroup bila opsinya sedikit dan perlu dibandingkan; Select bila ruang terbatas.",
+    "Tampilkan centang pada opsi terpilih dan pertahankan nilai terpilih terlihat di trigger.",
+    "Isi otomatis nilai yang sudah diketahui dari langkah sebelumnya (SC 3.3.7)."
+  ],
+  "dont": [
+    {
+      "text": "Menavigasi atau mengirim form otomatis saat nilai berubah (SC 3.2.2)."
+    },
+    {
+      "ref": "UB2",
+      "text": "Opsi terpilih hanya dibedakan lewat warna latar."
+    },
+    {
+      "ref": "UB5",
+      "text": "Popover kecil di ponsel dengan opsi di bawah 44."
+    },
+    {
+      "ref": "UB10",
+      "text": "Placeholder sebagai label."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "trigger menampilkan nilai dalam beberapa baris (tidak dipotong di form; di filter tabel boleh ellipsis + nama lengkap di nama aksesibel); listbox melebar sampai layout-modal-sm lalu membungkus",
+      "case": "label opsi +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "trigger dan opsi tumbuh tinggi; listbox yang tidak muat beralih ke Sheet; opsi aktif selalu digulir ke viewport",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "trigger tetap terlihat; daftar menampilkan alasan (\"No departments yet\") dan bila ada aksi valid, tautan untuk membuatnya; field wajib dengan 0 opsi dilaporkan sebagai error sistem, bukan validasi",
+      "case": "0 opsi"
+    },
+    {
+      "behaviour": "tetap ditampilkan sebagai Select terpilih (atau teks read-only bila tidak bisa diubah) agar pengguna tahu nilai yang dikirim",
+      "case": "1 opsi"
+    },
+    {
+      "behaviour": "> 15 opsi: tambahkan grup; > 30 atau perlu dicari: ganti ke Combobox",
+      "case": "jumlah opsi maksimum"
+    },
+    {
+      "behaviour": "opsi dari cache ditampilkan dengan catatan \"Last updated …\"; tanpa cache: aria-disabled dengan reason \"Options need a connection\"",
+      "case": "loading / offline"
+    },
+    {
+      "behaviour": "autocomplete country/bday memilih opsi yang cocok; bila nilai autofill tidak ada di daftar, field kosong tanpa error sampai submit",
+      "case": "autofill"
+    },
+    {
+      "behaviour": "trigger menampilkan placeholder + peringatan dev; tidak membuat opsi palsu",
+      "case": "nilai controlled tidak ada di opsi"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Select tanpa label ditolak",
+    "onValueChange yang menavigasi atau submit otomatis ditolak (manual-review, SC 3.2.2)",
+    "Select dengan > 30 opsi ditandai untuk diganti Combobox (manual-review)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled (trigger maupun opsi)"
+  ],
+  "name": "Select",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "error+focus",
+      "loading+pressed (dicegah)",
+      "read-only+focus",
+      "Sheet phone",
+      "label +40% + RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "open",
+      "selected",
+      "error",
+      "loading",
+      "disabled-with-reason",
+      "read-only",
+      "empty"
+    ],
+    "variants": [
+      "native",
+      "custom"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memilih tepat satu nilai dari daftar tertutup yang diketahui (±5 sampai ±15 opsi) dengan label di atas; di ponsel pilihan dibuka sebagai Sheet, bukan popover.",
+    "when_not_to_use": [
+      "Untuk 2–5 opsi yang perlu dibandingkan sekilas: pakai RadioGroup (semua opsi terlihat tanpa membuka).",
+      "Untuk daftar panjang, data dari server, atau opsi yang perlu dicari/diketik: pakai Combobox.",
+      "Untuk memilih beberapa nilai: pakai Checkbox (grup) atau Combobox multi.",
+      "Untuk menjalankan aksi (bukan memilih nilai): pakai Menu.",
+      "Untuk menyaring daftar secara langsung: pakai FilterChip atau SegmentedControl."
+    ]
+  },
+  "related": [
+    "Combobox",
+    "RadioGroup",
+    "Menu",
+    "FilterChip",
+    "TextField"
+  ],
+  "responsive": [
+    {
+      "behaviour": "Sheet dari bawah (bukan popover) berjudul label field; opsi size lg ≥ target-min-touch; varian native memakai picker OS",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "popover menempel trigger di z-popover; opsi ≥ target-min-touch di mode sentuh; beralih ke Sheet bila ruang vertikal tidak cukup",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "popover di z-popover lebar ≥ trigger, flip/shift agar tidak keluar viewport; size sm/md",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role boleh melihat nilai tetapi tidak mengubahnya: teks kontras penuh tanpa chevron"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "nilai terkunci oleh state data, atau opsi tertentu tidak diizinkan untuk role (opsi aria-disabled + alasan)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "opsi yang tidak boleh diketahui role tidak dirender sama sekali"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Chevron-down tidak berarah horizontal sehingga tidak dicerminkan; chevron dan centang berpindah ke sisi logis (inline-end/start); teks opsi rata inline-start; popover sejajar tepi inline-start trigger."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); opsi naik ke target-min-touch di mode sentuh",
+      "name": "sm",
+      "notes": "Filter tabel dan toolbar pointer. Teks tetap ≥ 16.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default form.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh dan opsi di dalam Sheet phone.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "opsi terpilih yang di-hover: centang tetap, latar selection + state-layer hover",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "opsi terpilih yang aktif-keyboard: centang + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "nilai terpilih tetap terbaca di trigger yang diblokir; aria-disabled + reason",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring fokus di luar",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "opsi tidak bisa dipilih saat daftar masih dimuat",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa hover pada trigger diblokir",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "nilai sebagai teks kontras penuh, fokusabel, tidak membuka",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "trigger": "color-structure-border-control",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "trigger border-control; nilai text-primary atau placeholder text-placeholder"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "option": "color-structure-selection",
+        "trigger": "color-structure-border-strong"
+      },
+      "treatment": "border ke border-strong pada trigger; opsi hover latar selection; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring",
+        "option-highlight": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px pada trigger; di listbox, opsi aktif ring inset −2px (aria-activedescendant)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "trigger": "color-interaction-pressed"
+      },
+      "treatment": "trigger state-layer pressed tanpa transform yang mengubah layout"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "trigger": "color-interaction-default"
+      },
+      "treatment": "listbox tampil (popover di z-popover atau Sheet); trigger aria-expanded=\"true\"; chevron berputar (fade di reduced motion)"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "option": "color-structure-selection",
+        "option-check": "color-interaction-default"
+      },
+      "treatment": "opsi terpilih: ikon centang + aria-selected=\"true\" + bobot label naik; bukan hanya latar"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error": "color-semantic-critical-strong",
+        "trigger": "color-semantic-critical"
+      },
+      "treatment": "border critical + ikon + errorText; aria-invalid=\"true\""
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "chevron": "color-structure-text-secondary"
+      },
+      "treatment": "opsi dimuat asinkron: Spinner di chevron, aria-busy=\"true\"; daftar terbuka menampilkan baris \"Loading options…\"; bila > 2 detik atau dari server, pertimbangkan Combobox"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "trigger": "color-structure-surface-sunken",
+        "value": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; trigger tetap fokusabel tetapi tidak membuka; latar surface-sunken, nilai text-disabled; reason di helper via aria-describedby. Opsi individual yang tidak tersedia: aria-disabled + alasan di baris kedua"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "trigger": "color-structure-border",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "nilai terpilih tampil sebagai teks kontras penuh tanpa chevron dan tanpa border kontrol aktif; aria-readonly=\"true\" pada combobox (native: dirender sebagai teks + input hidden)"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "value": "color-structure-text-placeholder"
+      },
+      "treatment": "belum ada pilihan: placeholder \"Select …\"; daftar tanpa opsi menampilkan baris non-interaktif yang menjelaskan sebabnya"
+    }
+  ],
+  "target_hints": {
+    "compose": "ExposedDropdownMenuBox dibungkus {Ns}Select; ModalBottomSheet di compact width",
+    "flutter": "DropdownMenu dibungkus {ns}_select.dart; phone memakai showModalBottomSheet",
+    "html": {
+      "element": "label + select (native) | label + button[role=combobox] + ul[role=listbox] (custom)",
+      "notes": "varian custom memakai modul JS untuk activedescendant dan typeahead, listbox di portal; tanpa JS jatuh ke <select> native; di phone custom membuka Sheet"
+    },
+    "swiftui": "Picker dibungkus {Ns}Select; .sheet di compact width"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default html-first: elemen <select> native dengan gaya trigger dari token; daftar dibuka oleh OS (picker/sheet sistem di ponsel memenuhi aturan sheet). Dipakai bila opsi berupa teks polos.",
+      "name": "native"
+    },
+    {
+      "description": "Pola select-only combobox (trigger + listbox) untuk opsi yang butuh ikon, deskripsi baris kedua, atau grup bergaya; popover di desktop/tablet, Sheet di phone. Fallback tanpa JS: <select> native dengan opsi yang sama.",
+      "name": "custom"
+    }
+  ]
+}

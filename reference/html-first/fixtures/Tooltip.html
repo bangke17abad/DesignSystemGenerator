@@ -1,0 +1,98 @@
+<!-- Tooltip fixture · variants, states, mandatory combinations (catalog preview) + edge cases.
+     Static demos (data-static) render the open bubble in flow; the "live" demos use Tooltip.js (hover after --timing-tooltip-delay,
+     focus at once, Esc, hoverable bubble, long press on touch). No-JS: the trigger keeps its aria-label / aria-describedby, so the
+     tooltip only ever duplicates information that is already available (UB9). The title attribute is never used. -->
+<section class="ds-demo" data-ds-demo="variants/label+description">
+  <div class="ds-inline" data-gap="8">
+    <span class="ds-tooltip-demo" data-side="block-start">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true">Settings</span>
+    </span>
+    <span class="ds-tooltip-demo" data-side="block-start">
+      <button type="button" class="ds-tooltip__demo-trigger" aria-describedby="tt-desc-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span>Updated 2 h ago</span></button>
+      <span class="ds-tooltip" role="tooltip" id="tt-desc-1" data-static data-side="block-start" data-ds-text="supporting">8 Oct 2026, 14:05 WIB</span>
+    </span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/open+sides">
+  <div class="ds-inline" data-gap="8">
+    <span class="ds-tooltip-demo" data-side="block-end">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Copy link"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="block-end" aria-hidden="true">Copy link</span>
+    </span>
+    <span class="ds-tooltip-demo" data-side="inline-end">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="inline-end" aria-hidden="true">Filter</span>
+    </span>
+    <span class="ds-tooltip-demo" data-side="inline-start">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Next page"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="inline-start" aria-hidden="true">Next page</span>
+    </span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="shortcut">
+  <span class="ds-tooltip-demo" data-side="block-start">
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Search" aria-keyshortcuts="Control+K"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></button>
+    <span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true">Search <kbd class="ds-tooltip__shortcut">Ctrl K</kbd></span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="hover+focus (one tooltip)">
+  <span class="ds-tooltip-demo" data-side="block-start">
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only data-force="hover focus" aria-label="Notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+    <span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true">Notifications</span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="blocked+focus (reason)">
+  <div>
+    <span class="ds-tooltip-demo" data-side="block-start">
+      <button type="button" class="ds-tooltip__demo-trigger" aria-disabled="true" data-force="focus" aria-describedby="tt-reason-1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Export</span></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true">Exports are limited to admins.</span>
+    </span>
+    <span class="ds-tooltip__reason" id="tt-reason-1">Exports are limited to admins. Ask an admin for access.</span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="pressed closes (prevented combination)">
+  <div class="ds-stack" data-gap="2">
+    <span><button type="button" class="ds-tooltip__demo-trigger" data-icon-only data-force="pressed" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button></span>
+    <p class="ds-text-secondary">Pressing the trigger closes its tooltip so the result of the action is never covered.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="flip at viewport edge">
+  <div class="ds-stack" data-gap="2">
+    <span class="ds-tooltip-demo" data-side="block-end">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Account"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="block-end" aria-hidden="true">Account</span>
+    </span>
+    <p class="ds-text-secondary">Preferred side is block-start; a trigger at the top edge flips the bubble to block-end and shifts it inside the viewport.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long text (+40%) wraps at 40ch">
+  <span class="ds-tooltip-demo" data-side="block-start">
+    <button type="button" class="ds-tooltip__demo-trigger" aria-describedby="tt-long-1">Pengaturan lanjutan</button>
+    <span class="ds-tooltip" role="tooltip" id="tt-long-1" data-static data-side="block-start" data-ds-text="supporting">Mengatur sinkronisasi otomatis untuk semua perangkat yang terhubung ke akun ini</span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="RTL" dir="rtl" lang="ar">
+  <div class="ds-inline" data-gap="8">
+    <span class="ds-tooltip-demo" data-side="inline-end">
+      <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="الإعدادات"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+      <span class="ds-tooltip" role="tooltip" data-static data-side="inline-end" aria-hidden="true">الإعدادات</span>
+    </span>
+    <span class="ds-tooltip-demo" data-side="block-start">
+      <button type="button" class="ds-tooltip__demo-trigger" aria-describedby="tt-rtl-2" aria-keyshortcuts="Control+S">حفظ</button>
+      <span class="ds-tooltip" role="tooltip" id="tt-rtl-2" data-static data-side="block-start" data-ds-text="supporting">حفظ المسودة <kbd class="ds-tooltip__shortcut">Ctrl S</kbd></span>
+    </span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (hover, focus, Esc, long press, toolbar group)">
+  <div class="ds-inline" data-gap="2" role="toolbar" aria-label="Formatting">
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Copy" data-ds-module="tooltip" data-ds-tooltip="tt-live-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg></button>
+    <div class="ds-tooltip" role="tooltip" id="tt-live-1" popover="manual" aria-hidden="true" data-ds-text="supporting">Copy</div>
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Link" data-ds-module="tooltip" data-ds-tooltip="tt-live-2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-link"/></svg></button>
+    <div class="ds-tooltip" role="tooltip" id="tt-live-2" popover="manual" aria-hidden="true" data-ds-text="supporting">Insert link</div>
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Upload" aria-keyshortcuts="Control+U" data-ds-module="tooltip" data-ds-tooltip="tt-live-3"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg></button>
+    <div class="ds-tooltip" role="tooltip" id="tt-live-3" popover="manual" aria-hidden="true" data-ds-text="supporting">Upload <kbd class="ds-tooltip__shortcut">Ctrl U</kbd></div>
+    <button type="button" class="ds-tooltip__demo-trigger" aria-describedby="tt-live-4" data-ds-module="tooltip" data-ds-tooltip="tt-live-4"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span>Due Fri</span></button>
+    <div class="ds-tooltip" role="tooltip" id="tt-live-4" popover="manual" data-ds-text="supporting">Friday 10 October 2026, 17:00</div>
+  </div>
+</section>

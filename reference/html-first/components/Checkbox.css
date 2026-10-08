@@ -1,0 +1,179 @@
+/* Checkbox · engine 1.8.0 reference (catalog/components/Checkbox.json). Tokens only (I3); logical properties only (§12.4).
+   The <label class="ds-checkbox"> is the hit area (box + label + description, >= target-current tall); the native input is the box
+   (appearance: none) and the check / minus glyphs come from the icon set, so the mark is never colour alone. */
+.ds-checkbox {
+  --_box: var(--icon-md);
+  --_row: max(var(--control-height-md), var(--target-current));
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-block-size: var(--_row);
+  padding-block: max(0px, calc((var(--_row) - var(--type-body-line)) / 2));
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-checkbox[data-size="sm"] { --_box: var(--icon-sm); --_row: max(var(--control-height-sm), var(--target-current)); }
+.ds-checkbox[data-size="lg"] { --_box: var(--icon-lg); --_row: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+
+.ds-checkbox__control {
+  --_border: var(--control-container-border);
+  --_fill: var(--control-container-background);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: none;
+  inline-size: var(--_box);
+  block-size: var(--_box);
+  margin-block: calc((var(--type-body-line) - var(--_box)) / 2);
+  transition: transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* state layer halo (opacity 0 in token-swap languages) */
+.ds-checkbox__control::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--space-2));
+  z-index: -1;
+  border-radius: var(--radius-full);
+  background: var(--color-interaction-default);
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-checkbox__input {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  border: var(--border-width-thick) solid var(--_border);
+  border-radius: var(--radius-xs);
+  background: var(--_fill);
+  cursor: inherit;
+  appearance: none;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), border-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-checkbox__mark {
+  grid-area: 1 / 1;
+  place-self: center;
+  inline-size: calc(var(--_box) * 0.8);
+  block-size: calc(var(--_box) * 0.8);
+  color: var(--control-checked-mark);
+  stroke-width: max(var(--icon-stroke), 2);
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-checkbox__input:is(:checked, :indeterminate) { --_border: var(--control-checked-background); --_fill: var(--control-checked-background); }
+.ds-checkbox__input:checked:not(:indeterminate) ~ .ds-checkbox__mark[data-mark="check"],
+.ds-checkbox__input:indeterminate ~ .ds-checkbox__mark[data-mark="mixed"] { opacity: 1; }
+
+.ds-checkbox__text { display: flex; flex-direction: column; min-inline-size: 0; overflow-wrap: anywhere; }
+.ds-checkbox__description { color: var(--color-structure-text-secondary); }
+.ds-checkbox__description:has(> .ds-icon) { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-checkbox__description .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+
+/* interaction (not for blocked or read-only rows) */
+@media (hover: hover) {
+  .ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):hover .ds-checkbox__input:not(:checked, :indeterminate, [aria-invalid="true"]) { --_border: var(--control-container-border-hover); }
+  .ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):hover .ds-checkbox__input:is(:checked, :indeterminate) { --_border: var(--color-interaction-hover); --_fill: var(--color-interaction-hover); }
+  .ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):hover .ds-checkbox__control::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-checkbox[data-force~="hover"] .ds-checkbox__input:not(:checked, :indeterminate, [aria-invalid="true"]) { --_border: var(--control-container-border-hover); }
+.ds-checkbox[data-force~="hover"] .ds-checkbox__input:is(:checked, :indeterminate) { --_border: var(--color-interaction-hover); --_fill: var(--color-interaction-hover); }
+.ds-checkbox[data-force~="hover"] .ds-checkbox__control::before { opacity: var(--state-layer-hover-opacity); }
+.ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):active .ds-checkbox__control,
+.ds-checkbox[data-force~="pressed"] .ds-checkbox__control { transform: var(--state-press-transform); }
+.ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):active .ds-checkbox__control::before,
+.ds-checkbox[data-force~="pressed"] .ds-checkbox__control::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-checkbox:not(:has([aria-disabled="true"], [aria-readonly="true"])):active .ds-checkbox__input:is(:checked, :indeterminate),
+.ds-checkbox[data-force~="pressed"] .ds-checkbox__input:is(:checked, :indeterminate) { --_border: var(--color-interaction-pressed); --_fill: var(--color-interaction-pressed); }
+.ds-checkbox[data-force~="pressed"] .ds-checkbox__input:not(:checked, :indeterminate) { --_border: var(--color-interaction-pressed); }
+
+/* error: critical border on unchecked boxes (single consent: aria-invalid; group: data-invalid on the fieldset) */
+.ds-checkbox__input[aria-invalid="true"]:not(:checked),
+.ds-checkbox-group[data-invalid] .ds-checkbox__input:not(:checked, :indeterminate, [aria-disabled="true"]) { --_border: var(--control-container-border-invalid); }
+
+/* blocked with reason: focusable (aria-disabled), Checkbox.js stops the toggle; the mark stays visible but muted */
+.ds-checkbox:has(.ds-checkbox__input[aria-disabled="true"]) { cursor: not-allowed; }
+.ds-checkbox:has(.ds-checkbox__input[aria-disabled="true"]) .ds-checkbox__label { color: var(--color-structure-text-disabled); }
+.ds-checkbox__input[aria-disabled="true"] { --_border: var(--color-structure-text-disabled); --_fill: var(--color-structure-surface-sunken); }
+.ds-checkbox__input[aria-disabled="true"] ~ .ds-checkbox__mark { color: var(--color-structure-text-disabled); }
+/* read-only: full contrast, no hover, cannot change */
+.ds-checkbox:has(.ds-checkbox__input[aria-readonly="true"]) { cursor: default; }
+
+/* card variant: the whole card is the target; selected = check + thicker interaction border, never only a fill */
+.ds-checkbox[data-variant="card"] {
+  --_row: max(var(--control-height-lg), var(--target-current));
+  padding: var(--space-4);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-md);
+  background: var(--control-container-background);
+  transition: border-color var(--motion-fast-duration) var(--motion-easing-standard), box-shadow var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-checkbox[data-variant="card"]:has(.ds-checkbox__input:is(:checked, :indeterminate)) {
+  border-color: var(--control-checked-background);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--control-checked-background);
+}
+.ds-checkbox[data-variant="card"] .ds-checkbox__label { font-weight: var(--type-label-weight); }
+@media (hover: hover) {
+  .ds-checkbox[data-variant="card"]:not(:has([aria-disabled="true"], [aria-readonly="true"], :checked)):hover { border-color: var(--control-container-border-hover); }
+}
+.ds-checkbox[data-variant="card"][data-force~="hover"]:not(:has(:checked)) { border-color: var(--control-container-border-hover); }
+/* card focus ring surrounds the card (the input keeps an outline style for forced colours, drawn transparent) */
+.ds-checkbox[data-variant="card"] .ds-checkbox__input:is(:focus-visible, [data-force~="focus"]) { outline-color: transparent; }
+.ds-checkbox[data-variant="card"]:has(.ds-checkbox__input:is(:focus-visible, [data-force~="focus"])) {
+  outline: var(--border-width-thick) solid var(--color-focus-ring);
+  outline-offset: var(--border-width-thick);
+}
+.ds-checkbox[data-variant="card"]:has([aria-disabled="true"]) { background: var(--color-structure-surface-sunken); border-color: var(--color-structure-border); }
+
+/* group (fieldset + legend), helper, error */
+.ds-checkbox-group { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.ds-checkbox-group__legend {
+  margin-block-end: var(--space-1);
+  padding: 0;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-checkbox-group__optional { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+.ds-checkbox-group__helper,
+.ds-checkbox__error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-checkbox__error { display: flex; align-items: flex-start; gap: var(--space-1); margin-block-start: var(--space-1); color: var(--color-semantic-critical-strong); }
+.ds-checkbox__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-checkbox__error[hidden] { display: none; }
+.ds-checkbox-group__items { display: flex; flex-direction: column; margin-block-start: var(--space-1); }
+.ds-checkbox-group__items:has(> [data-size="lg"]) { gap: var(--space-2); }
+.ds-checkbox-group__items:has(> [data-variant="card"]) { gap: var(--space-3); }
+.ds-checkbox-group__children { display: flex; flex-direction: column; padding-inline-start: calc(var(--icon-md) + var(--space-3)); }
+@media (--bp-tablet-up) {
+  .ds-checkbox-group__items[data-columns="2"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-checkbox__control, .ds-checkbox__input, .ds-checkbox[data-variant="card"] { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-checkbox__input { border-color: CanvasText; background: Canvas; }
+  .ds-checkbox__input:is(:checked, :indeterminate) { background: Highlight; border-color: Highlight; }
+  .ds-checkbox__mark { color: HighlightText; }
+  .ds-checkbox__input[aria-disabled="true"] { border-color: GrayText; }
+  .ds-checkbox__input[aria-disabled="true"]:is(:checked, :indeterminate) { background: GrayText; }
+  .ds-checkbox:has([aria-disabled="true"]) .ds-checkbox__label { color: GrayText; }
+  .ds-checkbox[data-variant="card"] { border-color: CanvasText; }
+  .ds-checkbox[data-variant="card"] .ds-checkbox__input:is(:focus-visible, [data-force~="focus"]) { outline-color: Highlight; }
+  .ds-checkbox__error { color: CanvasText; }
+}

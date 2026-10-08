@@ -1,0 +1,680 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-valuenow, aria-valuemin, aria-valuemax pada setiap thumb; pada range, aria-valuemax thumb minimum = nilai thumb maksimum dan sebaliknya",
+      "aria-valuetext bermakna dengan satuan dan format locale (\"250,000 rupiah\", \"Medium\", \"40 percent\"), bukan angka mentah",
+      "aria-labelledby ke label; pada range, label tiap thumb \"Minimum {label}\" / \"Maximum {label}\"",
+      "aria-orientation=\"vertical\" bila vertikal",
+      "aria-describedby ke helper",
+      "aria-disabled (tetap fokusabel) + reason; aria-readonly saat read-only",
+      "input pendamping adalah NumberInput berlabel sama (\"{label}, value\") dan terhubung lewat aria-controls",
+      "value-bubble aria-hidden (nilai sudah ada di aria-valuetext dan value-text)"
+    ],
+    "focus_order": "label → thumb (single) atau thumb minimum → thumb maksimum (range) → input pendamping (minimum lalu maksimum) → elemen berikutnya",
+    "native": {
+      "compose": "Slider(value, onValueChange, valueRange, steps, onValueChangeFinished) + Modifier.semantics { stateDescription = \"40 percent\" }; RangeSlider(value = a..b, onValueChange, valueRange, steps) dengan stateDescription per thumb; pendamping OutlinedTextField(KeyboardType.Decimal)",
+      "flutter": "Slider(value, min, max, divisions, label, onChanged, onChangeEnd, semanticFormatterCallback: (v) => '40 percent') / RangeSlider(values: RangeValues, semanticFormatterCallback); pendamping TextField numerik; Semantics bawaan adjustable (swipe naik/turun)",
+      "swiftui": "Slider(value: $v, in: 0...100, step: 1) { Text(\"Volume\") } minimumValueLabel: … maximumValueLabel: … onEditingChanged: { … } + .accessibilityValue(Text(\"40 percent\")); range: dua Slider berlabel atau kontrol kustom dengan .accessibilityAdjustableAction per thumb (tidak ada range slider native)"
+    },
+    "politeness": "polite",
+    "role": "slider pada setiap thumb (input type=range atau elemen dengan role=\"slider\"); grup range dibungkus role=group berlabel",
+    "sr_label": "\"{label}, slider, {aria-valuetext}\"; perubahan dibaca otomatis dari aria-valuetext tanpa pengumuman tambahan",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.4.7",
+      "2.5.1",
+      "2.5.2",
+      "2.5.3",
+      "2.5.7",
+      "2.5.8",
+      "3.2.2",
+      "3.3.2",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat menamai besaran; nilai saat ini terformat di inline-end baris label (selalu terlihat, bukan hanya tooltip)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "value-text",
+      "role": "nilai terformat terlihat (\"Rp 250.000 – Rp 1.000.000\", \"40%\"); angka tabular",
+      "tokens": [
+        "type-body-size",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "track",
+      "role": "jalur penuh min-max; area klik setinggi ≥ target-current walau garis visual tipis",
+      "tokens": [
+        "color-structure-border-control",
+        "radius-full",
+        "border-width-thick",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "fill",
+      "role": "bagian terisi dari inline-start ke thumb (single) atau di antara dua thumb (range)",
+      "tokens": [
+        "color-interaction-default",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "thumb",
+      "role": "pegangan fokusabel (role slider); visual boleh kecil, area klik ≥ target-current dan ≥ target-min-touch di sentuh",
+      "tokens": [
+        "color-interaction-default",
+        "color-structure-surface-raised",
+        "radius-full",
+        "elevation-1",
+        "icon-md",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "tick",
+      "role": "penanda langkah atau nilai bernama opsional; label tick di bawah track untuk min, max, dan titik bermakna",
+      "tokens": [
+        "color-structure-border-strong",
+        "type-caption-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "value-bubble",
+      "role": "gelembung nilai di atas thumb saat ditekan/fokus (pelengkap, tidak menggantikan value-text)",
+      "tokens": [
+        "color-structure-surface-inverse",
+        "color-structure-text-oninverse",
+        "type-caption-size",
+        "radius-sm",
+        "z-tooltip"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "NumberInput pendamping (satu per thumb) untuk mengetik nilai; sinkron dua arah",
+      "tokens": [
+        "control-height-md",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "rentang dan satuan (\"From 0 to 100%\") atau penjelasan dampak",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px di sekeliling thumb yang fokus",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "number | [number, number]",
+        "when": "nilai berubah selama drag, panah, klik track, atau input pendamping"
+      },
+      {
+        "name": "onValueCommit",
+        "payload": "number | [number, number]",
+        "when": "interaksi selesai: pelepasan pointer, setiap langkah keyboard, atau blur/Enter input pendamping"
+      }
+    ],
+    "parts": [
+      "Slider.Label",
+      "Slider.Value",
+      "Slider.Track",
+      "Slider.Range",
+      "Slider.Thumb",
+      "Slider.Marks",
+      "Slider.Input"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "single",
+        "description": "Satu atau dua thumb.",
+        "name": "variant",
+        "required": false,
+        "type": "\"single\" | \"range\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi baris; thumb ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: nilai (tuple untuk range).",
+        "name": "value",
+        "required": false,
+        "type": "number | [number, number]"
+      },
+      {
+        "description": "Uncontrolled: nilai awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "number | [number, number]"
+      },
+      {
+        "default": "0",
+        "description": "Batas bawah.",
+        "name": "min",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "100",
+        "description": "Batas atas.",
+        "name": "max",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "1",
+        "description": "Langkah nilai.",
+        "name": "step",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Langkah Page Up/Down.",
+        "name": "largeStep",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "0",
+        "description": "Jarak minimum dua thumb (range).",
+        "name": "minStepsBetweenThumbs",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "horizontal",
+        "description": "Arah track.",
+        "name": "orientation",
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      {
+        "description": "Format value-text dan input.",
+        "name": "formatOptions",
+        "required": false,
+        "type": "Intl.NumberFormatOptions"
+      },
+      {
+        "description": "Teks bermakna untuk aria-valuetext (nama tingkat, satuan dieja).",
+        "name": "getValueText",
+        "required": false,
+        "type": "(value: number) => string"
+      },
+      {
+        "description": "Tick dan label bernama.",
+        "name": "marks",
+        "required": false,
+        "type": "Array<{ value: number; label?: string }>"
+      },
+      {
+        "default": "true",
+        "description": "Input ketik pendamping; false hanya diterima bila brief mencatat alternatif SC 2.5.7 lain (`A-nn`).",
+        "name": "showInput",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Label thumb range; default \"Minimum {label}\" / \"Maximum {label}\".",
+        "name": "thumbLabels",
+        "required": false,
+        "type": "[string, string]"
+      },
+      {
+        "description": "Rentang, satuan, atau dampak.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila kontrol tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Nilai terlihat tanpa interaksi.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field Form (name, atau name.min/name.max untuk range).",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "naik satu step (di RTL horizontal, ← yang menaikkan); nilai, value-text, dan input pendamping diperbarui; onValueCommit per langkah",
+      "trigger": "→ / ↑"
+    },
+    {
+      "input": "keyboard",
+      "result": "turun satu step (di RTL horizontal, → yang menurunkan)",
+      "trigger": "← / ↓"
+    },
+    {
+      "input": "keyboard",
+      "result": "naik/turun largeStep (default 10 × step atau 10% rentang)",
+      "trigger": "Page Up / Page Down"
+    },
+    {
+      "input": "keyboard",
+      "result": "ke min / max (pada range: batas efektif thumb tersebut)",
+      "trigger": "Home / End"
+    },
+    {
+      "input": "keyboard",
+      "result": "nilai valid memindah thumb; di luar rentang = error di input, thumb tidak bergerak (alternatif tanpa drag, SC 2.5.7)",
+      "trigger": "mengetik di input pendamping lalu Enter/blur"
+    },
+    {
+      "input": "pointer",
+      "result": "nilai mengikuti pointer, dikunci ke step; melepas di luar komponen tetap mengomit nilai terakhir; Esc saat drag mengembalikan nilai awal (SC 2.5.2)",
+      "trigger": "drag thumb"
+    },
+    {
+      "input": "pointer",
+      "result": "thumb terdekat melompat ke titik klik (dikunci ke step) pada pelepasan; jalur satu-pointer tanpa drag",
+      "trigger": "klik track"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan pointer; area thumb ≥ target-min-touch; gestur vertikal di slider horizontal tidak dicegat (halaman tetap bisa digulir); swipe atas/bawah pembaca layar mengubah nilai satu step",
+      "trigger": "tap atau drag thumb/track"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Volume",
+        "40%",
+        "Price range",
+        "$250 – $1,000",
+        "Minimum price",
+        "Maximum price",
+        "From 0 to 100%",
+        "Medium"
+      ],
+      "id-ID": [
+        "Volume",
+        "40%",
+        "Rentang harga",
+        "Rp 250.000 – Rp 1.000.000",
+        "Harga minimum",
+        "Harga maksimum",
+        "Dari 0 sampai 100%",
+        "Sedang"
+      ]
+    },
+    "rules": [
+      "Label menamai besaran; nilai saat ini selalu terlihat sebagai teks di samping label, diformat locale dengan satuan.",
+      "aria-valuetext mengeja satuan lewat ICU (\"{value, number} percent\"), atau memakai nama tingkat bila langkah bernama (\"Low\", \"Medium\", \"High\").",
+      "Label min dan max ditampilkan di ujung track bila tidak jelas dari konteks.",
+      "Range memakai formatter rentang locale untuk value-text (\"Rp 250.000 – Rp 1.000.000\").",
+      "Tick bernama memakai label glosarium; maksimal ±5 label tick agar tidak bertumpuk."
+    ]
+  },
+  "depends_on": [
+    "NumberInput"
+  ],
+  "do": [
+    "Sediakan input ketik pendamping dan klik-track sebagai alternatif drag.",
+    "Isi aria-valuetext dengan nilai bermakna berformat locale.",
+    "Tampilkan nilai saat ini sebagai teks yang selalu terlihat.",
+    "Perluas area klik thumb ke ≥ 44 di sentuh walau visualnya kecil."
+  ],
+  "dont": [
+    {
+      "ref": "UB7",
+      "text": "Slider yang hanya bisa diubah dengan drag."
+    },
+    {
+      "ref": "UB9",
+      "text": "Nilai hanya tampil di tooltip saat drag."
+    },
+    {
+      "ref": "UB5",
+      "text": "Thumb dengan area klik selebar visual 16-20 px di sentuh."
+    },
+    {
+      "text": "Memakai slider untuk nilai pasti seperti jumlah transfer."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "value-text turun ke baris di bawah label; label tick di ujung membungkus atau disingkat dengan nama penuh di helper; track tidak menyempit di bawah ±layout-content-min",
+      "case": "label dan value-text +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "label, value-text, dan input tumbuh; thumb dan track tidak mengecil; input pendamping pindah ke bawah track",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "slider selalu punya nilai; bila \"belum ditentukan\" bermakna, pakai NumberInput atau Switch \"Set limit\" yang menampilkan slider",
+      "case": "kosong / belum ada nilai"
+    },
+    {
+      "behaviour": "min = max: slider read-only dengan value-text; rentang > ±1000 langkah: largeStep 10% rentang dan input pendamping menjadi jalur utama",
+      "case": "nilai maksimum, min = max, atau rentang sangat lebar"
+    },
+    {
+      "behaviour": "thumb yang terakhir digerakkan di atas; klik di titik tumpuk memilih thumb sesuai arah drag; keyboard tetap memindah thumb yang fokus",
+      "case": "range: thumb bertumpuk di nilai sama"
+    },
+    {
+      "behaviour": "slider tetap bekerja lokal; jumlah hasil di luar komponen menampilkan loading; filter server menunggu onValueCommit, bukan setiap frame drag",
+      "case": "offline atau data pendukung loading (histogram, jumlah hasil)"
+    },
+    {
+      "behaviour": "paste di input pendamping dinormalkan seperti NumberInput (\"1.000.000\", \"1,000,000\", \"40%\"); slider sendiri tidak menerima paste",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "track dan fill dicerminkan (min di kanan); ← menaikkan nilai horizontal; value-text, label tick, dan nilai input diisolasi bdi; slider vertikal tidak berubah",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "lompatan klik-track tanpa animasi; value-bubble muncul tanpa skala",
+      "case": "reduced motion"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Opsional: disertakan bila journey memuat penyesuaian nilai dalam rentang di mana umpan balik langsung lebih penting daripada nilai pasti (volume, kecerahan, rentang harga pada filter, toleransi); alasan dicatat. Bila disertakan, input ketik pendamping wajib (SC 2.5.7).",
+  "lint": [
+    "Slider tanpa aria-valuetext bermakna ditandai (manual-review)",
+    "showInput=false tanpa catatan A-nn ditolak (SC 2.5.7)",
+    "area klik thumb < target-current ditolak (UB5)",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "Slider",
+  "preview": {
+    "combinations": [
+      "dragged+focus",
+      "hover+focus",
+      "error+focus (input pendamping)",
+      "disabled+drag (dicegah)",
+      "read-only+focus",
+      "range thumb bertumpuk",
+      "marks bernama",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "dragged",
+      "error",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "single",
+      "range"
+    ]
+  },
+  "purpose": {
+    "purpose": "Kontrol untuk memilih satu nilai atau rentang dalam batas min-max dengan menggeser thumb, menekan track, memakai panah keyboard, atau mengetik nilai di field pendamping; nilai dibacakan sebagai teks bermakna.",
+    "when_not_to_use": [
+      "Untuk nilai pasti yang diketahui pengguna (jumlah uang, kuantitas): pakai NumberInput.",
+      "Untuk memilih dari ≤ 5 opsi bernama: pakai SegmentedControl atau RadioGroup; slider bertitik tidak memperlihatkan semua label sekaligus.",
+      "Untuk rentang sangat lebar atau skala non-linear (0 sampai jutaan): pakai dua NumberInput; geseran tidak memberi presisi.",
+      "Untuk menampilkan progres atau kapasitas tanpa interaksi: pakai ProgressBar.",
+      "Untuk menyalakan/mematikan: pakai Switch."
+    ]
+  },
+  "related": [
+    "NumberInput",
+    "SegmentedControl",
+    "ProgressBar",
+    "FilterChip"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh, size lg; thumb ≥ target-min-touch; input pendamping di baris sendiri di bawah track (dua field berdampingan untuk range); value-bubble di atas jari",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar penuh kontainer atau ±layout-measure; thumb ≥ target-min-touch di mode sentuh; input pendamping di inline-end track bila muat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar ±layout-measure; size sm/md; input pendamping di inline-end track",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengubah nilai"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat nilai sebagai teks dan track statis"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "nilai dikunci sementara (mis. dikendalikan kebijakan); reason di helper"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu pengaturan ini"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Arah slider horizontal dicerminkan (§12.4): min di inline-start (kanan), fill tumbuh ke kiri, ← menaikkan nilai; slider vertikal tidak berubah. Angka di value-text, tick, dan input diisolasi bdi dan tetap LTR."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "baris track + thumb ≥ max(control-height-sm, target-current); thumb ≥ target-min-pointer; di mode sentuh thumb diperluas ke target-min-touch",
+      "name": "sm",
+      "notes": "Panel padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "thumb dan baris track ≥ target-current",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "thumb ≥ target-min-touch (target-min-extended bila ada); jarak antar thumb range ≥ 8 saat bersentuhan dengan thumb terakhir di atas",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, in-motion.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "dragged",
+      "note": "thumb yang di-drag menerima fokus; ring + lapisan dragged",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring di luar; hover di atas fill thumb",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada input pendamping yang error; slider tetap di nilai valid",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "thumb diblokir tidak bisa digeser; reason diumumkan polite saat dicoba",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "slider tidak punya state loading; kontrol yang menunggu data diblokir dengan reason",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "thumb fokusabel untuk membaca nilai; panah tidak mengubah nilai",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "fill": "color-interaction-default",
+        "thumb": "color-interaction-default"
+      },
+      "treatment": "track border-control, fill interaction-default, thumb dengan outline agar ≥ 3:1 terhadap track dan latar"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "thumb": "color-interaction-hover"
+      },
+      "treatment": "thumb dengan lapisan state-layer hover; kursor grab; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px di thumb; value-bubble boleh tampil"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "thumb": "color-interaction-pressed"
+      },
+      "treatment": "thumb ditekan: lapisan pressed + value-bubble; tanpa perubahan layout"
+    },
+    {
+      "name": "dragged",
+      "token_swaps": {
+        "thumb": "color-interaction-pressed"
+      },
+      "treatment": "selama drag: lapisan state-layer-dragged pada thumb, value-text dan bubble diperbarui; haptic-selection per tick bila tersedia"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "input": "color-semantic-critical"
+      },
+      "treatment": "nilai ketikan di input pendamping di luar rentang atau thumb range terbalik dari input: error di input (NumberInput), track tidak berubah warna; thumb tetap di nilai valid terakhir"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "fill": "color-structure-text-disabled",
+        "thumb": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" pada thumb (tetap fokusabel); fill dan thumb diredam ke text-disabled; reason di helper; input pendamping ikut diblokir"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "fill": "color-structure-border-strong",
+        "thumb": "color-structure-surface-raised"
+      },
+      "treatment": "aria-readonly=\"true\"; value-text berteks penuh; track dan fill statis tanpa outline thumb interaktif; input pendamping disembunyikan"
+    }
+  ],
+  "target_hints": {
+    "compose": "Slider/RangeSlider + OutlinedTextField dibungkus {Ns}Slider",
+    "flutter": "Slider/RangeSlider + TextField dibungkus {ns}_slider.dart",
+    "html": {
+      "element": "input[type=range] + input (NumberInput)",
+      "notes": "tanpa JS: input type=range native berlabel + field angka yang dikirim bersama (single); range memakai dua input type=range berlabel; modul data-{ns}-module=\"slider\" menyinkronkan input, value-text, aria-valuetext, dan gaya track"
+    },
+    "swiftui": "Slider + TextField(value:format:) dibungkus {Ns}Slider"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Satu thumb; fill dari min (inline-start) ke thumb.",
+      "name": "single"
+    },
+    {
+      "description": "Dua thumb (minimum dan maksimum) masing-masing role slider berlabel; tidak bisa saling melewati; jarak minimum minStepsBetweenThumbs; dua NumberInput pendamping.",
+      "name": "range"
+    }
+  ]
+}

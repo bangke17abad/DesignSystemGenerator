@@ -1,0 +1,64 @@
+<!-- Divider fixture · decorative / semantic / labelled, weights, emphasis, vertical in Inline, long label, RTL label start, inverse surface, forced colours (catalog preview, §6.9). -->
+<section class="ds-demo" data-ds-demo="variant decorative (aria-hidden) · thin + thick">
+  <div class="ds-stack" data-gap="4">
+    <p>Billing address</p>
+    <div class="ds-divider" aria-hidden="true"></div>
+    <p>Shipping address</p>
+    <div class="ds-divider" data-weight="thick" aria-hidden="true"></div>
+    <p>Payment method</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant semantic (hr, role separator) · state emphasis">
+  <div class="ds-stack" data-gap="4">
+    <p>Group without a heading: Archive, Duplicate</p>
+    <hr class="ds-divider" data-emphasis>
+    <p>Next group: Delete, Leave project</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant labelled · center + start">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">Today</span></div>
+    <div class="ds-divider" data-variant="labelled" data-label-align="start"><span class="ds-divider__label">Earlier this week</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="labelled + long label (+40%, wraps, lines keep space-6)">
+  <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">Pesan yang diterima sebelum pembaruan sistem pada hari Senin, 9 Maret 2026</span></div>
+</section>
+<section class="ds-demo" data-ds-demo="vertical in Inline (semantic + decorative)">
+  <div class="ds-inline" data-gap="3" data-ds-module="inline">
+    <span>Bold</span><span>Italic</span>
+    <div class="ds-divider" role="separator" aria-orientation="vertical" data-orientation="vertical" data-emphasis></div>
+    <span>Align start</span><span>Align end</span>
+    <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+    <span>Insert link</span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL labelAlign start" dir="rtl" lang="ar">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-divider" data-variant="labelled" data-label-align="start"><span class="ds-divider__label">في وقت سابق من هذا الأسبوع</span></div>
+    <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">اليوم</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="inverse surface (border-strong)">
+  <div class="ds-stack" data-gap="4" data-ds-on="inverse" style="padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-structure-surface-inverse); color: var(--color-structure-text-oninverse)">
+    <p>Storage used: 18 of 20 GB</p>
+    <div class="ds-divider" aria-hidden="true"></div>
+    <p>Backups: 2 of 5 GB</p>
+    <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">Older files</span></div>
+    <p>Archive 2024.zip</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state forced-colors (system colours, static twin)">
+  <div class="ds-stack" data-gap="4" data-force="forced-colors" style="padding: var(--space-4)">
+    <p>Billing address</p>
+    <div class="ds-divider" aria-hidden="true"></div>
+    <p>Shipping address</p>
+    <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">Today</span></div>
+    <p>Payment method</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200%">
+  <div data-ds-zoom="200">
+    <div class="ds-divider" data-variant="labelled"><span class="ds-divider__label">Today</span></div>
+  </div>
+</section>

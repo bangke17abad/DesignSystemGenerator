@@ -1,0 +1,39 @@
+<!-- Badge fixture · count and label variants for every class. Fill/tint comes from attention-cN-* tokens, so in a language whose L3
+     keeps C3-C5 quiet those badges render as quiet text (and lint asks for StatusLabel there). The visible number is aria-hidden;
+     the owner carries the full sentence (Badge.json accessibility). -->
+<section class="ds-demo" data-ds-demo="count on icon owner (C1, C2)">
+  <div class="ds-inline" data-gap="8">
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Approvals, 3 overdue"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true">3</span></button>
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Requests, 12 waiting for you"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-badge" data-status="warning" data-placement="corner" aria-hidden="true">12</span></button>
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Messages, more than 99 need review"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true"><bdi>99+</bdi></span></button>
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Approvals"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="count after label: all classes via attention tokens">
+  <ul class="ds-stack" data-gap="2" role="list">
+    <li>Failed payments<span class="ds-badge" data-status="critical"><span aria-hidden="true">2</span><span class="ds-vh">, 2 failed</span></span></li>
+    <li>Waiting for you<span class="ds-badge" data-status="warning"><span aria-hidden="true">8</span><span class="ds-vh">, 8 waiting</span></span></li>
+    <li>Withdrawn<span class="ds-badge" data-status="neutral-negative"><span aria-hidden="true">4</span><span class="ds-vh">, 4 withdrawn</span></span></li>
+    <li>Paid this week<span class="ds-badge" data-status="positive"><span aria-hidden="true">31</span><span class="ds-vh">, 31 paid</span></span></li>
+    <li>With the bank<span class="ds-badge" data-status="info"><span aria-hidden="true">5</span><span class="ds-vh">, 5 being processed</span></span></li>
+  </ul>
+</section>
+<section class="ds-demo" data-ds-demo="variant label (icon + text)">
+  <div class="ds-stack" data-gap="3">
+    <h3 class="ds-text-h3">Vendor contracts<span class="ds-badge" data-variant="label" data-status="critical"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Overdue</span></span></h3>
+    <h3 class="ds-text-h3">Expense reports<span class="ds-badge" data-variant="label" data-status="warning"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Action needed</span></span></h3>
+    <h3 class="ds-text-h3">Import<span class="ds-badge" data-variant="label" data-status="positive"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>Complete</span></span></h3>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="on-selected-owner (tab) + focused owner">
+  <div class="ds-inline" data-gap="8">
+    <div role="tablist" aria-label="Requests" class="ds-inline" data-gap="2">
+      <button type="button" role="tab" aria-selected="true" class="ds-button ds-target" data-variant="tertiary">Pending<span class="ds-badge" data-status="warning"><span aria-hidden="true">12</span><span class="ds-vh">, 12 waiting</span></span></button>
+      <button type="button" role="tab" aria-selected="false" tabindex="-1" class="ds-button ds-target" data-variant="tertiary">Done</button>
+    </div>
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" data-force="focus" aria-pressed="true" aria-label="Alerts, 3 overdue"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true">3</span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="empty (0): no badge rendered">
+  <p class="ds-text-body">Approvals — nothing waiting, so the owner shows no badge and no “0”.</p>
+</section>

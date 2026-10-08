@@ -1,0 +1,78 @@
+<!-- Link fixture · inline + standalone × every state, current, blocked with reason, external/new tab, download, multi-line focus, inverse surface, RTL, 200% text (catalog preview, §6.9). Inline links are plain <a href> in running text (SC 2.5.8 inline exception). -->
+<section class="ds-demo" data-ds-demo="variant inline (in running text, underlined)">
+  <p>Before you submit, read the <a href="#terms">refund and cancellation terms</a> and check that the invoice number matches your <a href="#orders">order history</a>.</p>
+</section>
+<section class="ds-demo" data-ds-demo="inline states · hover · pressed · focus · hover+focus">
+  <div class="ds-stack" data-gap="2">
+    <p>Default: see the <a href="#a">payment schedule</a> for dates.</p>
+    <p>Hover: see the <a href="#b" data-force="hover">payment schedule</a> for dates.</p>
+    <p>Pressed: see the <a href="#c" data-force="pressed">payment schedule</a> for dates.</p>
+    <p>Focus: see the <a href="#d" data-force="focus">payment schedule</a> for dates.</p>
+    <p>Hover + focus: see the <a href="#e" data-force="hover focus">payment schedule</a> for dates.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="inline multi-line + focus (ring follows each fragment)">
+  <p style="max-inline-size: 22em">Your request was received. You can follow its progress on the <a href="#status" data-force="focus">request status page for reimbursement claims submitted this month</a> at any time.</p>
+</section>
+<section class="ds-demo" data-ds-demo="variant standalone · states">
+  <div class="ds-inline" data-gap="4">
+    <a class="ds-link" data-variant="standalone" href="#all">View all invoices</a>
+    <a class="ds-link" data-variant="standalone" href="#all" data-force="hover">Hover</a>
+    <a class="ds-link" data-variant="standalone" href="#all" data-force="pressed">Pressed</a>
+    <a class="ds-link" data-variant="standalone" href="#all" data-force="focus">Focus</a>
+    <a class="ds-link" data-variant="standalone" href="#all" data-force="hover focus">Hover + focus</a>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="standalone with icon-start (back-link)">
+  <a class="ds-link" data-variant="standalone" href="#invoices"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Back to invoices</span></a>
+</section>
+<section class="ds-demo" data-ds-demo="external + new tab · download">
+  <div class="ds-stack" data-gap="2" data-align="start">
+    <a class="ds-link" data-variant="standalone" href="#external-example" target="_blank" rel="noopener"><span class="ds-link__label">Tax guide for small <span class="ds-link__tail">businesses<svg class="ds-icon" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-external"/></svg></span></span><span class="ds-vh">(external site, opens in a new tab)</span></a>
+    <a class="ds-link" data-variant="standalone" href="#statement.pdf" download><span class="ds-link__label">Download March statement (PDF, 240 KB)</span></a>
+    <p>Rates follow the <a href="#external-example">central bank <span class="ds-link__tail">reference<svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-external"/></svg></span><span class="ds-vh">(external site)</span></a> published each morning.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state current (aria-current) · current + hover">
+  <nav aria-label="On this page">
+    <ul class="ds-stack" data-gap="1" role="list" style="padding: 0; list-style: none">
+      <li><a class="ds-link" data-variant="standalone" href="#overview">Overview</a></li>
+      <li><a class="ds-link" data-variant="standalone" href="#limits" aria-current="page">Spending limits</a></li>
+      <li><a class="ds-link" data-variant="standalone" href="#limits" aria-current="page" data-force="hover">Spending limits (current + hover)</a></li>
+      <li><a class="ds-link" data-variant="standalone" href="#cards">Cards and approvals</a></li>
+    </ul>
+  </nav>
+</section>
+<section class="ds-demo" data-ds-demo="state disabled-with-reason · blocked + focus">
+  <div class="ds-stack" data-gap="4">
+    <div>
+      <a class="ds-link" data-variant="standalone" role="link" aria-disabled="true" tabindex="0" aria-describedby="link-reason-1" data-ds-module="link"><svg class="ds-icon" data-icon="restricted" data-size="sm" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-link__label">Open payroll report</span></a>
+      <span class="ds-link__reason" id="link-reason-1">Only payroll admins can open this report.</span>
+    </div>
+    <div>
+      <a class="ds-link" data-variant="standalone" role="link" aria-disabled="true" tabindex="0" data-force="focus" aria-describedby="link-reason-2" data-ds-module="link"><svg class="ds-icon" data-icon="restricted" data-size="sm" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-link__label">Download audit log</span></a>
+      <span class="ds-link__reason" id="link-reason-2">Available after the period is closed on 31 March.</span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long URL as link text">
+  <p>Webhook endpoint: <a href="#webhook"><bdi>https://hooks.example.com/v2/finance/invoices/2026-03/overdue-reminders?token=7f3a9c</bdi></a></p>
+</section>
+<section class="ds-demo" data-ds-demo="inverse surface">
+  <div data-ds-on="inverse" style="padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-structure-surface-inverse); color: var(--color-structure-text-oninverse)">
+    <p>Your trial ends in 3 days. <a href="#plans">Compare plans</a> or <a href="#billing" data-force="focus">add billing details</a>.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="external + RTL" dir="rtl" lang="ar">
+  <div class="ds-stack" data-gap="2" data-align="start">
+    <p>اقرأ <a href="#terms-ar">شروط الاسترداد</a> قبل الإرسال.</p>
+    <a class="ds-link" data-variant="standalone" href="#external-example" target="_blank" rel="noopener"><span class="ds-link__label">دليل الضرائب <span class="ds-link__tail">للشركات<svg class="ds-icon" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-external"/></svg></span></span><span class="ds-vh">(موقع خارجي، يفتح في علامة تبويب جديدة)</span></a>
+    <a class="ds-link" data-variant="standalone" href="#back-ar"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">العودة إلى الفواتير</span></a>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% + longest locale (+40%)">
+  <div data-ds-zoom="200">
+    <p>Baca <a href="#syarat">syarat pengembalian dana dan pembatalan</a> sebelum mengirim.</p>
+    <a class="ds-link" data-variant="standalone" href="#semua">Lihat semua faktur yang belum dibayar</a>
+  </div>
+</section>

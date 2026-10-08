@@ -1,0 +1,171 @@
+/* Form · engine 1.8.0 reference (catalog/components/Form.json). Tokens only (I3); logical properties only (§12.4).
+   <form method action aria-labelledby aria-describedby> > header → alert slot (ErrorSummary / notice) → fieldset sections
+   (1–2 column field grid) → action bar (secondary then primary, sticky when long). Works without JS (native submit and
+   constraint validation); Form.js adds noValidate, inline errors, ErrorSummary, focus to the first invalid field, guards.
+   The notice (.ds-form__notice, attention C1/C2) is the minimal alert-slot message used when InlineAlert is not bundled. */
+.ds-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+}
+.ds-form__header { display: flex; flex-direction: column; gap: var(--space-2); }
+.ds-form__title {
+  margin: 0;
+  font-family: var(--type-h2-family);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  font-weight: var(--type-h2-weight);
+  letter-spacing: var(--type-h2-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-form__description,
+.ds-form__requirement {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+
+/* alert slot: one message at a time; empty slot takes no space */
+.ds-form__alerts { display: flex; flex-direction: column; gap: var(--space-3); }
+.ds-form__alerts:empty { display: none; }
+.ds-form__notice {
+  --_bg: var(--attention-c2-background);
+  --_border: var(--attention-c2-border);
+  --_fg: var(--attention-c2-foreground);
+  --_icon: var(--attention-c2-icon);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-md);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-form__notice[data-attention="c1"] {
+  --_bg: var(--attention-c1-background);
+  --_border: var(--attention-c1-border);
+  --_fg: var(--attention-c1-foreground);
+  --_icon: var(--attention-c1-icon);
+}
+.ds-form__notice[hidden] { display: none; }
+.ds-form__notice > .ds-icon { margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2); color: var(--_icon); }
+.ds-form__notice-body { display: flex; flex: 1 1 auto; flex-direction: column; gap: var(--space-1); min-inline-size: 0; overflow-wrap: anywhere; }
+.ds-form__notice-title { margin: 0; font-weight: var(--type-label-weight); }
+.ds-form__notice-body > p { margin: 0; }
+.ds-form__notice-action {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: inherit;
+  font-weight: var(--type-label-weight);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+@media (hover: hover) { .ds-form__notice-action:hover { text-decoration-thickness: var(--border-width-thick); } }
+.ds-form__notice-action[data-force~="hover"] { text-decoration-thickness: var(--border-width-thick); }
+.ds-form__notice :focus-visible, .ds-form__notice [data-force~="focus"] { outline-color: currentColor; }
+
+/* sections and field grid */
+.ds-form__section { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.ds-form__section + .ds-form__section { margin-block-start: var(--space-2); }
+.ds-form__legend {
+  margin-block-end: var(--space-4);
+  padding: 0;
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-form__section-description { margin-block: calc(-1 * var(--space-3)) var(--space-4); color: var(--color-structure-text-secondary); }
+.ds-form__fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--space-4); align-items: start; }
+.ds-form__fields > * { min-inline-size: 0; }
+@media (--bp-tablet-up) {
+  .ds-form__fields[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ds-form__fields[data-columns="2"] > [data-span="full"] { grid-column: 1 / -1; }
+}
+
+/* action bar: secondary then primary (primary at inline-end); phones stack full width with primary last (thumb zone) */
+.ds-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+}
+/* Form.Actions guarantees the hit area of whatever action is slotted (Button, Link) — STD-4 */
+.ds-form__actions > :is(button, a),
+.ds-form__confirm :is(button, a) { min-block-size: var(--target-current); }
+.ds-form__actions[data-sticky] {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--z-sticky);
+  padding-block: var(--space-3) max(var(--space-3), env(safe-area-inset-bottom));
+  padding-inline: var(--space-4);
+  background: var(--color-structure-surface-raised);
+}
+:root:has(.ds-form__actions[data-sticky]) { scroll-padding-block-end: calc(var(--layout-bar-height) + var(--space-4)); }
+.ds-form__status {
+  margin-inline-end: auto;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+}
+.ds-form__reason { flex: 1 1 100%; display: flex; align-items: flex-start; justify-content: flex-end; gap: var(--space-1); margin: 0; color: var(--color-structure-text-secondary); text-align: end; }
+.ds-form__reason .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); flex: none; margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+@media (--bp-tablet-down) {
+  .ds-form__actions { flex-direction: column; align-items: stretch; }
+  .ds-form__status { margin-inline-end: 0; }
+  .ds-form__reason { justify-content: flex-start; text-align: start; }
+}
+
+/* submitting: fields stay visible and readable; the form ignores a second submit */
+.ds-form[aria-busy="true"] { cursor: progress; }
+
+/* discard confirmation (embedded form + Esc, Cancel while dirty) */
+.ds-form__confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  box-shadow: var(--elevation-2);
+}
+.ds-form__confirm[hidden] { display: none; }
+.ds-form__confirm-title { margin: 0; font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+.ds-form__confirm > p { margin: 0; color: var(--color-structure-text-secondary); }
+
+/* inline edit: field + Save/Cancel side by side, wrapping under on narrow widths */
+.ds-form[data-variant="inline-edit"] { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2); }
+.ds-form[data-variant="inline-edit"] > :first-child { flex: 1 1 calc(var(--layout-content-min) / 2); }
+.ds-form[data-variant="inline-edit"] .ds-form__actions { padding-block: 0; border: 0; flex-direction: row; }
+
+@media (forced-colors: active) {
+  .ds-form__notice { border-color: CanvasText; }
+  .ds-form__notice > .ds-icon { color: CanvasText; }
+  .ds-form__actions[data-sticky] { border-block-start-color: CanvasText; }
+  .ds-form__confirm { border-color: CanvasText; }
+}

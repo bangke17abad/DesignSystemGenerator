@@ -1,0 +1,124 @@
+<!-- IconButton fixture · variants × states, sizes, selected (toggle), blocked with reason (Popover), loading, Badge, on inverse,
+     long Tooltip, RTL, and a live toolbar. Every IconButton has aria-label (the name) and shows the same text as a Tooltip on hover
+     and focus (IconButton.js + Tooltip.js); static demos render that Tooltip in flow (data-static). Adjacent buttons are >= 8 apart. -->
+<section class="ds-demo" data-ds-demo="variants (tertiary, secondary, primary, destructive)">
+  <div class="ds-inline" data-gap="2">
+    <button type="button" class="ds-icon-button" data-variant="tertiary" aria-label="More actions"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button>
+    <button type="button" class="ds-icon-button" data-variant="secondary" aria-label="Edit name"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+    <button type="button" class="ds-icon-button" data-variant="primary" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+    <button type="button" class="ds-icon-button" data-variant="destructive" aria-label="Remove filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/tertiary (default, hover, pressed, focus)">
+  <div class="ds-inline" data-gap="2">
+    <button type="button" class="ds-icon-button" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button>
+    <button type="button" class="ds-icon-button" data-force="hover" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button>
+    <button type="button" class="ds-icon-button" data-force="pressed" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button>
+    <button type="button" class="ds-icon-button" data-force="focus" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/secondary + primary + destructive">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline" data-gap="2">
+      <button type="button" class="ds-icon-button" data-variant="secondary" aria-label="Filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="secondary" data-force="hover" aria-label="Filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="secondary" data-force="pressed" aria-label="Filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="secondary" data-force="focus" aria-label="Filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg></button>
+    </div>
+    <div class="ds-inline" data-gap="2">
+      <button type="button" class="ds-icon-button" data-variant="primary" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="primary" data-force="hover" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="primary" data-force="pressed" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="primary" data-force="focus" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+    </div>
+    <div class="ds-inline" data-gap="2">
+      <button type="button" class="ds-icon-button" data-variant="destructive" aria-label="Remove filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="destructive" data-force="hover" aria-label="Remove filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="destructive" data-force="pressed" aria-label="Remove filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+      <button type="button" class="ds-icon-button" data-variant="destructive" data-force="focus" aria-label="Remove filter"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="selected (toggle: aria-pressed + filled icon) · selected+hover · selected+focus · disabled+selected">
+  <div class="ds-stack" data-gap="2">
+    <div class="ds-inline" data-gap="2">
+      <button type="button" class="ds-icon-button" aria-pressed="false" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+      <button type="button" class="ds-icon-button" aria-pressed="true" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+      <button type="button" class="ds-icon-button" aria-pressed="true" data-force="hover" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+      <button type="button" class="ds-icon-button" aria-pressed="true" data-force="focus" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+      <button type="button" class="ds-icon-button" aria-pressed="true" aria-disabled="true" aria-describedby="ib-sel-reason" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+    </div>
+    <p class="ds-text-secondary" id="ib-sel-reason">Notifications are managed by your club admin.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, md, lg; hit area always >= target)">
+  <div class="ds-inline" data-gap="2">
+    <button type="button" class="ds-icon-button" data-size="sm" data-variant="secondary" aria-label="Edit name"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+    <button type="button" class="ds-icon-button" data-size="md" data-variant="secondary" aria-label="Edit name"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+    <button type="button" class="ds-icon-button" data-size="lg" data-variant="secondary" aria-label="Edit name"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="hover+focus with Tooltip (one Tooltip)">
+  <span class="ds-tooltip-demo" data-side="block-start">
+    <button type="button" class="ds-icon-button" data-force="hover focus" aria-label="Share link"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-link"/></svg></button>
+    <span class="ds-tooltip" role="tooltip" data-static data-side="block-start" aria-hidden="true">Share link</span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="disabled-with-reason (press opens the reason Popover)">
+  <div class="ds-popover-demo">
+    <button type="button" class="ds-icon-button" data-variant="secondary" aria-disabled="true" aria-expanded="true" aria-describedby="ib-r1-text" aria-label="Delete venue" data-force="focus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+    <div class="ds-popover" role="dialog" aria-labelledby="ib-r1-title" data-static>
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="ib-r1-title">Not available</h2></div>
+      <div class="ds-popover__body"><p id="ib-r1-text">Only venue owners can delete a venue. Ask Rina Wijaya (owner) for access.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (spinner replaces icon, aria-busy) · loading+pressed prevented">
+  <div class="ds-stack" data-gap="2">
+    <div class="ds-inline" data-gap="2">
+      <button type="button" class="ds-icon-button" data-variant="secondary" aria-busy="true" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg><span class="ds-icon-button__spinner" aria-hidden="true"></span></button>
+      <button type="button" class="ds-icon-button" data-variant="primary" aria-busy="true" aria-label="Add booking"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span class="ds-icon-button__spinner" aria-hidden="true"></span></button>
+    </div>
+    <p class="ds-text-secondary">While loading, presses are ignored (no pressed state, no second request).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="badge (count in the name; colour = the Badge attention class the product passes, C1/C2 fill)">
+  <div class="ds-inline" data-gap="4">
+    <button type="button" class="ds-icon-button" aria-label="Requests, 12 waiting for you" data-ds-label="Requests"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="warning" data-placement="corner" aria-hidden="true">12</span></button>
+    <button type="button" class="ds-icon-button" aria-label="Approvals, 2 overdue" data-ds-label="Approvals"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true">2</span></button>
+    <button type="button" class="ds-icon-button" data-variant="secondary" aria-label="Messages, more than 99 need review" data-ds-label="Messages"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true"><bdi>99+</bdi></span></button>
+    <button type="button" class="ds-icon-button" aria-label="Notifications"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+  </div>
+  <p class="ds-text-secondary">0 items: the badge is not rendered and the name has no count.</p>
+</section>
+<section class="ds-demo" data-ds-demo="on surface-inverse (secondary + focus-ring-inverse)">
+  <div class="ds-icon-button-demo-inverse" data-ds-on="inverse">
+    <button type="button" class="ds-icon-button" data-variant="secondary" aria-label="Previous photo"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+    <button type="button" class="ds-icon-button" data-variant="secondary" data-force="focus" aria-label="Next photo"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long label (+40%): button size fixed, Tooltip wraps">
+  <span class="ds-tooltip-demo" data-side="block-end">
+    <button type="button" class="ds-icon-button" data-force="focus" aria-label="Unduh laporan rekonsiliasi kuartalan"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg></button>
+    <span class="ds-tooltip" role="tooltip" data-static data-side="block-end" aria-hidden="true">Unduh laporan rekonsiliasi kuartalan</span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (badge at inline-end corner, directional icons mirrored)" dir="rtl" lang="ar">
+  <div class="ds-inline" data-gap="2">
+    <button type="button" class="ds-icon-button" aria-label="الطلبات، 5 بانتظارك"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="warning" data-placement="corner" aria-hidden="true">5</span></button>
+    <button type="button" class="ds-icon-button" data-variant="secondary" aria-label="التالي"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button>
+    <button type="button" class="ds-icon-button" aria-label="الوقت"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (Tooltip on hover/focus/long press, toggle, blocked → Popover, badge)">
+  <div class="ds-inline" data-gap="2" role="toolbar" aria-label="Booking tools">
+    <button type="button" class="ds-icon-button" data-ds-module="icon-button" aria-label="Refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg></button>
+    <button type="button" class="ds-icon-button" data-ds-module="icon-button" aria-pressed="false" aria-label="Notify me"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></button>
+    <button type="button" class="ds-icon-button" data-ds-module="icon-button" aria-label="Requests, 3 waiting for you" data-ds-label="Requests"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-badge" data-status="warning" data-placement="corner" aria-hidden="true">3</span></button>
+    <button type="button" class="ds-icon-button" data-ds-module="icon-button" aria-disabled="true" aria-label="Delete venue" aria-describedby="ib-live-reason-text" popovertarget="ib-live-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+    <div class="ds-popover" id="ib-live-reason" popover="auto" role="dialog" aria-labelledby="ib-live-reason-title" data-role="reason" data-ds-module="popover">
+      <div class="ds-popover__header"><h2 class="ds-popover__title" id="ib-live-reason-title">Not available</h2><button type="button" class="ds-icon-button" data-size="sm" popovertarget="ib-live-reason" popovertargetaction="hide" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-popover__body"><p id="ib-live-reason-text">Only venue owners can delete a venue.</p></div>
+    </div>
+  </div>
+</section>

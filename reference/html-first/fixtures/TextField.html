@@ -1,0 +1,169 @@
+<!-- TextField fixture · every variant × state, sizes, mandatory combinations (§6.9). Text follows ui_locale en-US. Grid cells span 4 columns: 1 per row on phone, 2 on tablet, 3 on desktop. -->
+<section class="ds-demo" data-ds-demo="variants/default">
+  <div class="ds-grid">
+    <div class="ds-text-field" data-ds-module="text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-v1">Email address</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-v1" name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="off" dir="ltr" required aria-describedby="tf-v1-help"></div>
+      <p class="ds-text-field__helper" id="tf-v1-help">We'll send the receipt to this address.</p>
+    </div>
+    <div class="ds-text-field" data-ds-module="text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-v2">Full name</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-v2" name="name" type="text" autocomplete="name" dir="auto" value="Siti Rahmawati" required></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/with-adornment">
+  <div class="ds-grid">
+    <div class="ds-text-field" data-ds-module="text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-a1">Phone number <span class="ds-text-field__optional">(optional)</span></label>
+      <div class="ds-text-field__group">
+        <span class="ds-text-field__affix" data-affix="start" id="tf-a1-prefix">+62</span>
+        <input class="ds-text-field__input" id="tf-a1" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" dir="ltr" aria-describedby="tf-a1-prefix tf-a1-help">
+      </div>
+      <p class="ds-text-field__helper" id="tf-a1-help">Without the leading 0, for example 812 3456 7890.</p>
+    </div>
+    <div class="ds-text-field" data-ds-module="text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-a2">Parcel weight</label>
+      <div class="ds-text-field__group">
+        <input class="ds-text-field__input" id="tf-a2" name="weight" type="text" inputmode="decimal" value="2.5" required aria-describedby="tf-a2-suffix">
+        <span class="ds-text-field__affix" data-affix="end" id="tf-a2-suffix">kg</span>
+      </div>
+    </div>
+    <div class="ds-text-field" data-ds-module="text-field" data-clearable data-clear-label="Clear search term" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-a3">Search members <span class="ds-text-field__optional">(optional)</span></label>
+      <div class="ds-text-field__group">
+        <svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg>
+        <input class="ds-text-field__input" id="tf-a3" name="q" type="text" value="Rahmawati">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s1">Default (empty)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s1" type="text" placeholder="e.g. Finance team" required></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s2">Hover</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s2" type="text" data-force="hover" required></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s3">Focus</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s3" type="text" data-force="focus" value="Finance" required></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s4">Filled</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s4" type="text" value="Operations and logistics" required></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s5">Work email</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s5" type="email" autocomplete="email" dir="ltr" value="siti@example" required aria-invalid="true" aria-describedby="tf-s5-err tf-s5-help"></div>
+      <p class="ds-text-field__error" id="tf-s5-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter an email address in the format name@example.com</span></p>
+      <p class="ds-text-field__helper" id="tf-s5-help">Use the address on your company account.</p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s6">Username</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s6" type="text" autocomplete="username" spellcheck="false" autocapitalize="off" value="siti.r" aria-busy="true" required aria-describedby="tf-s6-help"><span class="ds-text-field__spinner" aria-hidden="true"></span></div>
+      <p class="ds-text-field__helper" id="tf-s6-help">Checking availability…</p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s7">Billing email</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s7" type="email" dir="ltr" value="billing@example.com" readonly aria-disabled="true" aria-describedby="tf-s7-reason"></div>
+      <p class="ds-text-field__reason" id="tf-s7-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only workspace owners can change the billing email.</span></p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s8">Employee ID</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s8" type="text" value="EMP-20417" readonly aria-readonly="true" aria-describedby="tf-s8-help"></div>
+      <p class="ds-text-field__helper" id="tf-s8-help">Assigned by HR. You can copy it.</p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-s9">Department <span class="ds-text-field__optional">(optional)</span></label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-s9" type="text" autocomplete="organization-title"></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c1">Error + focus</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c1" type="text" autocomplete="postal-code" inputmode="numeric" value="4012" required aria-invalid="true" data-force="focus" aria-describedby="tf-c1-err"></div>
+      <p class="ds-text-field__error" id="tf-c1-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Postal code must be 5 digits</span></p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c2">Error + hover</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c2" type="text" required aria-invalid="true" data-force="hover" aria-describedby="tf-c2-err"></div>
+      <p class="ds-text-field__error" id="tf-c2-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter your full name</span></p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c3">Hover + focus</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c3" type="text" data-force="hover focus" required></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c4">Blocked + focus</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c4" type="text" value="Jakarta HQ" readonly aria-disabled="true" data-force="focus" aria-describedby="tf-c4-reason"></div>
+      <p class="ds-text-field__reason" id="tf-c4-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Office is set by your manager.</span></p>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c5">Read-only + focus</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c5" type="text" value="INV-2026-00981" readonly aria-readonly="true" data-force="focus"></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-c6">Loading + focus (still editable)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-c6" type="text" value="siti.rahma" aria-busy="true" data-force="focus" required><span class="ds-text-field__spinner" aria-hidden="true"></span></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+    <div class="ds-text-field" data-size="sm" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-z1">Filter (sm)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-z1" type="text" value="Pending"></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-z2">City (md)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-z2" type="text" autocomplete="address-level2" value="Bandung"></div>
+    </div>
+    <div class="ds-text-field" data-size="lg" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-z3">Postal code (lg)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-z3" type="text" inputmode="numeric" autocomplete="postal-code" value="40115"></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="description+helper+optional">
+  <div class="ds-text-field" data-ds-module="text-field">
+    <label class="ds-text-field__label" for="tf-d1">Company website <span class="ds-text-field__optional">(optional)</span></label>
+    <p class="ds-text-field__description" id="tf-d1-desc">We show this link on your public profile.</p>
+    <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-d1" type="url" inputmode="url" autocomplete="url" spellcheck="false" autocapitalize="off" dir="ltr" placeholder="https://example.com" aria-describedby="tf-d1-desc tf-d1-help"></div>
+    <p class="ds-text-field__helper" id="tf-d1-help">Start with https://</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long-label+long-value+RTL">
+  <div class="ds-grid">
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-l1">Nama lengkap penanggung jawab keuangan sesuai dokumen identitas resmi perusahaan <span class="ds-text-field__optional">(opsional)</span></label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-l1" type="text" autocomplete="name" dir="auto" value="Raden Ajeng Kartika Sulistyaningrum Wibowo Hadiningrat"></div>
+    </div>
+    <div class="ds-text-field" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-l2">Callback URL</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-l2" type="url" dir="ltr" value="https://hooks.example.com/v2/workspaces/7f3a9c21e8b04d6f/integrations/payments/callback?token=9a8b7c6d5e4f" required></div>
+    </div>
+    <div class="ds-text-field" dir="rtl" lang="ar" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="tf-l3">رقم الهاتف <span class="ds-text-field__optional">(اختياري)</span></label>
+      <div class="ds-text-field__group">
+        <span class="ds-text-field__affix" data-affix="start" id="tf-l3-prefix"><bdi dir="ltr">+966</bdi></span>
+        <input class="ds-text-field__input" id="tf-l3" type="tel" dir="ltr" autocomplete="tel-national" value="55 123 4567" aria-describedby="tf-l3-prefix tf-l3-err" aria-invalid="true">
+      </div>
+      <p class="ds-text-field__error" id="tf-l3-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>أدخل رقم هاتف من 9 أرقام</span></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <div class="ds-text-field">
+      <label class="ds-text-field__label" for="tf-x1">Email address</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="tf-x1" type="email" dir="ltr" autocomplete="email" value="siti@example.com" aria-describedby="tf-x1-help"></div>
+      <p class="ds-text-field__helper" id="tf-x1-help">We'll send the receipt to this address.</p>
+    </div>
+  </div>
+</section>

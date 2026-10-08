@@ -1,0 +1,327 @@
+{
+  "accessibility": {
+    "attributes": [
+      "target main memiliki id dan tabindex=\"-1\" agar fokus benar-benar pindah (bukan hanya gulir)",
+      "tidak pernah aria-hidden, display:none, atau visibility:hidden pada SkipLink",
+      "di router berbasis hash: aktivasi memakai handler yang mencegah perubahan rute lalu memanggil focus() pada target; tanpa JavaScript fallback href tetap bekerja di router berbasis history"
+    ],
+    "focus_order": "pertama di dokumen; setelah aktivasi, fokus berada di main",
+    "native": {
+      "compose": "tidak dirender; Modifier.semantics { heading() } pada judul dan isTraversalGroup pada region; FocusRequester untuk keyboard eksternal",
+      "flutter": "native mobile: tidak dirender; judul layar memakai Semantics(header: true) dan region memakai FocusTraversalGroup. Flutter web: TextButton pertama di urutan traversal yang memanggil FocusNode.requestFocus() pada konten utama",
+      "swiftui": "tidak dirender; navigasi cepat lewat rotor heading (.accessibilityAddTraits(.isHeader)) dan .accessibilitySortPriority; @AccessibilityFocusState untuk memindah fokus bila perlu"
+    },
+    "role": "link (<a href=\"#{targetId}\">), elemen fokusabel pertama di DOM sebelum header",
+    "sr_label": "teks terlihat = nama aksesibel (\"Skip to main content\")",
+    "wcag": [
+      "2.1.1",
+      "2.4.1",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.8"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "link",
+      "role": "a href=\"#main\"; tersembunyi dengan pola VisuallyHidden focusable sampai menerima fokus",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-text-primary",
+        "radius-sm",
+        "elevation-2",
+        "z-tooltip"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "teks tujuan dari glosarium; bergaris bawah",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "padding",
+      "role": "ruang di dalam tautan agar area klik ≥ target-current",
+      "tokens": [
+        "space-2",
+        "space-3",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar tautan",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "target",
+      "role": "elemen tujuan (main) dengan tabindex -1; ring fokus inset −2px saat menerima fokus program",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "glosarium: \"Skip to main content\"",
+        "description": "Teks tujuan; juga nama aksesibel.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "main",
+        "description": "id elemen tujuan; elemen harus ada dan ber-tabindex -1.",
+        "name": "targetId",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "SkipLink menerima fokus dan tampil",
+      "trigger": "Tab pertama setelah halaman atau rute dimuat"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus pindah ke target (main tabindex -1), halaman menggulir ke target dengan scroll-padding header; Tab berikutnya masuk ke elemen fokusabel pertama di main. Space tidak mengaktifkan (perilaku tautan)",
+      "trigger": "Enter saat fokus"
+    },
+    {
+      "input": "keyboard",
+      "result": "SkipLink menyembunyikan diri dan fokus lanjut ke header",
+      "trigger": "Tab lagi tanpa aktivasi"
+    },
+    {
+      "input": "pointer",
+      "result": "sama dengan Enter",
+      "trigger": "klik saat terlihat"
+    },
+    {
+      "input": "touch",
+      "result": "dibaca sebagai tautan pertama; double-tap memindahkan fokus aksesibilitas ke main",
+      "trigger": "pembaca layar sentuh (swipe ke elemen berikut)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Skip to main content",
+        "Skip to search",
+        "Skip to navigation"
+      ],
+      "id-ID": [
+        "Lewati ke konten utama",
+        "Lewati ke pencarian",
+        "Lewati ke navigasi"
+      ]
+    },
+    "rules": [
+      "Label = \"Skip to\" + tujuan dari glosarium; bukan \"Skip navigation\" yang tidak menyebut tujuan.",
+      "Sama persis di setiap halaman (SC 3.2.4).",
+      "Maksimal tiga tautan; urutan sama dengan urutan region di halaman."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Jadikan SkipLink elemen pertama di body pada setiap halaman dan setiap rute.",
+    "Beri target tabindex -1 agar fokus berpindah, tidak hanya gulir.",
+    "Uji di Safari dan dengan header sticky."
+  ],
+  "dont": [
+    {
+      "text": "Menyembunyikan SkipLink dengan display:none atau visibility:hidden sehingga tidak bisa difokus."
+    },
+    {
+      "ref": "UB8",
+      "text": "Menghapus outline fokus SkipLink atau target tanpa pengganti."
+    },
+    {
+      "ref": "UB8",
+      "text": "Target yang tertutup header sticky setelah lompat."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tautan melebar sampai lebar viewport dikurangi margin lalu membungkus dua baris",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi tumbuh; tetap di atas header sticky; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "kesalahan build: lint V5 menolak halaman tanpa main",
+      "case": "0 target (halaman tanpa main)"
+    },
+    {
+      "behaviour": "maks 3 tautan; target lain memakai daftar isi terlihat",
+      "case": "jumlah target maksimum"
+    },
+    {
+      "behaviour": "main sudah ada sejak muat pertama (berisi Skeleton dengan aria-busy); lompat tetap bekerja",
+      "case": "loading"
+    },
+    {
+      "behaviour": "handler mencegah perubahan rute dan memfokus target secara program",
+      "case": "router berbasis hash"
+    },
+    {
+      "behaviour": "scroll-padding-block-start = tinggi header sehingga target tidak tertutup (SC 2.4.11)",
+      "case": "target berada di bawah header sticky"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Accessibility",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "SkipLink harus menjadi elemen fokusabel pertama di setiap halaman (V5)",
+    "targetId harus menunjuk elemen yang ada dan ber-tabindex -1 (V5)",
+    "SkipLink dengan display:none atau visibility:hidden ditolak (css-pattern)"
+  ],
+  "name": "SkipLink",
+  "preview": {
+    "combinations": [
+      "focus di atas header sticky",
+      "target fokus inset",
+      "label +40%",
+      "RTL"
+    ],
+    "states": [
+      "hidden-until-focus",
+      "focus",
+      "hover",
+      "pressed"
+    ],
+    "variants": [
+      "single",
+      "group"
+    ]
+  },
+  "purpose": {
+    "purpose": "Tautan yang menjadi elemen fokus pertama setiap halaman web, tersembunyi sampai difokus, dan memindahkan fokus langsung ke main (atau target lain) untuk melewati blok berulang (SC 2.4.1).",
+    "when_not_to_use": [
+      "Untuk navigasi antar halaman: pakai Link atau PrimaryNav.",
+      "Untuk lompat ke seksi di dalam konten panjang (daftar isi): pakai Link biasa yang terlihat.",
+      "Di aplikasi native mobile: SC 2.4.1 dipenuhi lewat heading dan pengelompokan semantik, bukan tautan tersembunyi."
+    ]
+  },
+  "related": [
+    "AppShell",
+    "VisuallyHidden",
+    "Link"
+  ],
+  "responsive": [
+    {
+      "behaviour": "web di ponsel: tampil saat keyboard eksternal atau pembaca layar memfokusnya; lebar maks viewport dikurangi margin; area klik ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama; tetap di atas global bar sticky",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "tampil di sudut inline-start atas; tidak menutup kontrol lain secara permanen (hilang saat blur)",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "SkipLink tersedia sama untuk semua role; ia tidak memuat data atau aksi berizin."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Posisi tampil di sudut block-start/inline-start (kanan atas di RTL) memakai inset logis; tidak ada ikon."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); di mode sentuh ≥ target-min-touch",
+      "name": "md",
+      "notes": "Ukuran tunggal; tidak ada prop size. Tinggi tumbuh mengikuti teks 200%.",
+      "size_token": "control-height-md"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "hover hanya relevan saat tautan sudah tampil karena fokus",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa fokus tautan tidak terlihat sehingga tidak ada hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "hidden-until-focus",
+      "token_swaps": {},
+      "treatment": "default: terpotong dengan pola VisuallyHidden (bukan display:none) sehingga tetap di urutan fokus"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring",
+        "link": "color-structure-surface-raised"
+      },
+      "treatment": "tampil di sudut block-start/inline-start viewport di atas header sticky (z-tooltip); latar surface-raised, elevation-2; ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "label": "color-interaction-hover"
+      },
+      "treatment": "hanya saat sudah terlihat karena fokus: garis bawah menebal; di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "label": "color-interaction-pressed"
+      },
+      "treatment": "label ke interaction-pressed sesaat sebelum fokus pindah"
+    }
+  ],
+  "target_hints": {
+    "compose": "tidak ada komponen; dokumentasikan heading() dan isTraversalGroup",
+    "flutter": "{ns}_skip_link.dart hanya untuk Flutter web; native tidak merender",
+    "html": {
+      "element": "a",
+      "notes": "elemen pertama di body; kelas VisuallyHidden focusable; inset-block-start/inset-inline-start logis; target main tabindex=-1"
+    },
+    "swiftui": "tidak ada komponen; dokumentasikan heading dan urutan aksesibilitas"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Satu tautan \"Skip to main content\" ke main.",
+      "name": "single"
+    },
+    {
+      "description": "Maksimal tiga tautan berurutan (main, pencarian, navigasi) untuk halaman dengan navigasi panjang; masing-masing tampil sendiri saat difokus, di posisi yang sama.",
+      "name": "group"
+    }
+  ]
+}

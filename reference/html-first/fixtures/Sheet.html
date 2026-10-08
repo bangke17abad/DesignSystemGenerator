@@ -1,0 +1,176 @@
+<!-- Sheet fixture · variants bottom / side / persistent, states open-medium / open-large / collapsed / dragging / loading / dirty / error,
+     keyboard open + footer, text 200% → large, long title, RTL side, live demos. Static demos render a NON-modal <dialog open data-static>
+     inside a framed scrim region. Live demos open real modal sheets with showModal() (Sheet.js): focus moves in, Esc / scrim / Close /
+     swipe-down = Cancel, the handle is a labelled Expand/Collapse button (drag alternative), focus returns to the trigger.
+     No-JS: each trigger is a link to the same content as a page (here: the matching static demo). -->
+<section class="ds-demo" data-ds-demo="variants/bottom · open-medium (list of choices)" id="sheet-fallback-sort">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" aria-labelledby="sh1-title" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh1-title">Sort by</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body">
+        <div class="ds-sheet__list" role="group" aria-labelledby="sh1-title">
+          <button type="button" class="ds-sheet__item" aria-pressed="true"><span>Booking slot (earliest first)</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+          <button type="button" class="ds-sheet__item" aria-pressed="false" data-force="hover"><span>Price (lowest first)</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+          <button type="button" class="ds-sheet__item" aria-pressed="false" data-force="focus"><span>Distance</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="open-large (form + footer above the home indicator)">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="large" aria-labelledby="sh2-title" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Collapse sheet" aria-expanded="true"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh2-title">Filters (3)</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body">
+        <div class="ds-text-field"><label class="ds-text-field__label" for="sh2-date">Date</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh2-date" value="Sat 11 Oct 2026"></div></div>
+        <div class="ds-text-field"><label class="ds-text-field__label" for="sh2-guests">Guests</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh2-guests" value="4" inputmode="numeric"></div></div>
+      </div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="tertiary">Clear all</button><button type="button" class="ds-button" data-variant="primary">Apply filters</button></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/side (tablet & desktop: from inline-end, layout-panel-width)">
+  <div class="ds-sheet-frame" data-variant="side">
+    <dialog open class="ds-sheet" data-variant="side" aria-labelledby="sh3-title" data-static>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh3-title">Share file</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body">
+        <p>Anyone with the link can view the scorecard for Saturday fourball.</p>
+        <div class="ds-text-field"><label class="ds-text-field__label" for="sh3-email">Invite by email</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh3-email" type="email" dir="ltr" value="rina@example.com"></div></div>
+      </div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="tertiary">Cancel</button><button type="button" class="ds-button" data-variant="primary">Send invite</button></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/persistent · collapsed (non-modal, over a map; F6)">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-sheet-frame" data-variant="persistent">
+      <p class="ds-sheet-frame__page">Venue map</p>
+      <aside class="ds-sheet" data-variant="persistent" data-detent="medium" aria-labelledby="sh4-title" data-static>
+        <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+        <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh4-title">Nearby venues (3)</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Collapse"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button></div>
+        <div class="ds-sheet__body"><p>North Harbor · 12 km · 4 booking slots left today</p></div>
+      </aside>
+    </div>
+    <div class="ds-sheet-frame" data-variant="persistent">
+      <p class="ds-sheet-frame__page">Venue map</p>
+      <aside class="ds-sheet" data-variant="persistent" data-detent="collapsed" aria-labelledby="sh5-title" data-static>
+        <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+        <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh5-title">Nearby venues (3)</h2></div>
+        <div class="ds-sheet__body"><p>Hidden while collapsed.</p></div>
+      </aside>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="dragging (follows the finger, scrim fades; Close and handle remain)">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" data-dragging aria-labelledby="sh6-title" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false" data-force="hover"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh6-title">Share file</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body"><p>Release below the threshold to close (as Cancel).</p></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (skeleton, aria-busy; title and Close available)">
+  <div class="ds-sheet-frame" data-device="phone">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" aria-labelledby="sh7-title" aria-busy="true" data-static>
+      <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh7-title">Booking slots</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body" aria-hidden="true"><span class="ds-sheet__skeleton"></span><span class="ds-sheet__skeleton"></span><span class="ds-sheet__skeleton"></span></div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="primary" aria-disabled="true" aria-describedby="sh7-reason">Book</button><span class="ds-sheet__footer-reason" id="sh7-reason">Needs connection.</span></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error (InlineAlert above the body; data kept) · dirty + swipe → Discard changes?">
+  <div class="ds-stack" data-gap="4">
+    <div class="ds-sheet-frame" data-device="phone">
+      <dialog open class="ds-sheet" data-variant="bottom" data-detent="medium" aria-labelledby="sh8-title" data-static>
+        <button type="button" class="ds-sheet__handle" aria-label="Expand sheet" aria-expanded="false"></button>
+        <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh8-title">Filters (3)</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+        <div class="ds-sheet__body">
+          <div class="ds-inline-alert" data-status="critical" role="alert" aria-labelledby="sh8-alert">
+            <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+            <div class="ds-inline-alert__content"><p class="ds-inline-alert__title" id="sh8-alert">We couldn't apply the filters</p><p class="ds-inline-alert__body">Your choices are kept. Try again.</p></div>
+          </div>
+          <div class="ds-text-field"><label class="ds-text-field__label" for="sh8-guests">Guests</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh8-guests" value="4"></div></div>
+        </div>
+        <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="primary">Apply filters</button></div>
+      </dialog>
+    </div>
+    <div class="ds-modal-frame">
+      <dialog open class="ds-modal" data-variant="confirmation" data-size="sm" role="alertdialog" aria-labelledby="sh9-title" data-static>
+        <div class="ds-modal__form">
+          <header class="ds-modal__header"><h2 class="ds-modal__title" id="sh9-title">Discard changes?</h2></header>
+          <div class="ds-modal__body"><p>Your filter changes will be lost.</p></div>
+          <footer class="ds-modal__footer"><button type="button" class="ds-modal__action">Keep editing</button><button type="button" class="ds-modal__action" data-variant="destructive">Discard</button></footer>
+        </div>
+      </dialog>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="keyboard open + footer (sheet sits above the keyboard, large detent)">
+  <div class="ds-sheet-frame" data-device="phone" data-keyboard>
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="large" aria-labelledby="sh10-title" data-static>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh10-title">Add note</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body"><div class="ds-text-field"><label class="ds-text-field__label" for="sh10-note">Note for the starter</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh10-note" value="Late by 10 min" data-force="focus"></div></div></div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="primary">Save note</button></div>
+    </dialog>
+    <p class="ds-sheet-frame__keyboard" aria-hidden="true">Virtual keyboard</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% → large · long title (two lines, full name kept)">
+  <div class="ds-sheet-frame" data-device="phone" style="--type-body-size: 2em; --type-body-line: 1.4; --type-h3-size: 2.2em; --type-h3-line: 1.25; --type-label-size: 2em; --type-label-line: 1.3">
+    <dialog open class="ds-sheet" data-variant="bottom" data-detent="large" aria-labelledby="sh11-title" data-static>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh11-title">Bagikan jadwal acara akhir pekan North Harbor kepada semua peserta</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Tutup"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body"><p>Semua peserta menerima tautan.</p></div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="tertiary">Batal</button><button type="button" class="ds-button" data-variant="primary">Bagikan sekarang</button></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL side (slides from inline-end = left)" dir="rtl" lang="ar">
+  <div class="ds-sheet-frame" data-variant="side">
+    <dialog open class="ds-sheet" data-variant="side" aria-labelledby="sh12-title" data-static>
+      <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh12-title">مشاركة الملف</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="إغلاق"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+      <div class="ds-sheet__body"><p>يمكن لأي شخص لديه الرابط عرض بطاقة النتائج.</p></div>
+      <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="primary">إرسال</button></div>
+    </dialog>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="live (showModal, handle Expand/Collapse, drag, Esc/scrim/Close = Cancel, dirty guard, side on wide screens)">
+  <div class="ds-inline" data-gap="3">
+    <a class="ds-button" href="#sheet-fallback-sort" data-ds-sheet-open="sh-live-1">Sort by</a>
+    <a class="ds-button" href="#sheet-fallback-sort" data-ds-sheet-open="sh-live-2">Edit filters</a>
+    <a class="ds-button" href="#sheet-fallback-sort" data-ds-sheet-open="sh-live-3">Share file</a>
+  </div>
+  <dialog class="ds-sheet" id="sh-live-1" data-variant="bottom" data-detent="medium" aria-labelledby="sh-live-1-title" data-ds-module="sheet">
+    <button type="button" class="ds-sheet__handle"></button>
+    <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh-live-1-title">Sort by</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+    <div class="ds-sheet__body"><form method="dialog" class="ds-sheet__list">
+      <button class="ds-sheet__item" value="time" aria-pressed="true"><span>Booking slot (earliest first)</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+      <button class="ds-sheet__item" value="price" aria-pressed="false"><span>Price (lowest first)</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+      <button class="ds-sheet__item" value="distance" aria-pressed="false"><span>Distance</span><svg class="ds-icon" data-check aria-hidden="true"><use href="#ds-i-check"/></svg></button>
+    </form></div>
+  </dialog>
+  <dialog class="ds-sheet" id="sh-live-2" data-variant="bottom" data-detent="medium" aria-labelledby="sh-live-2-title" data-ds-module="sheet" data-ds-discard="sh-live-2-discard" data-ds-announce="Filters applied">
+    <button type="button" class="ds-sheet__handle"></button>
+    <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh-live-2-title">Filters</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+    <form method="dialog" class="ds-sheet__body" id="sh-live-2-form">
+      <div class="ds-text-field"><label class="ds-text-field__label" for="sh-live-2-guests">Guests</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="sh-live-2-guests" value="4" inputmode="numeric"></div></div>
+    </form>
+    <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="tertiary" data-ds-sheet-close>Cancel</button><button type="submit" form="sh-live-2-form" value="apply" class="ds-button" data-variant="primary">Apply filters</button></div>
+  </dialog>
+  <dialog class="ds-modal" id="sh-live-2-discard" data-variant="confirmation" data-size="sm" role="alertdialog" aria-labelledby="sh-live-2-discard-title">
+    <div class="ds-modal__form">
+      <header class="ds-modal__header"><h2 class="ds-modal__title" id="sh-live-2-discard-title">Discard changes?</h2></header>
+      <div class="ds-modal__body"><p>Your filter changes will be lost.</p></div>
+      <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-discard-keep>Keep editing</button><button type="button" class="ds-modal__action" data-variant="destructive" data-ds-discard-confirm>Discard</button></footer>
+    </div>
+  </dialog>
+  <dialog class="ds-sheet" id="sh-live-3" data-variant="side" data-detent="medium" aria-labelledby="sh-live-3-title" data-ds-module="sheet">
+    <button type="button" class="ds-sheet__handle"></button>
+    <div class="ds-sheet__header"><h2 class="ds-sheet__title" id="sh-live-3-title">Share file</h2><button type="button" class="ds-icon-button ds-sheet__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+    <div class="ds-sheet__body"><p>Anyone with the link can view the scorecard.</p></div>
+    <div class="ds-sheet__footer"><button type="button" class="ds-button" data-variant="primary" data-ds-sheet-close>Done</button></div>
+  </dialog>
+</section>

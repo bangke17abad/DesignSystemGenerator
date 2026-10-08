@@ -1,0 +1,221 @@
+/* Select · engine 1.8.0 reference (catalog/components/Select.json). Tokens only (I3); logical properties only (§12.4).
+   html-first default is the native <select> styled as a trigger (OS picker = sheet on phones). data-variant="custom" is an
+   optional Select.js enhancement (select-only combobox + listbox popover) from tablet width up; on phones and without JS the
+   same native <select> stays in charge. Trigger height matches TextField exactly (same --_h, padding, border, line-height). */
+.ds-select {
+  --_h: max(var(--control-height-md), var(--target-current));
+  --_opt-h: max(var(--control-height-md), var(--target-current));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+}
+.ds-select[data-size="sm"] { --_h: max(var(--control-height-sm), var(--target-current)); --_opt-h: max(var(--control-height-sm), var(--target-current)); }
+.ds-select[data-size="lg"] { --_h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); --_opt-h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+
+.ds-select__label {
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-select__optional { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+.ds-select__helper,
+.ds-select__reason,
+.ds-select__error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-select__error,
+.ds-select__reason { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-select__error { color: var(--color-semantic-critical-strong); }
+.ds-select__error .ds-icon,
+.ds-select__reason .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-select__error[hidden] { display: none; }
+
+/* trigger: native select, custom combobox button, or read-only text input share one box */
+.ds-select__group { position: relative; display: flex; flex-wrap: wrap; min-inline-size: 0; }
+.ds-select__input,
+.ds-select__trigger {
+  --_border: var(--control-container-border);
+  --_inner: 0;
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--_h);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3) calc(var(--space-3) + var(--icon-md) + var(--space-2));
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  box-shadow: inset 0 0 0 var(--_inner) var(--_border);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  text-align: start;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color var(--motion-fast-duration) var(--motion-easing-standard), background-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* placeholder "Select …" (first option, empty value) is not a submittable choice */
+.ds-select__input:has(option[value=""]:checked),
+.ds-select__value[data-placeholder] { color: var(--control-placeholder-color); }
+.ds-select__input option { color: var(--color-structure-text-primary); background: var(--color-structure-surface-overlay); }
+.ds-select__chevron {
+  position: absolute;
+  inset-block-start: calc((var(--_h) - var(--icon-md)) / 2);
+  inset-inline-end: var(--space-3);
+  color: var(--color-structure-text-secondary);
+  pointer-events: none;
+  transition: transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+
+@media (hover: hover) {
+  :is(.ds-select__input, .ds-select__trigger):not([readonly], [aria-disabled="true"], [aria-invalid="true"], :focus):hover { --_border: var(--control-container-border-hover); }
+}
+:is(.ds-select__input, .ds-select__trigger)[data-force~="hover"]:not([aria-invalid="true"]) { --_border: var(--control-container-border-hover); }
+:is(.ds-select__input, .ds-select__trigger):not([readonly], [aria-disabled="true"]):focus,
+:is(.ds-select__input, .ds-select__trigger):not([readonly], [aria-disabled="true"])[data-force~="focus"],
+.ds-select__trigger[aria-expanded="true"] { --_border: var(--color-interaction-default); }
+:is(.ds-select__input, .ds-select__trigger):not([readonly], [aria-disabled="true"], [aria-busy="true"]):active,
+:is(.ds-select__input, .ds-select__trigger)[data-force~="pressed"]:not([aria-busy="true"]) { --_border: var(--color-interaction-default); background: var(--row-background-hover); }
+:is(.ds-select__input, .ds-select__trigger)[aria-invalid="true"] { --_border: var(--control-container-border-invalid); --_inner: var(--border-width-thin); }
+@media (--bp-tablet-up) { .ds-select__trigger[aria-expanded="true"] ~ .ds-select__chevron { transform: rotate(180deg); } }
+
+/* read-only: selected value as full-contrast text (readonly text input + hidden input), no chevron, decorative border */
+.ds-select__input[readonly] {
+  --_border: var(--color-structure-border);
+  padding-inline-end: var(--space-3);
+  background: var(--control-container-background-readonly);
+  color: var(--control-value-color);
+  cursor: text;
+}
+/* blocked with reason: focusable, never opens (pointer-events off; Select.js also stops keyboard changes) */
+:is(.ds-select__input, .ds-select__trigger)[aria-disabled="true"] {
+  --_border: var(--color-structure-border);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-disabled);
+  pointer-events: none;
+}
+.ds-select__group:has(> [aria-disabled="true"]) { cursor: not-allowed; }
+.ds-select__group:has(> [aria-disabled="true"]) .ds-select__chevron { color: var(--color-structure-text-disabled); }
+
+/* loading options: spinner replaces the chevron */
+.ds-select__spinner {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-3);
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block: auto;
+  border: var(--border-width-thick) solid var(--color-structure-text-secondary);
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  animation: ds-select-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+@keyframes ds-select-spin { to { transform: rotate(360deg); } }
+
+/* custom variant (Select.js): trigger + listbox from tablet width up; the native select keeps the value and serves phones */
+.ds-select__trigger { display: none; }
+.ds-select__value { display: block; overflow-wrap: anywhere; }
+.ds-select__listbox {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-1));
+  inset-inline-start: 0;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 100%;
+  max-inline-size: max(100%, var(--layout-modal-sm));
+  max-block-size: calc(var(--_opt-h) * 6.5);
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  box-shadow: var(--elevation-2);
+  list-style: none;
+}
+.ds-select__listbox[hidden] { display: none; }
+.ds-select[data-inline-list] .ds-select__listbox { position: static; flex: 1 1 100%; margin-block-start: var(--space-1); }
+@media (--bp-tablet-up) {
+  .ds-select[data-enhanced] .ds-select__input { display: none; }
+  .ds-select[data-enhanced] .ds-select__trigger { display: block; }
+}
+@media (--bp-tablet-down) { .ds-select[data-enhanced] .ds-select__listbox { display: none; } }
+
+.ds-select__option {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--icon-sm) minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-2);
+  min-block-size: var(--_opt-h);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  cursor: pointer;
+}
+.ds-select__option-check { grid-column: 1; visibility: hidden; inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--color-interaction-default); }
+.ds-select__option-text { grid-column: 2; display: flex; flex-direction: column; min-inline-size: 0; overflow-wrap: anywhere; }
+.ds-select__option-description { color: var(--color-structure-text-secondary); }
+.ds-select__option[aria-selected="true"] { background: var(--row-background-selected); font-weight: var(--type-label-weight); }
+.ds-select__option[aria-selected="true"] .ds-select__option-check { visibility: visible; }
+@media (hover: hover) {
+  .ds-select__option:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+}
+.ds-select__option[data-force~="hover"] { background: var(--row-background-hover); }
+/* keyboard-active option (aria-activedescendant): selection surface + inset ring */
+.ds-select__option[data-active],
+.ds-select__option[data-force~="focus"] {
+  background: var(--color-structure-selection);
+  outline: var(--border-width-thick) solid var(--color-focus-ring);
+  outline-offset: calc(-1 * var(--border-width-thick));
+}
+.ds-select__option[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-select__option[aria-disabled="true"] .ds-select__option-description { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+.ds-select__group-label {
+  padding-block: var(--space-2) var(--space-1);
+  padding-inline: var(--space-3);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-select__empty { padding: var(--space-3); color: var(--color-structure-text-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-select__input, .ds-select__trigger, .ds-select__chevron { transition: none; }
+  .ds-select__spinner { animation: none; border-inline-end-color: var(--color-structure-text-secondary); opacity: 0.6; }
+}
+@media (forced-colors: active) {
+  .ds-select__input, .ds-select__trigger { border-color: ButtonText; }
+  :is(.ds-select__input, .ds-select__trigger)[aria-invalid="true"] { border-style: double; border-width: var(--border-width-thick); }
+  :is(.ds-select__input, .ds-select__trigger)[aria-disabled="true"], .ds-select__option[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+  .ds-select__chevron { color: ButtonText; }
+  .ds-select__listbox { border-color: CanvasText; }
+  .ds-select__option[data-active] { outline-color: Highlight; }
+  .ds-select__option[aria-selected="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+  .ds-select__option[aria-selected="true"] .ds-select__option-check { color: HighlightText; }
+}

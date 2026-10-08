@@ -1,0 +1,2658 @@
+{
+  "$comment": "Normative machine-readable form of M01 §4.5. If this file and the M01 tables disagree, this file wins (engine 1.8.0). Values are consumed by tools/resolve-language.mjs and tools/derive-tokens.mjs.",
+  "engine_version": "1.8.0",
+  "icon_sets": {
+    "lucide": {
+      "license": "ISC",
+      "glyphs": {
+        "critical": "octagon-alert",
+        "warning": "triangle-alert",
+        "positive": "circle-check",
+        "info": "info",
+        "neutral-negative": "circle-minus",
+        "time": "clock",
+        "history": "history",
+        "restricted": "lock"
+      }
+    },
+    "material-symbols-rounded": {
+      "license": "Apache-2.0",
+      "glyphs": {
+        "critical": "report",
+        "warning": "warning",
+        "positive": "check_circle",
+        "info": "info",
+        "neutral-negative": "do_not_disturb_on",
+        "time": "schedule",
+        "history": "history",
+        "restricted": "lock"
+      }
+    },
+    "phosphor": {
+      "license": "MIT",
+      "glyphs": {
+        "critical": "WarningOctagon",
+        "warning": "Warning",
+        "positive": "CheckCircle",
+        "info": "Info",
+        "neutral-negative": "MinusCircle",
+        "time": "Clock",
+        "history": "ClockCounterClockwise",
+        "restricted": "Lock"
+      }
+    },
+    "tabler": {
+      "license": "MIT",
+      "glyphs": {
+        "critical": "alert-octagon",
+        "warning": "alert-triangle",
+        "positive": "circle-check",
+        "info": "info-circle",
+        "neutral-negative": "circle-minus",
+        "time": "clock",
+        "history": "history",
+        "restricted": "lock"
+      }
+    }
+  },
+  "font_fallbacks": {
+    "sans": "system-ui, -apple-system, \"Segoe UI\", Roboto, \"Noto Sans\", Arial, sans-serif",
+    "serif": "Georgia, \"Noto Serif\", serif",
+    "mono": "ui-monospace, \"SF Mono\", Menlo, Consolas, \"Noto Sans Mono\", monospace"
+  },
+  "dataviz": {
+    "categorical_hues": [
+      250,
+      55,
+      165,
+      340,
+      85
+    ],
+    "diverging": [
+      250,
+      55
+    ],
+    "hatch": {
+      "angle": 45,
+      "line_px": 1,
+      "gap_px": 6
+    }
+  },
+  "risk_order": [
+    "ink-graphite",
+    "dense-console",
+    "editorial-contrast",
+    "quiet-luxury",
+    "brand-led-tonal",
+    "immersive-glass",
+    "soft-friendly",
+    "neo-brutalist",
+    "playful-vivid"
+  ],
+  "archetypes": {
+    "ink-graphite": {
+      "character": "Alat kerja operasional yang tenang: bingkai netral, satu aksen interaksi nyaris-netral, warna hanya untuk perhatian",
+      "fit": "back-office, operasi lapangan, admin, keuangan, alat internal",
+      "avoid": "produk konsumen yang dipimpin merek",
+      "personality": {
+        "formality": 4,
+        "warmth": 2,
+        "expressiveness": 2,
+        "density": 4,
+        "risk_criticality": 5
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "quiet",
+        "C4": "quiet",
+        "C5": "quiet",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": 250,
+          "c": 0.01
+        },
+        "interaction": {
+          "source": "neutral",
+          "h": 250,
+          "c": 0.02,
+          "l": 0.3
+        },
+        "brand_role": "accent-nontext",
+        "semantic_chroma_max": 0.14,
+        "info": "neutral",
+        "link": {
+          "color": "interaction",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Inter",
+          "display": null,
+          "mono": "JetBrains Mono"
+        },
+        "weights": [
+          400,
+          500,
+          600
+        ],
+        "heading_weight": 600,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.5,
+          "heading": 1.25
+        },
+        "tracking_heading": "-0.01em",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 16,
+          "label": 16,
+          "code": 16,
+          "body_lg": 17,
+          "h3": 18,
+          "h2": 22,
+          "h1": 26,
+          "display": 36
+        },
+        "caption_line": 16
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16
+        ]
+      },
+      "control_height": {
+        "sm": 32,
+        "md": 40,
+        "lg": 48
+      },
+      "touch_rule": "sm tidak dipakai; md menjadi 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "kartu hanya untuk objek yang bisa dipilih; daftar memakai baris",
+      "radius": {
+        "control": 4,
+        "container": 4,
+        "overlay": 8,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              1,
+              2,
+              0.08
+            ],
+            [
+              0,
+              2,
+              8,
+              0.08
+            ]
+          ],
+          "2": [
+            [
+              0,
+              4,
+              12,
+              0.12
+            ],
+            [
+              0,
+              12,
+              32,
+              0.12
+            ]
+          ]
+        },
+        "usage": "0 saat rest; 1 popover dan toast; 2 modal",
+        "light_strategy": "shadow",
+        "dark_strategy": "border",
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 100,
+        "base": 180,
+        "slow": 240,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0,
+            0,
+            0.2,
+            1
+          ],
+          "exit": [
+            0.4,
+            0,
+            1,
+            1
+          ]
+        },
+        "stagger_max": 0
+      },
+      "themes": [
+        "Light",
+        "Dark",
+        "High-contrast"
+      ],
+      "icons": {
+        "set": "lucide",
+        "style": "stroke 1.5",
+        "stroke": 1.5,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.1
+      },
+      "illustration": "tidak memakai ilustrasi di surface operasional",
+      "principles": [
+        "Tenang sampai ada yang perlu diperhatikan (LB-02)",
+        "Bingkai netral, satu aksen (LB-03)",
+        "Datar saat diam (LB-01)",
+        "Angka dulu, hiasan tidak (LB-07)",
+        "Satu keputusan per layar (maks satu tombol primer)"
+      ],
+      "voice": {
+        "formal": 4,
+        "concise": 5,
+        "firm": 4,
+        "warm": 2,
+        "button": "Simpan perubahan",
+        "error": "Tanggal mulai wajib diisi."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "bayangan pada komponen non-overlay saat rest",
+          "kind": "css-pattern",
+          "pattern": null,
+          "applies_to": [
+            "components/**/!(Modal|Sheet|Popover|Menu|Toast|Tooltip|ContextPanel|SkipLink|CommandPalette|StepUpDialog)*.css"
+          ],
+          "question": "Apakah ada komponen non-overlay (kartu, thumb switch, tab, segmen, header tabel) yang memakai elevation-* saat rest? Pola regex tidak bisa membedakan rest dari state popup/fokus, jadi diperiksa manual dengan screenshot V9."
+        },
+        {
+          "id": "LB-02",
+          "statement": "fill untuk kelas C3-C6",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "warna interaksi pada area lebih luas dari satu kontrol",
+          "kind": "manual-review",
+          "question": "Apakah warna interaksi dipakai sebagai latar area lebih luas dari satu kontrol?"
+        },
+        {
+          "id": "LB-04",
+          "statement": "gradien",
+          "kind": "css-pattern",
+          "pattern": "(linear|radial|conic)-gradient\\(",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-05",
+          "statement": "rail berwarna di sisi kiri untuk severity",
+          "kind": "css-pattern",
+          "pattern": "border-(left|inline-start)\\s*:\\s*[2-9]px\\s+solid\\s+var\\(--color-semantic",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-06",
+          "statement": "radius > radius-sm di luar overlay",
+          "kind": "token-rule",
+          "check": {
+            "token": "radius-md",
+            "op": "<=",
+            "ref": "radius-sm"
+          }
+        },
+        {
+          "id": "LB-07",
+          "statement": "ilustrasi di surface operasional",
+          "kind": "manual-review",
+          "question": "Apakah ada ilustrasi di surface operasional?"
+        }
+      ],
+      "platform": "hybrid",
+      "platform_note": "tampilan seragam; date dan time picker native di ponsel",
+      "material": {
+        "gradient": "none",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "token-swap",
+        "press_transform": "none",
+        "haptics": [
+          "selection",
+          "error"
+        ],
+        "sound": "critical-only"
+      },
+      "layout": {
+        "content_max": "fluid",
+        "content_max_px": 1440,
+        "section": 24,
+        "section_lg": 32,
+        "alignment": "start",
+        "grid": "12 kolom ketat"
+      }
+    },
+    "brand-led-tonal": {
+      "character": "Merek hadir di setiap interaksi; permukaan bernuansa tonal dari ramp merek",
+      "fit": "aplikasi konsumen, SaaS dengan merek kuat",
+      "avoid": "warna merek tidak bisa lolos kontras sebagai teks tanpa menggelap berlebihan",
+      "personality": {
+        "formality": 3,
+        "warmth": 3,
+        "expressiveness": 4,
+        "density": 2,
+        "risk_criticality": 2
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "quiet",
+        "C4": "filled",
+        "C5": "quiet",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": "interaction",
+          "c": 0.02
+        },
+        "interaction": {
+          "source": "brand",
+          "h": 265,
+          "c": 0.16,
+          "l": 0.5,
+          "default_is_assumption": true
+        },
+        "brand_role": "interaction",
+        "semantic_chroma_max": 0.16,
+        "info": 250,
+        "link": {
+          "color": "interaction",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Plus Jakarta Sans",
+          "display": null,
+          "mono": "JetBrains Mono"
+        },
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "heading_weight": 700,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.5,
+          "heading": 1.25
+        },
+        "tracking_heading": "-0.01em",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 16,
+          "label": 16,
+          "code": 16,
+          "body_lg": 18,
+          "h3": 20,
+          "h2": 24,
+          "h1": 30,
+          "display": 40
+        },
+        "caption_line": 16
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20
+        ]
+      },
+      "control_height": {
+        "sm": 36,
+        "md": 44,
+        "lg": 52
+      },
+      "touch_rule": "sm diperluas area kliknya ke 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "kartu boleh untuk pengelompokan; maks satu tingkat bersarang",
+      "radius": {
+        "control": 8,
+        "container": 12,
+        "overlay": 16,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              1,
+              3,
+              0.1
+            ],
+            [
+              0,
+              1,
+              2,
+              0.06
+            ]
+          ],
+          "2": [
+            [
+              0,
+              4,
+              8,
+              0.1
+            ],
+            [
+              0,
+              2,
+              4,
+              0.06
+            ]
+          ],
+          "3": [
+            [
+              0,
+              12,
+              24,
+              0.12
+            ],
+            [
+              0,
+              4,
+              8,
+              0.08
+            ]
+          ]
+        },
+        "usage": "1 kartu terangkat; 2 popover dan menu; 3 modal dan sheet",
+        "light_strategy": "shadow",
+        "dark_strategy": "tonal",
+        "dark_alpha_factor": 2,
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 150,
+        "base": 250,
+        "slow": 350,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0.05,
+            0.7,
+            0.1,
+            1
+          ],
+          "exit": [
+            0.3,
+            0,
+            0.8,
+            0.15
+          ]
+        },
+        "stagger_max": 40
+      },
+      "themes": [
+        "Light",
+        "Dark"
+      ],
+      "icons": {
+        "set": "material-symbols-rounded",
+        "style": "weight 400, fill 0 (fill 1 untuk selected)",
+        "stroke": null,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.14
+      },
+      "illustration": "boleh di onboarding dan empty state",
+      "principles": [
+        "Merek di setiap interaksi (sumber interaksi = brand)",
+        "Permukaan bernuansa, bukan abu-abu (LB-01, LB-07)",
+        "Kedalaman bertingkat jelas (LB-02)",
+        "Ramah tetapi rapi (LB-03)",
+        "Status tidak meminjam merek (UB12)"
+      ],
+      "voice": {
+        "formal": 3,
+        "concise": 4,
+        "firm": 3,
+        "warm": 3,
+        "button": "Lanjutkan pembayaran",
+        "error": "Kartu ditolak bank. Coba kartu lain."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "netral tanpa hue, chroma 0",
+          "kind": "token-rule",
+          "check": {
+            "neutral_chroma_min": 0.005
+          }
+        },
+        {
+          "id": "LB-02",
+          "statement": "lebih dari 3 tingkat elevasi",
+          "kind": "token-rule",
+          "check": {
+            "elevation_levels_max": 3
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "radius-none pada kontrol",
+          "kind": "token-rule",
+          "check": {
+            "token": "radius-sm",
+            "op": ">",
+            "value": 0
+          }
+        },
+        {
+          "id": "LB-04",
+          "statement": "tombol primer berupa outline",
+          "kind": "manual-review",
+          "question": "Apakah ada tombol primer yang dirender sebagai outline?"
+        },
+        {
+          "id": "LB-05",
+          "statement": "lebih dari satu warna aksen per layar",
+          "kind": "manual-review",
+          "question": "Apakah satu layar memakai lebih dari satu warna aksen?"
+        },
+        {
+          "id": "LB-06",
+          "statement": "gradien di dalam komponen",
+          "kind": "css-pattern",
+          "pattern": "(linear|radial|conic)-gradient\\(",
+          "applies_to": [
+            "components/**/*.css"
+          ]
+        },
+        {
+          "id": "LB-07",
+          "statement": "permukaan tonal dari ramp selain merek",
+          "kind": "token-rule",
+          "check": {
+            "neutral_hue_follows": "interaction"
+          }
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "",
+      "material": {
+        "gradient": "hero-only",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "state-layer",
+        "press_transform": "none",
+        "haptics": [
+          "selection",
+          "success",
+          "error"
+        ],
+        "sound": "critical-only"
+      },
+      "layout": {
+        "content_max": "1200",
+        "content_max_px": 1200,
+        "section": 32,
+        "section_lg": 48,
+        "alignment": "center",
+        "grid": "12 kolom"
+      }
+    },
+    "soft-friendly": {
+      "character": "Ramah dan membumi: sudut membulat, ruang lega, ilustrasi",
+      "fit": "pendidikan, kesehatan umum, komunitas, onboarding",
+      "avoid": "data padat, operasi berisiko tinggi",
+      "personality": {
+        "formality": 2,
+        "warmth": 5,
+        "expressiveness": 4,
+        "density": 1,
+        "risk_criticality": 1
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "tinted",
+        "C4": "tinted",
+        "C5": "tinted",
+        "C6": "tinted"
+      },
+      "color": {
+        "neutral": {
+          "h": 70,
+          "c": 0.012
+        },
+        "interaction": {
+          "source": "brand",
+          "h": 175,
+          "c": 0.1,
+          "l": 0.5,
+          "default_is_assumption": true
+        },
+        "brand_role": "interaction",
+        "semantic_chroma_max": 0.13,
+        "info": 250,
+        "link": {
+          "color": "interaction",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Nunito",
+          "display": null,
+          "mono": "JetBrains Mono"
+        },
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "heading_weight": 700,
+        "label_weight": 600,
+        "line_ratio": {
+          "body": 1.53,
+          "heading": 1.3
+        },
+        "tracking_heading": "0",
+        "case": "sentence; tanpa kapital penuh",
+        "scale": {
+          "caption": 12,
+          "body": 17,
+          "label": 17,
+          "code": 16,
+          "body_lg": 18,
+          "h3": 20,
+          "h2": 24,
+          "h1": 30,
+          "display": 40
+        },
+        "caption_line": 18
+      },
+      "space": {
+        "steps": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "control_height": {
+        "sm": 40,
+        "md": 48,
+        "lg": 56
+      },
+      "touch_rule": "semua tinggi visual ≥ 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "kartu adalah wadah utama",
+      "radius": {
+        "control": 12,
+        "container": 16,
+        "overlay": 24,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              2,
+              12,
+              0.06
+            ]
+          ],
+          "2": [
+            [
+              0,
+              8,
+              24,
+              0.08
+            ]
+          ]
+        },
+        "usage": "1 kartu; 2 overlay",
+        "light_strategy": "shadow",
+        "dark_strategy": "tonal",
+        "dark_alpha_factor": 2,
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 200,
+        "base": 300,
+        "slow": 400,
+        "easing": {
+          "standard": [
+            0.25,
+            0.1,
+            0.25,
+            1
+          ],
+          "enter": [
+            0.34,
+            1.3,
+            0.64,
+            1
+          ],
+          "exit": [
+            0.4,
+            0,
+            1,
+            1
+          ]
+        },
+        "enter_overshoot_overlay_only": true,
+        "stagger_max": 50
+      },
+      "themes": [
+        "Light",
+        "Dark"
+      ],
+      "icons": {
+        "set": "phosphor",
+        "style": "Regular",
+        "stroke": null,
+        "sizes": [
+          20,
+          24,
+          28
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.11
+      },
+      "illustration": "maks satu ilustrasi per layar",
+      "principles": [
+        "Lega dulu, satu tugas per layar (LB-05)",
+        "Membulat dan lembut (LB-01, LB-02)",
+        "Bicara seperti teman (L11, LB-03)",
+        "Ilustrasi menjelaskan, bukan menghias (LB-04)",
+        "Tidak pernah mengagetkan (LB-07)"
+      ],
+      "voice": {
+        "formal": 2,
+        "concise": 3,
+        "firm": 2,
+        "warm": 5,
+        "button": "Mulai membaca",
+        "error": "Nomor HP-nya kurang 2 digit lagi."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "sudut < radius-sm pada kontrol dan wadah",
+          "kind": "token-rule",
+          "check": {
+            "token": "radius-md",
+            "op": ">=",
+            "ref": "radius-sm"
+          }
+        },
+        {
+          "id": "LB-02",
+          "statement": "bayangan dengan blur < 8px",
+          "kind": "token-rule",
+          "check": {
+            "shadow_blur_min": 8
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "teks kapital penuh",
+          "kind": "css-pattern",
+          "pattern": "text-transform\\s*:\\s*uppercase",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-04",
+          "statement": "lebih dari satu ilustrasi per layar",
+          "kind": "manual-review",
+          "question": "Apakah satu layar memuat lebih dari satu ilustrasi?"
+        },
+        {
+          "id": "LB-05",
+          "statement": "tabel lebih dari 4 kolom di ponsel",
+          "kind": "manual-review",
+          "question": "Apakah ada tabel lebih dari 4 kolom pada lebar ponsel?"
+        },
+        {
+          "id": "LB-06",
+          "statement": "font mono di luar kode",
+          "kind": "css-pattern",
+          "pattern": "font-family\\s*:\\s*var\\(--font-mono\\)",
+          "applies_to": [
+            "components/**/!(Kbd|CopyButton)*.css"
+          ]
+        },
+        {
+          "id": "LB-07",
+          "statement": "fill solid untuk C3-C6",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          }
+        }
+      ],
+      "platform": "hybrid",
+      "platform_note": "picker dan sheet native di ponsel",
+      "material": {
+        "gradient": "illustration-and-empty-state",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "state-layer",
+        "press_transform": "none",
+        "haptics": [
+          "selection",
+          "success"
+        ],
+        "sound": "critical-only"
+      },
+      "layout": {
+        "content_max": "960",
+        "content_max_px": 960,
+        "section": 40,
+        "section_lg": 48,
+        "alignment": "center",
+        "grid": "satu kolom di layar lebar"
+      }
+    },
+    "editorial-contrast": {
+      "character": "Konten adalah antarmuka: tipografi, kontras tinggi, garis tipis, sedikit wadah",
+      "fit": "penerbitan, dokumentasi, laporan, riset, hukum",
+      "avoid": "dasbor penuh widget, gamifikasi",
+      "personality": {
+        "formality": 5,
+        "warmth": 2,
+        "expressiveness": 3,
+        "density": 2,
+        "risk_criticality": 2
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "outline",
+        "C3": "outline",
+        "C4": "outline",
+        "C5": "outline",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": 90,
+          "c": 0.005
+        },
+        "interaction": {
+          "source": "fixed",
+          "h": 260,
+          "c": 0.03,
+          "l": 0.25
+        },
+        "brand_role": "accent-nontext",
+        "semantic_chroma_max": 0.12,
+        "info": "neutral",
+        "link": {
+          "color": "text-primary",
+          "underline_px": 1,
+          "hover_underline_px": 2
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Source Sans 3",
+          "display": "Source Serif 4",
+          "mono": "Source Code Pro"
+        },
+        "weights": [
+          400,
+          600
+        ],
+        "heading_weight": 600,
+        "label_weight": 600,
+        "line_ratio": {
+          "body": 1.56,
+          "heading": 1.2
+        },
+        "tracking_heading": "-0.01em",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 18,
+          "label": 18,
+          "code": 16,
+          "body_lg": 20,
+          "h3": 22,
+          "h2": 28,
+          "h1": 36,
+          "display": 48
+        },
+        "caption_line": 16
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          12,
+          16,
+          24
+        ]
+      },
+      "control_height": {
+        "sm": 32,
+        "md": 40,
+        "lg": 48
+      },
+      "touch_rule": "md menjadi 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "tanpa kartu untuk konten; garis pemisah 1px",
+      "radius": {
+        "control": 0,
+        "container": 2,
+        "overlay": 4,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": "border",
+          "2": "border"
+        },
+        "usage": "tanpa bayangan; overlay dibedakan oleh border dan scrim",
+        "light_strategy": "border",
+        "dark_strategy": "border",
+        "shadow_color": "neutral-12",
+        "flat": true
+      },
+      "motion": {
+        "fast": 100,
+        "base": 150,
+        "slow": 200,
+        "easing": {
+          "standard": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "enter": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "exit": [
+            0.4,
+            0,
+            0.2,
+            1
+          ]
+        },
+        "stagger_max": 0
+      },
+      "themes": [
+        "Light",
+        "Dark"
+      ],
+      "icons": {
+        "set": "lucide",
+        "style": "stroke 1.25",
+        "stroke": 1.25,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.08
+      },
+      "illustration": "mengutamakan foto berkualitas dengan keterangan",
+      "principles": [
+        "Isi adalah antarmuka (LB-02)",
+        "Garis, bukan kotak (LB-01)",
+        "Kontras tinggi dan tenang (LB-03)",
+        "Lebar baca terjaga (LB-05)",
+        "Satu aksen, dipakai hemat (LB-07)"
+      ],
+      "voice": {
+        "formal": 5,
+        "concise": 2,
+        "firm": 3,
+        "warm": 2,
+        "button": "Unduh dokumen",
+        "error": "Dokumen tidak ditemukan. Periksa nomornya atau telusuri ulang."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "bayangan apa pun selain ring fokus",
+          "kind": "css-pattern",
+          "pattern": "box-shadow\\s*:\\s*(?!none|0 0 0 [0-9]+px var\\(--color-(focus|structure-border))",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-02",
+          "statement": "kartu sebagai wadah daftar konten",
+          "kind": "manual-review",
+          "question": "Apakah daftar konten dibungkus kartu?"
+        },
+        {
+          "id": "LB-03",
+          "statement": "fill semantik selain C1",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C2",
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          }
+        },
+        {
+          "id": "LB-04",
+          "statement": "radius > 4",
+          "kind": "token-rule",
+          "check": {
+            "tokens": "radius-(xs|sm|md|lg)",
+            "op": "<=",
+            "value": 4
+          }
+        },
+        {
+          "id": "LB-05",
+          "statement": "teks berjalan lebih lebar dari layout-measure",
+          "kind": "css-pattern",
+          "pattern": "max-width\\s*:\\s*(?!var\\(--layout-measure\\))[0-9]{3,}px",
+          "applies_to": [
+            "**/prose*.css"
+          ]
+        },
+        {
+          "id": "LB-06",
+          "statement": "gradien",
+          "kind": "css-pattern",
+          "pattern": "(linear|radial|conic)-gradient\\(",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-07",
+          "statement": "ikon dekoratif di samping heading",
+          "kind": "manual-review",
+          "question": "Apakah ada ikon dekoratif di samping heading?"
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "",
+      "material": {
+        "gradient": "none",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "token-swap",
+        "press_transform": "none",
+        "haptics": [],
+        "sound": "none"
+      },
+      "layout": {
+        "content_max": "1280",
+        "content_max_px": 1280,
+        "section": 48,
+        "section_lg": 64,
+        "alignment": "start",
+        "grid": "asimetris (teks 7 kolom + catatan 3 kolom)"
+      }
+    },
+    "dense-console": {
+      "character": "Konsol profesional padat: keyboard-first, angka monospace, legenda status ketat",
+      "fit": "monitoring, analitik, trading, devtools, operasi jaringan",
+      "avoid": "pengguna kasual berbasis sentuh",
+      "personality": {
+        "formality": 4,
+        "warmth": 1,
+        "expressiveness": 1,
+        "density": 5,
+        "risk_criticality": 4
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "tinted",
+        "C4": "tinted",
+        "C5": "tinted",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": 255,
+          "c": 0.015
+        },
+        "interaction": {
+          "source": "brand",
+          "h": 230,
+          "c": 0.12,
+          "l": 0.55,
+          "l_dark": 0.75,
+          "default_is_assumption": false
+        },
+        "brand_role": "interaction",
+        "semantic_chroma_max": 0.15,
+        "info": "neutral",
+        "link": {
+          "color": "interaction",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "IBM Plex Sans",
+          "display": null,
+          "mono": "IBM Plex Mono"
+        },
+        "weights": [
+          400,
+          500,
+          600
+        ],
+        "heading_weight": 600,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.375,
+          "heading": 1.2
+        },
+        "tracking_heading": "0",
+        "case": "sentence; kapital penuh hanya singkatan satuan dan nama tombol keyboard",
+        "scale": {
+          "caption": 12,
+          "body": 16,
+          "label": 16,
+          "code": 16,
+          "body_lg": 17,
+          "h3": 18,
+          "h2": 20,
+          "h1": 24,
+          "display": 32
+        },
+        "caption_line": 16
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12
+        ]
+      },
+      "control_height": {
+        "sm": 28,
+        "md": 32,
+        "lg": 40
+      },
+      "touch_rule": "kontrol padat tidak dipakai: semua tinggi 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "panel bergaris, bukan kartu",
+      "radius": {
+        "control": 2,
+        "container": 4,
+        "overlay": 6,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": "border",
+          "2": [
+            [
+              0,
+              4,
+              16,
+              0.24
+            ]
+          ]
+        },
+        "usage": "1 panel bergaris; 2 hanya popover dan menu",
+        "light_strategy": "shadow",
+        "dark_strategy": "border",
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 80,
+        "base": 120,
+        "slow": 160,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "exit": [
+            0.2,
+            0,
+            0,
+            1
+          ]
+        },
+        "stagger_max": 0
+      },
+      "themes": [
+        "Dark",
+        "Light",
+        "High-contrast"
+      ],
+      "icons": {
+        "set": "tabler",
+        "style": "stroke 1.5",
+        "stroke": 1.5,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.15
+      },
+      "illustration": "tidak memakai ilustrasi di surface operasional",
+      "principles": [
+        "Pindai dalam sekejap (LB-01)",
+        "Keyboard dulu (LB-06)",
+        "Legenda ketat (LB-05)",
+        "Gerak hanya sebagai sinyal (LB-04)",
+        "Padat lewat susunan, bukan huruf kecil (I8)"
+      ],
+      "voice": {
+        "formal": 4,
+        "concise": 5,
+        "firm": 5,
+        "warm": 1,
+        "button": "Restart node",
+        "error": "Timeout 30 dtk. Coba lagi atau periksa koneksi."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "angka tanpa tabular-nums",
+          "kind": "css-pattern",
+          "pattern": null,
+          "question": "Apakah semua angka memakai font-variant-numeric: tabular-nums?",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-02",
+          "statement": "bayangan selain popover dan menu",
+          "kind": "css-pattern",
+          "pattern": null,
+          "applies_to": [
+            "components/**/!(Popover|Menu|CommandPalette|Tooltip|SkipLink|Sheet|Modal|Toast)*.css"
+          ],
+          "question": "Apakah ada komponen non-overlay (kartu, thumb switch, tab, segmen, header tabel) yang memakai elevation-* saat rest? Pola regex tidak bisa membedakan rest dari state popup/fokus, jadi diperiksa manual dengan screenshot V9."
+        },
+        {
+          "id": "LB-03",
+          "statement": "ilustrasi",
+          "kind": "manual-review",
+          "question": "Apakah ada ilustrasi?"
+        },
+        {
+          "id": "LB-04",
+          "statement": "durasi animasi > motion-base",
+          "kind": "token-rule",
+          "check": {
+            "token": "motion-slow-duration",
+            "op": "<=",
+            "value": 160
+          }
+        },
+        {
+          "id": "LB-05",
+          "statement": "warna status di layar tanpa legenda",
+          "kind": "manual-review",
+          "question": "Apakah ada warna status tanpa legenda di layar yang sama?"
+        },
+        {
+          "id": "LB-06",
+          "statement": "aksi primer desktop tanpa pintasan bermodifier",
+          "kind": "manual-review",
+          "question": "Apakah aksi primer desktop punya pintasan bermodifier?"
+        },
+        {
+          "id": "LB-07",
+          "statement": "fill solid untuk C3-C6",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          }
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "label pintasan mengikuti OS (⌘ atau Ctrl)",
+      "material": {
+        "gradient": "none",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "token-swap",
+        "press_transform": "none",
+        "haptics": [
+          "error",
+          "critical"
+        ],
+        "sound": "critical-only"
+      },
+      "layout": {
+        "content_max": "fluid",
+        "content_max_px": null,
+        "section": 12,
+        "section_lg": 16,
+        "alignment": "start",
+        "grid": "pane, bukan kolom"
+      }
+    },
+    "quiet-luxury": {
+      "character": "Premium dan tenang: ruang sangat lega, serif display, warna sangat terbatas, aksen merek (sering metalik) hanya non-teks",
+      "fit": "hospitality, klub dan keanggotaan premium, properti, wealth, fashion",
+      "avoid": "data padat, operasi berisiko tinggi, produk massal yang butuh energi",
+      "personality": {
+        "formality": 5,
+        "warmth": 3,
+        "expressiveness": 2,
+        "density": 1,
+        "risk_criticality": 2
+      },
+      "attention": {
+        "C1": "tinted",
+        "C2": "tinted",
+        "C3": "quiet",
+        "C4": "quiet",
+        "C5": "quiet",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": 70,
+          "c": 0.008
+        },
+        "interaction": {
+          "source": "neutral",
+          "h": 70,
+          "c": 0.015,
+          "l": 0.22
+        },
+        "brand_role": "accent-nontext",
+        "semantic_chroma_max": 0.11,
+        "info": "neutral",
+        "link": {
+          "color": "text-primary",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "DM Sans",
+          "display": "Playfair Display",
+          "mono": "DM Mono"
+        },
+        "weights": [
+          400,
+          500
+        ],
+        "display_weights": [
+          400,
+          600
+        ],
+        "heading_weight": 400,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.64,
+          "heading": 1.15
+        },
+        "tracking_heading": "0",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 17,
+          "label": 17,
+          "code": 16,
+          "body_lg": 19,
+          "h3": 22,
+          "h2": 28,
+          "h1": 36,
+          "display": 52
+        },
+        "caption_line": 18
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "control_height": {
+        "sm": 40,
+        "md": 48,
+        "lg": 56
+      },
+      "touch_rule": "semua tinggi visual ≥ 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 1
+      },
+      "container_rule": "tanpa kartu berbayang; kelompok dipisah ruang dan garis tipis",
+      "radius": {
+        "control": 2,
+        "container": 4,
+        "overlay": 8,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              1,
+              2,
+              0.04
+            ],
+            [
+              0,
+              4,
+              16,
+              0.06
+            ]
+          ],
+          "2": [
+            [
+              0,
+              8,
+              32,
+              0.08
+            ]
+          ]
+        },
+        "usage": "1 popover; 2 modal",
+        "light_strategy": "shadow",
+        "dark_strategy": "tonal",
+        "dark_alpha_factor": 2,
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 160,
+        "base": 280,
+        "slow": 400,
+        "easing": {
+          "standard": [
+            0.4,
+            0,
+            0.2,
+            1
+          ],
+          "enter": [
+            0.16,
+            1,
+            0.3,
+            1
+          ],
+          "exit": [
+            0.7,
+            0,
+            0.84,
+            0
+          ]
+        },
+        "stagger_max": 60
+      },
+      "themes": [
+        "Light",
+        "Dark"
+      ],
+      "icons": {
+        "set": "phosphor",
+        "style": "Light",
+        "stroke": null,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.07
+      },
+      "illustration": "mengutamakan foto berkualitas dengan keterangan",
+      "principles": [
+        "Ruang adalah kemewahan (L17)",
+        "Satu aksen, tidak berteriak (LB-01, LB-02)",
+        "Tipografi membawa karakter (L4)",
+        "Gerak pelan dan halus (LB-07)",
+        "Status santun tetapi jelas (LB-05, I7)"
+      ],
+      "voice": {
+        "formal": 5,
+        "concise": 3,
+        "firm": 2,
+        "warm": 3,
+        "button": "Reservasi meja",
+        "error": "Tanggal ini sudah penuh. Silakan pilih tanggal lain."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "lebih dari satu warna aksen per layar",
+          "kind": "manual-review",
+          "question": "Apakah satu layar memakai lebih dari satu warna aksen?"
+        },
+        {
+          "id": "LB-02",
+          "statement": "color-brand-* sebagai warna teks",
+          "kind": "token-rule",
+          "check": {
+            "css_forbid": "color\\s*:\\s*var\\(--color-brand-(default|subtle)\\)"
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "bayangan dengan alfa > .08",
+          "kind": "token-rule",
+          "check": {
+            "shadow_alpha_max": 0.08
+          }
+        },
+        {
+          "id": "LB-04",
+          "statement": "teks kapital penuh",
+          "kind": "css-pattern",
+          "pattern": "text-transform\\s*:\\s*uppercase",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-05",
+          "statement": "fill untuk C3-C6",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C3",
+              "C4",
+              "C5",
+              "C6"
+            ]
+          }
+        },
+        {
+          "id": "LB-06",
+          "statement": "ikon dekoratif berwarna",
+          "kind": "manual-review",
+          "question": "Apakah ada ikon dekoratif berwarna?"
+        },
+        {
+          "id": "LB-07",
+          "statement": "easing overshoot atau durasi > motion-slow",
+          "kind": "token-rule",
+          "check": {
+            "easing_no_overshoot": true
+          }
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "",
+      "material": {
+        "gradient": "photo-overlay-only",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "token-swap",
+        "press_transform": "none",
+        "haptics": [
+          "selection"
+        ],
+        "sound": "none"
+      },
+      "layout": {
+        "content_max": "1200",
+        "content_max_px": 1200,
+        "section": 64,
+        "section_lg": 96,
+        "alignment": "center",
+        "grid": "12 kolom dengan margin lebar"
+      }
+    },
+    "playful-vivid": {
+      "character": "Energik dan bermain: warna jenuh, bentuk sangat bulat, ilustrasi, perayaan kecil untuk keberhasilan",
+      "fit": "gamifikasi, keluarga, kebugaran, komunitas, edukasi kasual",
+      "avoid": "keuangan, hukum, klinis, operasi",
+      "personality": {
+        "formality": 1,
+        "warmth": 5,
+        "expressiveness": 5,
+        "density": 2,
+        "risk_criticality": 1
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "tinted",
+        "C4": "filled",
+        "C5": "tinted",
+        "C6": "tinted"
+      },
+      "color": {
+        "neutral": {
+          "h": 60,
+          "c": 0.015
+        },
+        "interaction": {
+          "source": "brand",
+          "h": 300,
+          "c": 0.2,
+          "l": 0.55,
+          "default_is_assumption": true
+        },
+        "brand_role": "interaction",
+        "semantic_chroma_max": 0.18,
+        "info": 250,
+        "link": {
+          "color": "interaction",
+          "underline_px": 2
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Lexend",
+          "display": "Fredoka",
+          "mono": "JetBrains Mono"
+        },
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "heading_weight": 600,
+        "label_weight": 600,
+        "line_ratio": {
+          "body": 1.53,
+          "heading": 1.2
+        },
+        "tracking_heading": "0",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 17,
+          "label": 17,
+          "code": 16,
+          "body_lg": 19,
+          "h3": 22,
+          "h2": 28,
+          "h1": 36,
+          "display": 48
+        },
+        "caption_line": 18
+      },
+      "space": {
+        "steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20,
+          24
+        ]
+      },
+      "control_height": {
+        "sm": 44,
+        "md": 52,
+        "lg": 60
+      },
+      "touch_rule": "semua tinggi visual ≥ 44",
+      "border_width": {
+        "thin": 2,
+        "thick": 3
+      },
+      "container_rule": "kartu berwarna adalah wadah utama",
+      "radius": {
+        "control": 16,
+        "container": 24,
+        "overlay": 32,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              3,
+              0,
+              0.14
+            ]
+          ],
+          "2": [
+            [
+              0,
+              8,
+              24,
+              0.14
+            ]
+          ]
+        },
+        "usage": "1 bibir kartu dan tombol; 2 overlay",
+        "light_strategy": "shadow",
+        "dark_strategy": "tonal",
+        "dark_alpha_factor": 2,
+        "keep_lip_in_dark": true,
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 150,
+        "base": 250,
+        "slow": 400,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0.34,
+            1.56,
+            0.64,
+            1
+          ],
+          "exit": [
+            0.4,
+            0,
+            1,
+            1
+          ]
+        },
+        "stagger_max": 60
+      },
+      "themes": [
+        "Light",
+        "Dark"
+      ],
+      "icons": {
+        "set": "phosphor",
+        "style": "Bold",
+        "stroke": null,
+        "sizes": [
+          20,
+          24,
+          28
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.17
+      },
+      "illustration": "maks satu ilustrasi per layar",
+      "principles": [
+        "Rayakan kemajuan, bukan kegagalan (LB-04)",
+        "Warna berenergi, bukan bising (LB-05)",
+        "Bulat dan empuk (LB-02)",
+        "Main tetapi jujur (LB-06, I6)",
+        "Terbaca dulu, lucu kemudian (LB-03)"
+      ],
+      "voice": {
+        "formal": 1,
+        "concise": 3,
+        "firm": 2,
+        "warm": 5,
+        "button": "Ambil hadiah",
+        "error": "Kodenya belum cocok. Cek lagi, ya."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "layar utama tanpa aksen warna, abu-abu datar",
+          "kind": "manual-review",
+          "question": "Apakah layar utama tampil abu-abu datar tanpa aksen?"
+        },
+        {
+          "id": "LB-02",
+          "statement": "sudut < radius-sm",
+          "kind": "token-rule",
+          "check": {
+            "token": "radius-md",
+            "op": ">=",
+            "ref": "radius-sm"
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "teks langsung di atas gradien atau ilustrasi",
+          "kind": "css-pattern",
+          "pattern": null,
+          "question": "Apakah ada teks langsung di atas gradien atau ilustrasi?",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-04",
+          "statement": "animasi perayaan untuk kelas selain C4",
+          "kind": "manual-review",
+          "question": "Apakah animasi perayaan dipakai untuk kelas selain C4?"
+        },
+        {
+          "id": "LB-05",
+          "statement": "lebih dari 3 warna aksen per layar",
+          "kind": "manual-review",
+          "question": "Apakah satu layar memakai lebih dari 3 warna aksen?"
+        },
+        {
+          "id": "LB-06",
+          "statement": "gamifikasi yang menyembunyikan informasi penting",
+          "kind": "manual-review",
+          "question": "Apakah gamifikasi menyembunyikan informasi penting?"
+        },
+        {
+          "id": "LB-07",
+          "statement": "bayangan abu-abu dengan blur > 24px",
+          "kind": "token-rule",
+          "check": {
+            "shadow_blur_max": 24
+          }
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "",
+      "material": {
+        "gradient": "decorative-only",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "state-layer",
+        "press_transform": "scale(0.97)",
+        "haptics": [
+          "selection",
+          "success",
+          "error"
+        ],
+        "sound": "brief-opt-in"
+      },
+      "layout": {
+        "content_max": "1080",
+        "content_max_px": 1080,
+        "section": 32,
+        "section_lg": 48,
+        "alignment": "center",
+        "grid": "grid kartu"
+      }
+    },
+    "immersive-glass": {
+      "character": "Berlapis dan imersif: kanvas foto atau gradien, chrome dan overlay translucent dengan blur, kedalaman lewat lapisan",
+      "fit": "media, hiburan, perjalanan, smart home, konsumen premium di perangkat modern",
+      "avoid": "perangkat low-end, outdoor, data padat",
+      "personality": {
+        "formality": 3,
+        "warmth": 3,
+        "expressiveness": 5,
+        "density": 2,
+        "risk_criticality": 2
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "quiet",
+        "C4": "tinted",
+        "C5": "tinted",
+        "C6": "quiet"
+      },
+      "color": {
+        "neutral": {
+          "h": 260,
+          "c": 0.02
+        },
+        "interaction": {
+          "source": "brand",
+          "h": 220,
+          "c": 0.14,
+          "l": 0.55,
+          "l_dark": 0.7,
+          "default_is_assumption": true
+        },
+        "brand_role": "interaction",
+        "semantic_chroma_max": 0.15,
+        "info": 250,
+        "link": {
+          "color": "interaction",
+          "underline_px": 1
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Manrope",
+          "display": null,
+          "mono": "JetBrains Mono"
+        },
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "heading_weight": 700,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.5,
+          "heading": 1.2
+        },
+        "tracking_heading": "-0.01em",
+        "case": "sentence",
+        "scale": {
+          "caption": 12,
+          "body": 16,
+          "label": 16,
+          "code": 16,
+          "body_lg": 18,
+          "h3": 20,
+          "h2": 26,
+          "h1": 34,
+          "display": 44
+        },
+        "caption_line": 16
+      },
+      "space": {
+        "steps": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          10,
+          12,
+          16,
+          20
+        ]
+      },
+      "control_height": {
+        "sm": 40,
+        "md": 48,
+        "lg": 56
+      },
+      "touch_rule": "semua tinggi visual ≥ 44",
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      },
+      "container_rule": "panel translucent di atas kanvas; maks 2 lapis translucent bertumpuk",
+      "radius": {
+        "control": 12,
+        "container": 20,
+        "overlay": 28,
+        "full": 9999
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              0,
+              4,
+              16,
+              0.12
+            ]
+          ],
+          "2": [
+            [
+              0,
+              12,
+              32,
+              0.18
+            ]
+          ],
+          "3": [
+            [
+              0,
+              24,
+              64,
+              0.24
+            ]
+          ]
+        },
+        "usage": "1 panel; 2 popover; 3 modal",
+        "light_strategy": "shadow",
+        "dark_strategy": "same",
+        "translucent_border": true,
+        "shadow_color": "neutral-12",
+        "flat": false
+      },
+      "motion": {
+        "fast": 150,
+        "base": 250,
+        "slow": 350,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0.05,
+            0.7,
+            0.1,
+            1
+          ],
+          "exit": [
+            0.3,
+            0,
+            0.8,
+            0.15
+          ]
+        },
+        "stagger_max": 40
+      },
+      "themes": [
+        "Dark",
+        "Light"
+      ],
+      "icons": {
+        "set": "lucide",
+        "style": "stroke 1.5",
+        "stroke": 1.5,
+        "sizes": [
+          16,
+          20,
+          24
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.14
+      },
+      "illustration": "foto atau gradien sebagai kanvas",
+      "principles": [
+        "Kedalaman lewat lapisan (LB-02)",
+        "Konten padat di atas kaca (LB-01, LB-03)",
+        "Kanvas boleh hidup, teks tidak (LB-01)",
+        "Selalu ada fallback padat (LB-04)",
+        "Gerak menegaskan lapisan (L8)"
+      ],
+      "voice": {
+        "formal": 3,
+        "concise": 4,
+        "firm": 3,
+        "warm": 3,
+        "button": "Putar sekarang",
+        "error": "Koneksi terputus. Kami coba lagi otomatis."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "teks langsung di atas kanvas tanpa lapisan surface",
+          "kind": "css-pattern",
+          "pattern": null,
+          "question": "Apakah ada teks langsung di atas kanvas tanpa lapisan surface?",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-02",
+          "statement": "lebih dari 2 lapis translucent bertumpuk",
+          "kind": "manual-review",
+          "question": "Apakah ada lebih dari 2 lapis translucent bertumpuk?"
+        },
+        {
+          "id": "LB-03",
+          "statement": "blur pada area konten yang dibaca",
+          "kind": "css-pattern",
+          "pattern": "backdrop-filter",
+          "applies_to": [
+            "components/**/!(AppShell|PrimaryNav|BottomNav|Modal|Sheet|Popover|Menu|Toast|ContextPanel)*.css"
+          ]
+        },
+        {
+          "id": "LB-04",
+          "statement": "translucency tanpa fallback padat",
+          "kind": "css-pattern",
+          "pattern": null,
+          "question": "Apakah setiap backdrop-filter punya fallback padat di prefers-reduced-transparency dan forced-colors?",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-05",
+          "statement": "border panel > 1px",
+          "kind": "token-rule",
+          "check": {
+            "token": "border-width-thin",
+            "op": "<=",
+            "value": 1
+          }
+        },
+        {
+          "id": "LB-06",
+          "statement": "parallax wajib atau gerak berbasis gulir tanpa opsi mati",
+          "kind": "manual-review",
+          "question": "Apakah ada parallax atau gerak berbasis gulir tanpa opsi mati?"
+        },
+        {
+          "id": "LB-07",
+          "statement": "fill solid untuk C3 dan C6",
+          "kind": "token-rule",
+          "check": {
+            "attention_not_filled": [
+              "C3",
+              "C6"
+            ]
+          }
+        }
+      ],
+      "platform": "hybrid",
+      "platform_note": "material sistem iOS dipetakan ke token material",
+      "material": {
+        "gradient": "canvas",
+        "translucency": true,
+        "texture": false,
+        "blur": [
+          8,
+          16,
+          32
+        ],
+        "surface_alpha": 0.72
+      },
+      "feedback": {
+        "strategy": "state-layer",
+        "press_transform": "none",
+        "haptics": [
+          "selection",
+          "success",
+          "error"
+        ],
+        "sound": "critical-only"
+      },
+      "layout": {
+        "content_max": "1280",
+        "content_max_px": 1280,
+        "section": 32,
+        "section_lg": 48,
+        "alignment": "center",
+        "grid": "lapisan di atas kanvas"
+      }
+    },
+    "neo-brutalist": {
+      "character": "Mentah dan jujur: border tebal, bayangan keras tanpa blur, blok warna jenuh, grotesk besar, grid terlihat",
+      "fit": "brand kreatif, startup, portofolio, komunitas kreatif",
+      "avoid": "institusi konservatif, operasi kritis, audiens yang butuh ketenangan",
+      "personality": {
+        "formality": 2,
+        "warmth": 2,
+        "expressiveness": 5,
+        "density": 3,
+        "risk_criticality": 2
+      },
+      "attention": {
+        "C1": "filled",
+        "C2": "filled",
+        "C3": "outline",
+        "C4": "outline",
+        "C5": "outline",
+        "C6": "outline"
+      },
+      "color": {
+        "neutral": {
+          "h": 0,
+          "c": 0
+        },
+        "interaction": {
+          "source": "fixed",
+          "h": 0,
+          "c": 0,
+          "l": 0.15
+        },
+        "brand_role": "block",
+        "brand_default_block": {
+          "h": 95,
+          "c": 0.19,
+          "l": 0.9
+        },
+        "semantic_chroma_max": 0.2,
+        "info": 250,
+        "link": {
+          "color": "text-primary",
+          "underline_px": 2
+        }
+      },
+      "type": {
+        "families": {
+          "ui": "Space Grotesk",
+          "display": null,
+          "mono": "Space Mono"
+        },
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "heading_weight": 700,
+        "label_weight": 500,
+        "line_ratio": {
+          "body": 1.5,
+          "heading": 1.1
+        },
+        "tracking_heading": "-0.02em",
+        "case": "sentence; kapital penuh hanya heading ≥ 32",
+        "scale": {
+          "caption": 12,
+          "body": 18,
+          "label": 18,
+          "code": 16,
+          "body_lg": 20,
+          "h3": 24,
+          "h2": 32,
+          "h1": 44,
+          "display": 64
+        },
+        "caption_line": 18
+      },
+      "space": {
+        "steps": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          8,
+          12,
+          16,
+          24
+        ]
+      },
+      "control_height": {
+        "sm": 40,
+        "md": 48,
+        "lg": 56
+      },
+      "touch_rule": "semua tinggi visual ≥ 44",
+      "border_width": {
+        "thin": 2,
+        "thick": 3
+      },
+      "container_rule": "kotak bergaris tebal dengan bayangan keras",
+      "radius": {
+        "control": 0,
+        "container": 0,
+        "overlay": 0,
+        "full": 0
+      },
+      "elevation": {
+        "levels": {
+          "1": [
+            [
+              4,
+              4,
+              0,
+              1
+            ]
+          ],
+          "2": [
+            [
+              8,
+              8,
+              0,
+              1
+            ]
+          ]
+        },
+        "usage": "1 kontrol dan wadah; 2 overlay",
+        "light_strategy": "shadow",
+        "dark_strategy": "same",
+        "shadow_color": "text-primary",
+        "flat": false
+      },
+      "motion": {
+        "fast": 60,
+        "base": 100,
+        "slow": 150,
+        "easing": {
+          "standard": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "enter": [
+            0.2,
+            0,
+            0,
+            1
+          ],
+          "exit": [
+            0.2,
+            0,
+            0,
+            1
+          ]
+        },
+        "stagger_max": 0
+      },
+      "themes": [
+        "Light",
+        "Dark",
+        "High-contrast"
+      ],
+      "icons": {
+        "set": "tabler",
+        "style": "stroke 2",
+        "stroke": 2,
+        "sizes": [
+          20,
+          24,
+          28
+        ]
+      },
+      "dataviz": {
+        "chroma": 0.18
+      },
+      "illustration": "blok warna dan tipografi; foto boleh dengan bingkai border tebal",
+      "principles": [
+        "Struktur terlihat (LB-04)",
+        "Keras, bukan kasar (STD-3)",
+        "Tanpa ilusi kedalaman lembut (LB-02, LB-03, LB-05)",
+        "Blok warna, bukan nuansa (LB-06)",
+        "Tipe besar, keputusan cepat (L4)"
+      ],
+      "voice": {
+        "formal": 2,
+        "concise": 5,
+        "firm": 5,
+        "warm": 2,
+        "button": "Kirim karya",
+        "error": "Gagal unggah. Ukuran file maks 10 MB."
+      },
+      "bans": [
+        {
+          "id": "LB-01",
+          "statement": "radius > 0",
+          "kind": "token-rule",
+          "check": {
+            "tokens": "radius-.*",
+            "op": "<=",
+            "value": 0
+          }
+        },
+        {
+          "id": "LB-02",
+          "statement": "bayangan dengan blur > 0",
+          "kind": "token-rule",
+          "check": {
+            "shadow_blur_max": 0
+          }
+        },
+        {
+          "id": "LB-03",
+          "statement": "gradien",
+          "kind": "css-pattern",
+          "pattern": "(linear|radial|conic)-gradient\\(",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-04",
+          "statement": "border < 2px pada kontrol dan wadah",
+          "kind": "token-rule",
+          "check": {
+            "token": "border-width-thin",
+            "op": ">=",
+            "value": 2
+          }
+        },
+        {
+          "id": "LB-05",
+          "statement": "translucency atau blur",
+          "kind": "css-pattern",
+          "pattern": "backdrop-filter|filter\\s*:\\s*blur",
+          "applies_to": [
+            "**/*.css"
+          ]
+        },
+        {
+          "id": "LB-06",
+          "statement": "fill aksen pastel, chroma < 0.08",
+          "kind": "token-rule",
+          "check": {
+            "brand_chroma_min": 0.08
+          }
+        },
+        {
+          "id": "LB-07",
+          "statement": "lebih dari 2 keluarga font",
+          "kind": "token-rule",
+          "check": {
+            "font_families_max": 2
+          }
+        }
+      ],
+      "platform": "uniform",
+      "platform_note": "",
+      "material": {
+        "gradient": "none",
+        "translucency": false,
+        "texture": false,
+        "blur": [
+          0,
+          0,
+          0
+        ],
+        "surface_alpha": 1
+      },
+      "feedback": {
+        "strategy": "token-swap",
+        "press_transform": "translate(4px,4px)",
+        "press_shadow_to_zero": true,
+        "haptics": [
+          "selection",
+          "error"
+        ],
+        "sound": "none"
+      },
+      "layout": {
+        "content_max": "1280",
+        "content_max_px": 1280,
+        "section": 24,
+        "section_lg": 48,
+        "alignment": "start",
+        "grid": "grid terlihat (garis 2px)"
+      }
+    }
+  }
+}

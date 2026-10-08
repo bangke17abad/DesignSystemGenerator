@@ -1,0 +1,111 @@
+{
+  "name": "BulkActions",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila brief memerlukan seleksi banyak item (ada aksi yang diterapkan ke banyak item sekaligus).",
+  "problem": {
+    "problem": "Pengguna menerapkan satu aksi ke banyak item sekaligus dengan tahu persis item mana yang terpilih (termasuk yang tidak terlihat), item mana yang tidak memenuhi syarat sebelum aksi dijalankan, dan hasil per item setelahnya: berhasil, gagal, atau dilewati.",
+    "when": [
+      "Daftar tempat aksi yang sama sering dilakukan ke banyak item (arsipkan, tetapkan ke, ubah status, ekspor, hapus).",
+      "Pemrosesan yang di satu-per-satu akan memakan waktu signifikan."
+    ],
+    "when_not": [
+      "Aksi yang hampir selalu ke satu item: aksi baris atau DetailView.",
+      "Memasukkan atau mengeluarkan berkas data: pakai ImportExport.",
+      "Pengeditan nilai berbeda per item: pakai Table interactive-grid dengan inline editor."
+    ]
+  },
+  "composition": [
+    { "component": "Table", "parts": ["Table.Toolbar", "Table.BulkBar", "Table.Header", "Table.Row", "Table.Footer"], "role_in_pattern": "master untuk data kompleks; kolom seleksi dengan pilih-semua; Table.BulkBar menggantikan toolbar dengan tinggi sama saat ada seleksi" },
+    { "component": "List", "parts": ["List.Item", "List.LoadMore"], "role_in_pattern": "master untuk item sederhana; variant selectable dengan selectionMode multiple, masuk mode seleksi lewat tombol \"Pilih\" yang terlihat" },
+    { "component": "Checkbox", "parts": ["Checkbox.SelectAll"], "role_in_pattern": "seleksi per item dan pilih-semua dengan state mixed; penanda centang, bukan warna" },
+    { "component": "Button", "role_in_pattern": "1-3 aksi massal paling sering di bulk bar, label menyertakan jumlah bila ruang ada (\"Arsipkan 12\")" },
+    { "component": "Menu", "parts": ["Menu.Trigger", "Menu.Item", "Menu.Separator"], "role_in_pattern": "aksi massal lain; aksi destructive terakhir; aksi yang tidak berlaku untuk seleksi disabled + reason" },
+    { "component": "InlineAlert", "role_in_pattern": "pra-cek C2 (\"3 dari 12 item tidak bisa diarsipkan dan akan dilewati\") dan ringkasan hasil sebagian di atas daftar" },
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Description", "Modal.Body", "Modal.Cancel", "Modal.Action"], "role_in_pattern": "konfirmasi aksi tidak bisa dibalik: menyebut jumlah, contoh nama item, dan akibatnya; tombol memakai kata kerja + jumlah" },
+    { "component": "StepUpDialog", "role_in_pattern": "otorisasi tambahan untuk aksi massal finansial, hukum, atau di atas ambang jumlah dari brief" },
+    { "component": "ProgressBar", "parts": ["ProgressBar.Actions"], "role_in_pattern": "progress determinate \"{n} dari {total}\" untuk pekerjaan > 2 detik, dengan Batal yang menghentikan item yang belum diproses" },
+    { "component": "Accordion", "parts": ["Accordion.Item", "Accordion.Trigger", "Accordion.Panel"], "role_in_pattern": "laporan hasil per item dikelompokkan: Gagal (terbuka), Dilewati, Berhasil; tiap item menyebut alasan" },
+    { "component": "Toast", "role_in_pattern": "semua berhasil: konfirmasi dengan Undo ≥ 10 detik bila aksi bisa dibalik" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "jumlah terpilih, progres pada tonggak, dan ringkasan hasil" }
+  ],
+  "flow": [
+    { "step": "Pilih item", "state_class": "C6", "transition": "centang baris; bulk bar menggantikan toolbar tanpa menggeser baris; jumlah terpilih tampil di bar" },
+    { "step": "Pilih semua lintas halaman", "state_class": "C6", "transition": "pilih-semua memilih halaman saat ini; bar menawarkan \"Pilih semua {total}\" yang memilih berdasarkan kueri/filter, bukan daftar ID di klien; bisa dibatalkan" },
+    { "step": "Pilih aksi dan pra-cek", "state_class": "C2", "transition": "sebelum dijalankan, item yang tidak memenuhi syarat (status, izin, terkunci) dihitung dan disebut dengan alasan; pengguna lanjut dengan sisanya atau membatalkan" },
+    { "step": "Konfirmasi", "state_class": "C2", "transition": "aksi tidak bisa dibalik → Modal yang menamai jumlah dan akibat (DestructiveAction); aksi yang bisa dibalik langsung jalan dengan Undo" },
+    { "step": "Proses", "state_class": "C5", "transition": "≤ 2 detik: Button loading; lebih lama: ProgressBar determinate; pekerjaan besar berjalan di server dan pengguna boleh meninggalkan halaman, hasil dikirim lewat notifikasi" },
+    { "step": "Semua berhasil", "state_class": "C4", "transition": "Toast \"{n} item diarsipkan\" + Undo bila bisa dibalik; item berhasil dibatalkan seleksinya; baris diperbarui setelah konfirmasi server (I6)" },
+    { "step": "Sebagian gagal", "state_class": "C1", "transition": "InlineAlert persisten \"{a} berhasil, {b} gagal, {c} dilewati\" + laporan per item; item gagal tetap terpilih dengan aksi \"Coba lagi yang gagal\"" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "masuk mode seleksi lewat tombol \"Pilih\" (tekan lama hanya pintasan); checkbox ≥ target-min-touch di kartu; bulk bar di bawah dalam zona jempol dengan 1-2 aksi + Menu sebagai Sheet; laporan hasil di halaman/Sheet sendiri" },
+    { "device_class": "tablet", "behaviour": "kolom seleksi tetap terlihat; bulk bar di slot toolbar atas atau di bawah bila daftar panjang dan toolbar tergulir keluar; Modal center" },
+    { "device_class": "desktop", "behaviour": "Table dengan kolom seleksi, Shift+klik untuk rentang (dengan alternatif keyboard); bulk bar di slot toolbar, sticky saat menggulir; laporan hasil di InlineAlert yang dapat dibuka menjadi daftar per item" }
+  ],
+  "states": {
+    "empty": "Tanpa seleksi: bulk bar tidak tampil, toolbar normal. Daftar kosong: pilih-semua tidak dirender dan tombol \"Pilih\" disembunyikan.",
+    "loading": "Aksi berjalan: aksi bulk bar loading dan seleksi dikunci (checkbox aria-disabled + reason \"Sedang memproses\"); ProgressBar determinate untuk pekerjaan panjang; baris yang sedang diproses bertanda \"Memproses\".",
+    "error": "Semua gagal (mis. server tidak merespons): InlineAlert C1 di atas daftar menyebut aksi belum diterapkan + Retry; seleksi dipertahankan utuh.",
+    "partial": "InlineAlert C1/C2 persisten dengan hitungan berhasil (C4), gagal (C1), dan dilewati (C3); laporan per item menyebut nama dan alasan; item gagal tetap terpilih untuk Retry; item berhasil tidak diproses ulang.",
+    "success": "Toast C4 dengan jumlah dan kata kerja yang sama dengan tombol, Undo ≥ 10 detik bila bisa dibalik; seleksi dikosongkan; fokus ke baris pertama yang tersisa atau ke caption tabel."
+  },
+  "accessibility": [
+    { "step": "Pilih item", "focus": "fokus tetap di checkbox; bulk bar muncul tanpa mencuri fokus dan berada sebelum header tabel dalam urutan DOM", "announcement": "\"{n} dipilih\" diumumkan polite, di-debounce saat memilih cepat" },
+    { "step": "Pilih semua lintas halaman", "focus": "fokus tetap di tombol \"Pilih semua {total}\" atau berpindah ke penggantinya \"Batalkan pilihan\" di posisi yang sama", "announcement": "\"Semua {total} item dipilih\" polite" },
+    { "step": "Konfirmasi", "focus": "Modal mengunci fokus pada Batal untuk aksi destruktif; ditutup → fokus kembali ke tombol aksi di bulk bar", "announcement": "judul dan deskripsi Modal dibaca" },
+    { "step": "Proses", "focus": "fokus tetap; ProgressBar berlabel nama aksi", "announcement": "progres diumumkan polite pada tonggak (25/50/75%), bukan setiap item" },
+    { "step": "Sebagian gagal", "focus": "fokus ke judul InlineAlert hasil (tabindex −1) karena tindakan diperlukan", "announcement": "ringkasan hitungan diumumkan assertive sekali" },
+    { "step": "Semua berhasil", "focus": "item yang diproses hilang dari daftar → fokus ke baris berikutnya atau caption (§9.5)", "announcement": "hasil polite lewat Toast/LiveAnnouncer" }
+  ],
+  "content": {
+    "rules": [
+      "Tombol aksi massal memakai kata kerja + jumlah bila muat (\"Arsipkan 12\"); toast dan laporan memakai kata kerja yang sama.",
+      "Hitungan memakai ICU plural, tidak pernah \"item(s)\".",
+      "Pra-cek menyebut berapa yang dilewati dan mengapa sebelum pengguna menekan konfirmasi.",
+      "Laporan per item menyebut nama item dan alasan, bukan kode error.",
+      "Konfirmasi destruktif menyebut jumlah, contoh 2-3 nama item, dan akibatnya."
+    ],
+    "examples": {
+      "en-US": ["12 selected", "Select all 248", "Archive 12", "3 of 12 items can't be archived and will be skipped", "9 archived, 2 failed, 1 skipped", "Retry failed items"],
+      "id-ID": ["12 dipilih", "Pilih semua 248", "Arsipkan 12", "3 dari 12 item tidak bisa diarsipkan dan akan dilewati", "9 diarsipkan, 2 gagal, 1 dilewati", "Coba lagi yang gagal"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role yang berhak atas semua item terpilih: semua aksi massal tersedia" },
+    { "pattern": "disabled-with-reason", "when": "aksi yang hanya berlaku untuk sebagian item: tetap tersedia dengan pra-cek; tidak berlaku untuk satu pun: Menu.Item disabled + reason" },
+    { "pattern": "hidden", "when": "role hanya membaca: tanpa kolom seleksi dan tanpa bulk bar; aksi non-mutasi (ekspor) tetap lewat toolbar" },
+    { "pattern": "step-up", "when": "aksi massal finansial, hukum, atau di atas ambang jumlah brief: StepUpDialog setelah konfirmasi" }
+  ],
+  "do": [
+    "Tunjukkan bulk bar di slot toolbar dengan tinggi sama agar baris tidak bergeser.",
+    "Pertahankan seleksi lintas halaman dan lintas perubahan urut; tunjukkan jumlah terpilih yang tidak terlihat oleh filter saat ini.",
+    "Laporkan hasil per item dan biarkan pengguna mengulang hanya yang gagal.",
+    "Jalankan pekerjaan besar di server dengan progress dan notifikasi saat selesai."
+  ],
+  "dont": [
+    { "text": "Menyatakan \"Selesai\" sebelum server mengonfirmasi setiap item, atau menyembunyikan item yang gagal di balik toast sukses.", "ref": "I6" },
+    { "text": "Konfirmasi destruktif massal yang tidak menyebut jumlah dan akibat.", "ref": "SC 3.3.4" },
+    { "text": "Seleksi yang hanya terlihat lewat warna baris.", "ref": "UB2" },
+    { "text": "Seleksi rentang yang hanya bisa lewat drag atau Shift+klik.", "ref": "UB7" },
+    { "text": "Menampilkan hasil sebagian sebagai toast yang hilang sendiri.", "ref": "§12.2" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "aksi massal aria-disabled + reason \"Butuh koneksi\", atau diantrekan bertanda \"Menunggu\" per item bila OfflineSync dipilih; tidak ada item tampil terproses sebelum konfirmasi (I6)" },
+    { "case": "timeout saat proses", "behaviour": "klien berhenti menunggu tetapi tidak menganggap gagal: status pekerjaan dicek ulang dari server; item yang belum pasti ditandai \"Belum diketahui\" + Muat ulang, bukan diulang otomatis" },
+    { "case": "pilih semua 10.000+ item", "behaviour": "seleksi berbasis kueri; pekerjaan di server dengan ProgressBar dan Batal; pengguna boleh pergi, hasil lewat NotificationCenter dengan tautan ke laporan" },
+    { "case": "daftar kosong atau seleksi menjadi kosong setelah filter", "behaviour": "bulk bar hilang; bila seleksi tersembunyi oleh filter, bar menyebut \"5 dipilih tidak terlihat\" + Tampilkan/Batalkan pilihan" },
+    { "case": "aksi ditekan ganda", "behaviour": "kiriman kedua diabaikan selama loading; pekerjaan memakai idempotency key; item tidak diproses dua kali" },
+    { "case": "label aksi dan hitungan +40% (locale terpanjang)", "behaviour": "jumlah pindah ke label bar (\"12 dipilih\") dan tombol memakai kata kerja saja; aksi yang tidak muat masuk Menu; tidak ada label terpotong" },
+    { "case": "item berubah atau dihapus pihak lain antara seleksi dan proses", "behaviour": "item itu dilewati (C3) dengan alasan \"Berubah sejak dipilih\"; tidak menimpa perubahan orang lain" },
+    { "case": "Undo setelah sebagian gagal", "behaviour": "Undo hanya membalik item yang berhasil; laporan menyebut jumlah yang dibalik" }
+  ],
+  "wcag": ["1.3.1", "1.4.1", "2.1.1", "2.4.3", "2.4.11", "2.5.7", "3.3.1", "3.3.4", "4.1.2", "4.1.3"],
+  "related_patterns": ["MasterDetail", "DestructiveAction", "AsyncFeedback", "SearchAndFilter", "NotificationCenter", "ImportExport", "OfflineSync"],
+  "lint": [
+    "Table.BulkBar hanya dirender di slot toolbar Table, dengan tinggi sama",
+    "Setiap aksi massal destructive melewati Modal variant=destructive dengan jumlah di judul",
+    "Hasil aksi massal dengan kegagalan dilaporkan di InlineAlert persisten, bukan Toast",
+    "Checkbox.SelectAll mendukung state mixed"
+  ]
+}

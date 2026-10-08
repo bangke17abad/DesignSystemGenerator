@@ -1,0 +1,89 @@
+{
+  "name": "FileUpload",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila FileDropzone dipilih (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna melampirkan satu atau beberapa berkas ke sebuah objek atau form dengan tahu sebelumnya apa yang diterima, melihat kemajuan dan hasil per berkas, dan bisa membatalkan, mengulang, atau menghapus satu berkas tanpa memengaruhi yang lain.",
+    "when": ["Lampiran dokumen atau gambar pada entitas (bukti, kontrak, foto kondisi).", "Berkas sebagai bagian dari form (FormFlow) yang dikirim bersama field lain.", "Unggah media ke galeri atau pustaka berkas."],
+    "when_not": ["Berkas yang isinya diparse menjadi baris data: pakai ImportExport.", "Satu foto profil dengan pratinjau dan crop: Image/Avatar + Button \"Ganti foto\".", "Pemindaian dokumen atau kode lewat kamera saja: alur kamera dengan alternatif input manual (§9.1 Pemindai) dan PermissionRequest.", "Memindah item di dalam aplikasi (urutkan, pindah folder): pola drag dengan alternatif Menu."]
+  },
+  "composition": [
+    { "component": "FileDropzone", "parts": ["FileDropzone.Zone", "FileDropzone.Trigger", "FileDropzone.Constraints", "FileDropzone.List", "FileDropzone.Item", "FileDropzone.ItemProgress", "FileDropzone.ItemAction"], "role_in_pattern": "zona drop + tombol pilih wajib + batasan terlihat + daftar per berkas dengan aksi Cancel / Retry / Remove" },
+    { "component": "ProgressBar", "role_in_pattern": "variant determinate size sm per berkas; satu bar agregat \"Mengunggah 3 dari 5 berkas\" bila lebih dari 3 berkas berjalan" },
+    { "component": "StatusLabel", "role_in_pattern": "status berkas setelah unggah: Menunggu koneksi / Memproses (C5, unconfirmed), Ditolak (C2), Gagal (C1); terkonfirmasi tanpa penanda tambahan selain \"Diunggah\"" },
+    { "component": "Image", "role_in_pattern": "variant thumbnail untuk berkas gambar; decorative karena nama berkas sudah menjadi teks item" },
+    { "component": "Sheet", "role_in_pattern": "phone: pilihan sumber (Ambil foto / Pilih dari galeri / Pilih berkas) hanya bila produk menawarkan lebih dari satu; pemilih berkas sendiri tetap native" },
+    { "component": "InlineAlert", "role_in_pattern": "C2 ringkasan bila beberapa berkas gagal (\"2 dari 5 berkas tidak dapat diunggah\") dengan \"Ulangi yang gagal\"; C2 offline" },
+    { "component": "ErrorSummary", "role_in_pattern": "di dalam form: berkas wajib belum ada atau masih ada berkas gagal saat submit" },
+    { "component": "Button", "role_in_pattern": "submit form induk; aria-disabled dengan alasan \"Tunggu 2 unggahan selesai\" selama unggahan berjalan" },
+    { "component": "Link", "role_in_pattern": "nama berkas yang sudah terunggah sebagai tautan lihat/unduh" },
+    { "component": "Modal", "role_in_pattern": "variant destructive saat menghapus berkas yang sudah tersimpan di objek dan tidak bisa dipulihkan" },
+    { "component": "Toast", "role_in_pattern": "Undo (≥ 10 detik) saat menghapus berkas yang masih bisa dipulihkan" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "jumlah berkas ditambahkan/ditolak, awal dan akhir unggah per berkas" }
+  ],
+  "flow": [
+    { "step": "Lihat batasan", "state_class": "C6", "transition": "tipe, ukuran per berkas, dan jumlah maksimum terlihat sebagai teks sebelum memilih; di sentuh tidak ada instruksi drag" },
+    { "step": "Pilih atau seret berkas", "state_class": "C6", "transition": "validasi klien per berkas; berkas lolos masuk daftar, berkas ditolak tampil dengan nama + alasan + aksi Hapus; berkas lain tidak terpengaruh" },
+    { "step": "Mengunggah", "state_class": "C5", "transition": "ProgressBar determinate per berkas dengan Cancel; konkurensi terbatas (dari brief, selain itu A-nn) dan sisanya \"Dalam antrean\"; berkas besar dikirim chunked dan dapat dilanjutkan bila protokol mendukung" },
+    { "step": "Diproses server", "state_class": "C5", "transition": "setelah byte terkirim, berkas berstatus \"Memproses\" (pemindaian, konversi) dan belum ditampilkan sebagai berhasil sampai server mengonfirmasi (I6)" },
+    { "step": "Gagal per berkas", "state_class": "C1", "transition": "item error dengan alasan spesifik + Retry (bila bisa diulang) + Remove; berkas yang sudah berhasil tetap" },
+    { "step": "Ditolak setelah diperiksa", "state_class": "C2", "transition": "server menolak isi (tipe tidak cocok dengan isi, terdeteksi berbahaya, melanggar kebijakan): alasan dari server, tanpa Retry, aksi \"Pilih berkas lain\" + Remove" },
+    { "step": "Berhasil", "state_class": "C4", "transition": "ikon centang + \"Diunggah\"; nama berkas menjadi tautan; submit form induk tidak lagi diblokir" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "FileDropzone variant compact: tombol \"Pilih berkas\" lebar penuh size lg, opsi \"Ambil foto\" bila accept gambar dan brief meminta capture; tanpa teks drag; daftar bertumpuk dengan aksi item ≥ target-min-touch; unggahan berlanjut saat layar dikunci sejauh OS mengizinkan, selain itu dilanjutkan saat aplikasi kembali" },
+    { "device_class": "tablet", "behaviour": "variant area bila ada ruang; teks drag hanya bila (pointer: fine) atau drag multitasking antar aplikasi tersedia; aksi item di inline-end" },
+    { "device_class": "desktop", "behaviour": "variant area dengan teks drag; seluruh zona menerima drop, drop di luar zona tidak membuka berkas di tab browser; daftar di bawah zona dengan nama, ukuran, progres, dan aksi di inline-end" }
+  ],
+  "states": {
+    "empty": "Zona dengan instruksi, tombol pilih, dan batasan; daftar tidak dirender; berkas wajib tidak ditandai error sebelum submit.",
+    "loading": "Per berkas: ProgressBar determinate + persentase + Cancel, aria-busy pada item; agregat untuk banyak berkas; status \"Memproses\" setelah byte terkirim.",
+    "error": "Per berkas: ikon + alasan spesifik (\"Lebih dari 10 MB\", \"Unggahan terputus, periksa koneksi\") + Retry/Remove. Tingkat field: errorText FileDropzone untuk wajib atau jumlah maksimum, dirujuk ErrorSummary saat submit.",
+    "partial": "Sebagian berhasil, sebagian gagal: yang berhasil tetap; InlineAlert C2 di atas daftar menyebut jumlah gagal dan aksi \"Ulangi yang gagal\"; submit diblokir dengan alasan hanya bila berkas wajib yang gagal.",
+    "success": "Semua berkas \"Diunggah\" dan terkonfirmasi server; diumumkan polite \"{n} berkas diunggah\"; aksi Remove tersedia; submit form induk aktif."
+  },
+  "accessibility": [
+    { "step": "Pilih berkas", "focus": "Enter/Space pada tombol pilih membuka pemilih sistem; setelah memilih fokus kembali ke tombol pilih", "announcement": "polite \"{n} berkas ditambahkan, {m} ditolak\"; alasan penolakan terbaca di item" },
+    { "step": "Mengunggah", "focus": "bar tidak fokusabel; Tab berpindah ke Cancel per item", "announcement": "polite saat mulai dan selesai per berkas, bukan setiap persen" },
+    { "step": "Gagal atau ditolak", "focus": "fokus tidak dipindah otomatis; Retry dan Remove item dapat dijangkau berurutan", "announcement": "polite \"{nama} gagal diunggah: {alasan}\"; ringkasan InlineAlert C2 polite bila beberapa gagal" },
+    { "step": "Hapus berkas", "focus": "fokus ke aksi item berikutnya, atau sebelumnya, atau tombol pilih bila daftar kosong (§9.5)", "announcement": "polite \"{nama} dihapus\" + aksi Undo pada Toast bila bisa dipulihkan" },
+    { "step": "Submit form induk", "focus": "aturan FormFlow: ErrorSummary bertaut ke tombol pilih FileDropzone", "announcement": "jumlah masalah assertive" }
+  ],
+  "content": {
+    "rules": ["Batasan ditulis konkret dengan unit dan formatter locale: tipe, ukuran per berkas, jumlah maksimum.", "Error menyebut nama berkas + alasan + cara memperbaiki; tidak memakai \"Berkas tidak valid\".", "Instruksi drag tidak muncul di perangkat sentuh tanpa drag multitasking.", "Kata kerja konsisten dengan glosarium (\"Unggah\" atau \"Lampirkan\", tidak bergantian)."],
+    "examples": {
+      "en-US": ["Choose files", "PDF, JPG or PNG · up to 10 MB each · max 5 files", "report-final.pdf is larger than 10 MB. Compress it or choose a smaller file.", "Waiting for connection", "2 of 5 files couldn't be uploaded"],
+      "id-ID": ["Pilih berkas", "PDF, JPG, atau PNG · maks 10 MB per berkas · maks 5 berkas", "laporan-final.pdf lebih besar dari 10 MB. Kompres atau pilih berkas yang lebih kecil.", "Menunggu koneksi", "2 dari 5 berkas tidak dapat diunggah"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role yang boleh mengubah objek: tambah, ganti, dan hapus lampiran" },
+    { "pattern": "read-only", "when": "role hanya lihat: zona tidak dirender; daftar berkas berupa tautan lihat/unduh tanpa Remove" },
+    { "pattern": "disabled-with-reason", "when": "objek terkunci oleh state (mis. sudah disetujui): tombol pilih aria-disabled dengan alasan di constraints; berkas yang ada tetap bisa dibuka" },
+    { "pattern": "hidden", "when": "aksi Remove pada berkas milik pengguna lain disembunyikan bagi role yang hanya boleh menghapus unggahannya sendiri" }
+  ],
+  "do": ["Tampilkan batasan sebelum pengguna memilih, bukan setelah penolakan.", "Perlakukan setiap berkas mandiri: progres, batal, ulang, dan hapus per berkas.", "Pertahankan berkas yang sudah berhasil saat ada berkas lain gagal.", "Sebut \"Memproses\" sampai server mengonfirmasi, lalu baru \"Diunggah\"."],
+  "dont": [
+    { "text": "Dropzone tanpa tombol pilih sehingga hanya drag yang bisa dipakai.", "ref": "UB7" },
+    { "text": "Status berhasil atau gagal yang hanya dibedakan warna border atau baris.", "ref": "UB2" },
+    { "text": "Menandai berkas \"Diunggah\" sebelum server mengonfirmasi penyimpanan.", "ref": "I6" },
+    { "text": "Mengosongkan seluruh daftar saat satu berkas gagal.", "ref": "§11.2" },
+    { "text": "Aksi item berupa ikon kecil tanpa label di bawah 44×44 di sentuh.", "ref": "UB5" }
+  ],
+  "edge_cases": [
+    { "case": "offline atau unggahan terputus", "behaviour": "bila OfflineSync dipilih: berkas diantrekan dengan StatusLabel C5 \"Menunggu koneksi\" dan tidak ditampilkan berhasil (I6); selain itu item error dengan Retry; berkas yang sudah selesai tetap" },
+    { "case": "timeout (unggahan macet tanpa kemajuan)", "behaviour": "setelah batas tanpa kemajuan (dari brief, selain itu A-nn) item menjadi C1 \"Unggahan terhenti\" dengan Retry yang melanjutkan dari chunk terakhir bila didukung" },
+    { "case": "berkas sangat besar atau sangat banyak", "behaviour": "ukuran di atas batas ditolak sebelum dikirim; jumlah melebihi maksimum ditolak per berkas dengan alasan; daftar > 10 item menampilkan ringkasan \"{n} berkas, {ukuran} total\" + agregat progres" },
+    { "case": "berkas 0 byte atau 0 berkas pada field wajib", "behaviour": "berkas kosong ditolak \"Berkas ini kosong\"; submit tanpa berkas = error field \"Tambahkan minimal satu dokumen\" dan fokus ke tombol pilih" },
+    { "case": "aksi ganda (berkas yang sama ditambahkan dua kali, klik ganda Pilih)", "behaviour": "duplikat dikenali dari nama + ukuran + waktu ubah dan tidak diunggah ulang (\"Sudah ditambahkan\"); tombol pilih mengabaikan klik saat pemilih sistem terbuka" },
+    { "case": "batasan dan nama berkas +40% (locale terpanjang)", "behaviour": "instruksi dan batasan membungkus; nama berkas dipotong di tengah dengan ekstensi tetap terlihat; nama lengkap di nama aksesibel" },
+    { "case": "teks 200%", "behaviour": "item dua baris (nama; ukuran + status); zona tumbuh tinggi; aksi tetap ≥ target minimum" },
+    { "case": "meninggalkan halaman saat unggahan berjalan", "behaviour": "konfirmasi keluar (beforeunload di web, dialog di native) yang menyebut jumlah unggahan yang akan dibatalkan" },
+    { "case": "ekstensi tidak cocok dengan isi", "behaviour": "validasi klien hanya kenyamanan; penolakan server tampil sebagai C2 \"Ditolak\" dengan alasan dari server" },
+    { "case": "RTL dengan ukuran, persen, dan nama berkas", "behaviour": "aksi di inline-end; ProgressBar terisi dari inline-start; angka dan nama berkas diisolasi bdi" }
+  ],
+  "wcag": ["1.1.1", "1.3.1", "1.4.1", "2.1.1", "2.4.3", "2.5.7", "3.3.1", "3.3.2", "3.3.3", "4.1.2", "4.1.3"],
+  "related_patterns": ["FormFlow", "ImportExport", "OfflineSync", "AsyncFeedback", "DestructiveAction", "PermissionRequest"],
+  "lint": ["Setiap FileDropzone punya FileDropzone.Trigger", "FileDropzone.Constraints dirender sebelum daftar dan tidak kosong", "Item berkas tidak berstatus \"Uploaded\" sebelum respons server", "Teks drag tidak dirender pada (pointer: coarse) tanpa dukungan drag multitasking"]
+}

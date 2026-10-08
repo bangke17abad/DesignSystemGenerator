@@ -1,0 +1,164 @@
+/* Timeline · engine 1.8.0 reference (catalog/components/Timeline.json). Tokens only (I3); logical properties only (§12.4).
+   section.ds-timeline > h3 day header + ol.ds-timeline__list > li.entry (marker + sentence + optional reason / status change +
+   time[datetime]). Relative time is the visible text; the exact time (date, clock, zone) is in a VisuallyHidden span and in a
+   Tooltip on hover/focus (Tooltip.js). audit shows the exact time visibly. Status changes = locked icon + StatusLabel text. */
+.ds-timeline {
+  --_marker: var(--avatar-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-structure-text-primary);
+}
+.ds-timeline__day {
+  margin: 0;
+  padding-block: var(--space-2);
+  background: var(--color-structure-surface-base);
+  color: var(--color-structure-text-secondary);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-timeline[data-sticky-days] .ds-timeline__day { position: sticky; inset-block-start: 0; z-index: var(--z-sticky); }
+.ds-timeline__list { margin: 0; padding: 0; list-style: none; }
+.ds-timeline__entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--_marker) minmax(0, 1fr);
+  column-gap: var(--space-3);
+  padding-block-end: var(--space-4);
+  border-radius: var(--radius-sm);
+}
+/* rail: decorative line joining the markers, at the marker centre (inline-start in either direction) */
+.ds-timeline__entry::before {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--_marker) + var(--space-1)) 0;
+  inset-inline-start: calc(var(--_marker) / 2 - var(--border-width-thin) / 2);
+  inline-size: var(--border-width-thin);
+  background: var(--color-structure-border);
+  pointer-events: none;
+}
+.ds-timeline__list > .ds-timeline__entry:last-child::before { display: none; }
+
+/* marker: Avatar (actor), event icon, or locked status icon — shape + icon, never colour alone. The status glyph sits on the
+   raised surface (not inside an attention container), so it reads the -strong semantic colour like other bare status icons. */
+.ds-timeline__marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--_marker);
+  block-size: var(--_marker);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--shape-circle);
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: 1;
+  font-weight: var(--type-label-weight);
+}
+.ds-timeline__marker[data-kind="avatar"] { background: var(--color-structure-surface-sunken); color: var(--color-structure-text-primary); }
+.ds-timeline__marker .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-timeline__marker[data-status="critical"] { color: var(--color-semantic-critical-strong); border-color: currentColor; }
+.ds-timeline__marker[data-status="warning"] { color: var(--color-semantic-warning-strong); border-color: currentColor; }
+.ds-timeline__marker[data-status="neutral-negative"] { color: var(--color-semantic-neutral-negative-strong); border-color: currentColor; }
+.ds-timeline__marker[data-status="positive"] { color: var(--color-semantic-positive-strong); border-color: currentColor; }
+.ds-timeline__marker[data-status="info"] { color: var(--color-semantic-info-strong); border-color: currentColor; }
+
+.ds-timeline__content { display: flex; flex-direction: column; gap: var(--space-2); min-inline-size: 0; padding-block-start: calc((var(--_marker) - var(--type-body-line)) / 2); }
+.ds-timeline__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-3); }
+.ds-timeline__sentence {
+  margin: 0;
+  flex: 1 1 18em;
+  min-inline-size: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  overflow-wrap: anywhere;
+}
+.ds-timeline__actor { font-weight: var(--type-label-weight); }
+.ds-timeline__sentence a { color: var(--color-interaction-default); text-decoration: underline; text-underline-offset: 0.2em; }
+.ds-timeline__sentence bdi { unicode-bidi: isolate; }
+.ds-timeline__deleted { color: var(--color-structure-text-secondary); }
+
+/* reason: quoted comment */
+.ds-timeline__reason {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  overflow-wrap: anywhere;
+}
+/* status change: StatusLabel before → after (arrow mirrored in RTL) */
+.ds-timeline__change { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; }
+.ds-timeline__change > .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--color-structure-text-secondary); }
+[dir="rtl"] .ds-timeline .ds-icon[data-mirror] { transform: scaleX(-1); }
+
+/* time: relative text, exact time in the accessible text + Tooltip; focusable only when the exact time is not visible */
+.ds-timeline__time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  margin-block: calc((var(--type-caption-line) - var(--target-current)) / 2);
+  border-radius: var(--radius-xs);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+.ds-timeline__time[tabindex] { cursor: default; text-decoration: underline dotted; text-underline-offset: 0.25em; }
+@media (hover: hover) { .ds-timeline__time[tabindex]:hover { color: var(--color-structure-text-primary); } }
+.ds-timeline__time[data-force~="hover"] { color: var(--color-structure-text-primary); }
+
+/* audit: exact time with zone visible, read-only (no entry actions) */
+.ds-timeline[data-variant="audit"] .ds-timeline__time { white-space: normal; }
+.ds-timeline__values { margin: 0; color: var(--color-structure-text-secondary); font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-timeline__values bdi { color: var(--color-structure-text-primary); }
+
+/* compact: small icon marker, no rail, one line per event */
+.ds-timeline[data-variant="compact"] { --_marker: var(--icon-md); }
+.ds-timeline[data-variant="compact"] .ds-timeline__entry { padding-block-end: var(--space-2); }
+.ds-timeline[data-variant="compact"] .ds-timeline__entry::before { display: none; }
+.ds-timeline[data-variant="compact"] .ds-timeline__marker { border: 0; background: transparent; margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2); }
+.ds-timeline[data-variant="compact"] .ds-timeline__content { padding-block-start: 0; }
+
+/* highlighted (deep link): highlight background + focus ring when opened */
+.ds-timeline__entry[data-highlighted] { background: var(--color-structure-highlight); box-shadow: 0 0 0 var(--space-2) var(--color-structure-highlight); }
+.ds-timeline__entry:focus-visible, .ds-timeline__entry[data-force~="focus"] { outline-offset: var(--space-2); }
+
+/* pending-sync / not sent */
+.ds-timeline__pending { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--color-structure-text-secondary); font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-timeline__pending .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+.ds-timeline__pending[data-failed] { color: var(--color-semantic-critical-strong); font-weight: var(--type-label-weight); }
+.ds-timeline__entry-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+
+/* new entries: shown above the list; the list does not move until it is activated */
+.ds-timeline__new { align-self: flex-start; box-shadow: var(--elevation-1); }
+.ds-timeline__footer { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding-block-start: var(--space-2); }
+
+/* loading skeleton entries */
+.ds-timeline__skeleton { display: grid; grid-template-columns: var(--_marker) minmax(0, 1fr); column-gap: var(--space-3); padding-block-end: var(--space-4); }
+.ds-timeline__skeleton > span:first-child { inline-size: var(--_marker); block-size: var(--_marker); border-radius: var(--shape-circle); background: var(--color-structure-skeleton); }
+.ds-timeline__skeleton > span:last-child { display: flex; flex-direction: column; gap: var(--space-2); padding-block-start: var(--space-1); }
+.ds-timeline__skeleton i { display: block; block-size: calc(var(--type-body-line) / 2); border-radius: var(--radius-xs); background: var(--color-structure-skeleton); }
+.ds-timeline__skeleton i:last-child { inline-size: 40%; }
+
+/* phone: smaller marker, no rail */
+@media (--bp-tablet-down) {
+  .ds-timeline:not([data-variant="compact"]) { --_marker: var(--avatar-sm); }
+  .ds-timeline__entry::before { display: none; }
+  .ds-timeline__marker { font-size: var(--type-caption-size); }
+}
+
+@media (forced-colors: active) {
+  .ds-timeline__marker { border-color: CanvasText; }
+  .ds-timeline__entry::before { background: CanvasText; }
+  .ds-timeline__entry[data-highlighted] { outline: var(--border-width-thick) solid Highlight; }
+}

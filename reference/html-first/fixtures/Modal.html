@@ -1,0 +1,221 @@
+<!-- Modal fixture · variants, sizes, states, mandatory combinations (catalog preview) + edge cases.
+     Static demos render the dialog's look as a NON-modal <dialog open data-static> inside a framed scrim region (no top layer).
+     Live demos at the end open real modals with showModal() (focus moves in, Esc = Cancel, focus returns to the trigger).
+     No-JS fallback: each trigger is a link (href) to a confirmation page; here the links point at the matching static demo. -->
+<section class="ds-demo" data-ds-demo="variants/dialog (form, md)" id="modal-fallback-edit">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md1-title" aria-describedby="md1-desc" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md1-title">Edit member</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    <p class="ds-modal__description" id="md1-desc">Changes apply to future bookings only.</p>
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md1-name">Member name</label><input class="ds-modal__input" id="md1-name" value="Rina Wijaya"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md1-hcp">Member level</label><input class="ds-modal__input" id="md1-hcp" value="12.4"></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Save changes</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/confirmation (alertdialog, sm, focus on title)">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="confirmation" data-size="sm" aria-labelledby="md2-title" role="alertdialog" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md2-title" tabindex="-1" data-force="focus">Send reminders?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>4 guests without a confirmed booking slot get an SMS now.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Send reminders</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/destructive (sm, Esc and scrim = Cancel, no Enter default)" id="modal-fallback-delete">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="destructive" data-size="sm" aria-labelledby="md3-title" role="alertdialog" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md3-title">Delete booking BK-20481?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>The 07:40 booking slot for 4 guests is released and the deposit of Rp 400.000 is refunded. This cannot be undone.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Keep booking</button><button type="submit" class="ds-modal__action" data-variant="destructive" value="confirm">Delete booking</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/fullscreen (phone presentation, safe-area)">
+<div class="ds-modal-frame" data-device="phone">
+<dialog open class="ds-modal" data-variant="fullscreen" data-size="md" aria-labelledby="md4-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md4-title">New booking</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md4-date">Date</label><input class="ds-modal__input" id="md4-date" value="Sat 11 Oct 2026"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md4-time">Booking slot</label><input class="ds-modal__input" id="md4-time" value="07:40"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md4-guests">Guests</label><input class="ds-modal__input" id="md4-guests" value="4"></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Create booking</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="size lg (two columns)">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="lg" aria-labelledby="md5-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md5-title">Venue settings</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__grid"><div class="ds-modal__field"><label class="ds-modal__label" for="md5-a">Venue name</label><input class="ds-modal__input" id="md5-a" value="North Harbor"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md5-b">Halls</label><input class="ds-modal__input" id="md5-b" value="18"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md5-c">First slot</label><input class="ds-modal__input" id="md5-c" value="06:00"></div><div class="ds-modal__field"><label class="ds-modal__label" for="md5-d">Last slot</label><input class="ds-modal__input" id="md5-d" value="15:30"></div></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Save settings</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="submitting + Cancel blocked (reason)">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md6-title" data-static aria-busy="true" data-cancellable="false">
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md6-title">Edit member</h2><button type="button" class="ds-modal__close" aria-label="Close" aria-disabled="true" aria-describedby="md6-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md6-name">Member name</label><input class="ds-modal__input" id="md6-name" value="Rina Wijaya" readonly></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close aria-disabled="true" aria-describedby="md6-reason">Cancel</button><button type="button" class="ds-modal__action" data-variant="primary" aria-busy="true"><span>Save changes</span><span class="ds-modal__spinner" aria-hidden="true"></span></button><span class="ds-modal__footer-reason" id="md6-reason">Saving… this can’t be cancelled.</span></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="error + focus on ErrorSummary">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md7-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md7-title">Edit member</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__alert" role="alert" tabindex="-1" data-force="focus" aria-labelledby="md7-sum"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><div><p id="md7-sum">2 fields need attention</p><ul><li><a href="#md7-name">Enter the member name</a></li><li><a href="#md7-hcp">Level must be 0–54</a></li></ul></div></div><div class="ds-modal__field"><label class="ds-modal__label" for="md7-name">Member name</label><input class="ds-modal__input" id="md7-name" value="" aria-invalid="true" aria-describedby="md7-name-err"><span class="ds-modal__field-error" id="md7-name-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter the member name</span></span></div><div class="ds-modal__field"><label class="ds-modal__label" for="md7-hcp">Member level</label><input class="ds-modal__input" id="md7-hcp" value="61" aria-invalid="true" aria-describedby="md7-hcp-err"><span class="ds-modal__field-error" id="md7-hcp-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Level must be between 0 and 54</span></span></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Save changes</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="dirty + Esc → discard confirmation (nested)">
+<div class="ds-modal-frame">
+<div class="ds-modal-stack"><dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md8-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md8-title">Edit member</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md8-name">Member name</label><input class="ds-modal__input" id="md8-name" value="Rina W."></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Save changes</button></footer>
+  </form>
+</dialog>
+<div class="ds-modal-stack__scrim" aria-hidden="true"></div>
+<dialog open class="ds-modal" data-variant="confirmation" data-size="sm" aria-labelledby="md9-title" role="alertdialog" data-static data-nested>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md9-title" tabindex="-1" data-force="focus">Discard changes?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>Your edits to this member will be lost.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Keep editing</button><button type="submit" class="ds-modal__action" data-variant="destructive" value="confirm">Discard</button></footer>
+  </form>
+</dialog></div>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="loading (skeleton body, aria-busy)">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md10-title" data-static aria-busy="true">
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md10-title">Booking BK-20481</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><span class="ds-modal__skeleton" aria-hidden="true"></span><span class="ds-modal__skeleton" aria-hidden="true"></span><span class="ds-modal__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading booking</span></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Close</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="nested StepUpDialog (one level max)">
+<div class="ds-modal-frame">
+<div class="ds-modal-stack"><dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md11-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md11-title">Members</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>Select members to remove from the event.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="destructive" value="confirm">Remove 2 members</button></footer>
+  </form>
+</dialog>
+<div class="ds-modal-stack__scrim" aria-hidden="true"></div>
+<dialog open class="ds-modal" data-variant="dialog" data-size="sm" aria-labelledby="md12-title" data-static data-nested>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md12-title">Confirm it’s you</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md10-pin">Staff PIN</label><input class="ds-modal__input" id="md10-pin" value=""></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Confirm</button></footer>
+  </form>
+</dialog></div>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="long content (body scrolls, header + footer stay)">
+<div class="ds-modal-frame" data-height="short">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md13-title" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md13-title">Venue rules</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body" tabindex="0" aria-label="Venue rules text" data-scroll-end><p>Rule 1: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p><p>Rule 2: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p><p>Rule 3: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p><p>Rule 4: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p><p>Rule 5: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p><p>Rule 6: Guests must repair divots and ball marks, rake bunkers after use, and keep pace with the group ahead; slow groups are asked to let faster groups play through.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Close</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">I agree</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="longest locale (+40%): long title + footer labels wrap">
+<div class="ds-modal-frame">
+<dialog lang="id" open class="ds-modal" data-variant="destructive" data-size="sm" aria-labelledby="md14-title" role="alertdialog" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md14-title">Hapus pemesanan atas nama Muhammad Rizky Pratama Wijayakusuma untuk acara akhir pekan?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>Slot booking 07:40 akan dilepas dan deposit dikembalikan dalam 3–5 hari kerja.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Pertahankan pemesanan</button><button type="submit" class="ds-modal__action" data-variant="destructive" value="confirm">Hapus pemesanan sekarang</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200%">
+<div class="ds-modal-frame" style="--type-body-size: 2em; --type-body-line: 1.4; --type-label-size: 2em; --type-label-line: 1.3; --type-h3-size: 2.4em; --type-h3-line: 1.25;">
+<dialog open class="ds-modal" data-variant="confirmation" data-size="sm" aria-labelledby="md15-title" role="alertdialog" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md15-title">Send reminders?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>4 guests get an SMS now.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Send</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL" dir="rtl" lang="ar">
+<div class="ds-modal-frame">
+<dialog open class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="md16-title" aria-describedby="md16-desc" data-static>
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="md16-title">تعديل العضو</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    <p class="ds-modal__description" id="md16-desc">تُطبق التغييرات على الحجوزات القادمة فقط.</p>
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="md14-name">اسم العضو</label><input class="ds-modal__input" id="md14-name" value="رنا"></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>إلغاء</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">حفظ التغييرات</button></footer>
+  </form>
+</dialog>
+</div>
+</section>
+<section class="ds-demo" data-ds-demo="live (showModal, focus return, Esc = Cancel, dirty guard, scroll lock)">
+<div class="ds-inline" data-gap="3">
+  <a class="ds-modal__action" data-variant="primary" href="#modal-fallback-edit" data-ds-modal-open="mlive1">Edit member</a>
+  <a class="ds-modal__action" data-variant="destructive" href="#modal-fallback-delete" data-ds-modal-open="mlive2">Delete booking</a>
+</div>
+<p class="ds-text-secondary">Type in the form, then press Esc: “Discard changes?” opens; Esc there keeps editing.</p>
+<dialog class="ds-modal" data-variant="dialog" data-size="md" aria-labelledby="mlive1-title" aria-describedby="mlive1-desc" id="mlive1" data-ds-module="modal" data-ds-discard="mlive1-discard" data-ds-announce="Member saved">
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="mlive1-title">Edit member</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    <p class="ds-modal__description" id="mlive1-desc">Changes apply to future bookings only.</p>
+    <div class="ds-modal__body"><div class="ds-modal__field"><label class="ds-modal__label" for="mlive1-name">Member name</label><input class="ds-modal__input" id="mlive1-name" value="Rina Wijaya"></div><div class="ds-modal__field"><label class="ds-modal__label" for="mlive1-hcp">Member level</label><input class="ds-modal__input" id="mlive1-hcp" value="12.4"></div></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Cancel</button><button type="submit" class="ds-modal__action" data-variant="primary" value="confirm">Save changes</button></footer>
+  </form>
+</dialog>
+<dialog class="ds-modal" data-variant="confirmation" data-size="sm" aria-labelledby="mlive1-discard-title" role="alertdialog" id="mlive1-discard">
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="mlive1-discard-title">Discard changes?</h2></header>
+    
+    <div class="ds-modal__body"><p>Your edits to this member will be lost.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-discard-keep>Keep editing</button><button type="button" class="ds-modal__action" data-variant="destructive" data-ds-discard-confirm>Discard</button></footer>
+  </form>
+</dialog>
+<dialog class="ds-modal" data-variant="destructive" data-size="sm" aria-labelledby="mlive2-title" role="alertdialog" id="mlive2" data-ds-module="modal" data-ds-announce="Booking deleted">
+  <form class="ds-modal__form" method="dialog">
+    <header class="ds-modal__header"><h2 class="ds-modal__title" id="mlive2-title">Delete booking BK-20481?</h2><button type="button" class="ds-modal__close" aria-label="Close"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></header>
+    
+    <div class="ds-modal__body"><p>The 07:40 booking slot is released and the deposit is refunded. This cannot be undone.</p></div>
+    <footer class="ds-modal__footer"><button type="button" class="ds-modal__action" data-ds-modal-close>Keep booking</button><button type="submit" class="ds-modal__action" data-variant="destructive" value="confirm">Delete booking</button></footer>
+  </form>
+</dialog>
+</section>

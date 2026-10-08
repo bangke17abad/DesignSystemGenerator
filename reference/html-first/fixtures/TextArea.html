@@ -1,0 +1,146 @@
+<!-- TextArea fixture · every variant × state, sizes, mandatory combinations (§6.9). Counter is aria-hidden (announced at 80%/100% by TextArea.js); the static limit is in the helper. -->
+<section class="ds-demo" data-ds-demo="variants/auto-grow">
+  <div class="ds-text-area" data-ds-module="text-area">
+    <label class="ds-text-area__label" for="ta-v1">Reason for request</label>
+    <p class="ds-text-area__description" id="ta-v1-desc">Include what happened and when.</p>
+    <textarea class="ds-text-area__input" id="ta-v1" name="reason" dir="auto" required data-max-length="120" aria-describedby="ta-v1-desc ta-v1-help">Customer requested a refund for order 4471 because the blender arrived with a cracked jar.</textarea>
+    <div class="ds-text-area__footer">
+      <p class="ds-text-area__helper" id="ta-v1-help">Up to 120 characters.</p>
+      <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>89/120</span></span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/fixed">
+  <div class="ds-text-area" data-variant="fixed" data-size="sm" data-ds-module="text-area">
+    <label class="ds-text-area__label" for="ta-v2">Notes <span class="ds-text-area__optional">(optional)</span></label>
+    <textarea class="ds-text-area__input" id="ta-v2" name="notes" dir="auto">Call the front desk on arrival. The loading dock closes at 4 pm on Fridays, so plan the delivery before then. Ask for Budi or Ratna.</textarea>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s1">Default (empty)</label>
+      <textarea class="ds-text-area__input" id="ta-s1" required placeholder="e.g. The jar arrived cracked"></textarea>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s2">Hover</label>
+      <textarea class="ds-text-area__input" id="ta-s2" required data-force="hover"></textarea>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s3">Focus</label>
+      <textarea class="ds-text-area__input" id="ta-s3" required data-force="focus">Please deliver after 5 pm.</textarea>
+    </div>
+    <div class="ds-text-area" data-ds-module="text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s4">Near limit</label>
+      <textarea class="ds-text-area__input" id="ta-s4" required data-max-length="120" aria-describedby="ta-s4-help">Customer requested a refund for order 4471 because the blender arrived with a cracked jar. Photos attached.</textarea>
+      <div class="ds-text-area__footer">
+        <p class="ds-text-area__helper" id="ta-s4-help">Up to 120 characters.</p>
+        <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>107/120</span></span>
+      </div>
+    </div>
+    <div class="ds-text-area" data-ds-module="text-area" data-over-limit style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s5">Over limit</label>
+      <textarea class="ds-text-area__input" id="ta-s5" required data-max-length="120" aria-invalid="true" aria-describedby="ta-s5-err ta-s5-help">The courier left the parcel at the wrong gate on Tuesday evening, and the security desk did not record who signed for it at all.</textarea>
+      <p class="ds-text-area__error" id="ta-s5-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Shorten the reason to 120 characters or fewer</span></p>
+      <div class="ds-text-area__footer">
+        <p class="ds-text-area__helper" id="ta-s5-help">Up to 120 characters.</p>
+        <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>8 characters too many</span></span>
+      </div>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s6">Error (empty, required)</label>
+      <textarea class="ds-text-area__input" id="ta-s6" required aria-invalid="true" aria-describedby="ta-s6-err"></textarea>
+      <p class="ds-text-area__error" id="ta-s6-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a reason for the request</span></p>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s7">Approval comment</label>
+      <textarea class="ds-text-area__input" id="ta-s7" readonly aria-disabled="true" aria-describedby="ta-s7-reason">Approved for the March budget cycle.</textarea>
+      <p class="ds-text-area__reason" id="ta-s7-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Comments are locked after the request is approved.</span></p>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s8">Delivery address</label>
+      <textarea class="ds-text-area__input" id="ta-s8" readonly aria-readonly="true" autocomplete="street-address">Jl. Asia Afrika No. 8
+Gedung Merdeka, Lantai 3
+Bandung 40111</textarea>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-s9">Comments <span class="ds-text-area__optional">(optional)</span></label>
+      <textarea class="ds-text-area__input" id="ta-s9"></textarea>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-c1">Error + focus</label>
+      <textarea class="ds-text-area__input" id="ta-c1" required aria-invalid="true" data-force="focus" aria-describedby="ta-c1-err"></textarea>
+      <p class="ds-text-area__error" id="ta-c1-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a reason for the request</span></p>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-c2">Error + hover</label>
+      <textarea class="ds-text-area__input" id="ta-c2" required aria-invalid="true" data-force="hover" aria-describedby="ta-c2-err"></textarea>
+      <p class="ds-text-area__error" id="ta-c2-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a reason for the request</span></p>
+    </div>
+    <div class="ds-text-area" data-ds-module="text-area" data-over-limit style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-c3">Over limit + focus</label>
+      <textarea class="ds-text-area__input" id="ta-c3" data-max-length="120" aria-invalid="true" data-force="focus" aria-describedby="ta-c3-help">The courier left the parcel at the wrong gate on Tuesday evening, and the security desk did not record who signed for it at all.</textarea>
+      <div class="ds-text-area__footer">
+        <p class="ds-text-area__helper" id="ta-c3-help">Up to 120 characters.</p>
+        <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>8 characters too many</span></span>
+      </div>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-c4">Blocked + focus</label>
+      <textarea class="ds-text-area__input" id="ta-c4" readonly aria-disabled="true" data-force="focus" aria-describedby="ta-c4-reason">Escalated to the regional office.</textarea>
+      <p class="ds-text-area__reason" id="ta-c4-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only the case owner can edit this note.</span></p>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-c5">Read-only + focus</label>
+      <textarea class="ds-text-area__input" id="ta-c5" readonly aria-readonly="true" data-force="focus">Signed by Ratna Dewi on 12 March 2026.</textarea>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+    <div class="ds-text-area" data-size="sm" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-z1">Note (sm, 2 rows)</label>
+      <textarea class="ds-text-area__input" id="ta-z1"></textarea>
+    </div>
+    <div class="ds-text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-z2">Note (md, 3 rows)</label>
+      <textarea class="ds-text-area__input" id="ta-z2"></textarea>
+    </div>
+    <div class="ds-text-area" data-size="lg" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-z3">Note (lg, 4 rows)</label>
+      <textarea class="ds-text-area__input" id="ta-z3"></textarea>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL+counter+long-label">
+  <div class="ds-grid">
+    <div class="ds-text-area" dir="rtl" lang="ar" data-ds-module="text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-r1">سبب الطلب</label>
+      <textarea class="ds-text-area__input" id="ta-r1" dir="auto" data-max-length="120" aria-describedby="ta-r1-help">وصل الطرد متأخرا ثلاثة أيام عن الموعد المحدد.</textarea>
+      <div class="ds-text-area__footer">
+        <p class="ds-text-area__helper" id="ta-r1-help">حتى 120 حرفا.</p>
+        <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>45/120</span></span>
+      </div>
+    </div>
+    <div class="ds-text-area" data-ds-module="text-area" style="grid-column: span 4">
+      <label class="ds-text-area__label" for="ta-r2">Jelaskan secara rinci kronologi kejadian, termasuk tanggal, lokasi, dan pihak yang terlibat <span class="ds-text-area__optional">(opsional)</span></label>
+      <textarea class="ds-text-area__input" id="ta-r2" dir="auto" data-max-length="120" aria-describedby="ta-r2-help"></textarea>
+      <div class="ds-text-area__footer">
+        <p class="ds-text-area__helper" id="ta-r2-help">Maksimal 120 karakter. Sebutkan nomor pesanan bila ada.</p>
+        <span class="ds-text-area__counter" aria-hidden="true" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span data-counter-text>0/120</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%+maxRows">
+  <div style="zoom: 2">
+    <div class="ds-text-area" style="--ds-text-area-max-rows: 4">
+      <label class="ds-text-area__label" for="ta-x1">Notes</label>
+      <textarea class="ds-text-area__input" id="ta-x1" dir="auto">Call the front desk on arrival. The loading dock closes at 4 pm on Fridays, so plan the delivery before then. Ask for Budi or Ratna at reception, and bring the signed delivery note.</textarea>
+    </div>
+  </div>
+</section>

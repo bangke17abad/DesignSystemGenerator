@@ -1,0 +1,57 @@
+{
+  "brief_schema_version": "1.5",
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "ProjectRequest"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "neo-brutalist",
+    "brands": [
+      {
+        "id": "default",
+        "interaction_hex": "#FF5A1F"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "Dark"
+      }
+    ]
+  },
+  "namespace": "KLT",
+  "product_name": "Kolektif",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard",
+        "touch"
+      ],
+      "name": "studio-web",
+      "os_runtime": "web",
+      "surface_type": "public"
+    }
+  ],
+  "targets": {
+    "primary_web_reference": "react"
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

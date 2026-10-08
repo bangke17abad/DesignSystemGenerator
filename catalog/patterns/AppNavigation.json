@@ -1,0 +1,348 @@
+{
+  "name": "AppNavigation",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Selalu disertakan. Surface kiosk atau berbasis state memakai AppShell variant kiosk tanpa nav, dan alur langkah memakai variant focused (§8.2); aturan judul halaman, fokus rute, dan SkipLink tetap berlaku di sana.",
+  "problem": {
+    "problem": "Pengguna selalu tahu di mana mereka berada, tujuan apa saja yang tersedia untuk role-nya, dan bagaimana sampai ke sana atau kembali, dengan struktur dan urutan navigasi yang sama di setiap layar dan kelas perangkat, tautan yang dapat dibagikan, dan fokus serta judul yang berpindah dengan benar setiap kali rute berganti.",
+    "when": [
+      "Setiap aplikasi atau situs dengan lebih dari satu tujuan tingkat atas.",
+      "Setiap hierarki halaman (daftar → detail → sub-detail) yang membutuhkan jalan kembali ke induk.",
+      "Surface web yang membutuhkan tautan langsung, riwayat browser, dan judul dokumen per halaman."
+    ],
+    "when_not": [
+      "Berpindah antar tampilan setara di dalam satu halaman: Tabs atau SegmentedControl.",
+      "Alur langkah (checkout, pendaftaran): Wizard dengan AppShell variant focused; nav global disembunyikan.",
+      "Menjalankan aksi (Buat, Ekspor, Keluar): Button atau Menu; nav hanya berisi tujuan."
+    ]
+  },
+  "composition": [
+    {
+      "component": "AppShell",
+      "parts": [
+        "AppShell.Header",
+        "AppShell.Nav",
+        "AppShell.Main",
+        "AppShell.Aside",
+        "AppShell.BottomBar"
+      ],
+      "role_in_pattern": "landmark dan slot region §8.2; memperbarui judul dokumen dan memindah fokus saat rute berganti"
+    },
+    {
+      "component": "SkipLink",
+      "role_in_pattern": "elemen fokus pertama setiap halaman web; lompat ke main (SC 2.4.1)"
+    },
+    {
+      "component": "PrimaryNav",
+      "parts": [
+        "PrimaryNav.List",
+        "PrimaryNav.Item",
+        "PrimaryNav.Group",
+        "PrimaryNav.CollapseToggle",
+        "PrimaryNav.Footer"
+      ],
+      "role_in_pattern": "tujuan tingkat atas: nav tetap (desktop), rail (tablet), drawer untuk tujuan sisa (phone); maksimal dua tingkat (item dan grup)"
+    },
+    {
+      "component": "BottomNav",
+      "parts": [
+        "BottomNav.Item",
+        "BottomNav.More"
+      ],
+      "role_in_pattern": "3-5 tujuan utama di phone, urutan identik dengan PrimaryNav; More membuka Sheet berisi tujuan sisa"
+    },
+    {
+      "component": "Breadcrumb",
+      "parts": [
+        "Breadcrumb.List",
+        "Breadcrumb.Item",
+        "Breadcrumb.Overflow"
+      ],
+      "role_in_pattern": "posisi dalam hierarki di atas h1 (tablet/desktop); variant parent menjadi back-link di phone"
+    },
+    {
+      "component": "PageHeader",
+      "parts": [
+        "PageHeader.Back",
+        "PageHeader.Breadcrumb",
+        "PageHeader.Title"
+      ],
+      "role_in_pattern": "tepat satu h1 per halaman sebagai target fokus rute; sumber judul dokumen"
+    },
+    {
+      "component": "Tabs",
+      "role_in_pattern": "variant links untuk sub-halaman di dalam satu tujuan (tingkat kedua di konten) dengan aria-current dan URL sendiri"
+    },
+    {
+      "component": "SearchField",
+      "role_in_pattern": "jalan kedua ke konten (SC 2.4.5) di global bar; variant submit membuka halaman hasil"
+    },
+    {
+      "component": "CommandPalette",
+      "role_in_pattern": "opsional: jalan ketiga berbasis keyboard; setiap tujuannya juga ada di nav"
+    },
+    {
+      "component": "Badge",
+      "role_in_pattern": "hitungan yang perlu tindakan pada item nav, hanya untuk kelas yang L3 izinkan filled"
+    },
+    {
+      "component": "Sheet",
+      "role_in_pattern": "isi BottomNav.More di phone"
+    },
+    {
+      "component": "IconButton",
+      "role_in_pattern": "pembuka drawer (aria-expanded) dan pembuka pencarian di phone"
+    },
+    {
+      "component": "Avatar",
+      "role_in_pattern": "pemicu area akun di global bar bersama nama pengguna"
+    },
+    {
+      "component": "Menu",
+      "role_in_pattern": "aksi akun (ganti akun, Keluar); tujuan akun seperti Profil dan Pengaturan tetap tautan di PrimaryNav.Footer"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "judul layar bila fokus tidak dapat dipindah, perubahan badge, dan rute yang dialihkan"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Masuk lewat tautan langsung",
+      "state_class": "C6",
+      "transition": "rute, tab, filter, dan halaman dipulihkan dari URL; jalan ke induk disusun dari hierarki (Breadcrumb/back-link) walau riwayat kosong; di native deep link menyusun back stack induk"
+    },
+    {
+      "step": "Lewati blok berulang",
+      "state_class": "C6",
+      "transition": "Tab pertama memunculkan SkipLink; Enter memindah fokus ke main"
+    },
+    {
+      "step": "Pilih tujuan",
+      "state_class": "C6",
+      "transition": "item nav adalah tautan nyata (href); navigasi saat pelepasan; aria-current dan penanda non-warna berpindah; drawer menutup lebih dulu; tap ulang item aktif di BottomNav menggulir ke atas, tap kedua ke akar tujuan"
+    },
+    {
+      "step": "Rute berganti",
+      "state_class": "C5",
+      "transition": "konten lama tetap dengan aria-busy sampai rute baru siap (> ±300 ms → Skeleton); judul dokumen \"{judul halaman} · {aplikasi}\"; fokus ke h1; posisi gulir ke atas untuk maju"
+    },
+    {
+      "step": "Turun hierarki",
+      "state_class": "C6",
+      "transition": "daftar → detail → sub-detail; Breadcrumb dan judul diperbarui; nav menampilkan maksimal dua tingkat, tingkat lebih dalam lewat konten, Tabs links, dan Breadcrumb"
+    },
+    {
+      "step": "Kembali",
+      "state_class": "C6",
+      "transition": "back sistem/browser mengikuti riwayat; back-link dan Breadcrumb mengikuti hierarki; posisi gulir dan fokus dipulihkan ke elemen asal; tiap tujuan BottomNav mempertahankan stack-nya sendiri"
+    },
+    {
+      "step": "Tujuan tidak tersedia",
+      "state_class": "C2",
+      "transition": "tujuan dikunci state (penyiapan belum selesai, fitur dalam pemeliharaan): item aria-disabled + alasan terlihat; tautan langsung ke tujuan yang tersembunyi bagi role → SystemPages"
+    },
+    {
+      "step": "Perhatian baru",
+      "state_class": "C2",
+      "transition": "Badge pada item nav berubah dengan nama aksesibel diperbarui; event kritis tidak pernah hanya berupa badge (I5)"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "global bar (judul layar, IconButton cari, akun) + main + BottomNav 3-5 tujuan berlabel; tujuan ke-6 dst. di More (Sheet) atau di drawer PrimaryNav — hanya satu tingkat navigasi yang tersembunyi, tidak ada drawer di dalam More atau More di dalam drawer; Breadcrumb diganti back-link berlabel induk; BottomNav disembunyikan saat keyboard terbuka dan di alur langkah; safe-area dihormati"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "PrimaryNav rail di inline-start dengan tujuan dan urutan yang sama dengan BottomNav dan nav desktop; label tersedia lewat Tooltip visual dan nama aksesibel; CollapseToggle membuka drawer berlabel penuh; Breadcrumb full dengan overflow; pencarian di global bar"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "PrimaryNav tetap selebar layout-nav-width, menciut ke rail bila nav + ContextPanel + konten minimum tidak muat (pilihan pengguna diingat); grup dapat dilipat, maksimal dua tingkat; Breadcrumb full (lebih dari 4 item diciutkan); SearchField di global bar + CommandPalette opsional; F6 berpindah antar region"
+    }
+  ],
+  "states": {
+    "empty": "Role dengan satu tujuan saja: nav tidak dirender dan beranda menjadi satu-satunya layar; grup yang semua itemnya tersembunyi bagi role tidak dirender (tanpa judul grup kosong).",
+    "loading": "Nav dirender dari konfigurasi dan izin sesi sebelum konten; bila izin masih dimuat, PrimaryNav loading menampilkan Skeleton item, bukan item yang muncul lalu hilang. Rute baru: konten lama aria-busy, lalu Skeleton bila lebih dari ±300 ms.",
+    "error": "Gagal memuat rute: SystemPages di region main sementara nav tetap berfungsi. Gagal memuat hitungan badge: badge tidak ditampilkan (bukan \"0\") dan tidak ada dialog error.",
+    "partial": "Sebagian tujuan tidak tersedia (pemeliharaan fitur, layanan terganggu): item tetap di posisinya dengan aria-disabled + alasan; Banner page di tujuan itu bila dibuka lewat tautan langsung.",
+    "success": "Rute baru: h1 terfokus, aria-current di nav, BottomNav, dan Breadcrumb, judul dokumen sesuai, posisi gulir sesuai arah (atas untuk maju, dipulihkan untuk kembali)."
+  },
+  "accessibility": [
+    {
+      "step": "Lewati blok berulang",
+      "focus": "SkipLink elemen fokusabel pertama; target main tabindex −1 sehingga fokus benar-benar pindah (SC 2.4.1)"
+    },
+    {
+      "step": "Pilih tujuan",
+      "focus": "setiap item adalah tautan di urutan Tab; ↑/↓ (nav vertikal) atau ←/→ (BottomNav) sebagai peningkatan; Esc menutup drawer dan fokus kembali ke tombol menu",
+      "announcement": "nama item memuat hitungan badge (\"Persetujuan, 3 menunggu\"); item aktif aria-current=\"page\"; induk grup membawa teks tersembunyi \"berisi halaman saat ini\""
+    },
+    {
+      "step": "Rute berganti",
+      "focus": "fokus ke h1 PageHeader (tabindex −1) dengan ring fokus; bila h1 belum ada karena konten masih dimuat, fokus menunggu h1 siap lalu dipindah sekali, tidak dua kali",
+      "announcement": "judul dibaca karena fokus; di native memakai pengumuman perubahan layar platform dengan judul (§9.5)"
+    },
+    {
+      "step": "Kembali",
+      "focus": "fokus ke elemen pemicu asal (baris, kartu, tautan) dan posisi gulir dipulihkan; bila elemen sudah tidak ada, ke h1 (§9.5)"
+    },
+    {
+      "step": "Tujuan tidak tersedia",
+      "focus": "item aria-disabled tetap fokusabel agar alasannya terbaca lewat aria-describedby",
+      "announcement": "aktivasi item yang diblokir mengumumkan alasan polite"
+    },
+    {
+      "step": "Perhatian baru",
+      "focus": "fokus tidak berpindah",
+      "announcement": "badge C1 baru diumumkan assertive, kelas lain polite dan di-debounce; pengurangan tidak diumumkan"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Label tujuan 1-2 kata benda dari glosarium dan sama persis di BottomNav, rail, nav, Breadcrumb, h1, dan judul dokumen.",
+      "Judul dokumen \"{judul halaman} · {nama aplikasi}\"; halaman record \"{nama record} · {tujuan} · {nama aplikasi}\" (SC 2.4.2).",
+      "Ikon tujuan selalu disertai label terlihat di BottomNav dan nav tetap; di rail label tersedia lewat Tooltip dan nama aksesibel.",
+      "Hitungan badge berarti \"perlu tindakan\", bukan total item.",
+      "Back-link menyebut tujuannya (\"{Induk}\"), bukan hanya \"Kembali\"."
+    ],
+    "examples": {
+      "en-US": [
+        "Main",
+        "Skip to main content",
+        "Approvals, 3 waiting",
+        "More",
+        "Back to Items",
+        "Show 2 more levels"
+      ],
+      "id-ID": [
+        "Utama",
+        "Langsung ke konten utama",
+        "Persetujuan, 3 menunggu",
+        "Lainnya",
+        "Kembali ke Item",
+        "Tampilkan 2 tingkat lagi"
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role melihat semua tujuan yang diizinkan, dalam urutan baku yang sama untuk semua role"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu tujuan ada: item tidak dirender di nav mana pun dan urutan relatif tujuan lain tetap; rute langsung ke tujuan itu → SystemPages tidak ditemukan atau tanpa izin"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tujuan ada tetapi belum bisa dipakai karena state (penyiapan, langganan, pemeliharaan): item aria-disabled + alasan terlihat yang menyebut cara membukanya"
+    }
+  ],
+  "do": [
+    "Pakai urutan tujuan yang sama di BottomNav, rail, dan nav tetap, dan di setiap halaman (SC 3.2.3).",
+    "Jadikan setiap tujuan, record, tab, dan filter dapat ditautkan, lalu pulihkan state dari URL.",
+    "Sediakan minimal dua cara mencapai halaman: navigasi dan pencarian (SC 2.4.5).",
+    "Pertahankan stack dan posisi gulir per tujuan BottomNav saat berpindah tujuan dan kembali.",
+    "Tandai lokasi saat ini dengan aria-current dan penanda non-warna (bobot, indikator, ikon terisi)."
+  ],
+  "dont": [
+    {
+      "text": "Menandai lokasi saat ini atau item terpilih hanya dengan warna.",
+      "ref": "UB2"
+    },
+    {
+      "text": "Lebih dari 5 item di BottomNav, atau lebih dari satu tingkat navigasi yang tersembunyi di phone.",
+      "ref": "§8.2"
+    },
+    {
+      "text": "Menonaktifkan tujuan tanpa alasan, atau menampilkan tujuan yang tidak boleh diketahui role.",
+      "ref": "UB10"
+    },
+    {
+      "text": "Gestur kembali atau swipe drawer sebagai satu-satunya cara bernavigasi.",
+      "ref": "SC 2.5.1"
+    },
+    {
+      "text": "Membiarkan fokus di elemen yang sudah hilang atau di awal dokumen setelah pindah rute.",
+      "ref": "§9.5"
+    },
+    {
+      "text": "Mengubah urutan tujuan per halaman atau per kelas perangkat.",
+      "ref": "SC 3.2.3"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "nav tetap berfungsi untuk tujuan ter-cache; tujuan yang butuh koneksi tetap di posisinya dan membuka halaman offline (SystemPages); ConnectionStatus di global bar"
+    },
+    {
+      "case": "timeout memuat rute",
+      "behaviour": "konten lama tetap dengan aria-busy dan Skeleton; tujuan lain tetap bisa dipilih dan membatalkan permintaan lama; setelah batas waktu, SystemPages error di main"
+    },
+    {
+      "case": "data sangat banyak (banyak tujuan atau hierarki dalam)",
+      "behaviour": "lebih dari ±9 tujuan tingkat atas dikelompokkan dalam Group berlabel (maksimal dua tingkat) dan didukung pencarian; Breadcrumb lebih dari 4 tingkat diciutkan ke overflow"
+    },
+    {
+      "case": "data kosong (role hanya punya satu tujuan)",
+      "behaviour": "nav tidak dirender; beranda langsung; judul dan fokus rute tetap berlaku"
+    },
+    {
+      "case": "aksi ganda (tap ganda item nav, klik cepat dua tujuan)",
+      "behaviour": "navigasi dijalankan sekali; rute terakhir yang dipilih menang dan permintaan rute sebelumnya dibatalkan"
+    },
+    {
+      "case": "label tujuan +40% (locale terpanjang)",
+      "behaviour": "label BottomNav membungkus ke dua baris tanpa ellipsis; nav tetap membungkus; rail memakai Tooltip dan nama aksesibel; Breadcrumb memotong item tengah dengan nama lengkap aksesibel; badge 99+ tidak menutupi label"
+    },
+    {
+      "case": "teks 200%",
+      "behaviour": "label BottomNav tetap terbaca (pindah ke bawah ikon atau dua baris); area konten diberi scroll-padding setinggi bar sehingga fokus tidak tertutup (SC 2.4.11)"
+    },
+    {
+      "case": "role atau izin berubah selama sesi",
+      "behaviour": "nav dihitung ulang; bila tujuan aktif tidak lagi diizinkan, pengguna dialihkan ke beranda dan alasannya diumumkan polite"
+    },
+    {
+      "case": "tautan langsung di native tanpa riwayat",
+      "behaviour": "back sistem menuju akar tujuan, bukan keluar aplikasi"
+    }
+  ],
+  "wcag": [
+    "1.3.1",
+    "1.4.1",
+    "1.4.10",
+    "2.4.1",
+    "2.4.2",
+    "2.4.3",
+    "2.4.4",
+    "2.4.5",
+    "2.4.6",
+    "2.4.7",
+    "2.4.11",
+    "2.5.1",
+    "3.2.3",
+    "3.2.4",
+    "4.1.2"
+  ],
+  "related_patterns": [
+    "SearchAndFilter",
+    "SystemPages",
+    "AuthAndSession",
+    "NotificationCenter",
+    "Settings",
+    "MasterDetail",
+    "Wizard"
+  ],
+  "lint": [
+    "BottomNav punya 3-5 item",
+    "Item nav aktif punya aria-current=\"page\" dan penanda non-warna",
+    "Setiap halaman punya tepat satu h1 dan <title> \"{judul} · {aplikasi}\"",
+    "SkipLink adalah elemen fokusabel pertama di setiap halaman web",
+    "Urutan tujuan identik di BottomNav, rail, dan nav tetap",
+    "Nav tidak memuat Button aksi; hanya tautan tujuan"
+  ]
+}

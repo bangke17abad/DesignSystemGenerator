@@ -1,0 +1,50 @@
+<!-- Spinner fixture · standalone (role=status + text) and in-control (aria-hidden; the control carries aria-busy), sizes,
+     on-solid / on-inverse, sm in a table cell, delayed show, escalation to Skeleton after 2 s. Spinners only cover waits under
+     2 s or live inside a control; previews run with reduced motion, so the arcs are static and standalone text is visible. -->
+<section class="ds-demo" data-ds-demo="standalone · sizes sm / md / lg (hidden text, shown under reduced motion)">
+  <div class="ds-inline" data-gap="6">
+    <span class="ds-spinner" role="status" data-size="sm"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label" data-hidden>Loading</span></span>
+    <span class="ds-spinner" role="status"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label" data-hidden>Loading comments</span></span>
+    <span class="ds-spinner" role="status" data-size="lg"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label" data-hidden>Loading results</span></span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="standalone · visible text (delayed show via Spinner.js)">
+  <span class="ds-spinner" role="status" data-ds-module="spinner"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label">Loading results</span></span>
+</section>
+<section class="ds-demo" data-ds-demo="in-control · Button loading (on-solid) + loading + pressed (prevented)">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-target" data-variant="primary" aria-busy="true"><span>Save changes</span><span class="ds-spinner" data-variant="in-control" aria-hidden="true"><span class="ds-spinner__indicator"></span></span></button>
+    <button type="button" class="ds-button ds-target" data-variant="primary" aria-busy="true" data-force="pressed"><span>Approve</span><span class="ds-spinner" data-variant="in-control" aria-hidden="true"><span class="ds-spinner__indicator"></span></span></button>
+    <button type="button" class="ds-button ds-target" aria-busy="true" data-force="focus"><span>Export report</span><span class="ds-spinner" data-variant="in-control" aria-hidden="true"><span class="ds-spinner__indicator"></span></span></button>
+    <button type="button" class="ds-button ds-target" data-variant="destructive" aria-busy="true"><span>Delete 3 items</span><span class="ds-spinner" data-variant="in-control" aria-hidden="true"><span class="ds-spinner__indicator"></span></span></button>
+    <button type="button" class="ds-button ds-target" data-variant="tertiary" aria-busy="true" aria-label="Refresh list"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg><span class="ds-spinner" data-variant="in-control" aria-hidden="true"><span class="ds-spinner__indicator"></span></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="on-inverse">
+  <div class="ds-inline" data-gap="4" data-ds-on="inverse" style="padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-structure-surface-inverse); color: var(--color-structure-text-oninverse)">
+    <span class="ds-spinner" role="status"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label">Connecting to the printer</span></span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sm in a table cell (row saving)">
+  <table class="ds-text-body">
+    <thead><tr><th scope="col">Vendor</th><th scope="col">Amount</th><th scope="col">Save state</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Sinar Jaya</th><td><bdi>4,250,000</bdi></td><td><span class="ds-spinner" role="status" data-size="sm"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label">Saving row</span></span></td></tr>
+      <tr><th scope="row">Mitra Abadi</th><td><bdi>1,180,000</bdi></td><td>Saved</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="ds-demo" data-ds-demo="over 2 s · escalated to Skeleton (owner swaps it, announces once)">
+  <section aria-labelledby="sp-esc" aria-busy="true" style="max-inline-size: 28rem">
+    <h3 class="ds-text-label" id="sp-esc">Search results</h3>
+    <p class="ds-text-secondary">Loading results</p>
+    <div class="ds-skeleton" aria-hidden="true" data-effect="none">
+      <div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+    </div>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="long text (+40% locale) wraps beside the arc">
+  <div style="max-inline-size: 16rem">
+    <span class="ds-spinner" role="status" lang="id"><span class="ds-spinner__indicator" aria-hidden="true"></span><span class="ds-spinner__label">Memuat hasil pencarian dan filter yang tersimpan</span></span>
+  </div>
+</section>

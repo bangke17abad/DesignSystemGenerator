@@ -1,0 +1,397 @@
+{
+  "accessibility": {
+    "attributes": [
+      "level heading diberikan lewat prop agar sesuai outline halaman (tidak selalu h2)",
+      "hasil pencarian/filter kosong diumumkan lewat LiveAnnouncer polite (\"No results for 'invoice 2041'\") oleh SearchField/FilterChip pemicu, bukan oleh EmptyState lagi",
+      "variant not-found: judul dokumen diperbarui (\"Page not found\") dan fokus ke h1 setelah navigasi",
+      "restricted: tidak menyebut judul atau isi konten yang dibatasi",
+      "CTA yang diblokir memakai aria-disabled + reason, bukan disabled native"
+    ],
+    "focus_order": "judul → deskripsi → CTA → aksi sekunder; tidak mencuri fokus saat render awal",
+    "native": {
+      "compose": "Column { Text(title, Modifier.semantics { heading() }); Text(description); Button(...) } dengan Image(contentDescription = null). Not verified against the pinned version",
+      "flutter": "Column dengan Semantics(header: true, child: Text(title)) dan ExcludeSemantics pada ilustrasi; pengumuman lewat SemanticsService.announce saat daftar menjadi kosong. Not verified against the pinned version",
+      "swiftui": "ContentUnavailableView(title, systemImage:, description:) { actions } (iOS 17+); versi lama VStack dengan .accessibilityAddTraits(.isHeader) pada judul. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "tidak ada role khusus; judul adalah heading (h2/h3 sesuai hierarki), ilustrasi dekoratif (alt=\"\" atau aria-hidden)",
+    "sr_label": "judul heading + deskripsi; ilustrasi tidak dibaca",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "2.4.6",
+      "3.3.3",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "wadah di area konten yang kosong (sel tabel penuh, panel, halaman); rata sesuai L17 (kiri atau tengah)",
+      "tokens": [
+        "space-6",
+        "space-8",
+        "space-12",
+        "layout-measure"
+      ]
+    },
+    {
+      "part": "illustration",
+      "role": "gambar atau ikon opsional sesuai kebijakan L9 (beberapa archetype tidak memakai ilustrasi di surface operasional); dekoratif, alt kosong",
+      "tokens": [
+        "icon-lg",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "apa yang kosong, sebagai heading dengan level yang benar untuk konteksnya (teks isi)",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "type-h3-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "mengapa kosong dan kapan atau bagaimana terisi",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "actions",
+      "role": "satu CTA (Button primary hanya bila tidak ada primer lain di tampilan; selain itu secondary) + satu aksi sekunder opsional (Link); hanya bila aksinya valid",
+      "tokens": [
+        "space-3",
+        "space-4"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "EmptyState.Actions (wadah CTA Button dan Link sekunder)"
+    ],
+    "props": [
+      {
+        "default": "first-use",
+        "description": "Jenis kekosongan; menentukan nada dan aksi default.",
+        "name": "variant",
+        "required": false,
+        "type": "\"first-use\" | \"no-results\" | \"cleared\" | \"not-found\" | \"restricted\""
+      },
+      {
+        "description": "Judul: apa yang kosong.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Mengapa kosong dan kapan terisi.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "2",
+        "description": "Level heading judul sesuai hierarki halaman.",
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4"
+      },
+      {
+        "description": "Visual dekoratif sesuai kebijakan L9; diabaikan bila L9 melarang di surface ini.",
+        "name": "illustration",
+        "required": false,
+        "type": "IllustrationName | IconName"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke CTA lalu aksi sekunder; judul dan deskripsi dibaca lewat urutan baca",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus ke judul EmptyState (tabindex -1) atau judul daftar (§9.5), dan \"No invoices\" diumumkan polite lewat LiveAnnouncer",
+      "trigger": "item terakhir dihapus sehingga daftar menjadi kosong"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress CTA (mis. membuka form buat-baru)",
+      "trigger": "klik CTA"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan pointer; area klik ≥ target-min-touch",
+      "trigger": "tap CTA"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "No invoices yet",
+        "Invoices you create or import will appear here.",
+        "Create invoice",
+        "No results for \"invoice 2041\"",
+        "Try a different number or clear the status filter.",
+        "Clear filters",
+        "All requests are handled",
+        "This item no longer exists. It may have been deleted or moved.",
+        "Back to requests",
+        "You don't have access to this page. Ask a workspace admin to give you access."
+      ],
+      "id-ID": [
+        "Belum ada faktur",
+        "Faktur yang Anda buat atau impor akan muncul di sini.",
+        "Buat faktur",
+        "Tidak ada hasil untuk \"faktur 2041\"",
+        "Coba nomor lain atau hapus filter status.",
+        "Hapus filter",
+        "Semua permintaan sudah ditangani",
+        "Item ini sudah tidak ada. Item mungkin telah dihapus atau dipindahkan.",
+        "Kembali ke permintaan",
+        "Anda tidak punya akses ke halaman ini. Minta admin workspace memberi akses."
+      ]
+    },
+    "rules": [
+      "Judul menyebut objek yang kosong (\"No invoices yet\"), bukan \"Nothing here\" atau \"No data\".",
+      "Deskripsi menjelaskan kapan atau bagaimana terisi dalam satu-dua kalimat.",
+      "CTA kata kerja spesifik dan hanya bila aksinya valid untuk role (\"Create invoice\").",
+      "No-results menyebut kueri atau filter aktif dan cara memperluasnya.",
+      "Not-found tidak menyalahkan pengguna dan selalu memberi jalan kembali; tanpa \"Oops\".",
+      "Ilustrasi dan nada mengikuti L9 dan L11; tanpa humor pada not-found atau restricted."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "Link",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Tulis apa yang kosong dan kapan terisi secara spesifik untuk entitas itu.",
+    "Bedakan first-use, no-results, cleared, not-found, dan restricted.",
+    "Tampilkan CTA hanya bila role boleh menjalankannya saat ini.",
+    "Pindahkan fokus ke judul saat daftar menjadi kosong karena aksi pengguna."
+  ],
+  "dont": [
+    {
+      "text": "Menampilkan EmptyState saat muat gagal atau saat offline tanpa cache; itu menyatakan data kosong yang belum tentu benar (I6)."
+    },
+    {
+      "text": "Menulis \"No data\" atau \"Nothing here\" tanpa objek dan penjelasan."
+    },
+    {
+      "ref": "UB10",
+      "text": "Menampilkan CTA yang akan ditolak izin tanpa alasan terlihat."
+    },
+    {
+      "text": "Memakai warna semantik atau ikon status untuk keadaan kosong biasa; kosong bukan status (I1)."
+    },
+    {
+      "text": "Menaruh teks penting di dalam ilustrasi."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul dan deskripsi membungkus di dalam layout-measure; CTA membungkus ke dua baris di phone, tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "ilustrasi disembunyikan lebih dulu agar teks dan CTA tetap terlihat tanpa gulir horizontal",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "inilah kasus utamanya; dipakai hanya setelah server mengonfirmasi hasil kosong",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "bukan EmptyState; CTA buat-baru di tempat lain diblokir dengan reason",
+      "case": "jumlah maksimum (kuota item tercapai)"
+    },
+    {
+      "behaviour": "dengan cache kosong yang terkonfirmasi: EmptyState + ConnectionStatus stale; tanpa konfirmasi: InlineAlert C2 offline, bukan EmptyState",
+      "case": "offline"
+    },
+    {
+      "behaviour": "EmptyState diganti daftar; item baru diumumkan polite sekali; fokus tidak dipindah bila pengguna tidak sedang di EmptyState",
+      "case": "pembaruan beruntun cepat (realtime menambah item saat EmptyState tampil)"
+    },
+    {
+      "behaviour": "pesan menyebut penyebab yang paling bisa diubah pengguna lebih dulu (filter), lalu izin bila tetap kosong",
+      "case": "filter + kueri + izin bersamaan menghasilkan kosong"
+    },
+    {
+      "behaviour": "satu sel colspan penuh; Table tetap menampilkan header kolom agar konteks tidak hilang",
+      "case": "EmptyState di dalam sel Table"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "EmptyState dengan label generik (\"No data\", \"Nothing here\") ditolak (V3)",
+    "EmptyState dengan CTA tanpa cek izin ditandai (manual-review)",
+    "Ilustrasi di surface operasional pada bahasa yang melarangnya ditolak (L9)"
+  ],
+  "name": "EmptyState",
+  "preview": {
+    "combinations": [
+      "first-use per role (full / hidden / disabled-with-reason)",
+      "EmptyState di sel Table",
+      "teks 200% (ilustrasi disembunyikan)",
+      "daftar menjadi kosong setelah hapus (fokus ke judul)"
+    ],
+    "states": [
+      "default",
+      "with-filters-active",
+      "cta-blocked",
+      "focus (CTA)",
+      "offline-empty"
+    ],
+    "variants": [
+      "first-use",
+      "no-results",
+      "cleared",
+      "not-found",
+      "restricted"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menggantikan konten yang kosong dengan penjelasan spesifik: apa yang kosong, mengapa, dan kapan atau bagaimana terisi; CTA hanya bila aksinya valid untuk role dan konteks saat ini. Juga jalur baku error Not found (§12.2) dengan jalan kembali.",
+    "when_not_to_use": [
+      "Untuk error server atau gagal muat: pakai InlineAlert C1 + Retry; EmptyState tidak pernah menyembunyikan kegagalan sebagai \"tidak ada data\".",
+      "Saat data masih dimuat: pakai Skeleton; EmptyState hanya setelah server mengonfirmasi hasil kosong.",
+      "Untuk izin yang ditolak RBAC: cegah lebih dulu (hidden atau disabled-with-reason); EmptyState restricted hanya bila pengguna tiba lewat tautan langsung.",
+      "Untuk field kosong di dalam DescriptionList atau sel tabel: tulis \"Not set\" atau tanda dari glosarium, bukan EmptyState.",
+      "Untuk onboarding bertahap atau tur fitur: pakai pattern onboarding terpisah; EmptyState tetap singkat."
+    ]
+  },
+  "related": [
+    "Skeleton",
+    "InlineAlert",
+    "Table",
+    "List",
+    "SearchField",
+    "FilterChip"
+  ],
+  "responsive": [
+    {
+      "behaviour": "rata sesuai L17 dengan gutter; ilustrasi diperkecil atau disembunyikan bila mendorong CTA keluar viewport; CTA lebar penuh",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "di dalam wadah konten; lebar teks dibatasi layout-measure; CTA lebar intrinsik",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "di area konten atau sel tabel penuh; lebar teks dibatasi layout-measure; tidak memenuhi seluruh layar bila hanya satu panel kosong",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh membuat item: CTA buat-baru ditampilkan"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak pernah boleh membuat item: CTA tidak ditampilkan; deskripsi menjelaskan siapa yang menambahkan item (\"Invoices appear here when finance adds them\")"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "role biasanya boleh tetapi diblokir sementara (kuota, langganan): CTA aria-disabled + reason"
+    },
+    {
+      "pattern": "read-only",
+      "when": "tampilan arsip atau audit: tanpa CTA, hanya penjelasan"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Panah \"Back to …\" dicerminkan; ilustrasi tidak dicerminkan kecuali berarah; perataan start mengikuti arah inline."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran mengikuti wadahnya (sel tabel, panel, halaman) lewat variant dan spasi L5; teks tetap ≥ 16 di semua wadah. Area klik milik Button dan Link di dalamnya."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "description": "color-structure-text-secondary",
+        "title": "color-structure-text-primary"
+      },
+      "treatment": "judul text-primary, deskripsi text-secondary, ilustrasi bila L9 izinkan; tidak memakai warna semantik karena kosong bukan status"
+    },
+    {
+      "name": "with-filters-active",
+      "token_swaps": {},
+      "treatment": "variant no-results menampilkan ringkasan filter aktif (FilterChip) dan aksi Clear filters; fokus tidak dipindah"
+    },
+    {
+      "name": "cta-blocked",
+      "token_swaps": {
+        "cta-label": "color-structure-text-disabled",
+        "reason": "color-structure-text-secondary"
+      },
+      "treatment": "CTA relevan tetapi tidak diizinkan saat ini: Button aria-disabled + reason terlihat (mis. \"Ask an admin to add vendors\")"
+    },
+    {
+      "name": "focus (CTA)",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring fokus pada Button/Link; EmptyState sendiri tidak fokusabel"
+    },
+    {
+      "name": "offline-empty",
+      "token_swaps": {},
+      "treatment": "tidak ada data cache dan perangkat offline: EmptyState tidak dipakai; diganti InlineAlert C2 offline agar tidak mengklaim \"tidak ada data\" (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}EmptyState: Column dengan heading semantics",
+    "flutter": "{ns}_empty_state.dart: Column dengan Semantics header",
+    "html": {
+      "element": "section",
+      "notes": "section.{ns}-empty-state dengan h{n} judul; tidak memakai role=status (pengumuman dari pemicu lewat LiveAnnouncer)"
+    },
+    "swiftui": "{Ns}EmptyState: membungkus ContentUnavailableView (fallback VStack)"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Belum ada data sama sekali. Menjelaskan apa yang akan muncul di sini; CTA membuat item pertama bila role boleh membuat.",
+      "name": "first-use"
+    },
+    {
+      "description": "Pencarian atau filter tidak cocok. Menyebut kueri/filter aktif; aksi \"Clear filters\" atau saran ejaan; tidak ada CTA buat-baru kecuali relevan.",
+      "name": "no-results"
+    },
+    {
+      "description": "Semua item sudah ditangani (antrean tugas habis). Kalimat netral faktual; tanpa perayaan berlebihan kecuali L1/L11 mengizinkan nada itu.",
+      "name": "cleared"
+    },
+    {
+      "description": "Item terhapus, dipindah, atau tautan salah. Halaman penuh dengan jalan kembali (ke daftar induk atau beranda).",
+      "name": "not-found"
+    },
+    {
+      "description": "Pengguna tiba lewat tautan langsung ke konten yang tidak boleh dilihat role. Menyebut siapa yang bisa memberi akses; tanpa membocorkan isi.",
+      "name": "restricted"
+    }
+  ]
+}

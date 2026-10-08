@@ -1,0 +1,471 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke label; aria-valuetext bermakna (\"450 of 1,000 rows\", \"About 2 minutes left\")",
+      "Pengumuman lewat LiveAnnouncer: mulai dan selesai polite; tonggak hanya setiap 25% dan tidak lebih sering dari 10 detik; gagal (C1) assertive; tidak pernah per persen",
+      "bar bukan live region; nilai dibaca saat pengguna menavigasi ke sana",
+      "region induk aria-busy=\"true\" selama proses yang mengubah konten di bawahnya",
+      "warna indikator tidak sendirian: hasil akhir selalu punya ikon status + teks di status-line (I2)",
+      "indeterminate di bawah reduced motion tidak bergerak; maknanya dari teks"
+    ],
+    "focus_order": "label → (bar, tidak fokusabel) → aksi Cancel/Retry; fokus tidak dipindah saat proses selesai kecuali proses dibuka dari Modal yang ditutup",
+    "native": {
+      "compose": "LinearProgressIndicator(progress = { p }, modifier = Modifier.semantics { progressBarRangeInfo = ProgressBarRangeInfo(p, 0f..1f); stateDescription = \"450 of 1,000 rows\" }); LinearProgressIndicator() untuk indeterminate. Not verified against the pinned version",
+      "flutter": "LinearProgressIndicator(value: p /* null = indeterminate */, semanticsLabel: label, semanticsValue: '450 of 1,000 rows'); tonggak lewat SemanticsService.announce; animasi indeterminate mati bila MediaQuery.disableAnimationsOf true. Not verified against the pinned version",
+      "swiftui": "ProgressView(value: done, total: total) { Text(label) } currentValueLabel: { Text(\"450 of 1,000 rows\") } dengan .accessibilityValue; ProgressView() untuk indeterminate. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "progressbar (elemen <progress> atau div role=\"progressbar\") dengan aria-valuenow/min/max untuk determinate; tanpa aria-valuenow untuk indeterminate",
+    "sr_label": "label proses + aria-valuetext; hasil akhir dari status-line",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "2.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "nama proses (\"Importing contacts\"); teks isi; juga nama aksesibel",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "value-text",
+      "role": "nilai terlihat dengan angka tabular (\"45%\" atau \"450 of 1,000 rows\"); teks isi karena dibutuhkan untuk keputusan",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "font-sans",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "track",
+      "role": "jalur penuh; batasnya terlihat ≥ 3:1 lewat border-control agar panjang total terbaca",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "indicator",
+      "role": "isi bar; warna semantik solid sesuai fase (berjalan = info, selesai = positive, gagal = critical, perlu tindakan = warning, dibatalkan = neutral-negative); grafis ≥ 3:1",
+      "tokens": [
+        "color-semantic-info",
+        "color-semantic-positive",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-neutral-negative",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "status-line",
+      "role": "ikon status terkunci + teks hasil atau sisa (\"About 2 minutes left\"); perlakuan teks dari L3 per kelas",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-semantic-info-strong",
+        "color-semantic-positive-strong",
+        "color-semantic-critical-strong",
+        "color-semantic-warning-strong",
+        "color-semantic-neutral-negative-strong",
+        "type-body-size",
+        "type-body-line"
+      ]
+    },
+    {
+      "part": "actions",
+      "role": "Cancel selama berjalan; Retry atau View report setelah selesai/gagal",
+      "tokens": [
+        "space-2",
+        "space-3"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "ProgressBar.Actions (Cancel, Retry, View)"
+    ],
+    "props": [
+      {
+        "default": "determinate",
+        "description": "Jenis progres.",
+        "name": "variant",
+        "required": false,
+        "type": "\"determinate\" | \"indeterminate\" | \"segmented\""
+      },
+      {
+        "default": "md",
+        "description": "Tebal track (subset §6.8; tidak ada lg karena bar tidak interaktif).",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\""
+      },
+      {
+        "description": "Nama proses; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Nilai saat ini (0-max); kosong = indeterminate.",
+        "name": "value",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "100",
+        "description": "Nilai maksimum (mis. total baris).",
+        "name": "max",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Teks nilai terlihat dan aria-valuetext; default dari formatter locale.",
+        "name": "valueText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "info",
+        "description": "Fase hasil: info berjalan, positive selesai, critical gagal, warning perlu tindakan, neutral-negative dibatalkan.",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Status-line: sisa waktu atau ringkasan hasil.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "bar tidak fokusabel; fokus ke Cancel atau Retry di sampingnya",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "konfirmasi bila pembatalan membuang pekerjaan (Modal), selain itu langsung; state cancelled diumumkan polite",
+      "trigger": "Enter pada Cancel"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada tooltip berisi info penting; nilai sudah terlihat di value-text (UB9)",
+      "trigger": "hover pada bar"
+    },
+    {
+      "input": "touch",
+      "result": "proses diulang dari awal atau dari titik gagal (sesuai brief); bar kembali ke running",
+      "trigger": "tap Retry setelah gagal"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Importing contacts",
+        "450 of 1,000 rows",
+        "About 2 minutes left",
+        "Import complete. 980 rows imported, 20 skipped.",
+        "Import failed at row 451 because the file stopped responding. Try again to continue from row 451.",
+        "Generating report",
+        "Waiting for the server to start the export"
+      ],
+      "id-ID": [
+        "Mengimpor kontak",
+        "450 dari 1.000 baris",
+        "Sekitar 2 menit lagi",
+        "Impor selesai. 980 baris diimpor, 20 dilewati.",
+        "Impor gagal di baris 451 karena file berhenti merespons. Coba lagi untuk melanjutkan dari baris 451.",
+        "Membuat laporan",
+        "Menunggu server memulai ekspor"
+      ]
+    },
+    "rules": [
+      "Label: kata kerja -ing/proses + objek (\"Importing contacts\"), sama dengan tombol pemicu (\"Import\").",
+      "Nilai: persentase atau n dari total dengan formatter locale dan tabular-nums; perkiraan waktu dibulatkan (\"About 2 minutes left\").",
+      "Hasil: apa yang selesai + apa yang tidak, dengan jumlah (\"980 rows imported, 20 skipped\").",
+      "Gagal: apa yang terjadi + cara memperbaiki + Retry; tanpa \"Oops\".",
+      "Tidak menampilkan 100% sebagai selesai sebelum server mengonfirmasi."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai determinate untuk impor dan laporan; ubah indeterminate menjadi determinate begitu total diketahui.",
+    "Tampilkan nilai sebagai teks selain bar.",
+    "Umumkan hanya mulai, tonggak 25%, selesai, dan gagal.",
+    "Tunggu konfirmasi server sebelum menampilkan selesai."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Menandai hasil gagal atau selesai hanya dengan warna bar."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai warna interaksi atau merek untuk isi bar yang membawa status."
+    },
+    {
+      "text": "Mengumumkan setiap perubahan persen ke pembaca layar."
+    },
+    {
+      "text": "Bar indeterminate yang terus bergerak di bawah reduced motion atau tanpa teks penjelas."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menaruh nilai progres hanya di tooltip."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label dan value-text pindah ke dua baris; bar selalu selebar wadah",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "teks tumbuh; tebal bar tidak berubah tetapi tetap ≥ 3:1 dan terbaca; tidak ada teks di dalam bar",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "proses tidak dimulai; InlineAlert C2 \"The file has no rows\" menggantikan bar",
+      "case": "0 item (file tanpa baris)"
+    },
+    {
+      "behaviour": "angka diringkas dengan formatter locale (\"1.2M\"); tonggak tetap per 25%",
+      "case": "jumlah maksimum (jutaan baris)"
+    },
+    {
+      "behaviour": "unggah berhenti di posisi terakhir dengan status C2 \"Paused: you're offline\"; lanjut otomatis saat online bila protokol mendukung, selain itu Retry",
+      "case": "offline di tengah proses"
+    },
+    {
+      "behaviour": "render dibatasi ±4 kali per detik; pengumuman tetap per 25%",
+      "case": "pembaruan beruntun cepat (event progres tiap 50 ms)"
+    },
+    {
+      "behaviour": "dijepit ke 0-100; nilai mundur ditampilkan (mis. fase ulang) tanpa animasi lompat, label menyebut fasenya",
+      "case": "nilai mundur atau melebihi 100"
+    },
+    {
+      "behaviour": "satu bar per proses dalam List, plus ringkasan agregat (\"2 of 3 imports running\"); masing-masing punya label unik",
+      "case": "beberapa proses bersamaan"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila journey memuat impor, unggah, ekspor, atau pembuatan laporan (§12.3).",
+  "lint": [
+    "ProgressBar tanpa label ditolak",
+    "Pengumuman progres lebih sering dari tonggak 25% ditandai (manual-review)",
+    "Animasi indeterminate tanpa aturan prefers-reduced-motion ditolak (V6)",
+    "Isi bar memakai color-interaction-* atau color-brand-* ditolak (UB12)"
+  ],
+  "name": "ProgressBar",
+  "preview": {
+    "combinations": [
+      "sm di baris tabel",
+      "indeterminate di bawah reduced motion",
+      "gagal + Retry fokus",
+      "3 proses bersamaan + ringkasan"
+    ],
+    "states": [
+      "running (C5 info)",
+      "complete (C4 positive)",
+      "failed (C1 critical)",
+      "needs-attention (C2 warning)",
+      "cancelled (C3 neutral-negative)",
+      "indeterminate",
+      "local-pending"
+    ],
+    "variants": [
+      "determinate",
+      "indeterminate",
+      "segmented"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menunjukkan kemajuan proses yang lebih lama dari 2 detik: determinate (persentase atau n dari total) untuk impor, unggah, ekspor, dan pembuatan laporan; indeterminate hanya bila total benar-benar tidak diketahui. Hasil akhir (selesai, gagal, sebagian, dibatalkan) ditandai dengan ikon dan teks status.",
+    "when_not_to_use": [
+      "Untuk tunggu di bawah 2 detik atau di dalam kontrol: pakai Spinner.",
+      "Untuk muat pertama daftar atau tabel: pakai Skeleton yang meniru tata letak.",
+      "Untuk menampilkan nilai atau kuota (penyimpanan terpakai, skor): itu meter/data, pakai InlineMetrics atau Chart, bukan ProgressBar.",
+      "Untuk langkah form bertahap: pakai Stepper.",
+      "Untuk sisa waktu: pakai CountdownTimer."
+    ]
+  },
+  "related": [
+    "Spinner",
+    "Skeleton",
+    "FileDropzone",
+    "InlineAlert",
+    "NotificationItem",
+    "Stepper"
+  ],
+  "responsive": [
+    {
+      "behaviour": "label di atas bar, value-text di bawah bar; aksi lebar penuh di bawah; proses panjang tetap berjalan bila pengguna meninggalkan layar dan hasilnya dikirim lewat NotificationItem",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "label dan value-text satu baris di atas bar; aksi di inline-end",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "satu baris label + value-text, bar di bawah; di tabel memakai sm dengan value-text di sel yang sama",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "pemilik proses: melihat progres dan bisa Cancel/Retry"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role lain yang boleh melihat proses (mis. admin memantau impor orang lain): progres terlihat tanpa Cancel"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "Cancel tidak tersedia karena proses sudah melewati titik tidak bisa dibatalkan; alasan tertulis"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Indikator mengisi dari inline-start ke inline-end sehingga dicerminkan di RTL (arah progress, §12.4); angka diisolasi LTR; ikon status tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "non-interaktif; tidak ada area klik (aksi Cancel/Retry adalah Button terpisah ≥ target-min-touch)",
+      "name": "sm",
+      "notes": "Di dalam baris tabel, item List, atau FileDropzone per file.",
+      "size_token": "space-1"
+    },
+    {
+      "axis": "block",
+      "hit_area": "non-interaktif; tidak ada area klik",
+      "name": "md",
+      "notes": "Default untuk panel proses, halaman impor, dan Modal.",
+      "size_token": "space-2"
+    }
+  ],
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "running (C5 info)",
+      "token_swaps": {
+        "indicator": "color-semantic-info",
+        "status-container-tinted": "color-semantic-info-subtle",
+        "status-icon": "color-semantic-info",
+        "status-text": "color-semantic-info-strong"
+      },
+      "treatment": "indicator info solid; status-line dengan perlakuan C5 dari L3 (umumnya quiet: ikon info + teks); nilai diperbarui tanpa animasi lompat"
+    },
+    {
+      "name": "complete (C4 positive)",
+      "token_swaps": {
+        "indicator": "color-semantic-positive",
+        "status-container-filled": "color-semantic-positive",
+        "status-container-tinted": "color-semantic-positive-subtle",
+        "status-content-filled": "color-semantic-on-positive",
+        "status-icon": "color-semantic-positive",
+        "status-text": "color-semantic-positive-strong"
+      },
+      "treatment": "indicator penuh positive; status-line C4 dari L3 (quiet / outline / tinted / filled sesuai izin L3); diumumkan polite"
+    },
+    {
+      "name": "failed (C1 critical)",
+      "token_swaps": {
+        "indicator": "color-semantic-critical",
+        "status-container-filled": "color-semantic-critical",
+        "status-container-tinted": "color-semantic-critical-subtle",
+        "status-content-filled": "color-semantic-on-critical",
+        "status-icon": "color-semantic-critical",
+        "status-text": "color-semantic-critical-strong"
+      },
+      "treatment": "indicator berhenti di posisi terakhir dan berganti critical; status-line C1 dari L3 + Retry; diumumkan assertive lewat LiveAnnouncer; detail kegagalan di InlineAlert C1"
+    },
+    {
+      "name": "needs-attention (C2 warning)",
+      "token_swaps": {
+        "indicator": "color-semantic-warning",
+        "status-container-filled": "color-semantic-warning",
+        "status-container-tinted": "color-semantic-warning-subtle",
+        "status-content-filled": "color-semantic-on-warning",
+        "status-icon": "color-semantic-warning",
+        "status-text": "color-semantic-warning-strong"
+      },
+      "treatment": "proses berhenti menunggu keputusan (mis. konflik kolom) atau selesai sebagian; indicator warning; status-line C2 + aksi \"Review\""
+    },
+    {
+      "name": "cancelled (C3 neutral-negative)",
+      "token_swaps": {
+        "indicator": "color-semantic-neutral-negative",
+        "status-container-filled": "color-semantic-neutral-negative",
+        "status-container-tinted": "color-semantic-neutral-negative-subtle",
+        "status-content-filled": "color-semantic-on-neutral-negative",
+        "status-icon": "color-semantic-neutral-negative",
+        "status-text": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "dibatalkan pengguna; indicator neutral-negative di posisi terakhir; status-line C3 menyebut apa yang sudah diproses"
+    },
+    {
+      "name": "indeterminate",
+      "token_swaps": {
+        "hatch": "chart-hatch-line",
+        "indicator": "color-semantic-info"
+      },
+      "treatment": "segmen bergerak di track (motion-slow-duration, easing standard); reduced motion: segmen statis selebar track dengan pola hatch atau pulse opasitas satu frame, label \"Waiting for server\" tetap membawa makna"
+    },
+    {
+      "name": "local-pending",
+      "token_swaps": {
+        "indicator": "color-semantic-info",
+        "status-text": "color-semantic-info-strong"
+      },
+      "treatment": "unggah selesai di klien tetapi server belum mengonfirmasi: bar penuh tetap info dengan teks \"Processing\"; tidak berpindah ke positive sebelum konfirmasi (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}ProgressBar: membungkus LinearProgressIndicator Material 3",
+    "flutter": "{ns}_progress_bar.dart: membungkus LinearProgressIndicator dengan status-line",
+    "html": {
+      "element": "progress",
+      "notes": "<progress> bergaya token atau div role=progressbar bila segmented; label lewat <label for> atau aria-labelledby; @media (prefers-reduced-motion) untuk indeterminate"
+    },
+    "swiftui": "{Ns}ProgressBar: ProgressView dengan ProgressViewStyle kustom dari token"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Nilai 0-100 atau n dari total; wajib untuk impor dan laporan.",
+      "name": "determinate"
+    },
+    {
+      "description": "Total tidak diketahui (mis. menunggu antrean server). Animasi bergerak; label menyebut tahapnya; berpindah ke determinate begitu total diketahui.",
+      "name": "indeterminate"
+    },
+    {
+      "description": "Beberapa fase berurutan (unggah → validasi → impor) dengan label fase aktif; tetap satu progressbar bagi teknologi bantu.",
+      "name": "segmented"
+    }
+  ]
+}

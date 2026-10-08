@@ -1,0 +1,119 @@
+<!-- PageHeader fixture · default / compact × states default, sticky-stuck, focus, loading, disabled-with-reason; long title + actions, read-only role, 0 actions, RTL, 200% text (catalog preview, §6.9). Each demo holds the page h1 (a real page has exactly one). Breadcrumb (tablet+) and back-link (phone) swap by width. -->
+<section class="ds-demo" data-ds-demo="variant default">
+  <header class="ds-page-header">
+    <a class="ds-link ds-page-header__back" data-variant="standalone" href="#ph-inv"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Invoices</span></a>
+    <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="#ph-fin">Finance</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-inv">Invoices</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-cur" aria-current="page">INV-2041</a></li></ol></nav>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Invoice INV-2041</h1>
+        <p class="ds-page-header__description">Sent to PT Sinar Jaya on 10 March. Payment is due in 14 days.</p>
+        <div class="ds-page-header__meta"><span class="ds-inline" data-gap="1"><svg class="ds-icon" data-size="sm" aria-hidden="true"><use href="#ds-i-time"/></svg><span>Updated 12 Mar 2026, 09:41</span></span><span>Owner: Dana Pratama</span></div>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">Send reminder</button></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="variant compact (dense surfaces: h1 at h2 scale, actions on the title row)">
+  <header class="ds-page-header" data-variant="compact">
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Invoices</h1>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">New invoice</button></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="long title + actions (actions drop below, no ellipsis)">
+  <header class="ds-page-header">
+    <a class="ds-link ds-page-header__back" data-variant="standalone" href="#ph-inv"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Invoices</span></a>
+    <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="#ph-fin">Finance</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-inv">Invoices</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-cur" aria-current="page">INV-2041</a></li></ol></nav>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Reconciliation of intercompany transfers between the Jakarta and Surabaya entities for the first quarter of 2026</h1>
+        <p class="ds-page-header__description">Includes 214 transfers; 9 need a matching entry before the books close.</p>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">Start reconciliation</button></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="state focus (h1 after a route change, ring outside)">
+  <header class="ds-page-header">
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1" data-force="focus">Invoice INV-2041</h1>
+        <p class="ds-page-header__description">Programmatic focus target: tabindex="-1", not a Tab stop.</p>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">Send reminder</button></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="state sticky-stuck (background + bottom edge appear, height unchanged)">
+  <header class="ds-page-header" data-variant="compact" data-sticky data-stuck>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Invoices</h1>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">New invoice</button></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="state loading (h1 kept with hidden “Loading…”, one-line placeholder)">
+  <header class="ds-page-header">
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1"><span class="ds-vh">Loading…</span><span class="ds-page-header__placeholder" aria-hidden="true"></span></h1>
+      </div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="state disabled-with-reason (primary action blocked)">
+  <header class="ds-page-header">
+    <a class="ds-link ds-page-header__back" data-variant="standalone" href="#ph-inv"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Invoices</span></a>
+    <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="#ph-fin">Finance</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-inv">Invoices</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-cur" aria-current="page">INV-2041</a></li></ol></nav>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Purchase order PO-7713</h1>
+        <p class="ds-page-header__description">Total Rp 184.500.000 · above your approval limit.</p>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><div class="ds-page-header__action-group"><button type="button" class="ds-button ds-target" data-variant="primary" aria-disabled="true" aria-describedby="ph-reason-1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Approve</span></button><span class="ds-page-header__reason" id="ph-reason-1">Only finance managers can approve orders above Rp 100.000.000.</span></div></div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="read-only role (no edit actions) · 0 actions">
+  <header class="ds-page-header">
+    <a class="ds-link ds-page-header__back" data-variant="standalone" href="#ph-inv"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Invoices</span></a>
+    <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="#ph-fin">Finance</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-inv">Invoices</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-cur" aria-current="page">INV-2041</a></li></ol></nav>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Invoice INV-2041</h1>
+        <p class="ds-page-header__description">You can view this invoice. Ask an admin to make changes.</p>
+        <div class="ds-page-header__meta"><span class="ds-inline" data-gap="1"><svg class="ds-icon" data-size="sm" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>View only</span></span></div>
+      </div>
+    </div>
+  </header>
+</section>
+<section class="ds-demo" data-ds-demo="sticky + text 200% (sticky drops when taller than a third of the viewport)">
+  <div data-ds-zoom="200">
+  <header class="ds-page-header" data-sticky data-ds-module="page-header">
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">Faktur yang menunggu persetujuan</h1>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="Tindakan lainnya" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">Buat faktur</button></div>
+    </div>
+  </header>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (actions at inline-end = left, back chevron mirrored)" dir="rtl" lang="ar">
+  <header class="ds-page-header">
+    <a class="ds-link ds-page-header__back" data-variant="standalone" href="#ph-inv"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">الفواتير</span></a>
+    <nav class="ds-page-header__breadcrumb" aria-label="مسار التنقل"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="#ph-fin">المالية</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-inv">الفواتير</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#ph-cur" aria-current="page">INV-2041</a></li></ol></nav>
+    <div class="ds-page-header__body">
+      <div class="ds-page-header__heading">
+        <h1 class="ds-page-header__title" tabindex="-1">الفاتورة INV-2041</h1>
+        <p class="ds-page-header__description">أُرسلت إلى شركة سينار جايا في ١٠ مارس. الدفع مستحق خلال ١٤ يومًا.</p>
+      </div>
+      <div class="ds-page-header__actions"><button type="button" class="ds-button ds-target" aria-label="إجراءات أخرى" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button><button type="button" class="ds-button ds-target" data-variant="primary">إرسال تذكير</button></div>
+    </div>
+  </header>
+</section>

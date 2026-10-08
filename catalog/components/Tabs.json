@@ -1,0 +1,546 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tablist aria-label atau aria-labelledby ke heading terkait",
+      "tab: aria-selected, aria-controls ke panel, id; roving tabindex (terpilih 0, lainnya −1)",
+      "tabpanel: aria-labelledby ke tab; tabindex=\"0\" bila panel tidak memuat elemen fokusabel",
+      "aria-disabled + aria-describedby ke reason pada tab diblokir",
+      "aria-busy pada panel yang sedang memuat",
+      "count dan error disertakan di nama tab, bukan hanya visual"
+    ],
+    "focus_order": "elemen sebelum → tab terpilih (satu tab stop) → isi panel → elemen sesudah; scroll-button tidak di urutan Tab",
+    "native": {
+      "compose": "PrimaryTabRow / SecondaryTabRow atau PrimaryScrollableTabRow + Tab(selected, onClick, text, icon) dengan HorizontalPager opsional; Modifier.semantics { stateDescription = reason } untuk tab diblokir",
+      "flutter": "TabBar(isScrollable: true, tabAlignment: TabAlignment.start) + TabBarView + DefaultTabController atau TabController; Semantics selected otomatis pada Tab",
+      "swiftui": "tidak ada tab strip di dalam halaman; ScrollView(.horizontal) berisi Button dengan .accessibilityAddTraits(.isSelected) dan .accessibilityElement(children: .contain) pada container; TabView hanya untuk tingkat aplikasi (BottomNav)"
+    },
+    "politeness": "polite",
+    "role": "tablist (aria-orientation) berisi tab; panel tabpanel; variant links: nav berlabel berisi a dengan aria-current=\"page\"",
+    "sr_label": "\"{label}, tab, 2 of 5, selected\" + count/error; tab diblokir menyebut reason",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.8",
+      "3.2.1",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "list",
+      "role": "baris tab (tablist); gulir horizontal bila tidak muat; garis dasar border di block-end",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "tab",
+      "role": "satu tab: icon-start opsional + label + count opsional; area klik penuh setinggi list",
+      "tokens": [
+        "control-height-sm",
+        "control-height-md",
+        "control-height-lg",
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "selected-indicator",
+      "role": "penanda non-warna tab terpilih: garis setebal border-width-thick di block-end (variant line) atau latar terangkat (variant contained) + label berbobot tebal",
+      "tokens": [
+        "border-width-thick",
+        "color-interaction-default",
+        "color-structure-surface-raised",
+        "color-structure-text-primary",
+        "radius-sm",
+        "motion-fast-duration",
+        "motion-easing-standard"
+      ]
+    },
+    {
+      "part": "count",
+      "role": "jumlah item atau error di tab; teks, bukan hanya titik",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-icon",
+      "role": "ikon error terkunci pada tab yang panelnya berisi error validasi",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong"
+      ]
+    },
+    {
+      "part": "scroll-button",
+      "role": "IconButton start/end di tepi list saat overflow, hanya di pointer; disembunyikan dari pembaca layar karena panah keyboard sudah menggulir",
+      "tokens": [
+        "icon-md",
+        "color-structure-surface-base",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "panel",
+      "role": "isi tabpanel; menerima fokus bila tidak punya elemen fokusabel",
+      "tokens": [
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px inset −2px di dalam tab; ring panel offset 2px",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "tab baru dipilih (klik, tap, Enter/Space, atau fokus panah pada activation automatic)"
+      }
+    ],
+    "parts": [
+      "Tabs.List",
+      "Tabs.Tab (value, label, icon, count, invalid, disabled, reason, href untuk variant links)",
+      "Tabs.Panel (value, loading)"
+    ],
+    "props": [
+      {
+        "description": "Controlled: nilai tab terpilih.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Uncontrolled: tab terpilih awal; default tab pertama yang tersedia.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "line",
+        "description": "Perlakuan visual dan semantik (links = nav).",
+        "name": "variant",
+        "required": false,
+        "type": "\"line\" | \"contained\" | \"links\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi tab; mode sentuh memaksa ≥ target-min-touch.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "horizontal",
+        "description": "Arah list dan tombol panah.",
+        "name": "orientation",
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      {
+        "default": "automatic",
+        "description": "Panel berganti saat fokus (automatic) atau saat Enter/Space (manual).",
+        "name": "activation",
+        "required": false,
+        "type": "\"automatic\" | \"manual\""
+      },
+      {
+        "description": "Nama aksesibel tablist bila tidak ada heading yang dirujuk.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke tab terpilih (roving tabindex: satu tab stop); Tab berikutnya pindah ke panel",
+      "trigger": "Tab masuk ke tablist"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah antar tab, melingkar; Home/End ke pertama/terakhir; tab ter-fokus digulir ke tampilan; arah ←/→ ditukar di RTL",
+      "trigger": "→/← (↓/↑ bila vertical), Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "panel ikut berganti saat fokus berpindah (hanya bila panel sudah dimuat dan instan)",
+      "trigger": "panah pada activation=\"automatic\""
+    },
+    {
+      "input": "keyboard",
+      "result": "tab terfokus dipilih dan panelnya ditampilkan; dipakai bila panel memuat data dari server",
+      "trigger": "Enter atau Space pada activation=\"manual\""
+    },
+    {
+      "input": "keyboard",
+      "result": "tidak memilih; reason diumumkan polite",
+      "trigger": "Enter pada tab diblokir"
+    },
+    {
+      "input": "pointer",
+      "result": "tab dipilih pada pelepasan (SC 2.5.2); scroll-button menggulir list satu lebar tampak tanpa memindah fokus",
+      "trigger": "klik tab; klik scroll-button"
+    },
+    {
+      "input": "touch",
+      "result": "tap memilih; swipe menggulir list. Swipe di panel untuk berganti tab hanya bila tidak bentrok dengan gulir konten, dan selalu ada jalur tap",
+      "trigger": "tap tab; swipe horizontal pada list"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Overview",
+        "Activity (12)",
+        "Files",
+        "Details (2 errors)",
+        "Settings"
+      ],
+      "id-ID": [
+        "Ringkasan",
+        "Aktivitas (12)",
+        "Berkas",
+        "Detail (2 error)",
+        "Pengaturan"
+      ]
+    },
+    "rules": [
+      "Label tab kata benda singkat (1-2 kata), sentence case, tanpa kata kerja.",
+      "Label tidak berubah saat dipilih; count sebagai angka dalam kurung atau Badge dengan teks.",
+      "Urutan tab dari yang paling sering dipakai; tab default = pertama.",
+      "Label tidak diulang di judul panel kecuali panel butuh heading untuk struktur."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Tooltip",
+    "Skeleton",
+    "EmptyState"
+  ],
+  "do": [
+    "Pakai activation manual bila panel memuat data dari server, automatic bila panel sudah ada di halaman.",
+    "Tandai tab yang panelnya berisi error dengan ikon dan jumlah di label.",
+    "Simpan tab terpilih di URL (query atau hash) agar dapat dibagikan dan dipulihkan saat kembali.",
+    "Biarkan list menggulir horizontal di phone daripada memperkecil teks."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Menandai tab terpilih hanya dengan warna label."
+    },
+    {
+      "text": "Memakai tablist untuk navigasi antar halaman (pakai variant links); riwayat browser dan tautan yang dapat dibagikan hilang."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menyembunyikan informasi kritis di tab yang tidak terpilih tanpa penanda di labelnya."
+    },
+    {
+      "text": "Tab bersarang (tab di dalam panel tab)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tab melebar; list menggulir horizontal; label tidak dipotong dan tidak membungkus (tinggi list stabil)",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi list tumbuh; bila list sticky melebihi seperempat tinggi viewport, list berhenti sticky",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Tabs tidak dirender; satu tab saja juga tidak dirender (panel tampil langsung dengan heading)",
+      "case": "0 tab"
+    },
+    {
+      "behaviour": "> 7 tab: tab sisa dipindah ke tab \"More\" yang membuka Menu berisi pilihan tab, atau diganti Select berlabel di phone",
+      "case": "jumlah tab maksimum"
+    },
+    {
+      "behaviour": "panel menampilkan Skeleton saat memuat; offline menampilkan data tersimpan dengan penanda stale atau InlineAlert + Retry di panel, tab tetap bisa dipindah",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "pilihan pindah ke tab pertama yang tersedia; fokus ke tab itu bila sebelumnya di dalam Tabs; diumumkan polite",
+      "case": "tab terpilih menjadi tersembunyi (izin berubah)"
+    },
+    {
+      "behaviour": "berpindah tab tidak membuang data; state form per panel dipertahankan",
+      "case": "panel dengan form belum tersimpan"
+    },
+    {
+      "behaviour": "list sticky berhenti sticky selama keyboard terbuka agar field fokus tetap terlihat",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "tab tanpa aria-controls atau panel tanpa aria-labelledby ditolak",
+    "Lebih dari satu tab aria-selected=\"true\" dalam satu tablist ditolak",
+    "Tabs berisi satu tab ditolak (manual-review)",
+    "Tab aria-disabled tanpa reason ditolak",
+    "Tabs di dalam Tabs.Panel ditolak (manual-review)"
+  ],
+  "name": "Tabs",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected (dicegah)",
+      "overflow gulir + RTL",
+      "vertical"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "selected",
+      "disabled-with-reason",
+      "error",
+      "loading",
+      "empty"
+    ],
+    "variants": [
+      "line",
+      "contained",
+      "links"
+    ]
+  },
+  "purpose": {
+    "purpose": "Berpindah antar tampilan setara dari konteks yang sama (mis. ringkasan, aktivitas, berkas satu objek) tanpa meninggalkan halaman; satu panel terlihat pada satu waktu.",
+    "when_not_to_use": [
+      "Untuk berpindah antar tujuan aplikasi: pakai PrimaryNav atau BottomNav.",
+      "Untuk mengganti mode, urutan, atau filter dari konten yang sama dengan 2-5 opsi: pakai SegmentedControl.",
+      "Untuk langkah berurutan yang harus diselesaikan: pakai Stepper.",
+      "Untuk bagian yang perlu dibandingkan atau dibaca bersama: tampilkan berurutan atau pakai Accordion; tab menyembunyikan isi.",
+      "Untuk lebih dari ±7 tampilan: pakai Select berlabel atau navigasi sekunder."
+    ]
+  },
+  "related": [
+    "SegmentedControl",
+    "PrimaryNav",
+    "Accordion",
+    "Stepper",
+    "PageHeader"
+  ],
+  "responsive": [
+    {
+      "behaviour": "list menggulir horizontal (overscroll ditandai bayangan tepi), tab terpilih digulir ke tampilan; size lg; label tidak mengecil atau terpotong; list boleh sticky di bawah global bar dengan scroll-padding (SC 2.4.11)",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "list selebar konten; gulir horizontal bila tidak muat; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "list selebar intrinsik di bawah PageHeader; scroll-button tampil saat overflow; orientation vertical diizinkan di panel pengaturan yang lebar",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu tampilan ada; tab dan panel tidak dirender, posisi \"n of m\" dihitung ulang"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tampilan ada tetapi belum tersedia (prasyarat); ikon gembok + reason"
+    },
+    {
+      "pattern": "read-only",
+      "when": "panel tampil penuh tanpa kontrol edit; tab sendiri tidak berubah"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Urutan tab mulai dari inline-start; →/← ditukar; scroll-button start/end bertukar sisi; gulir horizontal dimulai dari kanan di RTL."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh otomatis naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Panel padat pointer (inspector, ContextPanel).",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, dan phone.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "indikator tetap; hover menambah state-layer saja",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring inset + indikator terlihat bersamaan",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ikon error + ring; nama \"Details, 2 errors\"",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "tab terpilih tidak boleh diblokir; pilihan pindah ke tab pertama yang tersedia",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tab bisa dipilih saat panel lain masih memuat; panel baru menampilkan Skeleton",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "tab": "color-structure-text-secondary"
+      },
+      "treatment": "label text-secondary, tanpa indikator"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "tab": "color-structure-text-primary"
+      },
+      "treatment": "label text-primary + state-layer hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "tab": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px; muncul juga saat panah memindah fokus"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "selected-indicator": "color-interaction-default",
+        "tab": "color-structure-text-primary"
+      },
+      "treatment": "aria-selected=\"true\"; indikator garis/latar + label text-primary berbobot tebal; indikator bergeser dengan motion-fast (fade satu frame di reduced motion)"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "tab": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; label text-disabled + ikon gembok; tetap dapat difokus lewat panah; reason di Tooltip saat fokus/hover dan di aria-describedby; tidak bisa dipilih"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error-icon": "color-semantic-critical-strong"
+      },
+      "treatment": "panel memuat error validasi: error-icon + count \"(2 errors)\" di label tab; diumumkan sebagai bagian nama"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "panel memuat data: Skeleton di panel + aria-busy=\"true\" pada panel; tab tetap bisa dipindah"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "panel tanpa data menampilkan EmptyState spesifik; tab tidak disembunyikan agar struktur stabil"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Tabs: PrimaryTabRow / PrimaryScrollableTabRow + Tab",
+    "flutter": "{ns}_tabs.dart: TabBar + TabBarView dengan TabController",
+    "html": {
+      "element": "div[role=tablist] > button[role=tab] + div[role=tabpanel]",
+      "notes": "fallback tanpa JS: semua panel tampil berurutan dengan heading dan daftar tautan anchor; variant links = nav > a"
+    },
+    "swiftui": "{Ns}Tabs: ScrollView horizontal kustom + konten bersyarat"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Indikator garis di block-end tab terpilih; untuk tampilan setara di bawah PageHeader.",
+      "name": "line"
+    },
+    {
+      "description": "Tab sebagai kontrol terangkat di atas surface-sunken; untuk panel di dalam Card atau ContextPanel. Perlakuan visual dari bahasa desain; semantik sama.",
+      "name": "contained"
+    },
+    {
+      "description": "Setiap tab adalah tautan ke URL sendiri (sub-halaman). Dirender sebagai nav berlabel dengan aria-current=\"page\", bukan tablist; Tab berpindah antar tautan, Enter menavigasi.",
+      "name": "links"
+    }
+  ]
+}

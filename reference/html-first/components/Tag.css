@@ -1,0 +1,155 @@
+/* Tag · engine 1.8.0 reference (catalog/components/Tag.json). Tokens only (I3); logical properties only (§12.4).
+   Neutral metadata only (I1): surface-sunken + structure border, never a semantic or attention token, never a status glyph.
+   A pill (radius-full) so it reads differently from StatusLabel's container; square languages resolve it to their radius.
+   Markup: ul.ds-tag-list[aria-label] > li > span.ds-tag (static) | span.ds-tag[data-variant="removable"] > label + button
+   .ds-tag__remove[aria-label="Remove {label}"] | a.ds-tag[data-variant="link"]. The remove button is ≥ target-current: its
+   hit area extends past the pill with negative margins, and the list's row gap grows so it never overlaps a neighbour. */
+.ds-tag-list {
+  --_h: var(--control-height-sm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: max(var(--space-2), calc(var(--target-current) - var(--_h))) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-tag-list > li { display: flex; min-inline-size: 0; max-inline-size: 100%; }
+.ds-tag-list[data-size="md"] { --_h: var(--control-height-md); }
+
+.ds-tag {
+  --_h: var(--control-height-sm);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-block-size: var(--_h);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-block: 0;
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-decoration: none;
+  vertical-align: middle;
+}
+.ds-tag[data-size="md"], .ds-tag-list[data-size="md"] .ds-tag { --_h: var(--control-height-md); }
+.ds-tag__label {
+  min-inline-size: 0;
+  max-inline-size: calc(var(--layout-measure) / 2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ds-tag__icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--color-structure-text-secondary); }
+
+/* removable: remove button at inline-end, hit area max(control-height-sm, target-current) */
+.ds-tag[data-variant="removable"] { padding-inline-end: 0; }
+.ds-tag__remove {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-block-size: max(var(--_h), var(--target-current));
+  min-inline-size: max(var(--_h), var(--target-current));
+  margin-block: calc((var(--_h) - max(var(--_h), var(--target-current))) / 2);
+  margin-inline-start: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* state layer drawn only around the glyph, so the pill keeps its size and the neighbour is never covered */
+.ds-tag__remove::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  z-index: -1;
+  inline-size: calc(var(--_h) - 2 * var(--space-1));
+  block-size: calc(var(--_h) - 2 * var(--space-1));
+  margin-block-start: calc((var(--_h) - 2 * var(--space-1)) / -2);
+  margin-inline-start: calc((var(--_h) - 2 * var(--space-1)) / -2);
+  border-radius: var(--shape-circle);
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-tag__remove .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) {
+  .ds-tag__remove:not([aria-disabled="true"], [aria-busy="true"]):hover { color: var(--color-structure-text-primary); }
+  .ds-tag__remove:not([aria-disabled="true"], [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+  a.ds-tag:hover { border-color: var(--color-structure-border-strong); }
+  a.ds-tag:hover .ds-tag__label { text-decoration: underline; }
+}
+.ds-tag__remove[data-force~="hover"]:not([aria-disabled="true"]) { color: var(--color-structure-text-primary); }
+.ds-tag__remove[data-force~="hover"]:not([aria-disabled="true"])::before { opacity: var(--state-layer-hover-opacity); }
+.ds-tag__remove:not([aria-disabled="true"], [aria-busy="true"]):active,
+.ds-tag__remove[data-force~="pressed"]:not([aria-disabled="true"], [aria-busy="true"]) { color: var(--color-structure-text-primary); }
+.ds-tag__remove:not([aria-disabled="true"], [aria-busy="true"]):active::before,
+.ds-tag__remove[data-force~="pressed"]:not([aria-disabled="true"], [aria-busy="true"])::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-tag__remove[aria-busy="true"] { cursor: progress; }
+/* locked tag (system-assigned): the lock replaces the remove glyph, stays focusable so the reason is read */
+.ds-tag__remove[aria-disabled="true"] { color: var(--color-structure-text-secondary); cursor: not-allowed; }
+.ds-tag-list__reason { margin: 0; margin-block-start: var(--space-2); color: var(--color-structure-text-secondary); }
+
+/* link: the whole tag is the target (≥ target-current), non-colour cue = underline on hover and focus */
+a.ds-tag {
+  min-block-size: max(var(--_h), var(--target-current));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+a.ds-tag[data-force~="hover"] { border-color: var(--color-structure-border-strong); }
+a.ds-tag:focus-visible .ds-tag__label,
+a.ds-tag[data-force~="focus"] .ds-tag__label,
+a.ds-tag[data-force~="hover"] .ds-tag__label { text-decoration: underline; }
+a.ds-tag:active,
+a.ds-tag[data-force~="pressed"] { border-color: var(--color-structure-border-strong); transform: var(--state-press-transform); }
+
+/* pending removal (offline / waiting for the server): stays visible with a "Pending" note until confirmed (I6) */
+.ds-tag[data-state="pending"] { border-style: dashed; }
+.ds-tag__pending { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+/* removing: instant, or a short fade */
+.ds-tag[data-state="removing"] { opacity: 0; transition: opacity var(--motion-fast-duration) var(--motion-easing-exit); }
+
+/* "+N" summary that opens the full list */
+.ds-tag-list__more {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: max(var(--_h), var(--target-current));
+  min-inline-size: var(--target-current);
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-interaction-default);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+@media (hover: hover) { .ds-tag-list__more:hover { text-decoration: underline; } }
+.ds-tag-list__more[data-force~="hover"] { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-tag[data-state="removing"] { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-tag { border-color: CanvasText; }
+  .ds-tag__remove { color: ButtonText; }
+  a.ds-tag { border-color: LinkText; }
+}

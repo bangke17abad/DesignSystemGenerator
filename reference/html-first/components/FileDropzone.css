@@ -1,0 +1,216 @@
+/* FileDropzone · engine 1.8.0 reference (catalog/components/FileDropzone.json). Tokens only (I3); logical properties only (§12.4).
+   fieldset + legend > zone (icon, drag text, "Choose files" Button = a <label> around the real <input type="file">, limits stated
+   before choosing) > file list (name, size, StatusLabel, determinate <progress>, per-file IconButtons). The input is visually
+   hidden but stays the single Tab stop; the label shows its focus ring. Works without JS inside a multipart form; FileDropzone.js
+   adds drop, client validation with per-file reasons, the list, progress, Cancel / Retry / Remove and announcements. */
+.ds-file-dropzone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ds-file-dropzone__label {
+  float: inline-start;
+  inline-size: 100%;
+  margin-block-end: var(--space-1);
+  padding: 0;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-file-dropzone__label + * { clear: both; }
+.ds-file-dropzone__optional { color: var(--color-structure-text-secondary); font-weight: var(--type-body-weight); }
+.ds-file-dropzone__description,
+.ds-file-dropzone__limits,
+.ds-file-dropzone__reason,
+.ds-file-dropzone__error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-file-dropzone__error,
+.ds-file-dropzone__reason { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-file-dropzone__error { color: var(--color-semantic-critical-strong); }
+:is(.ds-file-dropzone__error, .ds-file-dropzone__reason) .ds-icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-file-dropzone__error[hidden], .ds-file-dropzone__reason[hidden] { display: none; }
+
+/* zone: drop target (not a Tab stop); its border style comes from the language tokens, dashed marks "drop here" */
+.ds-file-dropzone__zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: calc(var(--type-body-line) * 3 + 2 * var(--space-6));
+  padding-block: var(--space-6);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) dashed var(--color-structure-border-control);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+  text-align: center;
+  transition: border-color var(--motion-fast-duration) var(--motion-easing-standard), background-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-file-dropzone[data-enhanced] .ds-file-dropzone__zone:not([data-blocked]) { cursor: pointer; }
+.ds-file-dropzone__icon { inline-size: var(--icon-lg); block-size: var(--icon-lg); color: var(--color-structure-text-secondary); }
+.ds-file-dropzone__instruction { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-2); margin: 0; font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-file-dropzone__drop { display: none; align-items: center; gap: var(--space-2); margin: 0; font-weight: var(--type-label-weight); }
+@media (hover: hover) {
+  .ds-file-dropzone__zone:not([data-blocked], [data-dragover]):hover { border-color: var(--color-interaction-border); }
+}
+.ds-file-dropzone__zone[data-force~="hover"] { border-color: var(--color-interaction-border); }
+/* dragover: thick solid border + subtle fill + "Drop to upload" text (never colour alone) */
+.ds-file-dropzone__zone[data-dragover] {
+  border: var(--border-width-thick) solid var(--color-interaction-border);
+  background: var(--color-interaction-subtle);
+  padding-block: calc(var(--space-6) - var(--border-width-thick) + var(--border-width-thin));
+}
+.ds-file-dropzone__zone[data-dragover] > :not(.ds-file-dropzone__drop, .ds-file-dropzone__icon) { visibility: hidden; }
+.ds-file-dropzone__zone[data-dragover] > .ds-file-dropzone__drop { display: flex; position: absolute; inset: 0; justify-content: center; padding: var(--space-4); }
+.ds-file-dropzone__zone[data-dragover] > .ds-file-dropzone__icon { visibility: hidden; }
+.ds-file-dropzone__zone[data-dragover="reject"] { border-color: var(--color-semantic-critical); background: var(--color-semantic-critical-subtle); }
+.ds-file-dropzone__zone[data-dragover="reject"] > .ds-file-dropzone__drop { color: var(--color-semantic-critical-strong); }
+.ds-file-dropzone__drop .ds-icon { flex: none; }
+.ds-file-dropzone__drop [data-when] { display: none; }
+.ds-file-dropzone__zone[data-dragover="accept"] .ds-file-dropzone__drop [data-when="accept"],
+.ds-file-dropzone__zone[data-dragover="reject"] .ds-file-dropzone__drop [data-when="reject"] { display: inline-flex; align-items: center; gap: var(--space-2); }
+.ds-file-dropzone:has(.ds-file-dropzone__input[aria-invalid="true"]) .ds-file-dropzone__zone { border-color: var(--color-semantic-critical); border-style: solid; }
+/* blocked / max reached: no dragover, muted instruction; the reason is visible text */
+.ds-file-dropzone__zone[data-blocked] { cursor: not-allowed; }
+.ds-file-dropzone__zone[data-blocked] .ds-file-dropzone__instruction { color: var(--color-structure-text-secondary); }
+.ds-file-dropzone__zone[data-blocked] .ds-file-dropzone__icon { color: var(--color-structure-text-disabled); }
+
+/* "Choose files": a Button-styled <label> wrapping the visually hidden file input (keyboard and touch path, always present) */
+.ds-file-dropzone__choose { position: relative; cursor: pointer; }
+.ds-file-dropzone__input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.ds-file-dropzone__choose:has(> .ds-file-dropzone__input:focus-visible),
+.ds-file-dropzone__choose[data-force~="focus"] { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+.ds-file-dropzone__choose:has(> .ds-file-dropzone__input[aria-disabled="true"]) {
+  --_bg: var(--color-structure-surface-sunken);
+  --_fg: var(--color-structure-text-disabled);
+  --_border: var(--color-structure-border);
+  background: var(--_bg);
+  color: var(--_fg);
+  border-color: var(--_border);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* file list */
+.ds-file-dropzone__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.ds-file-dropzone__list:empty { display: none; }
+.ds-file-dropzone__item {
+  display: grid;
+  grid-template-columns: var(--icon-md) minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--space-3);
+  min-block-size: var(--layout-row-height);
+  padding-block: var(--space-2);
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+}
+.ds-file-dropzone__item > .ds-icon { margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2 + var(--space-1)); color: var(--color-structure-text-secondary); }
+.ds-file-dropzone__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); min-inline-size: 0; padding-block: var(--space-1); }
+.ds-file-dropzone__name { display: flex; flex: 1 1 100%; min-inline-size: 0; color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); unicode-bidi: isolate; }
+.ds-file-dropzone__name-start { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-file-dropzone__name-end { flex: none; white-space: nowrap; }
+.ds-file-dropzone__name a { display: inline-flex; align-items: center; min-inline-size: 0; max-inline-size: 100%; min-block-size: var(--target-current); color: var(--color-interaction-default); text-underline-offset: 0.2em; }
+.ds-file-dropzone__size { color: var(--color-structure-text-secondary); font-variant-numeric: tabular-nums; }
+.ds-file-dropzone__detail { flex: 1 1 100%; margin: 0; color: var(--color-structure-text-secondary); }
+.ds-file-dropzone__item[data-status="error"] .ds-file-dropzone__detail { color: var(--color-semantic-critical-strong); }
+/* determinate progress: native <progress> (value/max) styled with tokens; percentage text next to it */
+.ds-file-dropzone__progress { display: flex; flex: 1 1 100%; align-items: center; gap: var(--space-2); }
+.ds-file-dropzone__progress progress {
+  flex: 1 1 auto;
+  inline-size: 100%;
+  block-size: calc(var(--border-width-thick) * 2);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-interaction-default);
+  overflow: hidden;
+  appearance: none;
+}
+.ds-file-dropzone__progress progress::-webkit-progress-bar { background: var(--color-structure-surface-sunken); border-radius: var(--radius-full); box-shadow: inset 0 0 0 var(--border-width-thin) var(--color-structure-border); }
+.ds-file-dropzone__progress progress::-webkit-progress-value { background: var(--color-interaction-default); border-radius: var(--radius-full); }
+.ds-file-dropzone__progress progress::-moz-progress-bar { background: var(--color-interaction-default); border-radius: var(--radius-full); }
+.ds-file-dropzone__percent { flex: none; min-inline-size: 4ch; color: var(--color-structure-text-secondary); font-size: var(--type-caption-size); line-height: var(--type-caption-line); font-variant-numeric: tabular-nums; text-align: end; }
+.ds-file-dropzone__actions { display: flex; gap: var(--space-1); }
+.ds-file-dropzone__action {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: max(var(--control-height-md), var(--target-current));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-secondary);
+  cursor: pointer;
+}
+.ds-file-dropzone__action::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; }
+@media (hover: hover) {
+  .ds-file-dropzone__action:hover { color: var(--color-structure-text-primary); }
+  .ds-file-dropzone__action:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-file-dropzone__action[data-force~="hover"] { color: var(--color-structure-text-primary); }
+.ds-file-dropzone__action[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-file-dropzone__action:active::before, .ds-file-dropzone__action[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-file-dropzone__summary { margin: 0; color: var(--color-structure-text-secondary); }
+
+/* compact variant (default on phones): button row + limits, no large zone, no drag text */
+.ds-file-dropzone[data-variant="compact"] .ds-file-dropzone__zone {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  min-block-size: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: start;
+}
+.ds-file-dropzone[data-variant="compact"] .ds-file-dropzone__zone[data-dragover] { padding: var(--space-2); }
+.ds-file-dropzone[data-variant="compact"] :is(.ds-file-dropzone__icon, .ds-file-dropzone__drag) { display: none; }
+@media (hover: none) { .ds-file-dropzone__drag { display: none; } }
+@media (--bp-tablet-down) {
+  .ds-file-dropzone__zone { flex-direction: column; align-items: stretch; min-block-size: 0; padding: 0; border: 0; background: transparent; text-align: start; }
+  .ds-file-dropzone__zone :is(.ds-file-dropzone__icon, .ds-file-dropzone__drag) { display: none; }
+  .ds-file-dropzone__instruction { justify-content: stretch; }
+  .ds-file-dropzone__choose { flex: 1 1 100%; min-block-size: max(var(--control-height-lg), var(--target-current)); }
+}
+@media (prefers-reduced-motion: reduce) { .ds-file-dropzone__zone { transition: none; } }
+@media (forced-colors: active) {
+  .ds-file-dropzone__zone { border-color: CanvasText; }
+  .ds-file-dropzone__zone[data-dragover] { border-style: double; border-width: calc(var(--border-width-thick) * 2); }
+  .ds-file-dropzone__progress progress { forced-color-adjust: none; background: Canvas; border: var(--border-width-thin) solid CanvasText; }
+  .ds-file-dropzone__progress progress::-webkit-progress-value { background: Highlight; }
+  .ds-file-dropzone__error, .ds-file-dropzone__error .ds-icon { color: CanvasText; }
+  .ds-file-dropzone__choose:has(> .ds-file-dropzone__input[aria-disabled="true"]) { color: GrayText; border-color: GrayText; }
+}

@@ -1,0 +1,82 @@
+/* ErrorSummary · engine 1.8.0 reference (catalog/components/ErrorSummary.json). Tokens only (I3); logical properties only (§12.4).
+   section[aria-labelledby][tabindex=-1][data-ds-focus-target] > header (critical icon + heading with count) + list of links to
+   field ids, in field order. Works without JS (hash links); ErrorSummary.js moves focus to the input itself. Programmatic focus
+   uses base.css's inset ring for [data-ds-focus-target]. Outline treatment (thick critical border) reads in every language. */
+.ds-error-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-inline-size: var(--layout-measure);
+  padding: var(--space-4);
+  border: var(--border-width-thick) solid var(--color-semantic-critical);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-primary);
+  scroll-margin-block: var(--space-6);
+}
+.ds-error-summary[hidden] { display: none; }
+.ds-error-summary__header { display: flex; align-items: flex-start; gap: var(--space-2); }
+.ds-error-summary__icon {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: calc((var(--type-h3-line) - var(--icon-md)) / 2);
+  color: var(--color-semantic-critical-strong);
+}
+.ds-error-summary__title {
+  margin: 0;
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-error-summary__description {
+  margin: 0;
+  padding-inline-start: calc(var(--icon-md) + var(--space-2));
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-error-summary__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: calc(var(--icon-md) + var(--space-2)) 0;
+  list-style: none;
+}
+.ds-error-summary__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target-current);
+  min-inline-size: var(--target-current);
+  border-radius: var(--radius-xs);
+  color: var(--color-semantic-critical-strong);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  .ds-error-summary__link:hover { text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-error-summary__link[data-force~="hover"] { text-decoration-thickness: var(--border-width-thick); }
+.ds-error-summary__link:active,
+.ds-error-summary__link[data-force~="pressed"] { color: var(--color-interaction-pressed); }
+/* embedded (Modal, Sheet, ContextPanel): same anatomy, tighter frame inside the overlay's scroll area */
+.ds-error-summary[data-variant="embedded"] { gap: var(--space-2); padding: var(--space-3); }
+/* resubmitting: the summary stays put (no layout shift) until the next response */
+.ds-error-summary[aria-busy="true"] .ds-error-summary__list { cursor: progress; }
+
+@media (forced-colors: active) {
+  .ds-error-summary { border-color: CanvasText; }
+  .ds-error-summary__icon { color: CanvasText; }
+  .ds-error-summary__link { color: LinkText; }
+}

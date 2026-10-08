@@ -1,0 +1,42 @@
+<!-- Toast fixture · static frames of every state (data-static stack, not a landmark) + the live region driven by Toast.js.
+     Status treatment comes from attention-cN-* tokens painted over surface-raised; critical (C1) is refused and routed to
+     InlineAlert. Messages follow Toast.json content rules (no "Success!", one sentence, action = one verb). -->
+<section class="ds-demo" data-ds-demo="neutral · positive · info · neutral-negative (message)">
+  <div class="ds-toast-region" data-static>
+    <div class="ds-toast" role="group" aria-label="Changes saved"><p class="ds-toast__message">Changes saved</p><div class="ds-toast__controls"><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="positive" role="group" aria-label="3 invoices sent to the bank"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><p class="ds-toast__message"><bdi>3</bdi> invoices sent to the bank</p><div class="ds-toast__controls"><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="info" role="group" aria-label="Export started"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-info"/></svg><p class="ds-toast__message">Export started. You'll get a notification when the file is ready.</p><div class="ds-toast__controls"><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="neutral-negative" role="group" aria-label="Couldn't archive the message"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-neutral-negative"/></svg><p class="ds-toast__message">Couldn't archive the message. It was restored to your inbox.</p><div class="ds-toast__controls"><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="with-action · warning (C2, partial result + View)">
+  <div class="ds-toast-region" data-static>
+    <div class="ds-toast" role="group" aria-label="Message archived"><p class="ds-toast__message">Message archived</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action">Undo</button><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="warning" role="group" aria-label="8 of 10 payments sent"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><p class="ds-toast__message"><bdi>8</bdi> of <bdi>10</bdi> payments sent. <bdi>2</bdi> need a new account number.</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action">View</button><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="positive" role="group" aria-label="Request approved"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><p class="ds-toast__message">Request approved</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action">Undo</button><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="paused: hover + focus on action (timer stops) · hover dismiss">
+  <div class="ds-toast-region" data-static>
+    <div class="ds-toast" role="group" aria-label="Message archived"><p class="ds-toast__message">Message archived</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action" data-force="hover focus">Undo</button><button type="button" class="ds-toast__dismiss" data-force="hover" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="warning" role="group" aria-label="8 of 10 payments sent"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><p class="ds-toast__message"><bdi>8</bdi> of <bdi>10</bdi> payments sent.</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action" data-force="hover focus">View</button><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="loading Undo + pressed (prevented) · exiting frame">
+  <div class="ds-toast-region" data-static>
+    <div class="ds-toast" role="group" aria-label="3 messages archived"><p class="ds-toast__message"><bdi>3</bdi> messages archived</p><div class="ds-toast__controls"><button type="button" class="ds-toast__action" aria-busy="true" data-force="pressed">Undoing…</button><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+    <div class="ds-toast" data-status="positive" data-force="exiting" role="group" aria-label="Archive undone"><svg class="ds-icon ds-toast__icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><p class="ds-toast__message">Archive undone</p><div class="ds-toast__controls"><button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="critical (C1): refused → InlineAlert">
+  <p class="ds-text-body">Toast does not render <code class="ds-text-code">status="critical"</code>. The live demo's “Payment failed” button is ignored and logs a warning; show an InlineAlert C1 with Retry where the failure happened.</p>
+</section>
+<section class="ds-demo" data-ds-demo="live region: max 3 visible + queue, pause on hover/focus">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button ds-target" data-ds-module="toast-trigger" data-toast-label="Changes saved">Save</button>
+    <button type="button" class="ds-button ds-target" data-ds-module="toast-trigger" data-toast-label="Message archived" data-toast-action="Undo">Archive</button>
+    <button type="button" class="ds-button ds-target" data-ds-module="toast-trigger" data-toast-status="info" data-toast-label="Export started. You'll get a notification when the file is ready.">Export</button>
+    <button type="button" class="ds-button ds-target" data-ds-module="toast-trigger" data-toast-status="critical" data-toast-label="Payment failed">Payment failed</button>
+  </div>
+  <section class="ds-toast-region" aria-label="Notifications" data-ds-module="toast-region"></section>
+</section>

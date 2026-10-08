@@ -1,0 +1,84 @@
+<!-- ErrorSummary fixture · states, variants, mandatory combinations (§6.9). Every link points at a field that exists below (lint: fieldId in DOM). -->
+<section class="ds-demo" data-ds-demo="variants/page (visible, many: plural)">
+  <section class="ds-error-summary" aria-labelledby="es-1-title" tabindex="-1" data-ds-focus-target data-ds-module="error-summary">
+    <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="es-1-title">There are 3 problems</h2></div>
+    <p class="ds-error-summary__description">Fix the following to submit the request.</p>
+    <ul class="ds-error-summary__list">
+      <li><a class="ds-error-summary__link" href="#es-email">Email address: Enter an email address in the format name@example.com</a></li>
+      <li><a class="ds-error-summary__link" href="#es-country">Country: Select a country to continue</a></li>
+      <li><a class="ds-error-summary__link" href="#es-delivery">Delivery method: Select a delivery method</a></li>
+    </ul>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="fields the links move focus to">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-text-field">
+      <label class="ds-text-field__label" for="es-email">Email address</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="es-email" name="email" type="email" autocomplete="email" dir="ltr" value="siti@example" required aria-invalid="true" aria-describedby="es-email-err"></div>
+      <p class="ds-text-field__error" id="es-email-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter an email address in the format name@example.com</span></p>
+    </div>
+    <div class="ds-select" data-ds-module="select">
+      <label class="ds-select__label" for="es-country">Country</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="es-country" name="country" autocomplete="country" required aria-invalid="true" aria-describedby="es-country-err"><option value="">Select a country</option><option value="ID">Indonesia</option><option value="MY">Malaysia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__error" id="es-country-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a country to continue</span></p>
+    </div>
+    <fieldset class="ds-radio-group" id="es-delivery" role="radiogroup" aria-labelledby="es-delivery-legend" aria-invalid="true" aria-required="true" aria-describedby="es-delivery-err">
+      <legend class="ds-radio-group__legend" id="es-delivery-legend">Delivery method</legend>
+      <div class="ds-radio-group__items">
+        <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="es-del" value="std"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Standard</span></span></label>
+        <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="es-del" value="exp"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Express</span></span></label>
+      </div>
+      <p class="ds-radio-group__error" id="es-delivery-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a delivery method</span></p>
+    </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="focus (server render) + 1 problem">
+  <section class="ds-error-summary" aria-labelledby="es-2-title" tabindex="-1" data-ds-focus-target data-force="focus" data-ds-module="error-summary">
+    <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="es-2-title">There is 1 problem</h2></div>
+    <ul class="ds-error-summary__list">
+      <li><a class="ds-error-summary__link" href="#es-email">Email address: Enter an email address in the format name@example.com</a></li>
+    </ul>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="item hover / item hover+focus / item pressed">
+  <section class="ds-error-summary" aria-labelledby="es-3-title" tabindex="-1" data-ds-focus-target data-ds-module="error-summary">
+    <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="es-3-title">There are 3 problems</h2></div>
+    <ul class="ds-error-summary__list">
+      <li><a class="ds-error-summary__link" href="#es-email" data-force="hover">Email address: Enter an email address in the format name@example.com</a></li>
+      <li><a class="ds-error-summary__link" href="#es-country" data-force="hover focus">Country: Select a country to continue</a></li>
+      <li><a class="ds-error-summary__link" href="#es-delivery" data-force="pressed">Delivery method: Select a delivery method</a></li>
+    </ul>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="variants/embedded + loading (resubmitting) / stale">
+  <section class="ds-error-summary" data-variant="embedded" aria-labelledby="es-4-title" aria-busy="true" tabindex="-1" data-ds-focus-target data-ds-module="error-summary">
+    <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h3 class="ds-error-summary__title" id="es-4-title">There are 2 problems</h3></div>
+    <ul class="ds-error-summary__list">
+      <li><a class="ds-error-summary__link" href="#es-email">Email address: Enter an email address in the format name@example.com</a></li>
+      <li><a class="ds-error-summary__link" href="#es-delivery">Delivery method: Select a delivery method</a></li>
+    </ul>
+  </section>
+  <p class="ds-text-secondary">Stale: the list does not change while the person fixes fields; it updates (or disappears) after the next submit. Hidden: nothing is rendered before the first failed submit.</p>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + long text">
+  <section class="ds-error-summary" dir="rtl" lang="ar" aria-labelledby="es-5-title" tabindex="-1" data-ds-focus-target data-ds-module="error-summary">
+    <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="es-5-title">توجد مشكلتان</h2></div>
+    <ul class="ds-error-summary__list">
+      <li><a class="ds-error-summary__link" href="#es-email">البريد الإلكتروني: أدخل عنوان بريد إلكتروني بالتنسيق name@example.com</a></li>
+      <li><a class="ds-error-summary__link" href="#es-country">الدولة: اختر دولة للمتابعة إلى خطوة الدفع وتأكيد عنوان الشحن الخاص بالطلب</a></li>
+    </ul>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <section class="ds-error-summary" aria-labelledby="es-6-title" tabindex="-1" data-ds-focus-target data-ds-module="error-summary">
+      <div class="ds-error-summary__header"><svg class="ds-icon ds-error-summary__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><h2 class="ds-error-summary__title" id="es-6-title">There is 1 problem</h2></div>
+      <ul class="ds-error-summary__list">
+        <li><a class="ds-error-summary__link" href="#es-country">Country: Select a country to continue</a></li>
+      </ul>
+    </section>
+  </div>
+</section>

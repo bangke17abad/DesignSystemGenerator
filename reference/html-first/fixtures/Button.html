@@ -1,0 +1,59 @@
+<!-- Button fixture · every variant × state, sizes, mandatory combinations (§6.9). Text follows ui_locale en-US here; render-previews swaps locale strings when a glossary is present. -->
+<section class="ds-demo" data-ds-demo="variants">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button" data-variant="primary">Save changes</button>
+    <button type="button" class="ds-button" data-variant="secondary">Export report</button>
+    <button type="button" class="ds-button" data-variant="tertiary">View history</button>
+    <button type="button" class="ds-button" data-variant="destructive">Delete 3 items</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/primary">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button" data-variant="primary">Default</button>
+    <button type="button" class="ds-button" data-variant="primary" data-force="hover">Hover</button>
+    <button type="button" class="ds-button" data-variant="primary" data-force="pressed">Pressed</button>
+    <button type="button" class="ds-button" data-variant="primary" data-force="focus">Focus</button>
+    <button type="button" class="ds-button" data-variant="primary" data-force="hover focus">Hover + focus</button>
+    <button type="button" class="ds-button" data-variant="primary" aria-busy="true"><span>Saving</span><span class="ds-button__spinner" aria-hidden="true"></span></button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/secondary">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button">Default</button>
+    <button type="button" class="ds-button" data-force="hover">Hover</button>
+    <button type="button" class="ds-button" data-force="pressed">Pressed</button>
+    <button type="button" class="ds-button" data-force="focus">Focus</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/tertiary+destructive">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button" data-variant="tertiary" data-force="hover">Tertiary hover</button>
+    <button type="button" class="ds-button" data-variant="tertiary" data-force="pressed">Tertiary pressed</button>
+    <button type="button" class="ds-button" data-variant="destructive" data-force="hover">Destructive hover</button>
+    <button type="button" class="ds-button" data-variant="destructive" data-force="focus">Destructive focus</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="blocked-with-reason">
+  <div>
+    <button type="button" class="ds-button" data-variant="primary" aria-disabled="true" aria-describedby="btn-reason-1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Approve request</span></button>
+    <span class="ds-button__reason" id="btn-reason-1">Only finance managers can approve requests above the limit.</span>
+  </div>
+  <div>
+    <button type="button" class="ds-button" aria-disabled="true" data-force="focus" aria-describedby="btn-reason-2">Publish</button>
+    <span class="ds-button__reason" id="btn-reason-2">Add a title before publishing.</span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button" data-variant="primary" data-size="sm">Small</button>
+    <button type="button" class="ds-button" data-variant="primary">Medium</button>
+    <button type="button" class="ds-button" data-variant="primary" data-size="lg">Large</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="icons+long-label">
+  <div class="ds-inline" data-gap="3">
+    <button type="button" class="ds-button"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span>Add member</span></button>
+    <button type="button" class="ds-button"><span>Next step</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button>
+    <button type="button" class="ds-button" data-variant="primary">Download the complete quarterly reconciliation report</button>
+  </div>
+</section>

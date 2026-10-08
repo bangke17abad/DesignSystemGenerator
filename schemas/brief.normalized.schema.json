@@ -1,0 +1,648 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/brief.normalized.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "breakpoints": {
+      "additionalProperties": false,
+      "properties": {
+        "desktop": {
+          "type": "number"
+        },
+        "mobile": {
+          "type": "number"
+        },
+        "tablet": {
+          "type": "number"
+        },
+        "wide": {
+          "type": "number"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "brief_schema_version": {
+      "pattern": "^1\\.[0-5]$",
+      "type": "string"
+    },
+    "budgets": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "components": {
+      "additionalProperties": false,
+      "properties": {
+        "bulk_actions": {
+          "type": "boolean"
+        },
+        "domain_components": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "domain_patterns": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "component": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "component",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "component": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "component",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "pack_config": {
+          "type": "object"
+        },
+        "packs": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "pattern_exclusions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "pattern_include": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "pattern",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "delivery_tier_target": {
+      "enum": [
+        "T0",
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    "doc_language": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "domain": {
+      "additionalProperties": false,
+      "properties": {
+        "critical_events": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "dataviz": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "entities": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "journeys": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "spatial": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "domain_summary": {
+      "type": "string"
+    },
+    "formats": {
+      "type": "object"
+    },
+    "glossary_seed": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "hygiene": {
+      "additionalProperties": false,
+      "properties": {
+        "leak_terms": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "language": {
+      "additionalProperties": false,
+      "properties": {
+        "archetype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "brands": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "accent_hexes": {
+                "items": {
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "font_ui": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "id": {
+                "pattern": "^[a-z0-9-]+$",
+                "type": "string"
+              },
+              "interaction_hex": {
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "dislikes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "inherits_from": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "likes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "mode": {
+          "enum": [
+            "archetype",
+            "derive",
+            "custom",
+            "inherit"
+          ]
+        },
+        "must_not_look_like": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "neutral_temperature": {
+          "enum": [
+            "warm",
+            "cool",
+            "neutral"
+          ]
+        },
+        "overrides": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "pattern": "^L(1[0-7]|[1-9])$",
+                "type": "string"
+              },
+              "path": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "value": {}
+            },
+            "required": [
+              "decision",
+              "path",
+              "value"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "pack_vetoes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "personality": {
+          "additionalProperties": false,
+          "properties": {
+            "density": {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "expressiveness": {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "formality": {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "risk_criticality": {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "warmth": {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "formality",
+            "warmth",
+            "expressiveness",
+            "density",
+            "risk_criticality"
+          ],
+          "type": "object"
+        },
+        "themes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "base": {
+                "enum": [
+                  "light",
+                  "dark",
+                  "hc-light",
+                  "hc-dark"
+                ]
+              },
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "namespace": {
+      "pattern": "^[A-Za-z][A-Za-z0-9]{1,15}$",
+      "type": "string"
+    },
+    "overrides": {
+      "type": "object"
+    },
+    "package_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "product_name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "report_language": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "roles": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "goals": {
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "permission_notes": {
+            "type": "string"
+          },
+          "surfaces": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "run_mode": {
+      "enum": [
+        "greenfield",
+        "regenerate",
+        "brownfield",
+        "tenant-add"
+      ]
+    },
+    "surfaces": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "connectivity": {
+            "enum": [
+              "online",
+              "offline-first",
+              "intermittent"
+            ]
+          },
+          "default_theme": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "density_modes": {
+            "items": {
+              "enum": [
+                "comfortable",
+                "compact",
+                "spacious"
+              ]
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "device": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "distribution": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "input_modality": {
+            "items": {
+              "enum": [
+                "pointer",
+                "touch",
+                "keyboard",
+                "scanner",
+                "glove",
+                "in-motion",
+                "voice",
+                "switch"
+              ]
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "orientation": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "os_runtime": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "surface_type": {
+            "enum": [
+              "operational",
+              "consumer",
+              "content",
+              "public"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "input_modality",
+          "surface_type",
+          "default_theme",
+          "density_modes"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "targets": {
+      "additionalProperties": false,
+      "properties": {
+        "adapters": {
+          "items": {
+            "enum": [
+              "A01-antd-v6",
+              "A02-mui-v7",
+              "A03-shadcn-tailwind4",
+              "A04-flutter-material3"
+            ]
+          },
+          "type": "array"
+        },
+        "ci_platform": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "design_tool": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "design_tool_limits": {
+          "type": "object"
+        },
+        "foundation_libraries": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "package_registry": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "primary_web_reference": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "production_targets": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "primary_web_reference"
+      ],
+      "type": "object"
+    },
+    "ui_locales": {
+      "items": {
+        "pattern": "^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2})?$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "version_label": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "brief_schema_version",
+    "run_mode",
+    "product_name",
+    "namespace",
+    "doc_language",
+    "ui_locales",
+    "surfaces",
+    "targets",
+    "language"
+  ],
+  "title": "brief.normalized",
+  "type": "object"
+}

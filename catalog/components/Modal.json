@@ -1,0 +1,546 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke judul (wajib); aria-describedby ke description bila ada",
+      "konten di belakang inert (atau aria-hidden + penguncian fokus); region LiveAnnouncer berada di luar subtree inert",
+      "pemicu: aria-haspopup=\"dialog\" + aria-expanded bila relevan",
+      "judul tabindex=\"-1\" bila menerima fokus awal",
+      "aria-busy pada content saat loading/submitting",
+      "body yang menggulir: tabindex=\"0\" + nama bila tidak memuat elemen fokusabel (SC 2.1.1)",
+      "scroll-padding di body sebesar tinggi header/footer agar elemen fokus tidak tertutup (SC 2.4.11)"
+    ],
+    "focus_order": "fokus awal (field pertama atau judul) → field body → footer (Cancel → aksi primer) → Close di header → kembali ke awal",
+    "native": {
+      "compose": "AlertDialog(onDismissRequest, confirmButton, dismissButton, title, text) atau BasicAlertDialog; Dialog(properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = !dirty)) untuk fullscreen; BackHandler untuk discard",
+      "flutter": "showDialog / showAdaptiveDialog + AlertDialog (konfirmasi) atau Dialog / Dialog.fullscreen (form); barrierDismissible false untuk destruktif; PopScope(canPop: !dirty, onPopInvokedWithResult) untuk konfirmasi discard; fokus awal lewat autofocus atau FocusNode.requestFocus",
+      "swiftui": ".alert(_:isPresented:actions:message:) dengan Button(role: .cancel) dan Button(role: .destructive); .sheet atau .fullScreenCover untuk form; .interactiveDismissDisabled(dirty) + .confirmationDialog untuk discard; .accessibilityAddTraits(.isModal)"
+    },
+    "politeness": "polite",
+    "role": "dialog (variant dialog, fullscreen) atau alertdialog (confirmation, destructive) dengan aria-modal=\"true\"",
+    "sr_label": "\"{judul}, dialog\" + description; alertdialog diumumkan assertive saat dibuka oleh platform; label Close = \"Close\" (bukan \"X\")",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.1.2",
+      "2.2.1",
+      "2.4.3",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.1",
+      "2.5.8",
+      "3.2.1",
+      "3.3.1",
+      "3.3.4",
+      "3.3.7",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "scrim",
+      "role": "lapisan penutup halaman di z-overlay-scrim; konten di belakang inert",
+      "tokens": [
+        "color-structure-scrim",
+        "z-overlay-scrim",
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "panel dialog di tengah viewport di z-modal; lebar dari size; tinggi maksimum viewport dikurangi margin dan safe-area",
+      "tokens": [
+        "z-modal",
+        "color-structure-surface-overlay",
+        "elevation-2",
+        "radius-lg",
+        "layout-modal-sm",
+        "layout-modal-md",
+        "layout-modal-lg",
+        "space-6"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "judul (h2) + tombol Close berlabel di inline-end; tetap terlihat saat body menggulir",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "kalimat konteks di bawah judul; target aria-describedby",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "isi dialog; satu-satunya area gulir; batas atas/bawah tampil saat menggulir",
+      "tokens": [
+        "space-4",
+        "space-6",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "action bar: aksi primer di urutan baca terakhir, Cancel sebelumnya; tetap terlihat",
+      "tokens": [
+        "space-3",
+        "space-4",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "close-button",
+      "role": "IconButton \"Close\" (setara Cancel); area klik ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada kontrol; judul yang menerima fokus program juga menampilkan ring",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "safe-area",
+      "role": "margin viewport + inset platform pada presentasi layar penuh",
+      "tokens": [
+        "space-4"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"scrim\" | \"close-button\" | \"cancel\" | \"action\" | \"system-back\" }",
+        "when": "dialog dibuka atau ditutup"
+      },
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "Modal.Action diaktifkan"
+      }
+    ],
+    "parts": [
+      "Modal.Trigger",
+      "Modal.Content",
+      "Modal.Header",
+      "Modal.Title",
+      "Modal.Description",
+      "Modal.Body",
+      "Modal.Footer",
+      "Modal.Cancel",
+      "Modal.Action (variant: \"primary\" | \"destructive\", loading, disabled, reason, onPress)",
+      "Modal.Close"
+    ],
+    "props": [
+      {
+        "description": "Controlled: dialog terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "dialog",
+        "description": "Semantik dan presentasi; fullscreen otomatis untuk dialog form di phone.",
+        "name": "variant",
+        "required": false,
+        "type": "\"dialog\" | \"confirmation\" | \"destructive\" | \"fullscreen\""
+      },
+      {
+        "default": "md",
+        "description": "Lebar dari layout-modal-*.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Judul dialog; nama aksesibel.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Kalimat konteks; aria-describedby.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "first-field",
+        "description": "Target fokus saat dibuka; confirmation/destructive memaksa title.",
+        "name": "initialFocus",
+        "required": false,
+        "type": "\"first-field\" | \"title\" | Ref"
+      },
+      {
+        "default": "false",
+        "description": "Ada perubahan belum tersimpan; menutup memerlukan konfirmasi discard.",
+        "name": "dirty",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Isi sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke field pertama (dialog berisi form) atau ke judul bertabindex −1 (konfirmasi, destruktif, isi baca) dengan ring fokus; tidak ke tombol destruktif",
+      "trigger": "membuka (Enter/Space pada pemicu)"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus terkunci melingkar di dalam content (SC 2.1.2 dipenuhi karena Esc dan Close selalu tersedia)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "= Cancel di semua variant termasuk destruktif: dialog menutup tanpa aksi, onOpenChange(false, \"escape\"); bila dirty, membuka \"Discard changes?\" di mana Esc lagi = Keep editing",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "submit form dialog (aksi primer non-destruktif); pada variant destructive tidak ada default submit",
+      "trigger": "Enter di field"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus kembali ke pemicu; bila pemicu sudah tidak ada (objek dihapus), ke item berikutnya atau heading terdekat (§9.5); hasil diumumkan polite lewat Toast/LiveAnnouncer",
+      "trigger": "menutup (aksi selesai, Cancel, Esc)"
+    },
+    {
+      "input": "pointer",
+      "result": "dialog bersih: menutup sebagai Cancel; dirty: konfirmasi discard; destruktif dan submitting: diabaikan",
+      "trigger": "klik scrim"
+    },
+    {
+      "input": "touch",
+      "result": "diperlakukan sebagai Cancel dengan aturan dirty yang sama; swipe-to-dismiss selalu punya tombol Close padanan (SC 2.5.1)",
+      "trigger": "gestur kembali sistem (Android back, swipe iOS pada fullscreen)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Delete 3 files?",
+        "This can't be undone.",
+        "Delete files",
+        "Cancel",
+        "Discard changes?",
+        "Keep editing"
+      ],
+      "id-ID": [
+        "Hapus 3 berkas?",
+        "Tindakan ini tidak dapat dibatalkan.",
+        "Hapus berkas",
+        "Batal",
+        "Buang perubahan?",
+        "Lanjutkan mengedit"
+      ]
+    },
+    "rules": [
+      "Judul = pertanyaan atau kata kerja + objek (\"Delete 3 files?\", \"Rename project\"), bukan \"Warning\" atau \"Are you sure?\".",
+      "Description menyebut akibat konkret dan apakah dapat dibatalkan.",
+      "Label aksi = kata kerja yang sama dengan judul (\"Delete files\"); Cancel selalu berlabel \"Cancel\".",
+      "Tanpa tanda seru; tanpa menyalahkan pengguna.",
+      "Konfirmasi discard: \"Discard changes?\" dengan aksi \"Discard\" dan \"Keep editing\"."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "ErrorSummary",
+    "InlineAlert",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Esc selalu berarti Cancel, termasuk pada konfirmasi destruktif.",
+    "Kembalikan fokus ke pemicu, atau ke elemen logis berikutnya bila pemicu hilang.",
+    "Sebut objek dan akibat di judul dan description konfirmasi destruktif.",
+    "Tahan dialog terbuka dan pertahankan data saat submit gagal."
+  ],
+  "dont": [
+    {
+      "text": "Fokus awal pada tombol destruktif atau Enter yang menjalankan aksi destruktif."
+    },
+    {
+      "ref": "UB8",
+      "text": "Header atau footer sticky di dalam dialog yang menutup field fokus."
+    },
+    {
+      "text": "Dialog bersarang lebih dari satu tingkat atau dialog untuk form panjang."
+    },
+    {
+      "text": "Menutup dialog lewat klik scrim saat ada perubahan belum tersimpan tanpa konfirmasi."
+    },
+    {
+      "ref": "UB5",
+      "text": "Tombol Close berupa ikon tanpa nama aksesibel atau dengan area klik di bawah target-current."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tombol footer membungkus ke baris sendiri (bertumpuk, primer paling bawah di phone); judul membungkus, tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "body menggulir; header dan footer berhenti sticky bila bersama melebihi setengah tinggi dialog; tidak ada konten terpotong",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik di body; aksi primer aria-disabled dengan reason",
+      "case": "0 item (dialog berisi daftar pilihan kosong)"
+    },
+    {
+      "behaviour": "body bergulir internal dengan batas terlihat; > ±2 layar konten dipindah ke halaman atau ContextPanel",
+      "case": "konten maksimum / sangat panjang"
+    },
+    {
+      "behaviour": "InlineAlert \"Needs connection\" di dialog, data dipertahankan; atau diantrekan sesuai pattern OfflineSync dengan pengumuman polite",
+      "case": "offline saat submit"
+    },
+    {
+      "behaviour": "membungkus maksimal 3 baris; nama objek panjang dipotong di tengah dengan nama lengkap di description",
+      "case": "judul sangat panjang"
+    },
+    {
+      "behaviour": "dialog memakai tinggi visual viewport; field fokus digulir ke tampilan di atas keyboard; footer naik di atas keyboard atau ikut menggulir",
+      "case": "tinggi viewport kecil (keyboard terbuka, landscape phone)"
+    },
+    {
+      "behaviour": "Toast di z-toast tetap terbaca tetapi tidak mencuri fokus; overlay event kritis (z-critical) berada di atas Modal dan hanya ditutup lewat aksinya",
+      "case": "Toast atau event kritis muncul saat Modal terbuka"
+    },
+    {
+      "behaviour": "fokus saat menutup jatuh ke item berikutnya atau heading terdekat (§9.5)",
+      "case": "pemicu terhapus selama dialog terbuka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Overlays",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Modal tanpa title (aria-labelledby) ditolak",
+    "variant destructive dengan initialFocus pada aksi destruktif ditolak",
+    "Modal di dalam Modal lebih dari satu tingkat ditolak",
+    "Esc dinonaktifkan pada Modal ditolak (hanya overlay event kritis yang boleh)",
+    "Properti fisik pada posisi Close/footer ditolak (V6)"
+  ],
+  "name": "Modal",
+  "preview": {
+    "combinations": [
+      "submitting + Cancel diblokir",
+      "error + fokus ErrorSummary",
+      "dirty + Esc → discard",
+      "nested StepUpDialog",
+      "teks 200%",
+      "RTL"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "submitting",
+      "error",
+      "dirty",
+      "loading",
+      "nested"
+    ],
+    "variants": [
+      "dialog",
+      "confirmation",
+      "destructive",
+      "fullscreen"
+    ]
+  },
+  "purpose": {
+    "purpose": "Dialog yang memblokir halaman di belakangnya untuk tugas singkat yang harus diselesaikan atau dibatalkan sebelum melanjutkan: konfirmasi, form pendek, atau keputusan; fokus terkunci di dalamnya dan kembali ke pemicu saat ditutup.",
+    "when_not_to_use": [
+      "Untuk detail objek yang dibaca sambil tetap bekerja di daftar: pakai ContextPanel.",
+      "Untuk pilihan atau aksi singkat di phone: pakai Sheet.",
+      "Untuk konten kecil yang menempel pada pemicu tanpa memblokir: pakai Popover.",
+      "Untuk form panjang atau alur multi-langkah: pakai halaman sendiri dengan Stepper.",
+      "Untuk pesan yang tidak butuh keputusan: pakai Toast atau InlineAlert.",
+      "Untuk otorisasi tambahan atas aksi berisiko: pakai StepUpDialog (yang dibangun dari Modal)."
+    ]
+  },
+  "related": [
+    "Sheet",
+    "ContextPanel",
+    "Popover",
+    "StepUpDialog",
+    "Toast",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "confirmation dan destructive tetap center selebar layout-modal-sm dikurangi margin; dialog form menjadi fullscreen dengan top bar dan safe-area inset; tombol footer size lg di zona jempol",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "center (§8.3), lebar sesuai size; area klik ≥ target-min-touch; naik di atas keyboard virtual dengan field fokus terlihat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "center di z-modal; lebar layout-modal-sm/md/lg; tinggi maksimum viewport − margin dengan body bergulir",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi primer dialog tidak diizinkan untuk role saat ini; Button aria-disabled + reason, dialog tetap bisa dibaca dan ditutup"
+    },
+    {
+      "pattern": "read-only",
+      "when": "dialog berisi form dibuka oleh role baca: field tampil read-only, footer hanya Close"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi primer berisiko: menekan aksi membuka StepUpDialog sebagai satu-satunya dialog bersarang; Modal tidak menutup sampai otorisasi selesai atau dibatalkan"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh menjalankan aksi; pemicu dialog tidak dirender"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Close di inline-end header; urutan footer mengikuti arah tulisan (aksi primer di inline-end); ikon close (X) tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "inline",
+      "hit_area": "kontrol di dalamnya mengikuti target-current; tombol footer ≥ target-min-touch di sentuh",
+      "name": "sm",
+      "notes": "Konfirmasi dan destruktif.",
+      "size_token": "layout-modal-sm"
+    },
+    {
+      "axis": "inline",
+      "hit_area": "kontrol di dalamnya mengikuti target-current",
+      "name": "md",
+      "notes": "Token lebar. Default untuk form pendek.",
+      "size_token": "layout-modal-md"
+    },
+    {
+      "axis": "inline",
+      "hit_area": "kontrol di dalamnya mengikuti target-current",
+      "name": "lg",
+      "notes": "Token lebar. Konten dua kolom atau tabel kecil; menjadi fullscreen di phone.",
+      "size_token": "layout-modal-lg"
+    }
+  ],
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "tidak dirender atau dialog tanpa open; pemicu aria-expanded=\"false\" bila memakai aria-haspopup=\"dialog\""
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "content": "color-structure-surface-overlay",
+        "scrim": "color-structure-scrim"
+      },
+      "treatment": "scrim + content tampil (fade + skala halus; fade satu frame di reduced motion); halaman di belakang inert dan gulirnya terkunci; fokus dipindah"
+    },
+    {
+      "name": "submitting",
+      "token_swaps": {},
+      "treatment": "aksi primer loading dengan lebar terkunci + aria-busy pada content; field read-only; Esc dan Cancel tetap aktif bila operasi dapat dibatalkan, selain itu Cancel aria-disabled dengan reason \"Saving…\""
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "validasi: ErrorSummary di atas body + error per field, fokus ke ErrorSummary; error server: InlineAlert di atas body, dialog tidak menutup, data tidak hilang"
+    },
+    {
+      "name": "dirty",
+      "token_swaps": {},
+      "treatment": "form berubah: Esc, Close, atau scrim membuka konfirmasi bersarang \"Discard changes?\" alih-alih langsung menutup"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "isi dimuat setelah dibuka: Skeleton di body, aria-busy; judul dan Close sudah tersedia"
+    },
+    {
+      "name": "nested",
+      "token_swaps": {
+        "scrim": "color-structure-scrim"
+      },
+      "treatment": "dialog kedua (hanya konfirmasi) di atas dialog pertama dengan scrim sendiri; dialog pertama inert; maksimal satu tingkat"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Modal: AlertDialog / Dialog dengan DialogProperties",
+    "flutter": "{ns}_modal.dart: showDialog + AlertDialog / Dialog.fullscreen dengan PopScope",
+    "html": {
+      "element": "dialog (showModal())",
+      "notes": "dialog native memberi inert, Esc (event cancel), dan ::backdrop untuk scrim; modul JS menambah fokus awal, pengembalian fokus, kunci gulir body, dan konfirmasi discard; tanpa JS aksi berpindah ke halaman konfirmasi"
+    },
+    "swiftui": "{Ns}Modal: .alert / .sheet / .fullScreenCover sesuai variant"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Form pendek atau konten yang butuh keputusan; role dialog.",
+      "name": "dialog"
+    },
+    {
+      "description": "Satu pertanyaan + dua aksi (Cancel, aksi kata kerja); role alertdialog; tanpa field.",
+      "name": "confirmation"
+    },
+    {
+      "description": "Konfirmasi aksi yang menghapus atau tidak dapat dibalik: menyebut objek dan akibat, aksi berlabel kata kerja destruktif (Button destructive); Esc dan scrim = Cancel; Enter tidak memicu aksi destruktif secara default.",
+      "name": "destructive"
+    },
+    {
+      "description": "Presentasi phone untuk dialog dan form: memenuhi layar dengan top bar (Close, judul, aksi primer) dan safe-area inset.",
+      "name": "fullscreen"
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+/* AppShell · engine 1.8.0 reference (catalog/components/AppShell.json). Tokens only (I3); logical properties only (§12.4).
+   Markup (native landmarks, DOM order = visual order = focus order):
+   <body class="ds-app-shell" data-variant="standard|focused|kiosk">
+     <div class="ds-skip-links">…SkipLink…</div>
+     <header class="ds-app-shell__header">…</header>            banner, sticky at z-sticky
+     <div class="ds-app-shell__banner">…</div>                 optional system Banner (offline)
+     <nav class="ds-app-shell__nav" id aria-label>…</nav>       full (desktop) · rail (tablet / collapsed) · drawer (phone)
+     <main class="ds-app-shell__main" id="main" tabindex="-1">  document scroll, never a nested overflow container
+     <aside class="ds-app-shell__aside" aria-label>…</aside>    docked (desktop) · overlay (tablet) · full page (phone)
+     <div class="ds-app-shell__bottom-bar">…</div>             phone only (BottomNav or action bar)
+     <div class="ds-app-shell__scrim"></div>
+   State attributes: data-nav="collapsed|open", data-ds-nav-auto="collapsed" (AppShell.js), main[aria-busy].
+   data-ds-enhanced is set by AppShell.js: without JS the phone nav stays in the page flow instead of becoming a drawer.
+   data-contained renders the shell inside a box (docs, previews, embedded tools): overlays are positioned against the shell. */
+.ds-app-shell {
+  --_dir: 1;
+  --_nav-w: var(--layout-nav-width);
+  --_header-h: var(--ds-shell-header-h, var(--layout-bar-height));
+  --_safe-start: env(safe-area-inset-left, 0px);
+  --_safe-end: env(safe-area-inset-right, 0px);
+  --_fixed: fixed;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto 1fr auto auto;
+  grid-template-areas: "skip" "header" "banner" "nav" "main" "aside" "bottom";
+  min-block-size: 100dvh;
+  margin: 0;
+  background: var(--color-structure-surface-base);
+  color: var(--color-structure-text-primary);
+}
+.ds-app-shell:dir(rtl) { --_dir: -1; --_safe-start: env(safe-area-inset-right, 0px); --_safe-end: env(safe-area-inset-left, 0px); }
+/* sticky bars never hide the focused element (SC 2.4.11) */
+html:has(> body.ds-app-shell:not([data-contained])) {
+  scroll-padding-block-start: var(--_header-h, var(--layout-bar-height));
+}
+@media (--bp-tablet-down) {
+  html:has(> body.ds-app-shell:not([data-contained]) .ds-app-shell__bottom-bar) { scroll-padding-block-end: var(--layout-bar-height); }
+}
+
+.ds-app-shell > .ds-skip-links { grid-area: skip; }
+
+/* header: global bar (banner) */
+.ds-app-shell__header {
+  grid-area: header;
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-block-size: var(--layout-bar-height);
+  padding-block: max(var(--space-1), env(safe-area-inset-top, 0px)) var(--space-1);
+  padding-inline: max(var(--space-4), var(--_safe-start)) max(var(--space-4), var(--_safe-end));
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+}
+.ds-app-shell__brand {
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+}
+.ds-app-shell__header-end { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-inline-start: auto; }
+.ds-app-shell .ds-app-shell__menu-button { display: none; }
+
+/* system banner band (offline): below the global bar, other regions unchanged */
+.ds-app-shell__banner {
+  grid-area: banner;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  padding-inline: max(var(--space-4), var(--_safe-start)) max(var(--space-4), var(--_safe-end));
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+}
+.ds-app-shell__banner > .ds-icon { margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2); color: var(--attention-c3-icon); }
+
+/* nav: in flow on phone without JS; drawer on phone with JS; rail on tablet; full on desktop */
+.ds-app-shell__nav {
+  grid-area: nav;
+  min-inline-size: 0;
+  padding: var(--space-3);
+  padding-inline-start: max(var(--space-3), var(--_safe-start));
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ds-app-shell__nav-list { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.ds-app-shell__nav-item.ds-link {
+  display: flex;
+  inline-size: 100%;
+  gap: var(--space-3);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-3);
+  border-inline-start: var(--border-width-thick) solid transparent;
+  border-radius: var(--radius-sm);
+  /* a nav landmark + icon is the non-colour marker; current page adds indicator + weight (Link: standalone exception) */
+  text-decoration-line: none;
+  color: var(--color-structure-text-primary);
+}
+@media (hover: hover) {
+  .ds-app-shell__nav-item.ds-link:hover { background: var(--row-background-hover); text-decoration-line: underline; }
+}
+.ds-app-shell__nav-item.ds-link[data-force~="hover"] { background: var(--row-background-hover); text-decoration-line: underline; }
+.ds-app-shell__nav-item.ds-link[aria-current="page"] {
+  background: var(--nav-item-background-selected);
+  border-inline-start-color: var(--nav-item-indicator);
+  font-weight: bolder;
+}
+.ds-app-shell__nav-close { display: none; }
+
+.ds-app-shell__main {
+  grid-area: main;
+  min-inline-size: 0;
+  padding-block: var(--space-6);
+}
+.ds-app-shell__main[aria-busy="true"] { cursor: progress; }
+
+.ds-app-shell__aside {
+  grid-area: aside;
+  min-inline-size: 0;
+  padding: var(--space-4);
+  padding-inline-end: max(var(--space-4), var(--_safe-end));
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+}
+.ds-app-shell__aside[hidden] { display: none; }
+
+.ds-app-shell__bottom-bar {
+  grid-area: bottom;
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--layout-bar-height);
+  padding-block: var(--space-2) max(var(--space-2), env(safe-area-inset-bottom, 0px));
+  padding-inline: max(var(--space-4), var(--_safe-start)) max(var(--space-4), var(--_safe-end));
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-base);
+}
+.ds-app-shell__bottom-bar > * { flex: 1 1 auto; }
+
+.ds-app-shell__scrim { display: none; }
+
+@media (--bp-tablet-down) {
+  .ds-app-shell[data-ds-enhanced]:not([data-nav="open"]) .ds-app-shell__nav { display: none; }
+}
+
+/* tablet: rail at inline-start, aside overlays at inline-end (no scrim, Esc closes) */
+@media (--bp-tablet-up) {
+  .ds-app-shell {
+    --_nav-w: var(--layout-rail-width);
+    grid-template-columns: var(--_nav-w) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas: "skip skip" "header header" "banner banner" "nav main";
+  }
+  .ds-app-shell__nav {
+    padding-inline: var(--space-2);
+    border-block-end: 0;
+    border-inline-end: var(--border-width-thin) solid var(--color-structure-border);
+  }
+  .ds-app-shell:not([data-contained]) .ds-app-shell__nav {
+    position: sticky;
+    inset-block-start: var(--_header-h);
+    align-self: start;
+    block-size: calc(100dvh - var(--_header-h)); /* full height: the nav edge does not stop where the list ends */
+  }
+  .ds-app-shell__aside {
+    grid-area: main;
+    justify-self: end;
+    position: relative;
+    z-index: var(--z-panel);
+    inline-size: min(var(--layout-panel-width), 100%);
+    border-block-start: 0;
+    border-inline-start: var(--border-width-thin) solid var(--color-structure-border);
+    box-shadow: var(--elevation-1);
+  }
+  .ds-app-shell:not([data-contained]) .ds-app-shell__aside {
+    position: sticky;
+    inset-block-start: var(--_header-h);
+    align-self: start;
+    max-block-size: calc(100dvh - var(--_header-h));
+    overflow-y: auto;
+  }
+  .ds-app-shell__bottom-bar { display: none; }
+}
+/* rail: labels stay the accessible name (clip pattern, not display:none) */
+@media (--bp-tablet-up) {
+  @media (--bp-desktop-down) {
+    .ds-app-shell:not([data-nav="open"]) .ds-app-shell__nav-item.ds-link { justify-content: center; padding-inline: 0; }
+  }
+}
+@media (--bp-tablet-up) {
+  .ds-app-shell:not([data-nav="open"]) .ds-app-shell__nav-label,
+  .ds-app-shell[data-nav="collapsed"] .ds-app-shell__nav-label,
+  .ds-app-shell[data-ds-nav-auto="collapsed"] .ds-app-shell__nav-label {
+    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: -1px;
+  }
+}
+
+/* desktop: full nav (collapses to rail on request or when nav + panel + content-min do not fit), aside docked */
+@media (--bp-desktop-up) {
+  .ds-app-shell {
+    --_nav-w: var(--layout-nav-width);
+    grid-template-columns: var(--_nav-w) minmax(0, 1fr) auto;
+    grid-template-areas: "skip skip skip" "header header header" "banner banner banner" "nav main aside";
+  }
+  .ds-app-shell[data-nav="collapsed"],
+  .ds-app-shell[data-ds-nav-auto="collapsed"] { --_nav-w: var(--layout-rail-width); }
+  .ds-app-shell:not([data-nav="collapsed"], [data-ds-nav-auto="collapsed"]) .ds-app-shell__nav-label {
+    position: static; inline-size: auto; block-size: auto; overflow: visible; clip-path: none; white-space: normal; margin: 0;
+  }
+  :is(.ds-app-shell[data-nav="collapsed"], .ds-app-shell[data-ds-nav-auto="collapsed"]) .ds-app-shell__nav-item.ds-link { justify-content: center; padding-inline: 0; }
+  .ds-app-shell__nav { padding-inline: var(--space-3); }
+  .ds-app-shell__aside {
+    grid-area: aside;
+    justify-self: stretch;
+    position: static;
+    inline-size: var(--layout-panel-width);
+    box-shadow: none;
+  }
+  .ds-app-shell:not([data-contained]) .ds-app-shell__aside {
+    position: sticky;
+    inset-block-start: var(--_header-h);
+    align-self: start;
+    max-block-size: calc(100dvh - var(--_header-h));
+  }
+}
+
+/* phone (and tablet) drawer: JS-enhanced, opened with the menu button */
+@media (--bp-desktop-down) {
+  .ds-app-shell[data-ds-enhanced] .ds-app-shell__menu-button { display: inline-flex; }
+  .ds-app-shell[data-nav="open"] .ds-app-shell__nav {
+    /* grid-area auto: an abspos grid child would otherwise use its (empty) grid area as containing block */
+    grid-area: auto;
+    position: var(--_fixed);
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: var(--z-nav-overlay);
+    display: block;
+    inline-size: min(var(--layout-nav-width), calc(100% - var(--space-12)));
+    padding: var(--space-3);
+    padding-inline-start: max(var(--space-3), var(--_safe-start));
+    border: 0;
+    border-inline-end: var(--border-width-thin) solid var(--color-structure-border);
+    box-shadow: var(--elevation-2);
+    animation: ds-app-shell-drawer-in var(--motion-base-duration) var(--motion-easing-enter);
+  }
+  .ds-app-shell[data-nav="open"] .ds-app-shell__nav-close { display: flex; justify-content: flex-end; margin-block-end: var(--space-2); }
+  .ds-app-shell[data-nav="open"] .ds-app-shell__scrim {
+    position: var(--_fixed);
+    inset: 0;
+    z-index: var(--z-nav-scrim);
+    display: block;
+    background: var(--color-structure-scrim);
+  }
+}
+@keyframes ds-app-shell-drawer-in { from { transform: translateX(calc(-100% * var(--_dir))); } }
+
+/* variants */
+.ds-app-shell[data-variant="focused"],
+.ds-app-shell[data-variant="kiosk"] { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "skip skip" "header header" "banner banner" "main aside"; grid-template-rows: auto auto auto 1fr; }
+@media (--bp-desktop-down) {
+  .ds-app-shell[data-variant="focused"],
+  .ds-app-shell[data-variant="kiosk"] { grid-template-columns: minmax(0, 1fr); grid-template-areas: "skip" "header" "banner" "main" "aside"; grid-template-rows: auto auto auto 1fr auto; }
+}
+:is(.ds-app-shell[data-variant="focused"], .ds-app-shell[data-variant="kiosk"]) :is(.ds-app-shell__nav, .ds-app-shell__bottom-bar, .ds-app-shell__menu-button, .ds-app-shell__scrim) { display: none; }
+.ds-app-shell[data-variant="kiosk"] .ds-app-shell__header { position: static; }
+
+/* header and bottom bar stop being sticky when together they exceed a third of the viewport (200% text; AppShell.js) */
+.ds-app-shell[data-ds-unstick] :is(.ds-app-shell__header, .ds-app-shell__bottom-bar, .ds-app-shell__nav, .ds-app-shell__aside) { position: static; }
+
+/* contained: inside a box (docs, previews, embedded tools); overlays use the shell as their containing block */
+.ds-app-shell[data-contained] {
+  --_fixed: absolute;
+  --_header-h: 0px;
+  position: relative;
+  isolation: isolate;
+  min-block-size: calc(var(--layout-bar-height) * 6);
+  overflow: clip;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+}
+.ds-app-shell[data-contained] :is(.ds-app-shell__header, .ds-app-shell__bottom-bar) { position: relative; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-app-shell[data-nav="open"] .ds-app-shell__nav { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-app-shell__header, .ds-app-shell__nav, .ds-app-shell__aside, .ds-app-shell__bottom-bar { border-color: CanvasText; }
+  .ds-app-shell__nav-item.ds-link[aria-current="page"] { border-inline-start-color: Highlight; }
+  .ds-app-shell[data-nav="open"] .ds-app-shell__nav { border: var(--border-width-thin) solid CanvasText; }
+}

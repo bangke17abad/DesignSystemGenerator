@@ -1,0 +1,97 @@
+{
+  "name": "ImportExport",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila brief menyebut impor atau ekspor data (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna memasukkan data massal dari berkas atau mengeluarkan data ke berkas dengan yakin: tahu format yang diterima sebelum memilih, melihat apa yang akan berubah sebelum data ditulis, mengikuti kemajuan yang terukur, dan menerima laporan per baris yang bisa langsung ditindaklanjuti.",
+    "when": ["Impor entitas dari CSV/XLSX (data awal, migrasi dari sistem lain, pembaruan massal).", "Ekspor daftar, tabel, atau laporan ke berkas untuk diolah di luar produk.", "Ekspor data di balik chart (DataStory) atau hasil BulkActions."],
+    "when_not": ["Lampiran berkas yang isinya tidak diparse menjadi data: pakai FileUpload.", "Data pendek yang bisa diketik atau ditempel: TextArea di dalam FormFlow.", "Sinkronisasi otomatis berkala antar sistem (integrasi tanpa interaksi pengguna): bukan pola UI ini; statusnya ditampilkan lewat StatusLabel dan NotificationCenter.", "Perubahan beberapa item yang sudah ada di layar: pakai BulkActions."]
+  },
+  "composition": [
+    { "component": "Stepper", "parts": ["Stepper.Step"], "role_in_pattern": "variant linear untuk impor: Pilih berkas → Petakan kolom → Tinjau → Impor → Laporan" },
+    { "component": "FileDropzone", "parts": ["FileDropzone.Zone", "FileDropzone.Trigger", "FileDropzone.Constraints"], "role_in_pattern": "satu berkas sumber; format, ukuran maksimum, dan jumlah baris maksimum terlihat sebelum memilih" },
+    { "component": "Link", "role_in_pattern": "\"Unduh templat\" dengan kolom dan contoh baris; \"Unduh baris bermasalah\" di laporan" },
+    { "component": "Select", "role_in_pattern": "pemetaan kolom berkas → field, satu Select per field target; opsi \"Jangan impor\"; dipetakan otomatis dari nama header" },
+    { "component": "ErrorSummary", "role_in_pattern": "field wajib yang belum dipetakan atau dipetakan ganda di langkah Petakan kolom" },
+    { "component": "RadioGroup", "role_in_pattern": "aturan duplikat (Lewati / Perbarui yang ada / Buat baru); format ekspor (CSV, XLSX); cakupan ekspor (hasil filter / terpilih / semua)" },
+    { "component": "Checkbox", "parts": ["Checkbox.Group", "Checkbox.SelectAll"], "role_in_pattern": "pilihan kolom yang diekspor" },
+    { "component": "DateRangePicker", "role_in_pattern": "rentang waktu ekspor bila data berwaktu; zona waktu disebut di helper" },
+    { "component": "InlineMetrics", "role_in_pattern": "ringkasan pratinjau dan laporan: Valid · Gagal · Dilewati · Baru · Diperbarui" },
+    { "component": "Table", "parts": ["Table.Toolbar", "Table.Cell", "Table.Empty"], "role_in_pattern": "pratinjau baris dengan sel invalid + errorText; laporan per baris dengan kolom status; variant virtualized untuk data besar" },
+    { "component": "StatusLabel", "role_in_pattern": "status per baris: valid C4, gagal C1, dilewati C3 (§7.3 Impor / batch); status job ekspor C5 → C4" },
+    { "component": "FilterChip", "parts": ["FilterChip.Group"], "role_in_pattern": "menyaring laporan per status dengan jumlah per chip" },
+    { "component": "ProgressBar", "parts": ["ProgressBar.Actions"], "role_in_pattern": "variant determinate untuk parsing, impor, dan pembuatan ekspor besar; Cancel; hasil akhir sebagai status-line" },
+    { "component": "Modal", "role_in_pattern": "variant confirmation sebelum menulis data: menyebut jumlah baris dan akibatnya (baru vs menimpa) (SC 3.3.4)" },
+    { "component": "InlineAlert", "role_in_pattern": "C2 untuk baris bermasalah atau berkas kosong; C1 untuk kegagalan server dengan Retry" },
+    { "component": "Button", "role_in_pattern": "aksi primer per langkah dengan kata kerja + jumlah (\"Impor 1.180 baris\", \"Ekspor 2.340 baris\")" },
+    { "component": "NotificationItem", "role_in_pattern": "hasil impor/ekspor latar yang selesai saat pengguna di layar lain; membuka laporan atau unduhan" },
+    { "component": "Toast", "role_in_pattern": "ekspor kecil siap dengan aksi Unduh (≥ 10 detik); berkas juga tersedia dari riwayat ekspor, bukan hanya di toast" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "tonggak progres per 25% dan ringkasan hasil" }
+  ],
+  "flow": [
+    { "step": "Pilih berkas", "state_class": "C6", "transition": "batasan dan tautan templat terlihat sebelum memilih; validasi klien tipe dan ukuran; berkas ditolak menyebut alasannya pada FileDropzone" },
+    { "step": "Membaca dan memvalidasi", "state_class": "C5", "transition": "ProgressBar determinate untuk parsing; encoding, pemisah, dan format angka dideteksi lalu ditampilkan untuk dikonfirmasi; belum ada data yang ditulis" },
+    { "step": "Petakan kolom", "state_class": "C2", "transition": "kolom dipetakan otomatis dari header; field wajib yang belum dipetakan ditandai di ErrorSummary; Lanjut diblokir dengan alasan terlihat sampai lengkap; contoh nilai per kolom ditampilkan" },
+    { "step": "Tinjau", "state_class": "C2", "transition": "InlineMetrics + Table pratinjau; baris gagal dengan alasan per sel; pengguna memilih: perbaiki berkas lalu unggah ulang, atau impor hanya baris valid (baris gagal masuk laporan sebagai C1)" },
+    { "step": "Konfirmasi", "state_class": "C6", "transition": "Modal menyebut \"1.020 baru, 160 menimpa data yang ada\"; menimpa data memakai step-up bila brief mensyaratkan (SC 3.3.4)" },
+    { "step": "Mengimpor", "state_class": "C5", "transition": "ProgressBar determinate dengan n dari total; pengguna boleh meninggalkan layar dan hasilnya dikirim lewat NotificationItem; Cancel menghentikan baris berikutnya, baris yang sudah masuk disebut di laporan" },
+    { "step": "Laporan", "state_class": "C4", "transition": "ringkasan + Table per baris (valid C4, gagal C1, dilewati C3) dengan FilterChip; selesai sebagian = InlineAlert C2 + \"Unduh baris bermasalah\" berisi kolom alasan; gagal total = InlineAlert C1 + Retry" },
+    { "step": "Ekspor", "state_class": "C5", "transition": "cakupan, kolom, format, dan rentang dipilih; jumlah baris disebut di tombol; ekspor kecil langsung diunduh, ekspor besar berjalan di latar dengan ProgressBar dan NotificationItem saat siap (C4)" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "Stepper compact-summary (\"Langkah 2 dari 5\"); FileDropzone compact; pemetaan sebagai daftar bertumpuk satu field per baris, Select menjadi Sheet; pratinjau dan laporan sebagai stacked-card dengan baris gagal lebih dulu; ekspor lewat Sheet; berkas hasil diserahkan ke lembar berbagi native (§14.3)" },
+    { "device_class": "tablet", "behaviour": "Stepper horizontal; pemetaan dua kolom (kolom berkas → field) dengan contoh nilai; Table pratinjau dengan kolom prioritas dan kolom status tidak dilipat; action bar sticky di bawah" },
+    { "device_class": "desktop", "behaviour": "Stepper horizontal di atas; pemetaan sebagai tabel (kolom berkas, contoh nilai, field tujuan); Table virtualized dengan row-header sticky dan nomor baris berkas; ekspor dalam Modal atau Menu dari Table.Toolbar" }
+  ],
+  "states": {
+    "empty": "Berkas tanpa baris data: InlineAlert C2 \"Berkas tidak berisi baris\" menggantikan pratinjau, proses tidak dimulai. Ekspor dengan 0 baris: tombol ekspor aria-disabled dengan alasan \"Tidak ada baris yang cocok dengan filter\".",
+    "loading": "Parsing dan impor memakai ProgressBar determinate (§12.3), bukan Spinner; pratinjau memuat dengan Skeleton tabel; ekspor besar menampilkan ProgressBar di riwayat ekspor.",
+    "error": "Berkas tidak terbaca (format, encoding, kolom header hilang): error field pada FileDropzone dengan alasan dan tautan templat. Kegagalan server: InlineAlert C1 + Retry; laporan menyebut persis baris mana yang sudah tertulis bila ada.",
+    "partial": "Sebagian baris gagal atau dilewati: InlineAlert C2 dengan jumlah per status, Table laporan tersaring ke Gagal, dan \"Unduh baris bermasalah\" (baris asli + kolom alasan) agar bisa diperbaiki lalu diimpor ulang.",
+    "success": "InlineMetrics \"1.180 diimpor\" + tautan ke data yang baru masuk (tersaring ke batch ini); diumumkan polite; ekspor selesai = unduhan dimulai atau Toast dengan aksi Unduh dan entri di riwayat ekspor."
+  },
+  "accessibility": [
+    { "step": "Pilih berkas", "focus": "choose-button FileDropzone adalah jalur utama (SC 2.5.7); setelah memilih fokus kembali ke tombol", "announcement": "polite \"{nama berkas} dipilih\" atau alasan penolakan" },
+    { "step": "Pindah langkah", "focus": "fokus ke heading langkah (tabindex −1); Stepper memakai aria-current=\"step\"", "announcement": "polite \"Langkah 2 dari 5: Petakan kolom\"" },
+    { "step": "Petakan kolom", "focus": "aturan FormFlow: ErrorSummary dan fokus ke field pertama yang belum dipetakan", "announcement": "jumlah masalah assertive saat Lanjut ditekan" },
+    { "step": "Mengimpor", "focus": "bar tidak fokusabel; fokus di Cancel; meninggalkan layar tidak menghentikan proses", "announcement": "polite per 25%, bukan setiap persen; gagal diumumkan assertive" },
+    { "step": "Laporan", "focus": "fokus ke heading ringkasan; Table laporan punya caption; baris gagal punya alasan teks di sel, bukan hanya ikon", "announcement": "polite \"Impor selesai: 1.180 diimpor, 12 gagal, 8 dilewati\"" }
+  ],
+  "content": {
+    "rules": ["Batasan ditulis konkret dengan formatter locale sebelum memilih berkas (format, ukuran, jumlah baris).", "Error per baris menyebut nomor baris berkas, kolom, nilai, dan cara memperbaiki.", "Tombol menyebut kata kerja + jumlah + objek; kata kerja sama di tombol, progres, dan laporan (\"Impor\" → \"Diimpor\").", "Nama berkas ekspor: entitas + rentang + waktu dibuat; tanggal di dalam berkas memakai format ISO 8601 dan zona waktu disebut di header atau baris meta."],
+    "examples": {
+      "en-US": ["Import records", "Download template", "Row 14 · Email: add a domain, for example name@example.com", "1,180 imported · 12 failed · 8 skipped", "Export 2,340 rows as CSV", "The file has no rows"],
+      "id-ID": ["Impor data", "Unduh templat", "Baris 14 · Email: tambahkan domain, misalnya nama@contoh.com", "1.180 diimpor · 12 gagal · 8 dilewati", "Ekspor 2.340 baris sebagai CSV", "Berkas tidak berisi baris"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role dengan hak buat dan ubah pada entitas: semua opsi impor dan ekspor" },
+    { "pattern": "disabled-with-reason", "when": "role boleh membuat tetapi tidak mengubah: opsi \"Perbarui yang ada\" aria-disabled dengan alasan; ekspor kolom yang tidak boleh dilihat role tidak ditawarkan di Checkbox.Group" },
+    { "pattern": "hidden", "when": "role tanpa hak buat tidak melihat aksi Impor; ekspor tidak pernah memuat data atau kolom di luar yang bisa dilihat role di layar (izin dari server, §10)" },
+    { "pattern": "step-up", "when": "impor yang menimpa data finansial/hukum atau ekspor massal data pribadi: StepUpDialog sebelum mulai (SC 3.3.4), dicatat di audit" }
+  ],
+  "do": ["Validasi dan tampilkan pratinjau sebelum satu baris pun ditulis.", "Sediakan templat dan berkas baris bermasalah yang bisa diperbaiki lalu diimpor ulang.", "Jalankan proses besar di latar dengan hasil lewat NotificationItem; job punya ID sehingga tidak terduplikasi.", "Ekspor mengikuti filter dan urutan yang aktif, dan menyebut cakupannya di tombol dan nama berkas."],
+  "dont": [
+    { "text": "Menulis data langsung setelah berkas dipilih tanpa pratinjau dan konfirmasi.", "ref": "§11.2" },
+    { "text": "Memakai Spinner atau progres indeterminate untuk impor yang jumlah barisnya diketahui.", "ref": "§12.3" },
+    { "text": "Melaporkan hasil hanya sebagai toast atau hanya sebagai angka total tanpa baris dan alasan.", "ref": "§12.2" },
+    { "text": "Membedakan baris valid, gagal, dan dilewati hanya dengan warna baris.", "ref": "UB2" },
+    { "text": "Mengekspor kolom yang tidak boleh dilihat role karena UI hanya menyembunyikannya di tabel.", "ref": "§10" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "impor dan ekspor yang butuh server diblokir dengan alasan \"Perlu koneksi\" (InlineAlert C2); impor yang sudah berjalan di server tetap berjalan dan statusnya dimuat ulang saat online; tidak ada hasil ditampilkan sebelum server mengonfirmasi (I6)" },
+    { "case": "timeout atau koneksi putus saat impor berjalan", "behaviour": "job berlanjut di server; UI memeriksa status job lewat ID, tidak mengirim ulang berkas; bila status tidak diketahui, laporan menunggu dengan C5 \"Memeriksa status impor\" dan Retry pemeriksaan" },
+    { "case": "berkas sangat besar (jutaan baris)", "behaviour": "parsing streaming; pratinjau 100 baris pertama + total baris; Table virtualized; angka diringkas formatter locale; batas maksimum dari brief (selain itu A-nn) dicek sebelum unggah" },
+    { "case": "berkas kosong atau hanya header", "behaviour": "InlineAlert C2 \"Berkas tidak berisi baris\"; Lanjut tidak tersedia; tautan templat ditawarkan" },
+    { "case": "aksi ganda (klik ganda Impor atau mengimpor berkas yang sama dua kali)", "behaviour": "tombol loading dan kiriman kedua diabaikan; idempotency key per job; berkas identik dengan impor sebelumnya memicu InlineAlert C2 \"Berkas ini sudah diimpor pada {waktu}\" dengan pilihan lanjut" },
+    { "case": "header kolom dan alasan error +40% (locale terpanjang)", "behaviour": "Select pemetaan dan sel alasan membungkus; kolom status tidak dipotong; Stepper beralih ke compact-summary bila label tidak muat" },
+    { "case": "teks 200%", "behaviour": "pemetaan dua kolom menjadi bertumpuk; Table bergulir horizontal dengan kolom nomor baris sticky (SC 1.4.10)" },
+    { "case": "encoding, pemisah, dan format angka lokal", "behaviour": "UTF-8 dengan atau tanpa BOM; pemisah titik koma dan koma desimal dideteksi lalu ditampilkan untuk dikonfirmasi; tanggal ambigu (03/04) ditandai C2 sampai format dipilih" },
+    { "case": "sel ekspor diawali = + - @", "behaviour": "di-escape agar tidak dieksekusi sebagai formula saat dibuka di spreadsheet (CSV injection)" },
+    { "case": "pengguna membatalkan di tengah impor", "behaviour": "baris berikutnya tidak diproses; ProgressBar C3 \"Dibatalkan setelah 640 dari 1.180 baris\"; laporan untuk yang sudah masuk; rollback hanya bila brief mensyaratkan transaksi penuh" }
+  ],
+  "wcag": ["1.3.1", "1.4.1", "1.4.10", "2.4.3", "2.5.7", "3.3.1", "3.3.2", "3.3.3", "3.3.4", "4.1.3"],
+  "related_patterns": ["FileUpload", "Wizard", "BulkActions", "AsyncFeedback", "NotificationCenter", "DestructiveAction"],
+  "lint": ["ProgressBar di ImportExport memakai variant determinate", "Setiap baris laporan punya StatusLabel (C4/C1/C3) dan alasan teks untuk C1 dan C3", "Tombol impor dan ekspor menyebut jumlah baris", "Ekspor CSV meng-escape sel yang diawali = + - @"]
+}

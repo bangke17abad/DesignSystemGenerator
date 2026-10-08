@@ -1,0 +1,178 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/verification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "baseline": {
+      "additionalProperties": false,
+      "properties": {
+        "min_body_font_px": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "min_text_contrast": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "min_touch_target_px": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "wcag_sc_status": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "min_text_contrast",
+        "min_body_font_px",
+        "min_touch_target_px",
+        "wcag_sc_status"
+      ],
+      "type": "object"
+    },
+    "engine_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "generated_by": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "package": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "type": "integer"
+        },
+        "fail_advisory": {
+          "type": "integer"
+        },
+        "fail_blocking": {
+          "type": "integer"
+        },
+        "not_applicable": {
+          "type": "integer"
+        },
+        "not_run": {
+          "type": "integer"
+        },
+        "pass": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "checks",
+        "pass",
+        "fail_blocking",
+        "fail_advisory",
+        "not_run",
+        "not_applicable"
+      ],
+      "type": "object"
+    },
+    "tier_reached": {
+      "enum": [
+        "none",
+        "T0",
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    "validators": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "checks": {
+            "type": "integer"
+          },
+          "failures": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "pattern": "^(V\\d{1,2}|VB\\d{1,2}|P\\d{2}-V\\d+)$",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "severity": {
+            "enum": [
+              "blocking",
+              "advisory"
+            ]
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT RUN",
+              "NOT APPLICABLE"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "severity",
+          "checks",
+          "failures",
+          "notes"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "engine_version",
+    "package",
+    "generated_by",
+    "tier_reached",
+    "summary",
+    "validators",
+    "baseline"
+  ],
+  "title": "verification",
+  "type": "object"
+}

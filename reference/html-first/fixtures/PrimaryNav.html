@@ -1,0 +1,282 @@
+<!-- PrimaryNav fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases.
+     No-JS: every destination is a link in Tab order; groups render open; the menu button is a link to the in-page nav (#nav-fallback).
+     JS: arrows/Home/End, group disclosure, collapse to rail (auto between bp-tablet and bp-desktop), rail Tooltips, drawer dialog.
+     Phone (below bp-tablet): the persistent nav is NOT shown — BottomNav holds the top destinations and the global bar's menu button
+     opens the drawer (see "drawer-open"). The demo shells below therefore hide on phone; only the drawer demos remain. -->
+<section class="ds-demo" data-ds-demo="phone presentation">
+  <p class="ds-primary-nav__phone-note">On phone the persistent nav is not shown: BottomNav carries the top destinations and the menu button opens the drawer below.</p>
+  <p class="ds-text-secondary">Tablet: rail (auto). Desktop: full width, collapsible to rail. Phone: drawer from the global bar's menu button.</p>
+</section>
+<section class="ds-demo" data-ds-demo="drawer (live, opens from the menu button)">
+  <a class="ds-primary-nav__menu-button" href="#nav-fallback" data-ds-opens="pn-drawer-live"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg><span>Menu</span></a>
+  <dialog class="ds-primary-nav__drawer" id="pn-drawer-live" aria-label="Menu" data-ds-module="primary-nav-drawer">
+    <nav class="ds-primary-nav" data-presentation="drawer" data-size="lg" aria-label="Main (drawer)" data-ds-module="primary-nav">
+      <div class="ds-primary-nav__header">
+        <span class="ds-primary-nav__brand">Harbor Ops</span>
+        <button type="button" class="ds-primary-nav__toggle ds-primary-nav__drawer-close" aria-label="Close menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+      </div>
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#dl-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#dl-inbox"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Inbox</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#dl-book"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Bookings</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#dl-set"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">Settings</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </dialog>
+</section>
+<section class="ds-demo" data-ds-demo="variants/vertical (groups, badge, current, footer)">
+  <div class="ds-primary-nav-demo-shell" data-height="auto">
+    <nav class="ds-primary-nav" aria-label="Main" data-ds-module="primary-nav">
+      <div class="ds-primary-nav__header">
+        <span class="ds-primary-nav__brand">Harbor Ops</span>
+        <button type="button" class="ds-primary-nav__toggle" aria-expanded="true" aria-controls="pn-v-body" aria-label="Collapse navigation" data-label-collapse="Collapse navigation" data-label-expand="Expand navigation"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+      </div>
+      <div class="ds-primary-nav__body" id="pn-v-body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#dashboard" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#inbox"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Inbox</span><span class="ds-primary-nav__badge" data-ds-text="supporting"><span aria-hidden="true">3</span><span class="ds-vh">, 3 new</span></span></a></li>
+          <li><a class="ds-primary-nav__item" href="#bookings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Bookings</span></a></li>
+          <li class="ds-primary-nav__group">
+            <button type="button" class="ds-primary-nav__group-toggle" aria-expanded="true" aria-controls="pn-v-g1"><span class="ds-primary-nav__group-label" data-ds-text="supporting">Reports</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+            <ul class="ds-primary-nav__sublist" id="pn-v-g1">
+              <li><a class="ds-primary-nav__item" href="#revenue"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span class="ds-primary-nav__label">Revenue</span></a></li>
+              <li><a class="ds-primary-nav__item" href="#utilisation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span class="ds-primary-nav__label">Venue utilisation</span></a></li>
+            </ul>
+          </li>
+          <li class="ds-primary-nav__group">
+            <button type="button" class="ds-primary-nav__group-toggle" aria-expanded="true" aria-controls="pn-v-g2"><span class="ds-primary-nav__group-label" data-ds-text="supporting">Administration</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+            <ul class="ds-primary-nav__sublist" id="pn-v-g2">
+              <li><a class="ds-primary-nav__item" href="#members"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-primary-nav__label">Members</span></a></li>
+              <li><a class="ds-primary-nav__item" role="link" tabindex="0" aria-disabled="true" aria-describedby="pn-v-r1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-primary-nav__label-wrap"><span class="ds-primary-nav__label">Billing</span><span class="ds-primary-nav__reason" id="pn-v-r1" data-ds-text="supporting">Needs the Owner role</span></span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="ds-primary-nav__footer">
+        <a class="ds-primary-nav__item" href="#settings"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">Settings</span></a>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main"><p class="ds-text-secondary">Main content</p></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/horizontal (More disclosure)">
+  <div class="ds-primary-nav-demo-shell" data-height="auto" style="flex-direction: column;">
+    <nav class="ds-primary-nav" data-variant="horizontal" aria-label="Portal" data-ds-module="primary-nav">
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#h-home" aria-current="page"><span class="ds-primary-nav__label">Home</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#h-venues"><span class="ds-primary-nav__label">Venues</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#h-events"><span class="ds-primary-nav__label">Events</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#h-news"><span class="ds-primary-nav__label">News</span><span class="ds-primary-nav__badge" data-ds-text="supporting"><span aria-hidden="true">2</span><span class="ds-vh">, 2 new</span></span></a></li>
+          <li>
+            <details class="ds-primary-nav__more">
+              <summary class="ds-primary-nav__item"><span class="ds-primary-nav__label">More</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></summary>
+              <ul class="ds-primary-nav__more-panel">
+                <li><a class="ds-primary-nav__item" href="#h-help">Help centre</a></li>
+                <li><a class="ds-primary-nav__item" href="#h-contact">Contact</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main"><p class="ds-text-secondary">Main content</p></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default, hover, pressed, focus, current, blocked-with-reason)">
+  <div class="ds-primary-nav-demo-shell" data-height="auto">
+    <nav class="ds-primary-nav" aria-label="States demo" data-rail-auto="off">
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#s1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Default</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#s2" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Hover</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#s3" data-force="pressed"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Pressed</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#s4" data-force="focus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-primary-nav__label">Focus</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#s5" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-primary-nav__label">Current</span></a></li>
+          <li><a class="ds-primary-nav__item" role="link" tabindex="0" aria-disabled="true" aria-describedby="pn-s-r1"><svg class="ds-icon" data-icon="restricted" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span class="ds-primary-nav__label-wrap"><span class="ds-primary-nav__label">Payroll</span><span class="ds-primary-nav__reason" id="pn-s-r1" data-ds-text="supporting">Available on the Business plan</span></span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-stack" data-gap="1" style="--ds-gap: 0;">
+      <nav class="ds-primary-nav" aria-label="Selected and hover demo" data-rail-auto="off">
+        <div class="ds-primary-nav__body"><ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#c1" aria-current="page" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Selected + hover</span></a></li>
+        </ul></div>
+      </nav>
+      <nav class="ds-primary-nav" aria-label="Selected and focus demo" data-rail-auto="off">
+        <div class="ds-primary-nav__body"><ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#c2" aria-current="page" data-force="focus"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Selected + focus</span></a></li>
+        </ul></div>
+      </nav>
+    </div>
+    <div class="ds-primary-nav-demo-shell__main"><p class="ds-text-secondary">Exactly one aria-current="page" per nav. Prevented combinations: blocked + selected (the open page is never blocked; if permission is revoked the route moves and the item disappears) and loading + pressed (skeleton rows cannot be pressed).</p></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="ancestor-current + group-collapsed + loading">
+  <div class="ds-primary-nav-demo-shell" data-height="auto">
+    <nav class="ds-primary-nav" aria-label="Groups demo" data-ds-module="primary-nav" data-rail-auto="off">
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#g-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+          <li class="ds-primary-nav__group">
+            <button type="button" class="ds-primary-nav__group-toggle" aria-expanded="false" aria-controls="pn-g-g1" data-contains-current><span class="ds-primary-nav__group-label" data-ds-text="supporting">Reports</span><span class="ds-vh">, contains current page</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+            <ul class="ds-primary-nav__sublist" id="pn-g-g1" hidden>
+              <li><a class="ds-primary-nav__item" href="#g-rev" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span class="ds-primary-nav__label">Revenue</span></a></li>
+              <li><a class="ds-primary-nav__item" href="#g-util"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span class="ds-primary-nav__label">Utilisation</span></a></li>
+            </ul>
+          </li>
+          <li class="ds-primary-nav__group">
+            <button type="button" class="ds-primary-nav__group-toggle" aria-expanded="false" aria-controls="pn-g-g2"><span class="ds-primary-nav__group-label" data-ds-text="supporting">Archive</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+            <ul class="ds-primary-nav__sublist" id="pn-g-g2" hidden>
+              <li><a class="ds-primary-nav__item" href="#g-2025"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-primary-nav__label">Season 2025</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <nav class="ds-primary-nav" aria-label="Loading demo" aria-busy="true" data-rail-auto="off">
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#l-home"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+          <li class="ds-primary-nav__skeleton" aria-hidden="true"></li>
+          <li class="ds-primary-nav__skeleton" aria-hidden="true"></li>
+          <li class="ds-primary-nav__skeleton" aria-hidden="true"></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main"><p class="ds-text-secondary">Collapsed group holding the current page keeps the inline-start bar (ancestor-current). Permission-dependent items load as skeleton rows (aria-busy).</p></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="rail + Tooltip">
+  <div class="ds-primary-nav-demo-shell">
+    <nav class="ds-primary-nav" aria-label="Rail demo" data-rail data-rail-auto="off" data-ds-module="primary-nav">
+      <div class="ds-primary-nav__header">
+        <span class="ds-primary-nav__brand">Harbor Ops</span>
+        <button type="button" class="ds-primary-nav__toggle" aria-expanded="false" aria-label="Expand navigation" data-label-collapse="Collapse navigation" data-label-expand="Expand navigation"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+      </div>
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#r-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#r-inbox"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Inbox</span><span class="ds-primary-nav__badge" data-ds-text="supporting"><span aria-hidden="true">3</span><span class="ds-vh">, 3 new</span></span></a></li>
+          <li><a class="ds-primary-nav__item" href="#r-book" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Bookings</span></a></li>
+          <li class="ds-primary-nav__group">
+            <button type="button" class="ds-primary-nav__group-toggle" aria-expanded="true" aria-controls="pn-r-g1"><span class="ds-primary-nav__group-label" data-ds-text="supporting">Reports</span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></button>
+            <ul class="ds-primary-nav__sublist" id="pn-r-g1">
+              <li><a class="ds-primary-nav__item" href="#r-rev"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span class="ds-primary-nav__label">Revenue</span></a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main ds-stack" data-gap="3">
+      <span class="ds-tooltip-demo" data-side="inline-end">
+        <span class="ds-primary-nav" data-rail aria-hidden="true" style="border: 0; background: transparent;"><span class="ds-primary-nav__item" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg></span></span>
+        <span class="ds-tooltip" role="tooltip" data-static data-side="inline-end" aria-hidden="true">Bookings</span>
+      </span>
+      <p class="ds-text-secondary">Labels stay in the DOM as visually hidden text; the Tooltip is only a visual duplicate (hover after delay, focus at once, Esc).</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="rail + Tooltip + RTL" dir="rtl" lang="ar">
+  <div class="ds-primary-nav-demo-shell">
+    <nav class="ds-primary-nav" aria-label="التنقل الرئيسي" data-rail data-rail-auto="off" data-ds-module="primary-nav">
+      <div class="ds-primary-nav__header">
+        <span class="ds-primary-nav__brand">العمليات</span>
+        <button type="button" class="ds-primary-nav__toggle" aria-expanded="false" aria-label="توسيع التنقل" data-label-collapse="طي التنقل" data-label-expand="توسيع التنقل"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg></button>
+      </div>
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#ar-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">لوحة القيادة</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#ar-inbox"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">البريد</span><span class="ds-primary-nav__badge" data-ds-text="supporting"><span aria-hidden="true">٣</span><span class="ds-vh">، ٣ جديدة</span></span></a></li>
+          <li><a class="ds-primary-nav__item" href="#ar-set"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">الإعدادات</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main">
+      <span class="ds-tooltip-demo" data-side="inline-end">
+        <span class="ds-primary-nav" data-rail aria-hidden="true" style="border: 0; background: transparent;"><span class="ds-primary-nav__item" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg></span></span>
+        <span class="ds-tooltip" role="tooltip" data-static data-side="inline-end" aria-hidden="true">البريد</span>
+      </span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, md, lg)">
+  <div class="ds-primary-nav-demo-shell" data-height="auto">
+    <nav class="ds-primary-nav" aria-label="Size sm demo" data-size="sm" data-rail-auto="off">
+      <div class="ds-primary-nav__body"><ul class="ds-primary-nav__list">
+        <li><a class="ds-primary-nav__item" href="#sz1" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Small</span></a></li>
+        <li><a class="ds-primary-nav__item" href="#sz2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Console</span></a></li>
+      </ul></div>
+    </nav>
+    <nav class="ds-primary-nav" aria-label="Size md demo" data-rail-auto="off">
+      <div class="ds-primary-nav__body"><ul class="ds-primary-nav__list">
+        <li><a class="ds-primary-nav__item" href="#sz3" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Medium</span></a></li>
+        <li><a class="ds-primary-nav__item" href="#sz4"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Default</span></a></li>
+      </ul></div>
+    </nav>
+    <nav class="ds-primary-nav" aria-label="Size lg demo" data-size="lg" data-rail-auto="off">
+      <div class="ds-primary-nav__body"><ul class="ds-primary-nav__list">
+        <li><a class="ds-primary-nav__item" href="#sz5" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Large</span></a></li>
+        <li><a class="ds-primary-nav__item" href="#sz6"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Touch</span></a></li>
+      </ul></div>
+    </nav>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="drawer-open (static)">
+  <div class="ds-primary-nav-frame">
+    <div class="ds-primary-nav__drawer" data-static role="dialog" aria-label="Menu (preview)">
+      <nav class="ds-primary-nav" data-presentation="drawer" data-size="lg" aria-label="Main (drawer preview)" id="nav-fallback">
+        <div class="ds-primary-nav__header">
+          <span class="ds-primary-nav__brand">Harbor Ops</span>
+          <button type="button" class="ds-primary-nav__toggle" aria-label="Close menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button>
+        </div>
+        <div class="ds-primary-nav__body">
+          <ul class="ds-primary-nav__list">
+            <li><a class="ds-primary-nav__item" href="#d-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#d-inbox"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Inbox</span><span class="ds-primary-nav__badge" data-ds-text="supporting"><span aria-hidden="true">3</span><span class="ds-vh">, 3 new</span></span></a></li>
+            <li><a class="ds-primary-nav__item" href="#d-book"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Bookings</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#d-members"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-primary-nav__label">Members</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#d-set"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">Settings</span></a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="drawer + text 200%">
+  <div class="ds-primary-nav-frame" style="--type-label-size: 2em; --type-label-line: 1.3;">
+    <div class="ds-primary-nav__drawer" data-static role="dialog" aria-label="Menu (200% text preview)">
+      <nav class="ds-primary-nav" data-presentation="drawer" data-size="lg" aria-label="Main (200% text preview)">
+        <div class="ds-primary-nav__body">
+          <ul class="ds-primary-nav__list">
+            <li><a class="ds-primary-nav__item" href="#t-home" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dashboard</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#t-util"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span class="ds-primary-nav__label">Venue utilisation</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#t-members"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-primary-nav__label">Members</span></a></li>
+            <li><a class="ds-primary-nav__item" href="#t-set"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">Settings</span></a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="edge: longest locale labels + many items (internal scroll)">
+  <div class="ds-primary-nav-demo-shell">
+    <nav class="ds-primary-nav" aria-label="Long labels demo" lang="id" data-rail-auto="off">
+      <div class="ds-primary-nav__body">
+        <ul class="ds-primary-nav__list">
+          <li><a class="ds-primary-nav__item" href="#e1" aria-current="page"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-home"/></svg><span class="ds-primary-nav__label">Dasbor operasional harian</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e2"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-calendar"/></svg><span class="ds-primary-nav__label">Pemesanan jadwal ruangan</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e3"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span class="ds-primary-nav__label">Laporan pendapatan per lapangan</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e4"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span class="ds-primary-nav__label">Keanggotaan</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e5"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-file"/></svg><span class="ds-primary-nav__label">Dokumen</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e6"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-primary-nav__label">Pemberitahuan</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e7"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span class="ds-primary-nav__label">Pencarian</span></a></li>
+          <li><a class="ds-primary-nav__item" href="#e8"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span class="ds-primary-nav__label">Pengaturan</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="ds-primary-nav-demo-shell__main"><p class="ds-text-secondary">Labels wrap (no ellipsis); the nav scrolls inside its own region.</p></div>
+  </div>
+</section>

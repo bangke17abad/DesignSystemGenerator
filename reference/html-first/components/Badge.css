@@ -1,0 +1,62 @@
+/* Badge · engine 1.8.0 reference (catalog/components/Badge.json). Tokens only (I3); logical properties only (§12.4).
+   Fill comes from the --attention-cN-* tokens, so a class that L3 does not allow to fill renders quiet (text + ring only)
+   instead of inventing a fill; lint reports a Badge on such a class and products use StatusLabel there. */
+.ds-badge {
+  --_bg: var(--attention-c1-background);
+  --_fg: var(--attention-c1-foreground);
+  --_border: var(--attention-c1-border);
+  --_icon: var(--attention-c1-icon);
+  --_ring: var(--color-structure-surface-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-block-size: calc(var(--type-label-line) + 2 * var(--border-width-thin));
+  min-inline-size: calc(var(--type-label-line) + 2 * var(--border-width-thin));
+  padding-inline: var(--space-1);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-full);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  vertical-align: middle;
+  pointer-events: none; /* the owner keeps its full hit area; the badge never takes clicks */
+}
+.ds-badge[data-status="warning"] { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-badge[data-status="neutral-negative"] { --_bg: var(--attention-c3-background); --_fg: var(--attention-c3-foreground); --_border: var(--attention-c3-border); --_icon: var(--attention-c3-icon); }
+.ds-badge[data-status="positive"] { --_bg: var(--attention-c4-background); --_fg: var(--attention-c4-foreground); --_border: var(--attention-c4-border); --_icon: var(--attention-c4-icon); }
+.ds-badge[data-status="info"] { --_bg: var(--attention-c5-background); --_fg: var(--attention-c5-foreground); --_border: var(--attention-c5-border); --_icon: var(--attention-c5-icon); }
+
+/* label variant: locked status glyph + one or two words */
+.ds-badge[data-variant="label"] { padding-inline: var(--space-2); }
+.ds-badge .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--_icon); }
+[dir="rtl"] .ds-badge .ds-icon { transform: none; }
+
+/* inline after a nav / tab / section label */
+.ds-badge:not([data-placement="corner"]) { margin-inline-start: var(--space-2); }
+
+/* corner placement on an icon owner: logical insets so it moves to the top-left in RTL; separation ring in the owner's surface */
+:has(> .ds-badge[data-placement="corner"]) { position: relative; }
+.ds-badge[data-placement="corner"] {
+  /* anchored to the centred icon (not the owner box), so it covers at most the icon's block-start/inline-end corner
+     whatever padding the owner's language gives it */
+  position: absolute;
+  inset-block-end: calc(50% + var(--icon-md) / 4);
+  inset-inline-start: calc(50% + var(--icon-md) / 4);
+  z-index: 1;
+  box-shadow: 0 0 0 var(--border-width-thick) var(--_ring);
+}
+/* selected / current / focused owner: badge colour never changes, only the ring follows the owner surface */
+:is([aria-selected="true"], [aria-current]:not([aria-current="false"]), [aria-pressed="true"]) > .ds-badge { --_ring: var(--color-structure-surface-raised); }
+
+@media (forced-colors: active) {
+  .ds-badge { border-color: CanvasText; }
+  .ds-badge .ds-icon { color: CanvasText; }
+}

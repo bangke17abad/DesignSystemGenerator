@@ -1,0 +1,914 @@
+{
+  "accessibility": {
+    "attributes": [
+      "caption atau aria-labelledby ke judul terlihat; scroll-region role=\"region\" + aria-labelledby caption + tabindex=\"0\" bila bisa digulir horizontal",
+      "aria-sort=\"ascending\" | \"descending\" hanya pada th yang aktif; th lain tanpa aria-sort",
+      "pilih-semua: aria-checked=\"mixed\" saat sebagian; label \"Select all rows on this page\"",
+      "checkbox baris berlabel nama row-header (\"Select {nama}\")",
+      "aria-selected pada baris di varian grid; aria-multiselectable pada grid",
+      "aria-rowcount (total termasuk header) dan aria-rowindex per baris saat virtualisasi atau paginasi sisi server; aria-colcount/aria-colindex bila kolom tersembunyi",
+      "aria-busy=\"true\" pada table saat loading atau refreshing",
+      "aria-invalid + aria-describedby pada inline-editor yang error",
+      "aria-expanded + aria-controls pada expand-toggle",
+      "resize-handle: role=\"separator\" aria-orientation=\"vertical\" aria-valuenow/min/max + aria-label \"Resize {kolom}\"",
+      "pengumuman sort, jumlah terpilih, hasil filter, dan Load more lewat LiveAnnouncer polite; error muat lewat InlineAlert role=\"alert\""
+    ],
+    "focus_order": "caption → toolbar/bulk-bar → header (sort, pilih-semua) → baris dalam urutan data → footer; bulk-bar tidak mencuri fokus saat muncul; setelah baris dihapus fokus ke baris berikutnya atau ke caption bila kosong (§9.5)",
+    "native": {
+      "compose": "Tidak ada DataTable bawaan: LazyColumn dengan stickyHeader + Row per baris; Modifier.semantics { collectionInfo = CollectionInfo(rowCount, columnCount) } pada daftar dan collectionItemInfo = CollectionItemInfo(rowIndex, 1, columnIndex, 1) per sel; Modifier.selectable / toggleable untuk seleksi; heading() pada header",
+      "flutter": "DataTable / PaginatedDataTable (sortColumnIndex, sortAscending, DataColumn.onSort, DataRow.selected + onSelectChanged, showCheckboxColumn, numeric: true) untuk data kecil; TableView dari two_dimensional_scrollables (pinnedRowCount, pinnedColumnCount) untuk data besar; Semantics(sortKey, selected:) per baris; di compact width ListView berisi Card",
+      "swiftui": "Table(rows, selection: $selection, sortOrder: $sortOrder) { TableColumn(\"Name\", value: \\.name) } di regular width; pada compact width Table hanya menampilkan kolom pertama, jadi pakai List berisi baris tersusun; .accessibilityElement(children: .combine) per kartu"
+    },
+    "politeness": "polite",
+    "role": "table dengan caption, thead/tbody, th scope=\"col\" dan th scope=\"row\" untuk kolom identitas; varian interactive-grid: role=\"grid\" dengan row, columnheader, rowheader, gridcell",
+    "sr_label": "tabel dinamai caption; sel dibaca dengan header kolom dan row-header; nilai yang dipotong punya nama lengkap; sel kosong dibaca \"No value\" bukan tanda hubung",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.1",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.12",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.7",
+      "2.5.8",
+      "3.3.1",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "scroll-region",
+      "role": "pembungkus gulir horizontal berlabel caption; dapat difokus (tabindex 0) hanya bila kontennya lebih lebar dari viewport",
+      "tokens": [
+        "color-structure-surface-base",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "caption",
+      "role": "judul tabel (terlihat atau VisuallyHidden) + ringkasan jumlah dan filter aktif",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "toolbar",
+      "role": "SearchField, FilterChip, dan aksi tabel di atas header; ditukar oleh bulk-bar saat ada seleksi dengan tinggi yang sama",
+      "tokens": [
+        "layout-bar-height",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "header-row",
+      "role": "baris th; sticky di atas area gulir vertikal pada z-sticky dengan garis bawah",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-strong",
+        "border-width-thin",
+        "z-sticky",
+        "layout-row-height"
+      ]
+    },
+    {
+      "part": "header-cell",
+      "role": "th scope=\"col\"; label kolom + unit; rata sesuai tipe data (angka di inline-end)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "space-3"
+      ]
+    },
+    {
+      "part": "sort-button",
+      "role": "tombol di dalam th yang dapat diurutkan; ikon arah urut aktif (panah atas/bawah) atau ikon netral saat tidak aktif; label kolom tetap teks tombol",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-interaction-default",
+        "color-structure-text-secondary",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "resize-handle",
+      "role": "separator yang bisa difokus di tepi inline-end th; drag, panah, atau item Menu kolom",
+      "tokens": [
+        "color-structure-border-strong",
+        "color-interaction-default",
+        "border-width-thick",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "selection-cell",
+      "role": "kolom Checkbox per baris; di header berisi pilih-semua (indeterminate saat sebagian)",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch",
+        "space-3"
+      ]
+    },
+    {
+      "part": "row",
+      "role": "tr; tinggi minimum layout-row-height, tumbuh mengikuti isi; garis pemisah bawah; ring fokus inset −2px bila baris dapat difokus",
+      "tokens": [
+        "layout-row-height",
+        "color-structure-border",
+        "border-width-thin",
+        "color-structure-selection",
+        "color-focus-ring",
+        "state-layer-hover-opacity",
+        "state-layer-selected-opacity"
+      ]
+    },
+    {
+      "part": "row-header",
+      "role": "th scope=\"row\" kolom identitas (nama/ID); sticky di inline-start saat gulir horizontal; boleh dipotong ellipsis dengan nama lengkap di Tooltip atau long-press dan di nama aksesibel",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary",
+        "color-structure-surface-raised",
+        "color-structure-shadow",
+        "z-sticky"
+      ]
+    },
+    {
+      "part": "cell",
+      "role": "td; teks isi; angka, harga, waktu, dan kuantitas rata inline-end dengan font-variant-numeric: tabular-nums; status, harga, waktu tidak pernah dipotong",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "color-structure-text-secondary",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "status-cell",
+      "role": "berisi StatusLabel (ikon terkunci + teks); membungkus ke baris berikut bila sempit, tidak pernah ellipsis",
+      "tokens": [
+        "icon-sm",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "row-actions",
+      "role": "IconButton \"More actions\" membuka Menu per baris; aksi tunggal boleh Button tertiary",
+      "tokens": [
+        "icon-md",
+        "control-height-sm",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "expand-toggle",
+      "role": "IconButton chevron ber-aria-expanded di tablet; membuka baris ekspansi berisi kolom sekunder sebagai DescriptionList",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-surface-sunken",
+        "space-4"
+      ]
+    },
+    {
+      "part": "inline-editor",
+      "role": "TextField/Select/NumberInput di dalam sel saat mode edit; error per sel dengan ikon + teks + aria-describedby",
+      "tokens": [
+        "color-structure-border-control",
+        "color-interaction-default",
+        "color-semantic-critical-strong",
+        "color-semantic-critical-subtle",
+        "icon-sm",
+        "radius-sm"
+      ]
+    },
+    {
+      "part": "bulk-bar",
+      "role": "bar aksi massal sticky; menggantikan toolbar di slot yang sama (tanpa menggeser baris) dan tidak menutup elemen yang fokus; memuat jumlah terpilih, aksi, dan Clear selection",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "elevation-1",
+        "z-sticky",
+        "layout-bar-height",
+        "type-label-size"
+      ]
+    },
+    {
+      "part": "partial-row-marker",
+      "role": "baris yang gagal dimuat atau disimpan: ikon kritis + teks singkat + Retry di sel pertama; bukan hanya warna",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "skeleton-row",
+      "role": "baris Skeleton yang meniru jumlah dan lebar kolom asli selama loading awal",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-xs",
+        "layout-row-height"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "Pagination (default data operasional) atau tombol \"Load more\" + ringkasan \"1–50 of 1,240\"",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "stacked-card",
+      "role": "presentasi di bawah bp-tablet: satu Card per baris, row-header sebagai judul, kolom lain sebagai pasangan label: nilai",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "radius-md",
+        "space-3",
+        "space-4",
+        "bp-tablet"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onSortChange",
+        "payload": "{ columnId: string; direction: \"ascending\" | \"descending\" } | null",
+        "when": "sort-button diaktifkan"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "string[] | \"all\"",
+        "when": "checkbox baris, pilih-semua, atau Select all {total} berubah"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "{ rowId: string; columnId: string; value: unknown }",
+        "when": "edit inline disimpan (Enter, Tab, atau blur valid)"
+      },
+      {
+        "name": "onColumnWidthChange",
+        "payload": "{ columnId: string; width: number }",
+        "when": "resize lewat drag, keyboard, atau Menu kolom selesai"
+      },
+      {
+        "name": "onLoadMore",
+        "payload": "void",
+        "when": "tombol Load more diaktifkan"
+      },
+      {
+        "name": "onRetry",
+        "payload": "{ rowIds?: string[] }",
+        "when": "Retry pada InlineAlert atau partial-row-marker"
+      }
+    ],
+    "parts": [
+      "Table.Toolbar",
+      "Table.BulkBar (count, actions)",
+      "Table.Header",
+      "Table.HeaderCell (columnId, label, unit, sortable, resizable, priority: \"primary\" | \"secondary\", align: \"start\" | \"end\", numeric)",
+      "Table.Body",
+      "Table.Row (rowId, onPress, selectable, reason, invalid, errorText)",
+      "Table.RowHeader (truncate)",
+      "Table.Cell (numeric, editable, invalid, errorText, pending)",
+      "Table.RowActions",
+      "Table.Expansion",
+      "Table.Empty",
+      "Table.Footer",
+      "Table.LoadMore"
+    ],
+    "props": [
+      {
+        "description": "Judul tabel; juga nama aksesibel. Bisa disembunyikan visual lewat captionHidden.",
+        "name": "caption",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Merender caption sebagai VisuallyHidden bila judul terlihat sudah ada di PageHeader.",
+        "name": "captionHidden",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "static",
+        "description": "Model keyboard dan rendering.",
+        "name": "variant",
+        "required": false,
+        "type": "\"static\" | \"interactive-grid\" | \"virtualized\""
+      },
+      {
+        "default": "none",
+        "description": "Menambahkan kolom seleksi.",
+        "name": "selectionMode",
+        "required": false,
+        "type": "\"none\" | \"single\" | \"multiple\""
+      },
+      {
+        "description": "Controlled: id baris terpilih; \"all\" = semua baris di seluruh hasil.",
+        "name": "selected",
+        "required": false,
+        "type": "string[] | \"all\""
+      },
+      {
+        "default": "[]",
+        "description": "Uncontrolled: seleksi awal.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "description": "Controlled: kolom dan arah urut aktif.",
+        "name": "sort",
+        "required": false,
+        "type": "{ columnId: string; direction: \"ascending\" | \"descending\" } | null"
+      },
+      {
+        "default": "null",
+        "description": "Uncontrolled: urut awal.",
+        "name": "defaultSort",
+        "required": false,
+        "type": "{ columnId: string; direction: \"ascending\" | \"descending\" } | null"
+      },
+      {
+        "description": "Total baris di sumber data (aria-rowcount, ringkasan caption, Select all {total}).",
+        "name": "rowCount",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "pages",
+        "description": "Paginasi default untuk data operasional; load-more untuk daftar panjang lain; tidak ada gulir tak berujung otomatis.",
+        "name": "pagination",
+        "required": false,
+        "type": "\"pages\" | \"load-more\" | \"none\""
+      },
+      {
+        "default": "true",
+        "description": "Header menempel saat gulir vertikal.",
+        "name": "stickyHeader",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "true",
+        "description": "Kolom identitas menempel saat gulir horizontal.",
+        "name": "stickyRowHeader",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Loading awal (skeleton) atau refreshing bila sudah ada data.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error muat; menampilkan InlineAlert C1 + Retry.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Mematikan seleksi dan edit inline.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan seleksi atau aksi massal diblokir untuk role/kondisi saat ini.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus melewati scroll-region (bila dapat digulir), sort-button, pilih-semua, checkbox baris, tautan dan aksi per baris dalam urutan DOM",
+      "trigger": "Tab / Shift+Tab (varian static)"
+    },
+    {
+      "input": "keyboard",
+      "result": "urut ascending → descending (→ tanpa urut bila allowUnsorted); hanya satu kolom aktif; diumumkan polite \"Sorted by {kolom}, {arah}\"; fokus tetap di tombol",
+      "trigger": "Enter atau Space pada sort-button"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengubah seleksi; pilih-semua memilih baris di halaman saat ini; bila ada halaman lain, bulk-bar menawarkan \"Select all {total}\"; jumlah diumumkan polite",
+      "trigger": "Space pada checkbox baris atau pilih-semua"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antar sel; Home/End ke awal/akhir baris; Ctrl+Home/End ke sel pertama/terakhir tabel; satu tab stop untuk seluruh grid",
+      "trigger": "panah, Home/End, Ctrl+Home/End, Page Up/Down (varian interactive-grid)"
+    },
+    {
+      "input": "keyboard",
+      "result": "Enter/F2 masuk mode edit; Enter menyimpan; Esc membatalkan dan memulihkan nilai; Tab menyimpan dan pindah ke sel editable berikut; error menahan fokus di sel dengan teks error",
+      "trigger": "Enter atau F2 pada sel editable; Enter saat mengedit; Esc; Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "lebar kolom berubah per langkah; aria-valuenow diperbarui; Home/End ke lebar minimum/maksimum",
+      "trigger": "←/→ pada resize-handle (Shift untuk langkah besar), Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "baris berikut dimuat dan ditambahkan; fokus tetap pada tombol (atau tombol penggantinya di posisi yang sama); \"{n} more rows loaded\" diumumkan polite",
+      "trigger": "Enter pada tombol \"Load more\""
+    },
+    {
+      "input": "pointer",
+      "result": "membuka detail (ContextPanel di desktop); klik pada kontrol di dalam baris tidak memicu onPress baris; tautan utama tetap ada di row-header agar bisa dibuka di tab baru",
+      "trigger": "klik baris yang punya onPress"
+    },
+    {
+      "input": "pointer",
+      "result": "memilih rentang dari baris terakhir yang dipilih; alternatif keyboard: centang satu per satu atau pilih-semua",
+      "trigger": "Shift+klik checkbox"
+    },
+    {
+      "input": "pointer",
+      "result": "drag mengubah lebar (alternatif satu-pointer: item Menu kolom \"Column width\" dengan pilihan narrow/default/wide, UB7); klik ganda mengepas lebar ke isi",
+      "trigger": "drag resize-handle; klik ganda"
+    },
+    {
+      "input": "touch",
+      "result": "membuka detail; checkbox dan aksi baris punya area ≥ target-min-touch dan tidak tumpang tindih dengan area tap kartu",
+      "trigger": "tap stacked-card atau baris (phone/tablet)"
+    },
+    {
+      "input": "touch",
+      "result": "menampilkan nama lengkap (Tooltip atau Popover); tidak memulai seleksi tersembunyi",
+      "trigger": "tekan lama pada nama yang dipotong"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Name",
+        "Status",
+        "Last updated",
+        "3 selected",
+        "Select all 1,240 items",
+        "No results match these filters",
+        "Load more",
+        "Sorted by Last updated, descending",
+        "2 rows couldn't load. Retry"
+      ],
+      "id-ID": [
+        "Nama",
+        "Status",
+        "Terakhir diperbarui",
+        "3 dipilih",
+        "Pilih semua 1.240 item",
+        "Tidak ada hasil untuk filter ini",
+        "Muat lagi",
+        "Diurutkan menurut Terakhir diperbarui, menurun",
+        "2 baris gagal dimuat. Coba lagi"
+      ]
+    },
+    "rules": [
+      "Header kolom = kata benda singkat, sentence case, dari glosarium; unit ditulis sekali di header (\"Duration (min)\"), tidak di setiap sel.",
+      "Angka, harga, tanggal, dan waktu diformat locale sesi (B1) dan rata inline-end; desimal konsisten per kolom.",
+      "Sel kosong ditampilkan sebagai tanda pisah dengan nama aksesibel \"No value\"; jangan biarkan sel kosong tanpa makna.",
+      "Caption menyebut isi tabel dan filter aktif; jumlah record ditulis dengan angka.",
+      "EmptyState spesifik: menyebut apa yang kosong dan kapan terisi; hasil filter kosong menawarkan Clear filters.",
+      "Label aksi massal = kata kerja + jumlah (\"Archive 3 items\")."
+    ]
+  },
+  "depends_on": [
+    "Checkbox",
+    "StatusLabel",
+    "Skeleton",
+    "EmptyState",
+    "InlineAlert",
+    "Menu",
+    "IconButton",
+    "Button",
+    "Tooltip",
+    "Pagination",
+    "VisuallyHidden",
+    "LiveAnnouncer",
+    "ProgressBar"
+  ],
+  "do": [
+    "Pakai th dengan scope dan caption pada setiap tabel data.",
+    "Ratakan angka, harga, dan waktu di inline-end dengan tabular-nums.",
+    "Tunjukkan bulk-bar di slot toolbar agar baris tidak bergeser saat seleksi dimulai.",
+    "Pertahankan data lama saat refresh dan tandai kesegarannya."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Memotong status, harga, atau waktu dengan ellipsis untuk menghemat lebar kolom."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai baris terpilih atau status sel hanya dengan warna latar."
+    },
+    {
+      "ref": "UB3",
+      "text": "Mengecilkan huruf di bawah type-body untuk memuat lebih banyak kolom; kepadatan lewat ruang dan susunan."
+    },
+    {
+      "text": "Memberi aria-sort pada lebih dari satu header atau memakai role=grid tanpa navigasi sel; pembaca layar mengumumkan model yang salah."
+    },
+    {
+      "text": "Menggulir tak berujung otomatis untuk data operasional; posisi dan fokus hilang."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "header membungkus dua baris; tidak ada ellipsis pada header; lebar minimum kolom dihitung dari kata terpanjang",
+      "case": "label header +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "baris tumbuh tinggi; kolom sekunder melipat lebih awal (breakpoint mengikuti lebar tersedia); tidak ada tinggi baris tetap yang memotong",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik di body; header tetap agar konteks kolom jelas; pilih-semua disembunyikan",
+      "case": "0 baris"
+    },
+    {
+      "behaviour": "paginasi sisi server (default) atau virtualized dengan aria-rowcount; pilih-semua hanya halaman ini, lalu tawaran eksplisit \"Select all 10,000\"; caption menyebut total",
+      "case": "10.000+ baris"
+    },
+    {
+      "behaviour": "skeleton baris saat pertama; saat refresh data lama tetap dengan ProgressBar tipis dan aria-busy",
+      "case": "loading pertama dan muat ulang"
+    },
+    {
+      "behaviour": "data tersimpan tampil dengan \"Last updated {waktu}\" dan ConnectionStatus; edit inline diantrekan dan bertanda Pending (I6); aksi yang butuh server aria-disabled dengan reason",
+      "case": "offline"
+    },
+    {
+      "behaviour": "baris gagal bertanda ikon + teks + Retry per baris; ringkasan jumlah gagal di caption; baris lain tetap bisa dipakai",
+      "case": "gagal sebagian"
+    },
+    {
+      "behaviour": "urutan kolom dicerminkan, kolom identitas sticky di inline-start (kanan); angka, ID, dan nilai mata uang diisolasi bidi (bdi/dir=\"ltr\") dan tetap rata inline-end",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "overflow-wrap: anywhere di sel non-identitas; identitas boleh ellipsis + nama lengkap di Tooltip/long-press",
+      "case": "string tanpa spasi sangat panjang (ID, URL)"
+    },
+    {
+      "behaviour": "fokus ke baris berikutnya atau caption (§9.5); urutan tidak berubah di bawah fokus tanpa pengumuman polite",
+      "case": "baris yang fokus dihapus atau berpindah karena data live"
+    },
+    {
+      "behaviour": "tanda negatif dengan teks (minus), bukan hanya warna; angka besar diformat dengan pemisah locale; kolom melebar, tidak dipotong",
+      "case": "nilai ekstrem (negatif, sangat besar, desimal panjang)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "table tanpa caption atau aria-labelledby ditolak",
+    "th tanpa scope ditolak",
+    "aria-sort pada lebih dari satu th ditolak",
+    "Sel status, harga, atau waktu dengan text-overflow: ellipsis ditolak",
+    "Sel numeric tanpa font-variant-numeric: tabular-nums ditolak (css-pattern)",
+    "role=grid tanpa sel editable atau navigasi sel (manual-review)",
+    "Gulir tak berujung otomatis pada data operasional (manual-review)"
+  ],
+  "name": "Table",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus (sel)",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "pilih-semua indeterminate",
+      "bulk-bar muncul tanpa pergeseran",
+      "stacked-card phone",
+      "baris ekspansi tablet",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "row-hover",
+      "row-focus",
+      "row-pressed",
+      "selected",
+      "sorted",
+      "loading",
+      "refreshing",
+      "empty",
+      "empty-filtered",
+      "error",
+      "partial-failure",
+      "editing",
+      "cell-error",
+      "pending-sync",
+      "read-only",
+      "disabled-with-reason"
+    ],
+    "variants": [
+      "static",
+      "interactive-grid",
+      "virtualized"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan kumpulan record dengan atribut yang sama dalam baris dan kolom berheader, untuk memindai, membandingkan, mengurutkan, memilih, dan (bila diizinkan) mengedit nilai per sel.",
+    "when_not_to_use": [
+      "Untuk record dengan satu atau dua atribut atau yang dibaca berurutan (pesan, notifikasi): pakai List.",
+      "Untuk pasangan label–nilai satu record: pakai DescriptionList.",
+      "Untuk data hierarkis yang dibuka per tingkat: pakai Tree.",
+      "Untuk riwayat kronologis kejadian: pakai Timeline.",
+      "Untuk tata letak visual (kolom halaman, galeri): pakai Grid; elemen table tidak pernah dipakai untuk layout.",
+      "Untuk menunjukkan tren atau proporsi: pakai Chart, dengan Table sebagai alternatif datanya."
+    ]
+  },
+  "related": [
+    "List",
+    "DescriptionList",
+    "Card",
+    "Pagination",
+    "FilterChip",
+    "SearchField",
+    "ContextPanel",
+    "Chart"
+  ],
+  "responsive": [
+    {
+      "behaviour": "di bawah bp-tablet menjadi stacked-card (label: nilai); row-header sebagai judul kartu; status, harga, waktu tidak dipotong; urut lewat Select \"Sort by\"; seleksi lewat checkbox ≥ target-min-touch; bulk-bar di bawah dalam zona jempol; Load more sebagai default",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "kolom primer tetap; kolom sekunder melipat ke baris ekspansi (expand-toggle); bila kolom primer masih tidak muat, gulir horizontal dengan header dan kolom identitas sticky; target ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "semua kolom; header dan kolom identitas sticky; resize kolom; detail baris di ContextPanel docked; paginasi di footer",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "kolom berisi data yang tidak boleh diketahui role: kolom tidak dirender (bukan disamarkan) dan aria-colcount menyesuaikan"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role hanya membaca: tanpa kolom seleksi, tanpa bulk-bar, tanpa inline-editor; aksi non-mutasi (ekspor, salin tautan) tetap"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi massal atau seleksi baris tertentu tidak diizinkan saat ini: ikon gembok + reason terlihat"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi massal berisiko tinggi (hapus banyak, ubah nilai finansial): StepUpDialog menyebut jumlah dan objek sebelum dijalankan"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Urutan kolom, sticky row-header, resize-handle, dan perataan memakai properti logis (inline-start/end); chevron ekspansi dicerminkan; panah urut atas/bawah tidak dicerminkan; angka dan ID diisolasi bidi agar digit tidak terbalik; ←/→ pada resize-handle mengikuti arah visual."
+  },
+  "sizes": {
+    "not_applicable": "Tinggi baris berasal dari layout-row-height dan sumbu mode kepadatan (§5.9), bukan prop size (§6.8); baris tumbuh mengikuti isi dan area klik kontrol di dalamnya mengikuti ukuran kontrol masing-masing (≥ target-current, baris ≥ 44 di sentuh)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "latar selection + state-layer hover; centang tetap",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "centang + latar selection + ring inset −2px",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "sel error dengan ring fokus; teks error tetap tampil di bawah nilai",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "baris terkunci yang sudah terpilih: centang diredam, aria-checked tetap diumumkan, reason tersedia",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "baris skeleton tidak bisa ditekan",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "baris tanpa onPress tidak memberi umpan balik hover",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "dragged",
+      "note": "urutan baris tidak diubah dengan drag di Table; urutan manual memakai List dengan Menu Move up/down",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "header-row": "color-structure-surface-raised",
+        "row": "color-structure-surface-base"
+      },
+      "treatment": "baris di atas surface-base dengan garis pemisah border; header surface-raised"
+    },
+    {
+      "name": "row-hover",
+      "token_swaps": {
+        "row": "color-structure-selection"
+      },
+      "treatment": "state-layer hover di atas baris (hanya bila baris punya onPress atau seleksi, dan hanya di (hover: hover)); geometri tetap"
+    },
+    {
+      "name": "row-focus",
+      "token_swaps": {
+        "row": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px di sekeliling baris (grid atau baris ber-onPress); sel fokus di grid juga inset −2px"
+    },
+    {
+      "name": "row-pressed",
+      "token_swaps": {
+        "row": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform pada baris"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "row": "color-structure-selection",
+        "selection-cell": "color-interaction-default"
+      },
+      "treatment": "checkbox tercentang (penanda non-warna) + latar selection; aria-selected di grid; jumlah terpilih diumumkan polite"
+    },
+    {
+      "name": "sorted",
+      "token_swaps": {
+        "sort-button": "color-interaction-default"
+      },
+      "treatment": "th aktif ber-aria-sort; ikon arah urut tampil penuh, label kolom tidak berubah warna saja"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "skeleton-row": "color-structure-skeleton"
+      },
+      "treatment": "loading awal: skeleton-row sebanyak ukuran halaman; table aria-busy=\"true\"; header tetap tampil"
+    },
+    {
+      "name": "refreshing",
+      "token_swaps": {},
+      "treatment": "data lama tetap tampil dan bisa dibaca; ProgressBar indeterminate tipis di bawah header; aria-busy; fokus tidak dipindah"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "satu baris penuh lebar berisi EmptyState spesifik (apa yang kosong, kapan terisi, CTA hanya bila valid); header tetap"
+    },
+    {
+      "name": "empty-filtered",
+      "token_swaps": {},
+      "treatment": "EmptyState \"No results match these filters\" + aksi Clear filters; jumlah 0 diumumkan polite"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "partial-row-marker": "color-semantic-critical-strong"
+      },
+      "treatment": "InlineAlert C1 dengan teks penyebab + Retry menggantikan body; header dan toolbar tetap; diumumkan lewat role=alert"
+    },
+    {
+      "name": "partial-failure",
+      "token_swaps": {
+        "partial-row-marker": "color-semantic-critical-strong"
+      },
+      "treatment": "baris yang gagal ditandai partial-row-marker (ikon + teks + Retry per baris); baris lain normal; ringkasan \"2 rows couldn't load\" di caption"
+    },
+    {
+      "name": "editing",
+      "token_swaps": {
+        "inline-editor": "color-structure-border-control"
+      },
+      "treatment": "sel berubah menjadi inline-editor dengan border-control dan ring fokus; nilai asli disimpan untuk Esc"
+    },
+    {
+      "name": "cell-error",
+      "token_swaps": {
+        "cell": "color-semantic-critical-subtle",
+        "inline-editor": "color-semantic-critical-strong"
+      },
+      "treatment": "inline-editor ber-aria-invalid; ikon kritis + teks error di bawah nilai; latar sel critical-subtle; sel tetap terbuka sampai diperbaiki atau Esc"
+    },
+    {
+      "name": "pending-sync",
+      "token_swaps": {
+        "cell": "color-structure-text-secondary"
+      },
+      "treatment": "nilai yang diedit offline atau belum dikonfirmasi server diberi ikon jam + teks \"Pending\"; tidak tampil terkonfirmasi (I6)"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {},
+      "treatment": "tanpa kolom seleksi, tanpa inline-editor; nilai kontras penuh; aria-readonly pada grid"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "selection-cell": "color-structure-text-disabled"
+      },
+      "treatment": "baris yang tidak boleh dipilih: checkbox aria-disabled + ikon gembok + reason di Tooltip yang juga terbaca saat fokus dan di stacked-card sebagai teks"
+    }
+  ],
+  "target_hints": {
+    "compose": "LazyColumn + stickyHeader dibungkus {Ns}Table; WindowSizeClass compact memilih daftar kartu",
+    "flutter": "DataTable/PaginatedDataTable atau TableView dibungkus {ns}_table.dart; LayoutBuilder memilih kartu di bawah bp-tablet",
+    "html": {
+      "element": "table (caption, thead, tbody, th[scope])",
+      "notes": "div[role=region][tabindex=0] sebagai pembungkus gulir; role=\"grid\" hanya untuk varian interactive-grid; tanpa JS: tabel statis + tautan urut/halaman sebagai query string; stacked-card lewat container query di bawah bp-tablet dengan data-label per sel"
+    },
+    "swiftui": "Table dibungkus {Ns}Table; List berisi {Ns}TableCard pada horizontalSizeClass == .compact"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Elemen table semantik; Tab berpindah antar kontrol di dalamnya (tombol urut, checkbox, tautan, aksi baris). Tidak ada navigasi sel dengan panah.",
+      "name": "static"
+    },
+    {
+      "description": "Hanya bila ada edit inline atau navigasi per sel yang dibutuhkan journey: role=\"grid\", satu tab stop, panah antar sel (roving tabindex). Bukan default karena mengubah model keyboard.",
+      "name": "interactive-grid"
+    },
+    {
+      "description": "Untuk > ±200 baris dalam satu tampilan yang tidak dipaginasi: hanya baris terlihat dirender; aria-rowcount total dan aria-rowindex per baris; tinggi baris diperkirakan dan dikoreksi saat diukur.",
+      "name": "virtualized"
+    }
+  ]
+}

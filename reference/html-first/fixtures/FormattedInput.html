@@ -1,0 +1,44 @@
+<!-- FormattedInput fixture · fixed-pattern numbers; raw value submitted, separators visual only. -->
+<section class="ds-demo" data-ds-demo="variants/account-number">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="#### #### #### ####">
+      <label class="ds-text-field__label" for="fi-1">Bank account number</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="fi-1" name="account" type="text" inputmode="numeric" autocomplete="off" dir="ltr" value="1234567890123456" aria-describedby="fi-1-help"></div>
+      <input type="hidden" class="ds-formatted-input__raw-value">
+      <p class="ds-text-field__helper" id="fi-1-help">16 digits. Spaces are added for you and are not sent.</p>
+    </div>
+    <div class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="####-####-####">
+      <label class="ds-text-field__label" for="fi-2">Phone number</label>
+      <div class="ds-text-field__group"><span class="ds-text-field__affix" data-affix="start" id="fi-2-p">+62</span><input class="ds-text-field__input" id="fi-2" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" dir="ltr" aria-describedby="fi-2-p fi-2-help"></div>
+      <input type="hidden" class="ds-formatted-input__raw-value">
+      <p class="ds-text-field__helper" id="fi-2-help">Paste in any format; it is tidied to 0812-3456-7890.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="##.###.###.#-###.###">
+      <label class="ds-text-field__label" for="fi-3">Tax ID</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="fi-3" name="tax" type="text" inputmode="numeric" dir="ltr" value="0123456" aria-invalid="true" aria-describedby="fi-3-err fi-3-help" data-force="focus"></div>
+      <input type="hidden" class="ds-formatted-input__raw-value">
+      <p class="ds-text-field__error" id="fi-3-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Tax ID needs 15 digits. You entered 7.</span></p>
+      <p class="ds-text-field__helper" id="fi-3-help">Format 00.000.000.0-000.000</p>
+    </div>
+    <div class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="#### #### #### ####">
+      <label class="ds-text-field__label" for="fi-4">Card on file</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="fi-4" type="text" dir="ltr" value="4111 1111 1111 1111" readonly aria-readonly="true"></div>
+    </div>
+    <div class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="#####">
+      <label class="ds-text-field__label" for="fi-5">Postal code</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input" id="fi-5" type="text" inputmode="numeric" dir="ltr" readonly aria-disabled="true" aria-describedby="fi-5-r"></div>
+      <p class="ds-text-field__reason" id="fi-5-r"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Choose a country first to set the postal code format.</span></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="rtl+long-label">
+  <div dir="rtl" lang="ar" class="ds-text-field ds-formatted-input" data-ds-module="text-field formatted-input" data-mask="#### #### #### ####">
+    <label class="ds-text-field__label" for="fi-6">رقم الحساب البنكي للتحويلات الدولية والمحلية</label>
+    <div class="ds-text-field__group"><input class="ds-text-field__input" id="fi-6" type="text" inputmode="numeric" dir="ltr" value="9876543210987654"></div>
+    <input type="hidden" class="ds-formatted-input__raw-value">
+  </div>
+</section>

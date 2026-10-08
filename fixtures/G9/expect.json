@@ -1,0 +1,37 @@
+{
+  "assertions": [
+    {
+      "eq": "#ff5a1f",
+      "mode": "default/Light",
+      "token_mode": "color-brand-default"
+    },
+    {
+      "contrast": {
+        "bg": "color-brand-default",
+        "fg": "color-brand-on",
+        "min": 4.5,
+        "mode": "default/Light"
+      }
+    },
+    {
+      "eq": 0,
+      "token": "radius-md"
+    },
+    {
+      "eq": "translate(4px,4px)",
+      "token": "state-press-transform"
+    },
+    {
+      "eq": "Space Grotesk",
+      "lang": "decisions.L4.value.families.ui"
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G9",
+  "run_only": [
+    "Langkah 2 tenant-add studio-biru (V15)"
+  ],
+  "source": "golden-briefs.md G9"
+}

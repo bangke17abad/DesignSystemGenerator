@@ -1,0 +1,365 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: tunggu < 2 detik tidak diumumkan (teks tersembunyi standalone baru disisipkan setelah jeda tampil); hasil akhir diumumkan polite oleh komponen pemilik (\"Changes saved\"); tidak pernah assertive",
+      "in-control: spinner aria-hidden, kontrol aria-busy=\"true\", nama aksesibel kontrol tidak berubah (label tidak diganti \"Loading\")",
+      "SVG bergerak berhenti di bawah prefers-reduced-motion (V6) dan tidak berputar lebih dari 5 detik tanpa eskalasi (SC 2.2.2)",
+      "satu spinner per wilayah; beberapa spinner bersamaan digantikan satu indikator wilayah"
+    ],
+    "focus_order": "tidak pernah menerima fokus; fokus tetap pada kontrol yang memicu",
+    "native": {
+      "compose": "CircularProgressIndicator(Modifier.semantics { contentDescription = \"Loading results\" }) untuk standalone; di dalam Button Modifier.clearAndSetSemantics {} dan stateDescription pada Button. Not verified against the pinned version",
+      "flutter": "CircularProgressIndicator(semanticsLabel: 'Loading results') untuk standalone; di dalam tombol ExcludeSemantics + Semantics(enabled: false) pada tombol; animasi mati bila MediaQuery.disableAnimationsOf(context) true. Not verified against the pinned version",
+      "swiftui": "ProgressView().accessibilityLabel(\"Loading results\") untuk standalone; di dalam Button .accessibilityHidden(true) dan .accessibilityValue(\"Loading\") pada Button; @Environment(\\.accessibilityReduceMotion) untuk varian statis. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "standalone: role=\"status\" dengan teks tersembunyi (node status persisten terdaftar, pengecualian V5 LiveAnnouncer); in-control: aria-hidden=\"true\" dan kontrol induk aria-busy=\"true\"",
+    "sr_label": "\"Loading\" atau \"Loading {content}\" untuk standalone; in-control tidak punya label sendiri",
+    "wcag": [
+      "1.1.1",
+      "1.4.11",
+      "2.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "track",
+      "role": "lingkaran penuh samar sebagai konteks bentuk (opsional, sesuai L9); dekoratif",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "indicator",
+      "role": "busur yang berputar; warna mewarisi konteks (currentColor): text-secondary saat berdiri sendiri, warna label kontrol saat di dalam kontrol; ≥ 3:1 terhadap latar",
+      "tokens": [
+        "color-structure-text-secondary",
+        "color-structure-text-primary",
+        "color-interaction-on-solid",
+        "color-structure-text-oninverse",
+        "border-width-thick",
+        "icon-sm",
+        "icon-md",
+        "icon-lg"
+      ]
+    },
+    {
+      "part": "hidden-label",
+      "role": "teks VisuallyHidden \"Loading\" (atau nama proses) di dalam node role=status; tidak ada saat Spinner di dalam kontrol yang sudah aria-busy",
+      "tokens": []
+    },
+    {
+      "part": "visible-label",
+      "role": "teks terlihat opsional di samping spinner berdiri sendiri (\"Loading results\"); wajib di bawah reduced motion untuk spinner berdiri sendiri",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "motion",
+      "role": "rotasi linear satu putaran per ±motion-slow-duration × 3; mati di bawah reduced motion",
+      "tokens": [
+        "motion-slow-duration",
+        "motion-easing-standard"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "standalone",
+        "description": "Menentukan semantik aksesibilitas.",
+        "name": "variant",
+        "required": false,
+        "type": "\"standalone\" | \"in-control\""
+      },
+      {
+        "default": "md",
+        "description": "Ukuran dari icon-*.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "Loading",
+        "description": "Teks tersembunyi (standalone); diabaikan untuk in-control.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Teks terlihat opsional; ditampilkan otomatis di bawah reduced motion untuk standalone.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "300",
+        "description": "Jeda sebelum tampil (standalone).",
+        "name": "delay",
+        "required": false,
+        "type": "number (ms)"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "spinner tidak fokusabel; kontrol induk yang loading tetap fokusabel dan mengabaikan Enter/Space",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "diabaikan (loading + pressed dicegah, §6.9)",
+      "trigger": "klik kontrol yang sedang menampilkan spinner"
+    },
+    {
+      "input": "touch",
+      "result": "tidak ada aksi",
+      "trigger": "tap area spinner standalone"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Loading",
+        "Loading results",
+        "Saving changes"
+      ],
+      "id-ID": [
+        "Memuat",
+        "Memuat hasil",
+        "Menyimpan perubahan"
+      ]
+    },
+    "rules": [
+      "Teks tersembunyi atau terlihat menyebut apa yang dimuat bila diketahui (\"Loading results\").",
+      "Label tombol tidak diganti \"Loading\"; hasil diumumkan terpisah dengan kata kerja tombol (\"Save\" → \"Changes saved\").",
+      "Tanpa \"Please wait\" atau elipsis animasi sebagai satu-satunya teks."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Batasi Spinner untuk tunggu di bawah 2 detik atau di dalam kontrol.",
+    "Eskalasi ke Skeleton atau ProgressBar bila tunggu melewati 2 detik.",
+    "Matikan rotasi di bawah reduced motion dan tampilkan teks untuk spinner standalone.",
+    "Kunci lebar kontrol saat spinner menggantikan label."
+  ],
+  "dont": [
+    {
+      "text": "Memakai spinner halaman penuh untuk muat daftar atau tabel."
+    },
+    {
+      "ref": "UB9",
+      "text": "Membiarkan rotasi berjalan di bawah reduced motion atau lebih dari 5 detik tanpa teks."
+    },
+    {
+      "text": "Membuat region aria-live baru untuk setiap spinner; pengumuman lewat LiveAnnouncer atau node terdaftar."
+    },
+    {
+      "text": "Menampilkan beberapa spinner sekaligus di satu wilayah."
+    },
+    {
+      "text": "Memakai warna semantik untuk spinner; menunggu bukan status (I1)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "teks terlihat standalone membungkus; in-control tidak terdampak karena lebar kontrol terkunci dari label asli",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "ukuran spinner mengikuti skala ikon; di dalam Button tetap berada di tengah lebar terkunci",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "spinner tidak pernah tampil; tidak ada kedip",
+      "case": "0 item (tunggu selesai < 300 ms)"
+    },
+    {
+      "behaviour": "spinner per baris maksimal untuk baris yang terlihat; ringkasan \"Saving 12 rows\" di toolbar menggantikan puluhan spinner",
+      "case": "jumlah maksimum (banyak baris menyimpan bersamaan)"
+    },
+    {
+      "behaviour": "aksi yang diantrekan tidak menampilkan spinner berputar terus; diganti penanda \"Not synced\" (StatusLabel C5) dan ConnectionStatus",
+      "case": "offline"
+    },
+    {
+      "behaviour": "spinner dipertahankan minimal ±500 ms setelah tampil agar tidak berkedip",
+      "case": "pembaruan beruntun cepat (loading on/off berulang)"
+    },
+    {
+      "behaviour": "eskalasi ke Skeleton/ProgressBar + pengumuman sekali",
+      "case": "tunggu > 2 detik"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; Button, IconButton, dan CopyButton bergantung padanya untuk state loading.",
+  "lint": [
+    "Spinner tanpa aturan prefers-reduced-motion ditolak (V6)",
+    "Spinner standalone tanpa teks (tersembunyi) ditolak",
+    "Spinner sebagai satu-satunya indikator muat daftar/tabel ditandai (manual-review)"
+  ],
+  "name": "Spinner",
+  "preview": {
+    "combinations": [
+      "Button loading + pressed (dicegah)",
+      "reduced motion standalone (teks terlihat)",
+      "sm di sel tabel",
+      "eskalasi ke Skeleton setelah 2 detik"
+    ],
+    "states": [
+      "spinning",
+      "on-solid (di dalam Button primary atau destructive)",
+      "on-inverse",
+      "reduced-motion",
+      "delayed-show",
+      "over-2s (eskalasi)",
+      "forced-colors"
+    ],
+    "variants": [
+      "standalone",
+      "in-control"
+    ]
+  },
+  "purpose": {
+    "purpose": "Indikator aktivitas tak tentu untuk tunggu di bawah 2 detik atau di dalam kontrol (Button loading, baris yang sedang disimpan); di atas 2 detik beralih ke Skeleton (tata letak diketahui) atau ProgressBar (kemajuan diketahui atau proses panjang).",
+    "when_not_to_use": [
+      "Untuk muat pertama daftar, tabel, atau kartu: pakai Skeleton.",
+      "Untuk impor, unggah, ekspor, dan laporan: pakai ProgressBar determinate.",
+      "Sebagai pengganti halaman penuh selama lebih dari 2 detik: pakai Skeleton atau ProgressBar dengan teks.",
+      "Untuk menyatakan status koneksi atau sinkronisasi: pakai ConnectionStatus.",
+      "Sebagai dekorasi atau penanda \"live\"."
+    ]
+  },
+  "related": [
+    "Skeleton",
+    "ProgressBar",
+    "Button",
+    "IconButton",
+    "CopyButton"
+  ],
+  "responsive": [
+    {
+      "behaviour": "sama; ukuran mengikuti kontrol induk; tidak dipakai sebagai layar muat penuh",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sama; di sel tabel memakai sm",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Spinner tidak menampilkan data dan tidak punya aksi; izin ditangani kontrol induknya."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Arah putar tidak dicerminkan (bukan ikon berarah); teks terlihat mengikuti arah inline."
+  },
+  "sizes": [
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; tidak ada area klik (area milik kontrol induk)",
+      "name": "sm",
+      "notes": "Di dalam field, baris tabel, dan Button sm.",
+      "size_token": "icon-sm"
+    },
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; tidak ada area klik",
+      "name": "md",
+      "notes": "Default; di dalam Button md/lg dan IconButton.",
+      "size_token": "icon-md"
+    },
+    {
+      "axis": "both",
+      "hit_area": "non-interaktif; tidak ada area klik",
+      "name": "lg",
+      "notes": "Standalone di panel kecil. Tidak ada ukuran halaman penuh: tunggu sepanjang itu memakai Skeleton/ProgressBar.",
+      "size_token": "icon-lg"
+    }
+  ],
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "spinning",
+      "token_swaps": {
+        "indicator": "color-structure-text-secondary"
+      },
+      "treatment": "busur berputar; warna dari konteks"
+    },
+    {
+      "name": "on-solid (di dalam Button primary atau destructive)",
+      "token_swaps": {
+        "indicator": "color-interaction-on-solid"
+      },
+      "treatment": "indicator memakai warna label kontrol agar ≥ 3:1 di atas fill"
+    },
+    {
+      "name": "on-inverse",
+      "token_swaps": {
+        "indicator": "color-structure-text-oninverse"
+      },
+      "treatment": "di atas surface-inverse"
+    },
+    {
+      "name": "reduced-motion",
+      "token_swaps": {
+        "visible-label": "color-structure-text-secondary"
+      },
+      "treatment": "prefers-reduced-motion: reduce (Reduce Motion / Remove animations): rotasi dimatikan; busur statis (glyph progres tak tentu dari L9); spinner standalone wajib menampilkan teks terlihat \"Loading …\" sehingga makna tidak bergantung pada gerak; in-control tetap dengan aria-busy pada kontrol"
+    },
+    {
+      "name": "delayed-show",
+      "token_swaps": {},
+      "treatment": "spinner standalone tampil hanya setelah ±300 ms agar tunggu sangat singkat tidak berkedip; teks tersembunyi disisipkan bersama tampilnya"
+    },
+    {
+      "name": "over-2s (eskalasi)",
+      "token_swaps": {},
+      "treatment": "bila tunggu melewati 2 detik, komponen pemilik mengganti Spinner dengan Skeleton atau ProgressBar dan LiveAnnouncer mengumumkan \"Loading {content}\" sekali; Spinner tidak dibiarkan berputar tanpa batas"
+    },
+    {
+      "name": "forced-colors",
+      "token_swaps": {},
+      "treatment": "indicator memakai CanvasText/ButtonText lewat currentColor; track disembunyikan"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Spinner: membungkus CircularProgressIndicator dengan varian statis",
+    "flutter": "{ns}_spinner.dart: membungkus CircularProgressIndicator dengan varian statis",
+    "html": {
+      "element": "span",
+      "notes": "span[role=status] > svg[aria-hidden] + span.{ns}-visually-hidden; @media (prefers-reduced-motion: reduce) { animation: none }"
+    },
+    "swiftui": "{Ns}Spinner: ProgressView dengan style kustom dan varian statis"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Berdiri sendiri di area kecil (panel, sel) dengan role=status dan teks tersembunyi; teks terlihat opsional.",
+      "name": "standalone"
+    },
+    {
+      "description": "Di dalam Button, IconButton, atau field (mis. pencarian berjalan). aria-hidden; status dibawa aria-busy kontrol + LiveAnnouncer untuk hasil.",
+      "name": "in-control"
+    }
+  ]
+}

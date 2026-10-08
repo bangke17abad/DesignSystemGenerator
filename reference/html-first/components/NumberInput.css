@@ -1,0 +1,100 @@
+/* NumberInput · engine 1.8.0 reference (catalog/components/NumberInput.json). Tokens only (I3); logical properties only (§12.4).
+   Anatomy = TextField (.ds-text-field wrapper: label → group → error → helper with min/max/step), so heights, border, focus,
+   invalid, read-only and blocked treatments are TextField's. The input is type="text" role="spinbutton" (never type=number:
+   the wheel changes values and locale parsing is inconsistent), digits tabular and aligned to inline-end, width intrinsic from
+   the size attribute (the longest reasonable value), not full width.
+   stepper variant: Decrease at inline-start, Increase at inline-end, attached segments as tall as the control and at least
+   --target-current wide (tabindex -1: keyboard uses the arrow keys). They render only once NumberInput.js has enhanced the field
+   (data-enhanced), so without JS the field is a plain, fully working text input. */
+.ds-text-field.ds-number-input .ds-text-field__group { align-self: flex-start; max-inline-size: 100%; }
+.ds-text-field.ds-number-input .ds-number-input__input {
+  flex: 0 1 auto;
+  inline-size: auto;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+/* the focused input paints above the attached segments so its ring and border are never covered */
+.ds-number-input__input:is(:focus, [data-force~="focus"], [aria-invalid="true"]) { position: relative; z-index: 1; }
+.ds-text-field.ds-number-input .ds-text-field__group:dir(rtl) > .ds-number-input__input:dir(ltr) { text-align: start; } /* digits stay LTR, aligned to the page's inline-end */
+.ds-number-input[data-block] .ds-text-field__group { align-self: stretch; }
+.ds-number-input[data-block] .ds-number-input__input { flex: 1 1 auto; }
+
+/* ± segments */
+.ds-number-input__step {
+  --_border: var(--control-container-border);
+  position: relative;
+  isolation: isolate;
+  display: none;
+  flex: none;
+  place-items: center;
+  inline-size: max(var(--_h), var(--target-current));
+  min-block-size: var(--_h);
+  margin: 0;
+  padding: 0;
+  border: var(--border-width-thin) solid var(--_border);
+  background: var(--control-container-background);
+  color: var(--color-structure-text-primary);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-number-input[data-enhanced] .ds-number-input__step { display: grid; }
+/* state layer (opacity 0 in token-swap languages; the background swap carries the state there) */
+.ds-number-input__step::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-number-input__step[data-dir="down"] {
+  border-inline-end-width: 0;
+  border-start-start-radius: var(--radius-sm);
+  border-end-start-radius: var(--radius-sm);
+}
+.ds-number-input__step[data-dir="up"] {
+  border-inline-start-width: 0;
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+}
+.ds-text-field.ds-number-input[data-enhanced][data-variant="stepper"] .ds-text-field__group { --_rs: 0; --_re: 0; }
+.ds-text-field.ds-number-input[data-enhanced][data-variant="stepper"] .ds-text-field__affix { border-radius: 0; }
+.ds-number-input__step .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+
+@media (hover: hover) {
+  .ds-number-input__step:not([aria-disabled="true"]):hover { background: var(--row-background-hover); }
+  .ds-number-input__step:not([aria-disabled="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-number-input__step[data-force~="hover"] { background: var(--row-background-hover); }
+.ds-number-input__step[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-number-input__step:not([aria-disabled="true"]):active,
+.ds-number-input__step[data-force~="pressed"] { background: var(--color-interaction-subtle); }
+.ds-number-input__step:not([aria-disabled="true"]):active::before,
+.ds-number-input__step[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* at limit: muted, aria-disabled (reason "Maximum is …" in its description), still exposed to the virtual cursor */
+.ds-number-input__step[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+/* blocked: segments follow the sunken surface of the blocked input */
+.ds-text-field__group:has(> .ds-number-input__input[aria-disabled="true"]) > .ds-number-input__step {
+  --_border: var(--color-structure-border);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-disabled);
+  cursor: not-allowed;
+}
+/* read-only: full-contrast value, no ± */
+.ds-text-field.ds-number-input .ds-text-field__group:has(> .ds-number-input__input[readonly]:not([aria-disabled="true"])) { --_rs: var(--radius-sm); --_re: var(--radius-sm); }
+.ds-text-field__group:has(> .ds-number-input__input[readonly]:not([aria-disabled="true"])) > .ds-number-input__step { display: none; }
+/* loading (server check): ± do not react, spinner sits before Increase */
+.ds-text-field__group:has(> .ds-number-input__input[aria-busy="true"]) > .ds-number-input__step { cursor: progress; }
+.ds-number-input[data-enhanced][data-variant="stepper"] .ds-text-field__spinner { inset-inline-end: calc(max(var(--_h), var(--target-current)) + var(--space-3)); }
+
+@media (prefers-reduced-motion: reduce) { .ds-number-input__step { transition: none; } }
+@media (forced-colors: active) {
+  .ds-number-input__step { border-color: ButtonText; color: ButtonText; }
+  .ds-number-input__step[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+}

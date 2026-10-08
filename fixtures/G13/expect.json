@@ -1,0 +1,28 @@
+{
+  "assertions": [
+    {
+      "eq": "P01",
+      "manifest": "packs.0.id"
+    },
+    {
+      "patterns_include": [
+        "Dashboard"
+      ]
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V22"
+      ]
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G13",
+  "run_only": [
+    "Komponen P01 tingkat R (BulkActionBar, JobStatus, TreeTable, Scheduler, DiffView, ShortcutHelp)",
+    "CommandPalette wajib karena keyboard_power_users"
+  ],
+  "source": "golden-briefs.md G13"
+}

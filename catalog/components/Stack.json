@@ -1,0 +1,274 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tidak menambahkan aria-* sendiri; meneruskan id, className, dan data-* ke elemen akar (§6.8)",
+      "tidak pernah memberi role=\"presentation\" atau aria-hidden pada wadah yang berisi konten",
+      "Divider dari prop divider selalu dekoratif (aria-hidden=\"true\")"
+    ],
+    "focus_order": "sama dengan urutan sumber dari atas ke bawah; pengurutan visual yang berbeda dari DOM dilarang",
+    "native": {
+      "compose": "Column(verticalArrangement = Arrangement.spacedBy(gap), horizontalAlignment = Alignment.Start); tanpa Modifier.semantics",
+      "flutter": "Column(spacing: …, crossAxisAlignment: …) atau Flex(direction: Axis.vertical); tanpa Semantics tambahan; padding anak memakai EdgeInsetsDirectional",
+      "swiftui": "VStack(alignment: .leading, spacing: …); tanpa modifier aksesibilitas; jarak dari token, bukan Spacer berukuran tetap"
+    },
+    "role": "tidak ada (elemen generik div tanpa role); semantik daftar, grup, atau region berasal dari komponen anak atau induk (List, Form fieldset, AppShell)",
+    "sr_label": "tidak punya nama aksesibel dan tidak diumumkan sebagai elemen; pembaca layar hanya membaca anak",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "2.4.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "wadah flex arah blok; tanpa latar, border, padding, maupun warna (primitif layout tidak membawa warna)",
+      "tokens": []
+    },
+    {
+      "part": "gap",
+      "role": "jarak blok antar anak langsung; hanya token skala space-* dan space-section untuk antar-seksi halaman",
+      "tokens": [
+        "space-1",
+        "space-2",
+        "space-3",
+        "space-4",
+        "space-6",
+        "space-8",
+        "space-12",
+        "space-section",
+        "space-section-lg"
+      ]
+    },
+    {
+      "part": "child",
+      "role": "anak langsung; tidak pernah memberi margin luar sendiri, jarak hanya dari gap",
+      "tokens": []
+    },
+    {
+      "part": "divider",
+      "role": "Divider dekoratif opsional yang disisipkan di antara anak (bukan sebelum anak pertama atau setelah anak terakhir); token garis milik Divider, bukan Stack",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "space-4",
+        "description": "Jarak blok antar anak; hanya token, nilai lain ditolak lint.",
+        "name": "gap",
+        "required": false,
+        "type": "\"space-1\" | \"space-2\" | \"space-3\" | \"space-4\" | \"space-6\" | \"space-8\" | \"space-12\" | \"space-section\" | \"space-section-lg\""
+      },
+      {
+        "default": "stretch",
+        "description": "Perataan anak pada sumbu inline; nilai logis sehingga mengikuti arah tulisan.",
+        "name": "align",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\" | \"stretch\""
+      },
+      {
+        "default": "start",
+        "description": "Distribusi anak pada sumbu blok bila Stack lebih tinggi dari isinya.",
+        "name": "justify",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\" | \"space-between\""
+      },
+      {
+        "default": "false",
+        "description": "Menyisipkan Divider dekoratif di antara anak yang dirender.",
+        "name": "divider",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Stack bukan tab stop; urutan fokus anak = urutan sumber; dilarang membalik urutan visual (column-reverse, order) sehingga fokus melompat (SC 1.3.2, 2.4.3)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada aksi; Stack tidak menangkap event dan tidak memperluas area klik anak ke gap",
+      "trigger": "klik di area gap"
+    },
+    {
+      "input": "touch",
+      "result": "Stack tidak membuat area gulir sendiri; overflow ditangani dokumen atau region AppShell agar zoom dan gulir tetap native",
+      "trigger": "gulir"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Account details",
+        "Notification settings",
+        "Recent activity"
+      ],
+      "id-ID": [
+        "Detail akun",
+        "Pengaturan notifikasi",
+        "Aktivitas terbaru"
+      ]
+    },
+    "rules": [
+      "Stack tidak memiliki string UI sendiri dan tidak pernah menyisipkan teks pemisah.",
+      "Contoh di bawah adalah judul anak yang dipakai untuk uji panjang +40% dan teks 200% di dalam Stack.",
+      "Urutan anak mengikuti urutan baca konten (judul, deskripsi, isi, aksi), bukan urutan kepentingan visual."
+    ]
+  },
+  "depends_on": [
+    "Divider"
+  ],
+  "do": [
+    "Atur semua jarak blok antar komponen lewat gap Stack, bukan margin anak.",
+    "Pakai space-section atau space-section-lg untuk jarak antar seksi halaman dan space-* kecil di dalam grup.",
+    "Biarkan anak yang disembunyikan kondisional dihapus dari pohon sehingga gap tidak berlipat."
+  ],
+  "dont": [
+    {
+      "ref": "UB1",
+      "text": "Memberi margin-block pada anak atau memakai angka jarak ajaib di luar skala space-*."
+    },
+    {
+      "text": "Memakai column-reverse atau order sehingga urutan visual berbeda dari urutan fokus dan baca."
+    },
+    {
+      "ref": "UB1",
+      "text": "Memberi Stack latar, border, atau bayangan; itu peran Card atau region AppShell."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "anak tumbuh tinggi; Stack tidak memotong atau menyembunyikan overflow",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi total tumbuh; gap tetap dari token (tidak ikut diskalakan) sehingga hierarki tetap terbaca; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak merender ruang, gap, atau Divider; tampilan kosong menjadi tanggung jawab EmptyState",
+      "case": "0 anak"
+    },
+    {
+      "behaviour": "Stack tidak memvirtualisasi; data panjang dipindah ke List atau Table dengan virtualisasi dan aria-rowcount",
+      "case": "jumlah anak maksimum (ratusan)"
+    },
+    {
+      "behaviour": "Skeleton anak memakai gap yang sama dengan konten final sehingga tidak ada pergeseran layout saat data tiba",
+      "case": "loading"
+    },
+    {
+      "behaviour": "tidak ikut aliran flex sehingga tidak menambah gap",
+      "case": "anak absolut atau VisuallyHidden"
+    },
+    {
+      "behaviour": "diizinkan; gap terluar selalu ≥ gap dalam agar pengelompokan terbaca (proksimitas)",
+      "case": "Stack bersarang dengan gap berbeda"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Stack.gap hanya menerima token space-* (token-rule)",
+    "Anak langsung Stack tidak boleh memiliki margin-block (css-pattern)",
+    "Dilarang flex-direction: column-reverse atau properti order di Stack (css-pattern)",
+    "Stack tidak boleh memiliki background, border, atau box-shadow (css-pattern)"
+  ],
+  "name": "Stack",
+  "preview": {
+    "combinations": [
+      "align start/center/end/stretch",
+      "Stack bersarang",
+      "RTL",
+      "teks 200%"
+    ],
+    "states": [
+      "default",
+      "empty"
+    ],
+    "variants": [
+      "gap space-2",
+      "gap space-4",
+      "gap space-8",
+      "gap space-section",
+      "divider"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyusun anak secara vertikal (sumbu blok) dengan jarak seragam dari token space-*; satu-satunya sumber jarak blok antar komponen.",
+    "when_not_to_use": [
+      "Untuk menyusun anak sebaris (sumbu inline), termasuk grup aksi dan metadata: pakai Inline.",
+      "Untuk tata letak dua dimensi berkolom yang mengikuti kolom §8.1: pakai Grid.",
+      "Untuk membatasi lebar konten atau memberi margin halaman: pakai Container.",
+      "Untuk daftar data yang bisa panjang, dipilih, atau divirtualisasi: pakai List atau Table, bukan Stack berisi ratusan anak.",
+      "Untuk memberi garis pemisah tanpa jarak: pakai Divider (atau prop divider pada Stack)."
+    ]
+  },
+  "related": [
+    "Inline",
+    "Grid",
+    "Container",
+    "Divider"
+  ],
+  "responsive": [
+    {
+      "behaviour": "satu kolom; gap boleh beralih nilai per lebar kontainer lewat prop responsif (mis. space-4 di bawah bp-tablet) tanpa mengubah urutan anak",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama; gap seksi memakai space-section; bila ruang cukup untuk dua kolom, komposisi beralih ke Grid, bukan Stack bersarang berukuran tetap",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sama; Stack tidak berubah menjadi kolom berdampingan; lebar baca dibatasi Container, bukan Stack",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Stack tidak memuat aksi atau data; perilaku per role diterapkan pada komponen anak."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Sumbu blok tidak dicerminkan; align start/end adalah nilai logis sehingga anak ber-align start menempel ke tepi kanan di RTL."
+  },
+  "sizes": {
+    "not_applicable": "Stack tidak interaktif dan tidak punya tinggi sendiri; tingginya adalah jumlah tinggi anak ditambah gap."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "Tidak ada state visual: Stack tidak interaktif, tidak menerima fokus, dan tidak menukar token apa pun (I4 tidak berlaku)."
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "0 anak: tidak merender ruang apa pun (tinggi 0, tanpa gap, tanpa Divider); kekosongan data ditangani EmptyState di dalam Stack, bukan oleh Stack."
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Stack membungkus Column(verticalArrangement = Arrangement.spacedBy(…))",
+    "flutter": "{ns}_stack.dart membungkus Column(spacing: …, crossAxisAlignment: …); tanpa Padding antar anak",
+    "html": {
+      "element": "div",
+      "notes": "display:flex; flex-direction:column; gap: var(--space-*); tanpa margin pada anak; tidak memakai column-reverse"
+    },
+    "swiftui": "{Ns}Stack membungkus VStack(alignment: .leading, spacing:)"
+  },
+  "tier": "R",
+  "variants": {
+    "not_applicable": "Stack tidak punya varian visual; perilaku diatur lewat prop gap, align, justify, dan divider."
+  }
+}

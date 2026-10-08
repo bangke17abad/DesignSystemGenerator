@@ -1,0 +1,50 @@
+/* PinInput · engine 1.8.0 reference (catalog/components/PinInput.json). ONE logical input (one-time-code, numeric, paste and
+   autofill work); the per-digit cells are a visual layer drawn behind the input. */
+.ds-pin-input { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-pin-input__frame {
+  /* cells shrink on very narrow screens; the single input (the real target) keeps >= target-current height */
+  --_cell: max(var(--icon-lg), min(var(--control-height-lg), calc((100vw - var(--space-12)) / var(--_len, 6) - var(--_gap))));
+  min-block-size: max(var(--_cell), var(--target-current));
+  --_gap: clamp(var(--space-1), 1vw, var(--space-2));
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(var(--_len, 6), var(--_cell));
+  gap: var(--_gap);
+  inline-size: max-content;
+  max-inline-size: 100%;
+}
+.ds-pin-input__cell {
+  block-size: 100%;
+  min-block-size: var(--_cell);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+}
+.ds-pin-input__field {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  padding-inline-start: calc(var(--_cell) / 2 - 0.5ch);
+  border: 0;
+  background: transparent;
+  color: var(--control-value-color);
+  font-family: var(--font-mono);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  letter-spacing: calc(var(--_cell) + var(--_gap) - 1ch);
+  font-variant-numeric: tabular-nums;
+  caret-color: var(--color-interaction-default);
+  direction: ltr;
+}
+.ds-pin-input__field:focus-visible, .ds-pin-input__field[data-force~="focus"] { outline-color: transparent; } /* ring is drawn on the frame */
+.ds-pin-input__frame:has(.ds-pin-input__field:focus-visible), .ds-pin-input__frame:has(.ds-pin-input__field[data-force~="focus"]) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); }
+.ds-pin-input__frame:has(.ds-pin-input__field:focus) .ds-pin-input__cell { border-color: var(--color-interaction-default); }
+.ds-pin-input__frame:has(.ds-pin-input__field[aria-invalid="true"]) .ds-pin-input__cell { border-color: var(--control-container-border-invalid); box-shadow: inset 0 0 0 var(--border-width-thin) var(--control-container-border-invalid); }
+.ds-pin-input__frame:has(.ds-pin-input__field[aria-disabled="true"]) .ds-pin-input__cell { background: var(--color-structure-surface-sunken); border-color: var(--color-structure-border); }
+.ds-pin-input__field[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+@media (forced-colors: active) {
+  .ds-pin-input__cell { border-color: FieldText; }
+  .ds-pin-input__field:focus-visible { outline: var(--focus-ring-width) solid Highlight; }
+}

@@ -1,0 +1,744 @@
+{
+  "accessibility": {
+    "attributes": [
+      "label for/id: label terlihat = nama aksesibel (SC 2.5.3); placeholder bukan nama",
+      "aria-describedby berurutan: errorText (bila invalid), description, helperText, adornment teks",
+      "aria-invalid=\"true\" hanya setelah validasi gagal",
+      "aria-required=\"true\" atau required native (pesan native diganti teks sistem oleh modul Form)",
+      "autocomplete sesuai tujuan data pribadi (name, given-name, family-name, email, tel, street-address, postal-code, organization, username) (SC 1.3.5); autocomplete=\"off\" dilarang untuk data pengguna sendiri",
+      "inputmode dan type sesuai data; spellcheck dan autocapitalize dimatikan untuk email, kode, URL",
+      "aria-disabled + readonly untuk field diblokir; aria-readonly untuk read-only",
+      "aria-busy saat validasi asinkron; hasilnya diumumkan polite lewat LiveAnnouncer"
+    ],
+    "focus_order": "label → field → tombol hapus (bila ada) mengikuti urutan DOM; error tidak menerima fokus sendiri, Form memindahkan fokus ke field invalid pertama",
+    "native": {
+      "compose": "Column { Text(label, Modifier.clearAndSetSemantics {}); OutlinedTextField(value, onValueChange, isError = invalid, readOnly, enabled, supportingText = { Text(errorText ?: helperText) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, autoCorrectEnabled = false), modifier = Modifier.semantics { contentDescription = label; contentType = ContentType.EmailAddress; if (invalid) error(errorText) }) } (penggabungan label perlu uji TalkBack: Not verified: needs device test)",
+      "flutter": "TextFormField(decoration: InputDecoration(helperText, errorText, prefixIcon, suffixText, border: OutlineInputBorder), autofillHints: [AutofillHints.email], keyboardType: TextInputType.emailAddress, readOnly, enabled) di dalam AutofillGroup; label Text di atas dengan ExcludeSemantics dan field dibungkus Semantics(label: label, textField: true, readOnly: …, hint: reason) agar nama tidak ganda",
+      "swiftui": "VStack { Text(label); TextField(label, text: $value) }.textContentType(.emailAddress).keyboardType(.emailAddress).textInputAutocapitalization(.never).autocorrectionDisabled(); error lewat .accessibilityHint(errorText) + AccessibilityNotification.Announcement saat submit; read-only memakai Text(value).textSelection(.enabled)"
+    },
+    "politeness": "polite",
+    "role": "textbox (elemen <input> type text/email/tel/url dengan <label for>)",
+    "sr_label": "label (+ \"optional\" bila tidak wajib), lalu tipe/state (wajib, invalid), lalu deskripsi: error, helper; contoh: \"Email address, required, invalid entry, Enter an email address in the format name@example.com\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.12",
+      "2.1.1",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.3",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.7",
+      "3.3.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label tampak di atas field (≥ 16), terhubung lewat for/id; tidak pernah di dalam field atau mengambang",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "optional-marker",
+      "role": "teks \"(optional)\" dari glosarium di akhir label; bagian dari nama aksesibel, bukan hanya simbol",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "keterangan opsional di antara label dan field untuk instruksi yang harus dibaca sebelum mengetik",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "control",
+      "role": "kotak input; border kontrol ≥ 3:1 di semua surface; tinggi dari size; padding inline dari space",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-3"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "teks yang diketik; ≥ 16 di semua ukuran agar tidak memicu zoom otomatis di browser seluler",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "placeholder",
+      "role": "contoh opsional (bukan instruksi, bukan label); hilang saat mengetik; kontras ≥ 4.5:1",
+      "tokens": [
+        "color-structure-text-placeholder",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "adornment-start",
+      "role": "ikon atau prefiks teks (mis. kode negara, satuan) di inline-start; dibaca sebagai bagian deskripsi",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "adornment-end",
+      "role": "sufiks teks (satuan) atau IconButton tunggal (hapus isi) di inline-end; tombol punya area klik sendiri ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "teks bantuan di bawah field: format, batas, contoh; tetap tampil saat error (error ditambahkan, helper tidak hilang)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon status + teks error di bawah field, terhubung aria-describedby; menyebut apa yang salah dan cara memperbaikinya",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size",
+        "type-body-line",
+        "space-1"
+      ]
+    },
+    {
+      "part": "status-spinner",
+      "role": "Spinner kecil di inline-end saat validasi asinkron (mis. cek ketersediaan)",
+      "tokens": [
+        "icon-sm",
+        "motion-slow-duration"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar control; ditambahkan di atas border error, tidak menggantikannya",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "setiap perubahan nilai: ketik, paste, autofill, hapus"
+      },
+      {
+        "name": "onBlur",
+        "payload": "FocusEvent",
+        "when": "field kehilangan fokus; titik validasi format"
+      },
+      {
+        "name": "onFocus",
+        "payload": "FocusEvent",
+        "when": "field menerima fokus"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Label terlihat dan nama aksesibel; placeholder tidak pernah menggantikannya.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: nilai saat ini.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"\"",
+        "description": "Uncontrolled: nilai awal (termasuk data yang sudah diketahui dari langkah sebelumnya, SC 3.3.7).",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "text",
+        "description": "Tipe input; menentukan keyboard virtual dan validasi dasar.",
+        "name": "type",
+        "required": false,
+        "type": "\"text\" | \"email\" | \"tel\" | \"url\""
+      },
+      {
+        "description": "Petunjuk keyboard virtual bila berbeda dari type.",
+        "name": "inputMode",
+        "required": false,
+        "type": "\"text\" | \"email\" | \"tel\" | \"url\" | \"numeric\" | \"decimal\""
+      },
+      {
+        "description": "Token autocomplete HTML (SC 1.3.5); wajib untuk data pribadi pengguna.",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Nama field untuk pengiriman Form dan tautan ErrorSummary.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Instruksi di antara label dan field.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bantuan format/batas di bawah field; tetap tampil saat error.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib; field tidak wajib otomatis diberi penanda optional.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText (lint).",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error: apa yang salah dan cara memperbaiki.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Contoh nilai opsional; bukan label, bukan instruksi.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Teks prefiks (satuan, kode negara); tidak ikut dikirim.",
+        "name": "prefix",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Teks sufiks (satuan); tidak ikut dikirim.",
+        "name": "suffix",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Ikon dekoratif di inline-start dari set L9.",
+        "name": "iconStart",
+        "required": false,
+        "type": "IconName"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan IconButton \"Clear\" berlabel saat field berisi.",
+        "name": "clearable",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Batas panjang yang divalidasi (tidak memotong); disebut di helper.",
+        "name": "maxLength",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi control; area klik selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Nilai tampil kontras penuh dengan aria-readonly; bukan disabled.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field benar-benar tidak relevan; selain itu pakai reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan field diblokir; wajib bila diblokir (aria-disabled).",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Validasi asinkron berjalan; field tetap bisa diketik.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus masuk/keluar field; field aria-disabled dan read-only tetap menerima fokus",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "onValueChange per perubahan; paste dan autofill tidak pernah diblokir (SC 3.3.8); spasi di awal/akhir dipangkas saat blur hanya untuk tipe email, url, dan kode",
+      "trigger": "mengetik, paste (Ctrl/⌘+V), undo"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengirim Form induk (perilaku native); tidak pernah memicu aksi lain atau pindah halaman tanpa Form",
+      "trigger": "Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "tidak mengosongkan nilai; bila field di dalam Modal/Sheet, Esc diteruskan ke overlay yang meminta konfirmasi bila ada perubahan",
+      "trigger": "Esc"
+    },
+    {
+      "input": "pointer",
+      "result": "memfokuskan field; klik tombol hapus mengosongkan nilai, mengembalikan fokus ke field, dan mengumumkan \"Cleared\" polite",
+      "trigger": "klik label atau control"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual sesuai inputMode/type muncul (email, tel, url, numeric); field digulir ke atas keyboard; tidak ada zoom otomatis karena teks ≥ 16",
+      "trigger": "tap field"
+    },
+    {
+      "input": "pointer",
+      "result": "validasi format dijalankan; field yang sudah error divalidasi ulang saat mengetik agar error hilang segera setelah benar",
+      "trigger": "blur setelah nilai berubah"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Email address",
+        "Phone number (optional)",
+        "We'll send the receipt to this address.",
+        "Enter an email address in the format name@example.com",
+        "Enter your full name",
+        "Postal code must be 5 digits"
+      ],
+      "id-ID": [
+        "Alamat email",
+        "Nomor telepon (opsional)",
+        "Kami akan mengirim tanda terima ke alamat ini.",
+        "Masukkan alamat email dengan format nama@contoh.com",
+        "Masukkan nama lengkap Anda",
+        "Kode pos harus 5 digit"
+      ]
+    },
+    "rules": [
+      "Label = kata benda singkat dari glosarium (\"Email address\"), sentence case, tanpa titik dua dan tanpa tanda bintang sebagai satu-satunya penanda.",
+      "Field tidak wajib ditandai \"(optional)\"; bila sebagian besar field opsional, Form beralih menandai \"(required)\" — satu gaya per form.",
+      "Helper menjelaskan format, batas, atau alasan data diminta; contoh format ada di helper, bukan hanya di placeholder.",
+      "Error = apa yang salah + cara memperbaiki, suara sistem, tanpa \"Oops\", \"invalid\", atau menyalahkan pengguna (\"Enter …\", bukan \"You entered …\").",
+      "Error kosong menyebut label (\"Enter your email address\"); error format menyebut format yang diterima.",
+      "Placeholder hanya contoh nilai dan opsional; tidak pernah instruksi atau label (UB10)."
+    ]
+  },
+  "depends_on": [
+    "Spinner",
+    "IconButton",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Letakkan label di atas field dan helper di bawahnya, selalu terlihat.",
+    "Isi autocomplete untuk setiap data pribadi dan biarkan paste serta pengelola sandi/autofill bekerja.",
+    "Tampilkan error setelah blur atau submit, lalu validasi ulang saat mengetik sampai benar.",
+    "Pakai type dan inputMode yang sesuai agar keyboard virtual tepat."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "Memakai placeholder sebagai satu-satunya label atau label mengambang yang menyusut ke dalam border."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai error hanya dengan border merah tanpa ikon dan teks."
+    },
+    {
+      "ref": "UB3",
+      "text": "Teks nilai, label, atau error di bawah 16 (memicu zoom di seluler dan melanggar STD-2)."
+    },
+    {
+      "text": "Memblokir paste atau autofill, atau memotong nilai paste diam-diam lewat maxlength native."
+    },
+    {
+      "ref": "UB10",
+      "text": "Field diblokir memakai disabled native tanpa reason."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus ke beberapa baris di atas field; tidak dipotong, tidak ada ellipsis; penanda optional tetap di akhir",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi control tumbuh mengikuti line-height; tidak ada tinggi tetap; adornment tetap sejajar baris pertama",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak error sampai submit (atau blur setelah diubah); error menyebut label",
+      "case": "nilai kosong pada field wajib"
+    },
+    {
+      "behaviour": "batas diperiksa sebagai validasi (bukan maxlength native yang memotong); kelebihan ditandai error yang menyebut batas dan jumlah karakter saat ini",
+      "case": "panjang maksimum"
+    },
+    {
+      "behaviour": "email dipangkas spasinya; prefiks mailto: dibuang; nilai lain dibiarkan apa adanya dan divalidasi; untuk nomor berpola gunakan FormattedInput",
+      "case": "paste nilai berformat (spasi, tanda hubung, mailto:, URL lengkap)"
+    },
+    {
+      "behaviour": "onValueChange terpicu; gaya :autofill memakai token surface dan text-primary (warna latar UA ditimpa dengan kontras tetap ≥ 4.5:1); error yang ada divalidasi ulang",
+      "case": "autofill browser/OS"
+    },
+    {
+      "behaviour": "validasi server ditunda dengan helper \"Will check when online\"; tidak menandai error palsu; submit diantrekan sesuai pattern OfflineSync",
+      "case": "validasi asinkron saat offline"
+    },
+    {
+      "behaviour": "gulir horizontal di dalam field; nilai lengkap terbaca pembaca layar; tidak memperlebar layout",
+      "case": "string tanpa spasi sangat panjang (URL, token)"
+    },
+    {
+      "behaviour": "dir=\"auto\" pada nilai buatan pengguna; email, URL, dan kode tetap LTR terisolasi",
+      "case": "nilai campuran RTL/LTR"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "TextField tanpa label ditolak; placeholder tanpa label ditolak (UB10)",
+    "invalid tanpa errorText ditolak",
+    "Field data pribadi tanpa autocomplete ditolak (SC 1.3.5, manual-review untuk deteksi tujuan)",
+    "onpaste yang mencegah default ditolak (SC 3.3.8)",
+    "reason wajib bila aria-disabled",
+    "maxlength native pada field teks ditolak; gunakan maxLength tervalidasi"
+  ],
+  "name": "TextField",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "error+hover",
+      "hover+focus",
+      "disabled+focus",
+      "read-only+focus",
+      "loading+focus (tetap bisa diketik)",
+      "label +40% + RTL",
+      "teks 200%"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "filled",
+      "error",
+      "loading",
+      "disabled-with-reason",
+      "read-only",
+      "empty"
+    ],
+    "variants": [
+      "default",
+      "with-adornment"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menerima satu baris teks bebas (nama, email, telepon, URL, kode) dengan label tampak di atas, helper di bawah, dan error yang menyebut cara memperbaiki.",
+    "when_not_to_use": [
+      "Untuk teks lebih dari satu baris (catatan, alasan, deskripsi): pakai TextArea.",
+      "Untuk memilih dari daftar tertutup ≤ ±15 opsi: pakai Select atau RadioGroup; daftar panjang yang perlu dicari: pakai Combobox.",
+      "Untuk angka yang dihitung atau punya min/max/step: pakai NumberInput; untuk nomor berpola tetap (rekening, telepon, kode pos): pakai FormattedInput.",
+      "Untuk sandi: pakai PasswordInput; untuk kode sekali pakai: pakai PinInput; untuk pencarian: pakai SearchField.",
+      "Untuk tanggal: pakai DatePicker, bukan TextField dengan pola tanggal."
+    ]
+  },
+  "related": [
+    "TextArea",
+    "PasswordInput",
+    "NumberInput",
+    "FormattedInput",
+    "SearchField",
+    "Combobox",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh kolom; size md atau lg dengan area ≥ target-min-touch; keyboard virtual sesuai inputMode; field fokus digulir di atas keyboard dan action bar sticky",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar mengikuti isi yang diharapkan (pendek untuk kode pos, penuh untuk alamat) dalam grid 1–2 kolom; area ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar dibatasi layout-measure; lebar field memberi petunjuk panjang nilai; sm hanya di toolbar dan filter tabel",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role boleh melihat nilai tetapi tidak mengubahnya: tampil read-only (kontras penuh, aria-readonly), bukan disabled"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "field sementara tidak bisa diubah karena state data (mis. terkunci setelah disetujui); reason terlihat"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu data ada (mis. data sensitif); field tidak dirender dan tidak dikirim"
+    },
+    {
+      "pattern": "full",
+      "when": "default: role boleh mengubah nilai"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Label, helper, dan error rata inline-start; prefix/suffix dan adornment memakai posisi logis (inline-start/end) sehingga berpindah sisi di RTL; ikon tidak berarah tidak dicerminkan; nilai email, URL, telepon, dan kode diisolasi LTR, nilai buatan pengguna memakai dir=\"auto\"."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); label ikut menjadi target fokus (klik label memfokuskan field); di mode sentuh tinggi naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Hanya untuk filter tabel dan toolbar pointer padat. Teks nilai tetap ≥ 16.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default untuk form.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Form di surface sentuh, glove, atau in-motion; field tunggal yang dominan (mis. langkah identitas).",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical tetap; ring fokus ditambahkan di luar; errorText tetap terlihat saat memperbaiki",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "hover tidak mengganti border critical; hanya state-layer di dalam",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring fokus menang secara visual; border interaction-default",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "aria-disabled tetap fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tidak ada umpan balik hover pada field diblokir",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring fokus tampil; nilai kontras penuh; tidak ada caret edit",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "validasi asinkron tidak mengunci pengetikan; ketikan baru membatalkan validasi sebelumnya",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "error",
+      "focus": false,
+      "interaction": "rest",
+      "note": "nilai read-only tidak divalidasi pengguna; error sistem tampil di InlineAlert",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "control": "color-structure-border-control",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "border-control tipis di atas surface-raised; label text-primary; helper text-secondary"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "control": "color-structure-border-strong"
+      },
+      "treatment": "border menguat ke border-strong atau state-layer hover di dalam control; hanya di (hover: hover); kontras border tetap ≥ 3:1"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "control": "color-interaction-default",
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "border ke interaction-default + outline 2px focus-ring offset 2px; caret terlihat; field digulir agar tidak tertutup keyboard virtual atau bar sticky (SC 2.4.11)"
+    },
+    {
+      "name": "filled",
+      "token_swaps": {
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "nilai text-primary; placeholder tidak tampil; tombol hapus (bila diaktifkan) muncul di adornment-end"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "control": "color-semantic-critical",
+        "error": "color-semantic-critical-strong"
+      },
+      "treatment": "border semantic-critical + ikon status + errorText critical-strong di bawah field; aria-invalid=\"true\"; aria-describedby menunjuk errorText lalu helperText; bukan hanya warna (ikon + teks)"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "status-spinner": "color-interaction-default"
+      },
+      "treatment": "validasi asinkron: Spinner di adornment-end, aria-busy=\"true\" pada field; field tetap bisa diketik; hasil diumumkan polite"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "control": "color-structure-surface-sunken",
+        "value": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" + atribut readonly native agar tidak bisa diketik tetapi tetap fokusabel; latar surface-sunken, nilai text-disabled; reason tampil sebagai helper dan terhubung aria-describedby; nilai tidak ikut dikirim bila brief menyatakan demikian"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "control": "color-structure-border",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "nilai tampil kontras penuh (text-primary) tanpa border kontrol aktif (border dekoratif atau tanpa border); aria-readonly=\"true\" (readonly native); fokusabel dan bisa diseleksi/disalin; bukan tampilan disabled"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "placeholder": "color-structure-text-placeholder"
+      },
+      "treatment": "tanpa nilai: placeholder (bila ada) atau kosong; label dan helper tetap tampil; field wajib yang kosong tidak berstatus error sebelum submit atau blur setelah diubah"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}TextField membungkus OutlinedTextField dengan label di atas dan semantics contentType",
+    "flutter": "TextFormField dibungkus {ns}_text_field.dart; label di atas, AutofillGroup di Form",
+    "html": {
+      "element": "label + input",
+      "notes": "type sesuai data; autocomplete wajib untuk data pribadi; tanpa maxlength native; aria-describedby dibangun dari id error/helper; gaya :autofill memakai token; berfungsi tanpa JS (validasi native sebagai fallback)"
+    },
+    "swiftui": "{Ns}TextField membungkus TextField + textContentType/keyboardType; Text untuk read-only"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Field satu baris dengan border kontrol penuh dan label di atas. Bentuk (outline, underline, filled) diambil dari L-bahasa, tetapi batas kontrol selalu memakai border-control ≥ 3:1 (bukan hanya latar).",
+      "name": "default"
+    },
+    {
+      "description": "Field dengan prefiks/sufiks (satuan, kode negara) atau satu IconButton hapus. Adornment teks dibaca lewat aria-describedby; nilai yang dikirim tidak memuat adornment.",
+      "name": "with-adornment"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+/* LiveAnnouncer · engine 1.8.0 reference (catalog/components/LiveAnnouncer.json). The two regions (#ds-live-polite,
+   #ds-live-assertive) are created by ds.js at load, at the end of body outside any inert subtree, hidden with .ds-vh.
+   They have no visual design. This file only styles the optional announcement log used in docs and previews. */
+.ds-live-announcer__log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  list-style: none;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-live-announcer__entry { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); overflow-wrap: anywhere; }
+.ds-live-announcer__politeness {
+  font-family: var(--type-code-family);
+  font-size: var(--type-code-size);
+  line-height: var(--type-code-line);
+  color: var(--color-structure-text-secondary);
+}
+.ds-live-announcer__entry[data-politeness="assertive"] .ds-live-announcer__politeness { color: var(--color-semantic-critical-strong); }
+.ds-live-announcer__entry[data-state="merged"] { color: var(--color-structure-text-secondary); text-decoration-line: line-through; }
+.ds-live-announcer__empty { color: var(--color-structure-text-secondary); }
+.ds-live-announcer__log:has(.ds-live-announcer__entry) .ds-live-announcer__empty { display: none; }
+/* region snapshot used to document idle / announcing / cleared */
+.ds-live-announcer__snapshot { overflow-wrap: anywhere; }

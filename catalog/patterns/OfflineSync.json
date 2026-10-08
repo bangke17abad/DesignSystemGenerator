@@ -1,0 +1,93 @@
+{
+  "name": "OfflineSync",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila ada surface offline-first di B3/B4 (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna tetap bekerja saat koneksi hilang atau tidak stabil, selalu tahu apa yang sudah sampai ke server dan apa yang baru tersimpan di perangkat, dan dapat menyelesaikan konflik atau penolakan tanpa kehilangan pekerjaan.",
+    "when": ["Surface offline-first di B3/B4 (lapangan, gudang, perjalanan, area sinyal lemah).", "Entri dibuat atau diubah tanpa koneksi dan dikirim belakangan.", "Beberapa pengguna atau perangkat dapat mengubah objek yang sama sehingga konflik mungkin terjadi."],
+    "when_not": ["Produk online-only: offline cukup ditangani SystemPages (halaman offline) dan InlineAlert C2 (§12.2), tanpa outbox.", "Data live yang tidak bermakna bila basi: ConnectionStatus stale dan blokir aksi, bukan antrean.", "Operasi yang tidak boleh diantrekan (pembayaran real-time, otorisasi, reservasi berbatas stok): blokir dengan alasan \"Perlu koneksi\"."]
+  },
+  "composition": [
+    { "component": "ConnectionStatus", "role_in_pattern": "indikator global: live (tenang), reconnecting C5, stale C2, offline C2 persisten dengan queue-count, syncing C5; membuka panel outbox" },
+    { "component": "Banner", "role_in_pattern": "variant system C2 hanya bila fungsi aplikasi berubah karena offline; tidak bisa ditutup; diganti C4 \"Kembali online\" setelah antrean terkirim" },
+    { "component": "StatusLabel", "role_in_pattern": "prop unconfirmed per entri lokal: belum sinkron C5 (\"Not synced\"), konflik C2, ditolak C1; terkonfirmasi tanpa penanda (§7.3)" },
+    { "component": "Sheet", "role_in_pattern": "panel outbox di phone dan tablet" },
+    { "component": "ContextPanel", "role_in_pattern": "panel outbox di desktop" },
+    { "component": "List", "parts": ["List.Item", "List.Meta", "List.TrailingAction"], "role_in_pattern": "isi outbox: satu item per perubahan tertunda (objek, jenis perubahan, waktu simpan lokal, status), urut sesuai urutan kirim" },
+    { "component": "ProgressBar", "role_in_pattern": "determinate \"Mengirim 3 dari 12 perubahan\" saat antrean besar disinkronkan" },
+    { "component": "Modal", "role_in_pattern": "penyelesaian konflik: membandingkan versi dan memilih hasil" },
+    { "component": "DescriptionList", "role_in_pattern": "variant columns: field yang berbeda antara versi lokal dan versi server, dengan siapa dan kapan versi server diubah" },
+    { "component": "RadioGroup", "role_in_pattern": "variant card: \"Pakai versi saya\" / \"Pakai versi dari {nama}, {waktu}\" / gabung per field bila brief mengizinkan" },
+    { "component": "InlineAlert", "role_in_pattern": "C2 offline di atas form atau konten yang terdampak; C1 penjelasan entri ditolak; C2 batas penyimpanan lokal" },
+    { "component": "Badge", "role_in_pattern": "jumlah konflik dan penolakan pada pemicu outbox; bukan satu-satunya penanda" },
+    { "component": "Menu", "parts": ["Menu.Item"], "role_in_pattern": "aksi per item outbox: Ubah, Salin isi, Buang perubahan lokal (DestructiveAction)" },
+    { "component": "Button", "role_in_pattern": "\"Coba sekarang\", \"Tinjau konflik\", \"Kirim ulang\"" },
+    { "component": "Toast", "role_in_pattern": "ringkasan setelah sinkron \"12 perubahan terkirim\" dan Undo untuk buang perubahan lokal yang masih bisa dipulihkan" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman transisi koneksi (sekali per perubahan kelas) dan ringkasan sinkron" }
+  ],
+  "flow": [
+    { "step": "Koneksi hilang", "state_class": "C2", "transition": "transisi di-debounce ±2 detik; ConnectionStatus offline persisten; Banner system hanya bila fungsi berubah; pekerjaan berlanjut tanpa dialog yang memblokir" },
+    { "step": "Bekerja offline", "state_class": "C5", "transition": "simpan masuk outbox; entri bertanda StatusLabel C5 \"Belum sinkron\"; konfirmasi berbunyi \"Disimpan di perangkat ini\", bukan \"Disimpan\"; queue-count bertambah" },
+    { "step": "Aksi yang butuh server", "state_class": "C2", "transition": "aksi yang tidak bisa diantrekan aria-disabled dengan alasan \"Perlu koneksi\"; InlineAlert C2 di atas konten yang terdampak" },
+    { "step": "Koneksi pulih, sinkronisasi", "state_class": "C5", "transition": "ConnectionStatus syncing \"Mengirim {n} perubahan\"; urutan kirim dipertahankan; setiap perubahan membawa idempotency key; penanda per entri hilang satu per satu saat server mengonfirmasi" },
+    { "step": "Terkonfirmasi", "state_class": "C4", "transition": "penanda belum sinkron hilang (terkonfirmasi = tanpa penanda); ringkasan Toast; Banner diganti C4 \"Kembali online\" yang dapat ditutup" },
+    { "step": "Konflik", "state_class": "C2", "transition": "server menolak karena versi berubah: StatusLabel C2 \"Konflik\", Badge pada outbox; Tinjau membuka Modal perbandingan; tidak ada penimpaan diam-diam" },
+    { "step": "Ditolak server", "state_class": "C1", "transition": "validasi atau izin gagal di server: StatusLabel C1 dengan alasan; isi lokal dipertahankan; aksi Ubah lalu kirim ulang, Salin isi, atau Buang (DestructiveAction)" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "ConnectionStatus compact di header atau di atas BottomNav; tap membuka Sheet outbox; konflik di Modal fullscreen dengan versi bertumpuk (milik saya di atas, server di bawah); font dan aset inti di-bundle (§14.3 butir 2)" },
+    { "device_class": "tablet", "behaviour": "ConnectionStatus di header surface; outbox di Sheet side; konflik di Modal dengan dua kolom berdampingan" },
+    { "device_class": "desktop", "behaviour": "ConnectionStatus di AppShell atau PageHeader; outbox di ContextPanel; konflik di Modal dengan DescriptionList columns per field yang berbeda dan pilihan per field bila brief mengizinkan gabung" }
+  ],
+  "states": {
+    "empty": "Outbox kosong: \"Semua perubahan terkirim\" + waktu sinkron terakhir; offline tanpa antrean: ConnectionStatus menyebut \"Perubahan akan disimpan di perangkat ini\" tanpa queue-count.",
+    "loading": "Sinkronisasi berjalan: ConnectionStatus syncing + ProgressBar determinate di outbox untuk antrean besar; data cache tampil dengan \"Last updated {waktu}\" sampai data server diterima.",
+    "error": "Server tidak dapat dihubungi meski online: entri tetap \"Belum sinkron\", percobaan ulang dengan backoff tanpa pengumuman per percobaan, \"Coba sekarang\" tersedia; entri ditolak tampil C1 dengan alasan dan isi lokal utuh.",
+    "partial": "Sebagian terkirim, sebagian konflik atau ditolak: ringkasan \"10 terkirim · 1 konflik · 1 tidak tersimpan\" di outbox dengan aksi Tinjau; entri bermasalah tetap di outbox sampai diselesaikan.",
+    "success": "Semua perubahan terkonfirmasi: penanda hilang, queue-count hilang, ConnectionStatus kembali tenang; ringkasan diumumkan polite sekali."
+  },
+  "accessibility": [
+    { "step": "Koneksi hilang atau pulih", "focus": "fokus tidak berpindah; label ConnectionStatus tidak fokusabel, aksi \"Coba sekarang\" atau pemicu outbox fokusabel", "announcement": "polite sekali per perubahan kelas (\"Anda offline. Perubahan disimpan di perangkat ini\"); offline saat tugas yang tak bisa diantrekan berjalan = assertive (C1)" },
+    { "step": "Simpan offline", "focus": "mengikuti FormFlow; fokus tetap atau ke tujuan berikut", "announcement": "polite \"Disimpan di perangkat ini\"; teks StatusLabel \"Belum sinkron\" menjadi bagian nama aksesibel baris" },
+    { "step": "Sinkronisasi", "focus": "tidak ada perpindahan fokus; konten yang sedang diedit tidak di-refresh di bawah kursor", "announcement": "tanpa pengumuman per item; satu ringkasan polite di akhir; konflik dan penolakan diumumkan assertive satu kali sebagai jumlah" },
+    { "step": "Selesaikan konflik", "focus": "fokus ke judul Modal; RadioGroup berlabel; Esc menutup tanpa memilih dan entri tetap C2; fokus kembali ke pemicu (§9.5)", "announcement": "polite \"Konflik diselesaikan, mengirim versi Anda\"" },
+    { "step": "Buang perubahan lokal", "focus": "aturan DestructiveAction; setelah item hilang fokus ke item outbox berikutnya atau judul outbox", "announcement": "polite dengan aksi Undo bila masih bisa dipulihkan" }
+  ],
+  "content": {
+    "rules": ["Simpan lokal tidak pernah ditulis \"Disimpan\"/\"Saved\"; pakai \"Disimpan di perangkat ini\" dan label glosarium \"Belum sinkron\".", "Konflik menyebut siapa dan kapan versi server diubah; pilihan menyebut hasilnya, bukan \"Ya/Tidak\".", "Waktu sinkron terakhir absolut bila jam perangkat tidak bisa dipercaya; relatif bila waktu server tersedia.", "Jumlah antrean memakai ICU plural; \"999+\" di indikator ringkas, angka penuh di outbox."],
+    "examples": {
+      "en-US": ["You're offline. Changes will be saved on this device.", "Saved on this device", "Not synced", "3 changes waiting to send", "This record was changed by Dina at 10:42 while you were offline", "Keep my version"],
+      "id-ID": ["Anda offline. Perubahan akan disimpan di perangkat ini.", "Disimpan di perangkat ini", "Belum sinkron", "3 perubahan menunggu dikirim", "Data ini diubah oleh Dina pukul 10.42 saat Anda offline", "Pakai versi saya"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role yang boleh mengubah entitas di surface offline-first: outbox, penyelesaian konflik, dan buang perubahan lokal" },
+    { "pattern": "read-only", "when": "role hanya lihat: data cache dengan penanda kesegaran, tanpa outbox dan tanpa aksi ubah" },
+    { "pattern": "disabled-with-reason", "when": "aksi yang butuh otorisasi server atau step-up (persetujuan, pembayaran) diblokir saat offline dengan alasan \"Perlu koneksi untuk verifikasi\"; izin yang dicabut saat offline menghasilkan penolakan C1 \"Anda tidak lagi punya akses\" dengan isi lokal tetap bisa disalin" }
+  ],
+  "do": ["Tunjukkan outbox dan jumlahnya setiap saat selama ada perubahan tertunda.", "Pertahankan isi lokal pada konflik dan penolakan sampai pengguna memilih sendiri.", "Kirim setiap perubahan dengan idempotency key agar percobaan ulang tidak menggandakan data.", "Tandai data cache dengan waktu terakhir diperbarui (I6)."],
+  "dont": [
+    { "text": "Menampilkan entri lokal sebagai terkonfirmasi atau final sebelum server mengonfirmasi.", "ref": "I6" },
+    { "text": "Menyelesaikan konflik diam-diam dengan menimpa versi terakhir tanpa memberi tahu pengguna.", "ref": "§12.3" },
+    { "text": "Menyediakan tombol tutup pada penanda offline atau menyembunyikannya setelah beberapa detik.", "ref": "§12.2" },
+    { "text": "Menandai status sinkron hanya dengan titik berwarna atau ikon tanpa teks.", "ref": "UB2" },
+    { "text": "Mengantrekan aksi yang hasilnya harus pasti saat itu (pembayaran real-time, otorisasi) seolah sudah berhasil.", "ref": "I6" }
+  ],
+  "edge_cases": [
+    { "case": "offline lama hingga batas penyimpanan lokal", "behaviour": "InlineAlert C2 saat mendekati batas (dari brief, selain itu A-nn); entri lama tidak pernah dibuang otomatis; pengguna diarahkan menyambung atau mengekspor isi" },
+    { "case": "timeout permintaan (hasil di server tidak diketahui)", "behaviour": "perubahan tetap \"Belum sinkron\"; kirim ulang dengan idempotency key yang sama sehingga server menolak duplikat; tidak pernah dianggap berhasil" },
+    { "case": "antrean sangat besar (ratusan perubahan)", "behaviour": "\"999+\" di indikator ringkas; dikirim per batch berurutan; ProgressBar determinate di outbox; outbox dipaginasi" },
+    { "case": "outbox kosong", "behaviour": "queue-count disembunyikan; outbox menampilkan \"Semua perubahan terkirim\" + waktu sinkron terakhir" },
+    { "case": "aksi ganda (Coba sekarang berulang, entri yang sama diubah lagi sebelum terkirim)", "behaviour": "Coba sekarang diabaikan selama sinkron berjalan; perubahan berturut-turut pada entri yang sama digabung menjadi satu perubahan tertunda" },
+    { "case": "teks status +40% (locale terpanjang)", "behaviour": "ConnectionStatus compact dua baris (label + freshness); queue-count pindah ke outbox di phone; StatusLabel membungkus, tidak dipotong" },
+    { "case": "koneksi putus-sambung tiap detik", "behaviour": "debounce ±2 detik dengan kondisi terburuk di jendela itu; satu pengumuman per perubahan kelas" },
+    { "case": "aplikasi ditutup atau dimatikan saat sinkron", "behaviour": "outbox persisten di penyimpanan lokal; sinkron dilanjutkan dari entri yang belum terkonfirmasi saat aplikasi dibuka" },
+    { "case": "sesi habis saat offline", "behaviour": "outbox dipertahankan; setelah online pengguna diminta masuk ulang (AuthAndSession) sebelum pengiriman; keluar dengan perubahan tertunda memakai konfirmasi DestructiveAction yang menyebut jumlahnya" },
+    { "case": "objek dihapus di server saat diubah offline", "behaviour": "konflik C2 dengan pilihan \"Buat ulang dengan perubahan saya\" atau \"Buang perubahan saya\"" },
+    { "case": "jam perangkat salah", "behaviour": "urutan dan freshness memakai waktu server bila tersedia; waktu lokal ditampilkan absolut" }
+  ],
+  "wcag": ["1.3.1", "1.4.1", "2.1.1", "2.2.2", "2.4.3", "3.3.1", "3.3.4", "4.1.2", "4.1.3"],
+  "related_patterns": ["AsyncFeedback", "SystemPages", "FormFlow", "FileUpload", "AuthAndSession", "DestructiveAction"],
+  "lint": ["Setiap entri lokal yang belum terkonfirmasi merender StatusLabel unconfirmed", "String \"Saved\"/\"Disimpan\" tidak dipakai untuk penyimpanan lokal (V3 glosarium)", "ConnectionStatus offline dan Banner offline tidak punya dismiss", "Setiap mutasi di outbox membawa idempotency key"]
+}

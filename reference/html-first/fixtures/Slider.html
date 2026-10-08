@@ -1,0 +1,319 @@
+<!-- Slider fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases. Text follows ui_locale en-US
+     (id-ID currency and RTL demos at the end). Without JS each slider is a labelled native range input (keyboard + track click);
+     Slider.js reveals the value text and the companion NumberInput(s) and draws the token track and fill. -->
+<section class="ds-demo" data-ds-demo="variants/single (live) + range (live)">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-v1" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-v1-r">Volume</label>
+        <output class="ds-slider__value" for="sl-v1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-v1-r" type="range" name="volume" min="0" max="100" step="1" value="40" aria-describedby="sl-v1-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-v1-n">Volume, value</label><input class="ds-slider__input" id="sl-v1-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-v1-help">From 0 to 100%.</p>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" data-variant="range" id="sl-v2" role="group" aria-labelledby="sl-v2-label" data-format='{"style":"currency","currency":"IDR","maximumFractionDigits":0}' lang="id-ID" data-min-steps-between="1">
+      <div class="ds-slider__header">
+        <span class="ds-slider__label" id="sl-v2-label">Price range</span>
+        <output class="ds-slider__value" for="sl-v2-r0 sl-v2-r1" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <label class="ds-vh" for="sl-v2-r0">Minimum price</label>
+          <input class="ds-slider__range" id="sl-v2-r0" type="range" name="sl-v2_min" min="0" max="2000000" step="50000" value="250000" aria-describedby="sl-v2-help">
+          <label class="ds-vh" for="sl-v2-r1">Maximum price</label>
+          <input class="ds-slider__range" id="sl-v2-r1" type="range" name="sl-v2_max" min="0" max="2000000" step="50000" value="1000000" aria-describedby="sl-v2-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-v2-n0">Minimum price, value</label><input class="ds-slider__input" id="sl-v2-n0" type="text" inputmode="numeric" autocomplete="off"></span>
+          <span class="ds-slider__inputs-sep" aria-hidden="true">–</span>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-v2-n1">Maximum price, value</label><input class="ds-slider__input" id="sl-v2-n1" type="text" inputmode="numeric" autocomplete="off"></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-v2-help">From Rp 0 to Rp 2.000.000, in steps of Rp 50.000.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (default, hover, focus, pressed, dragged+focus)">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-s1" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-s1-r">Default</label>
+        <output class="ds-slider__value" for="sl-s1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-s1-r" type="range" min="0" max="100" step="1" value="30">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-s1-n">Default, value</label><input class="ds-slider__input" id="sl-s1-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-s2" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-s2-r">Hover</label>
+        <output class="ds-slider__value" for="sl-s2-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-s2-r" type="range" min="0" max="100" step="1" value="45" data-force="hover">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-s2-n">Hover, value</label><input class="ds-slider__input" id="sl-s2-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-s3" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-s3-r">Focus (value bubble)</label>
+        <output class="ds-slider__value" for="sl-s3-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-s3-r" type="range" min="0" max="100" step="1" value="60" data-force="focus">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-s3-n">Focus (value bubble), value</label><input class="ds-slider__input" id="sl-s3-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-s4" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-s4-r">Pressed</label>
+        <output class="ds-slider__value" for="sl-s4-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-s4-r" type="range" min="0" max="100" step="1" value="70" data-force="pressed">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-s4-n">Pressed, value</label><input class="ds-slider__input" id="sl-s4-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-s5" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-s5-r">Dragged + focus</label>
+        <output class="ds-slider__value" for="sl-s5-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-s5-r" type="range" min="0" max="100" step="1" value="85" data-force="pressed focus">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-s5-n">Dragged + focus, value</label><input class="ds-slider__input" id="sl-s5-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (error in the companion input + focus, disabled-with-reason, read-only + focus)">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-e1" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-e1-r">Discount</label>
+        <output class="ds-slider__value" for="sl-e1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-e1-r" type="range" min="0" max="100" step="1" value="20" aria-describedby="sl-e1-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-e1-n">Discount, value</label><input class="ds-slider__input" id="sl-e1-n" type="text" inputmode="numeric" autocomplete="off" value="140" aria-invalid="true" aria-describedby="sl-e1-error" data-force="focus"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__error" id="sl-e1-error"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a value from 0% to 100%</span></p>
+      <p class="ds-slider__helper" id="sl-e1-help">From 0 to 100%.</p>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-e2" data-format='{"style":"unit","unit":"day","unitDisplay":"long"}' data-valuetext="{value} days">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-e2-r">Data retention</label>
+        <output class="ds-slider__value" for="sl-e2-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-e2-r" type="range" min="30" max="365" step="1" value="90" aria-disabled="true" aria-describedby="sl-e2-reason">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-e2-n">Data retention, value</label><input class="ds-slider__input" id="sl-e2-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">days</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__reason" id="sl-e2-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Set by your organisation’s retention policy.</span></p>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-e3" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-e3-r">Brightness</label>
+        <output class="ds-slider__value" for="sl-e3-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-e3-r" type="range" min="0" max="100" step="1" value="65" data-force="focus" aria-readonly="true" aria-describedby="sl-e3-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-e3-n">Brightness, value</label><input class="ds-slider__input" id="sl-e3-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-e3-help">Managed by the kiosk profile.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="marks (named steps, aria-valuetext = name) + range thumbs stacked">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-m1" data-format='{}' data-valuetext="" data-names='{"1":"Low","2":"Medium","3":"High"}'>
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-m1-r">Noise reduction</label>
+        <output class="ds-slider__value" for="sl-m1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-m1-r" type="range" min="1" max="3" step="1" value="2" aria-describedby="sl-m1-help">
+          <ul class="ds-slider__marks" aria-hidden="true" data-ds-text="supporting">
+            <li class="ds-slider__mark" style="--_p: 0" data-edge="start">Low</li>
+            <li class="ds-slider__mark" style="--_p: 0.5">Medium</li>
+            <li class="ds-slider__mark" style="--_p: 1" data-edge="end">High</li>
+          </ul>
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-m1-n">Noise reduction, value</label><input class="ds-slider__input" id="sl-m1-n" type="text" inputmode="numeric" autocomplete="off"></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-m1-help">Low, Medium or High.</p>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" data-variant="range" id="sl-m2" role="group" aria-labelledby="sl-m2-label" data-format='{"style":"unit","unit":"hour","unitDisplay":"short"}'>
+      <div class="ds-slider__header">
+        <span class="ds-slider__label" id="sl-m2-label">Booking window</span>
+        <output class="ds-slider__value" for="sl-m2-r0 sl-m2-r1" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <label class="ds-vh" for="sl-m2-r0">Earliest hour</label>
+          <input class="ds-slider__range" id="sl-m2-r0" type="range" name="sl-m2_min" min="6" max="18" step="1" value="9" data-top aria-describedby="sl-m2-help">
+          <label class="ds-vh" for="sl-m2-r1">Latest hour</label>
+          <input class="ds-slider__range" id="sl-m2-r1" type="range" name="sl-m2_max" min="6" max="18" step="1" value="9" aria-describedby="sl-m2-help">
+          <ul class="ds-slider__marks" aria-hidden="true" data-ds-text="supporting">
+            <li class="ds-slider__mark" style="--_p: 0" data-edge="start">6</li>
+            <li class="ds-slider__mark" style="--_p: 0.5">12</li>
+            <li class="ds-slider__mark" style="--_p: 1" data-edge="end">18</li>
+          </ul>
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-m2-n0">Earliest hour, value</label><input class="ds-slider__input" id="sl-m2-n0" type="text" inputmode="numeric" autocomplete="off"></span>
+          <span class="ds-slider__inputs-sep" aria-hidden="true">–</span>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-m2-n1">Latest hour, value</label><input class="ds-slider__input" id="sl-m2-n1" type="text" inputmode="numeric" autocomplete="off"></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-m2-help">Both thumbs at 9 h: the last moved thumb is on top.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, md, lg)">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-z1" data-format='{"style":"percent"}' data-valuetext="{value} percent" data-size="sm">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-z1-r">Opacity (sm)</label>
+        <output class="ds-slider__value" for="sl-z1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-z1-r" type="range" min="0" max="100" step="1" value="80">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-z1-n">Opacity (sm), value</label><input class="ds-slider__input" id="sl-z1-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-z2" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-z2-r">Opacity (md)</label>
+        <output class="ds-slider__value" for="sl-z2-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-z2-r" type="range" min="0" max="100" step="1" value="80">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-z2-n">Opacity (md), value</label><input class="ds-slider__input" id="sl-z2-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" id="sl-z3" data-format='{"style":"percent"}' data-valuetext="{value} percent" data-size="lg">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-z3-r">Opacity (lg)</label>
+        <output class="ds-slider__value" for="sl-z3-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-z3-r" type="range" min="0" max="100" step="1" value="80">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-z3-n">Opacity (lg), value</label><input class="ds-slider__input" id="sl-z3-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + long label">
+  <div class="ds-stack" data-gap="6">
+    <div class="ds-slider" data-ds-module="slider" id="sl-r1" data-format='{"style":"percent"}' data-valuetext="{value} بالمئة" dir="rtl" lang="ar">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-r1-r">مستوى الصوت</label>
+        <output class="ds-slider__value" for="sl-r1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-r1-r" type="range" min="0" max="100" step="1" value="40" aria-describedby="sl-r1-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-r1-n">مستوى الصوت, value</label><input class="ds-slider__input" id="sl-r1-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-r1-help">من 0 إلى 100%.</p>
+    </div>
+    <div class="ds-slider" data-ds-module="slider" data-variant="range" id="sl-r2" role="group" aria-labelledby="sl-r2-label" data-format='{"style":"currency","currency":"IDR","maximumFractionDigits":0}' lang="id-ID">
+      <div class="ds-slider__header">
+        <span class="ds-slider__label" id="sl-r2-label">Rentang harga sewa lapangan per jam untuk pemesanan rutin klub</span>
+        <output class="ds-slider__value" for="sl-r2-r0 sl-r2-r1" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <label class="ds-vh" for="sl-r2-r0">Harga minimum</label>
+          <input class="ds-slider__range" id="sl-r2-r0" type="range" name="sl-r2_min" min="0" max="600000" step="25000" value="150000" aria-describedby="sl-r2-help">
+          <label class="ds-vh" for="sl-r2-r1">Harga maksimum</label>
+          <input class="ds-slider__range" id="sl-r2-r1" type="range" name="sl-r2_max" min="0" max="600000" step="25000" value="450000" aria-describedby="sl-r2-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-r2-n0">Harga minimum, value</label><input class="ds-slider__input" id="sl-r2-n0" type="text" inputmode="numeric" autocomplete="off"></span>
+          <span class="ds-slider__inputs-sep" aria-hidden="true">–</span>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-r2-n1">Harga maksimum, value</label><input class="ds-slider__input" id="sl-r2-n1" type="text" inputmode="numeric" autocomplete="off"></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-r2-help">Dari Rp 0 sampai Rp 600.000.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <div class="ds-slider" data-ds-module="slider" id="sl-x1" data-format='{"style":"percent"}' data-valuetext="{value} percent">
+      <div class="ds-slider__header">
+        <label class="ds-slider__label" for="sl-x1-r">Volume</label>
+        <output class="ds-slider__value" for="sl-x1-r" hidden></output>
+      </div>
+      <div class="ds-slider__body">
+        <div class="ds-slider__control">
+          <input class="ds-slider__range" id="sl-x1-r" type="range" min="0" max="100" step="1" value="40" aria-describedby="sl-x1-help">
+        </div>
+        <div class="ds-slider__inputs" hidden>
+          <span class="ds-slider__field"><label class="ds-vh" for="sl-x1-n">Volume, value</label><input class="ds-slider__input" id="sl-x1-n" type="text" inputmode="numeric" autocomplete="off"><span class="ds-slider__affix" aria-hidden="true">%</span></span>
+        </div>
+      </div>
+      <p class="ds-slider__helper" id="sl-x1-help">From 0 to 100%.</p>
+    </div>
+  </div>
+</section>

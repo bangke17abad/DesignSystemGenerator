@@ -1,0 +1,4 @@
+{
+  "$comment": "Istilah domain dari run nyata sebelumnya (audit 1.7.0). Fixture referensi harus domain-netral; ref-check menolak istilah ini (R15). Tambahkan istilah saat engine dipakai run baru.",
+  "terms": ["golf", "tee time", "tee-time", "tee sheet", "handicap", "caddie", "fairway", "Rainbow Hills", "Green Clubs", "TGC", "Unigal", "Agency OS", "M3E"]
+}

@@ -1,0 +1,355 @@
+{
+  "name": "AuthAndSession",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada akun (M08 §11.2), kecuali B7 pattern_exclusions memberi alasan. Kebijakan sesi (durasi, ambang peringatan, batas percobaan) dari brief; selain itu dicatat A-nn.",
+  "problem": {
+    "problem": "Pengguna masuk, tetap masuk selama aman, diperingatkan sebelum sesi habis dengan opsi memperpanjang, masuk kembali tanpa kehilangan pekerjaan, memulihkan akses saat lupa sandi, dan membuktikan identitas ulang untuk aksi berisiko — tanpa tes kognitif yang hanya mengandalkan ingatan (SC 3.3.8) dan tanpa membocorkan apakah sebuah akun ada.",
+    "when": [
+      "Produk punya akun atau sesi berautentikasi.",
+      "Ada aksi yang memerlukan otorisasi ulang (step-up).",
+      "Ada batas waktu sesi dari brief atau kebijakan keamanan."
+    ],
+    "when_not": [
+      "Pendaftaran panjang atau aktivasi bertahap: Onboarding atau Wizard; pattern ini hanya menyediakan langkah kredensial.",
+      "Izin perangkat (kamera, lokasi, notifikasi): PermissionRequest.",
+      "Persetujuan oleh orang lain di perangkatnya sendiri: alur permintaan persetujuan berstatus C5, bukan step-up."
+    ]
+  },
+  "composition": [
+    {
+      "component": "AppShell",
+      "role_in_pattern": "variant focused untuk halaman masuk, faktor kedua, dan atur ulang sandi (tanpa nav)"
+    },
+    {
+      "component": "PageHeader",
+      "parts": [
+        "PageHeader.Title",
+        "PageHeader.Description"
+      ],
+      "role_in_pattern": "h1 tiap layar autentikasi; target fokus rute"
+    },
+    {
+      "component": "Form",
+      "parts": [
+        "Form.Header",
+        "Form.Section",
+        "Form.Actions"
+      ],
+      "role_in_pattern": "form masuk, lupa sandi, dan atur ulang sandi mengikuti FormFlow"
+    },
+    {
+      "component": "TextField",
+      "role_in_pattern": "identifier (email atau nama pengguna) dengan autocomplete=\"username\""
+    },
+    {
+      "component": "PasswordInput",
+      "role_in_pattern": "variant current untuk masuk, new untuk atur ulang dengan aturan terlihat sebelum mengetik; tampil/sembunyikan berlabel"
+    },
+    {
+      "component": "PinInput",
+      "role_in_pattern": "kode verifikasi satu field dengan autocomplete=\"one-time-code\", paste diizinkan, kirim ulang setelah hitung mundur"
+    },
+    {
+      "component": "Checkbox",
+      "role_in_pattern": "\"Tetap masuk di perangkat ini\" hanya bila kebijakan sesi brief mengizinkan"
+    },
+    {
+      "component": "Button",
+      "role_in_pattern": "Masuk (primer); passkey atau SSO sebagai metode sekunder"
+    },
+    {
+      "component": "Link",
+      "role_in_pattern": "Lupa sandi, Gunakan metode lain, bantuan masuk"
+    },
+    {
+      "component": "ErrorSummary",
+      "role_in_pattern": "error validasi setelah submit"
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "kredensial ditolak atau akun dibatasi (C2), error server (C1 + Retry), info \"Anda telah keluar\""
+    },
+    {
+      "component": "Modal",
+      "role_in_pattern": "peringatan sesi akan habis dengan \"Tetap masuk\"; masuk kembali di tempat setelah sesi habis tanpa membuang halaman"
+    },
+    {
+      "component": "CountdownTimer",
+      "role_in_pattern": "sisa waktu di peringatan sesi dan jeda kirim ulang kode; diumumkan hanya di ambang dan nol"
+    },
+    {
+      "component": "StepUpDialog",
+      "role_in_pattern": "otorisasi ulang sebelum aksi berisiko dengan jalur non-ingatan (passkey, biometrik, kode yang bisa di-paste)"
+    },
+    {
+      "component": "Avatar",
+      "role_in_pattern": "pemicu menu akun di global bar bersama nama pengguna"
+    },
+    {
+      "component": "Menu",
+      "role_in_pattern": "aksi akun: ganti akun, Keluar"
+    },
+    {
+      "component": "Toast",
+      "role_in_pattern": "\"Sesi diperpanjang\", \"Sandi diperbarui\""
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "pengumuman peringatan, sesi berakhir, kode terkirim, dan hasil masuk kembali"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Masuk",
+      "state_class": "C6",
+      "transition": "identifier + sandi, atau passkey/SSO/tautan email bila brief menyediakannya; paste, autofill, dan pengelola sandi tidak pernah diblokir"
+    },
+    {
+      "step": "Verifikasi",
+      "state_class": "C5",
+      "transition": "Button Masuk loading dengan lebar terkunci; klik ganda diabaikan"
+    },
+    {
+      "step": "Kredensial ditolak",
+      "state_class": "C2",
+      "transition": "InlineAlert C2 generik di atas form tanpa menyebut field mana yang salah dan tanpa mengonfirmasi keberadaan akun; identifier dipertahankan; sandi dikosongkan hanya bila kebijakan keamanan brief mensyaratkan"
+    },
+    {
+      "step": "Faktor kedua",
+      "state_class": "C2",
+      "transition": "PinInput one-time-code atau passkey; \"Gunakan metode lain\" selalu ada; \"Kirim ulang kode\" aktif setelah hitung mundur; kode lama tidak dihapus otomatis"
+    },
+    {
+      "step": "Dibatasi",
+      "state_class": "C2",
+      "transition": "setelah batas percobaan (brief, selain itu A-nn): InlineAlert C2 menyebut waktu absolut kapan bisa mencoba lagi dan jalur pemulihan; Masuk aria-disabled dengan alasan"
+    },
+    {
+      "step": "Masuk berhasil",
+      "state_class": "C4",
+      "transition": "dialihkan ke return URL yang tervalidasi (same-origin) atau beranda; fokus ke h1 tujuan; sandi dikembalikan ke mode tersamar sebelum kirim agar pengelola sandi menyimpannya"
+    },
+    {
+      "step": "Lupa sandi",
+      "state_class": "C6",
+      "transition": "satu field identifier; respons selalu sama (\"Bila ada akun untuk …, tautan sudah dikirim\"); tautan berlaku terbatas; atur ulang dengan PasswordInput new lalu masuk otomatis atau kembali ke Masuk sesuai brief"
+    },
+    {
+      "step": "Sesi hampir habis",
+      "state_class": "C2",
+      "transition": "minimal 20 detik sebelum habis (default ±2 menit, A-nn): Modal dengan CountdownTimer, \"Tetap masuk\" (satu aksi) dan \"Keluar\"; perpanjang di satu tab berlaku di semua tab"
+    },
+    {
+      "step": "Sesi habis",
+      "state_class": "C1",
+      "transition": "pekerjaan dan rute disimpan lokal; Modal masuk kembali di tempat (atau halaman masuk dengan return URL bila tidak memungkinkan); setelah berhasil, draf, rute, dan fokus dipulihkan; tidak ada aksi yang dikirim dengan sesi kedaluwarsa"
+    },
+    {
+      "step": "Step-up",
+      "state_class": "C2",
+      "transition": "StepUpDialog sebelum aksi berisiko; berhasil menjalankan aksi, Batal tidak menjalankannya dan tidak dilaporkan sebagai error"
+    },
+    {
+      "step": "Keluar",
+      "state_class": "C3",
+      "transition": "Menu akun → Keluar; sesi server dicabut dan data sensitif di cache dibersihkan; halaman Masuk menampilkan InlineAlert info \"Anda telah keluar\"; keluar di satu tab mengeluarkan semua tab"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "layar autentikasi satu kolom tanpa nav (AppShell focused); field size lg dengan keyboard sesuai tipe (email; numerik untuk kode) dan saran autofill OS; tombol primer lebar penuh tetap terlihat di atas keyboard; biometrik/passkey ditawarkan bila tersedia; peringatan sesi sebagai Modal center"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "form di tengah dengan lebar ±layout-measure di orientasi apa pun; surface perangkat bersama (dari B3) memakai sesi pendek, tanpa \"Tetap masuk\", dan keluar otomatis yang selalu didahului peringatan"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "form di tengah dibatasi layout-measure; menu akun (Avatar + Menu) di inline-end global bar; peringatan dan status sesi sinkron antar tab; passkey lewat WebAuthn bila brief mendukung"
+    }
+  ],
+  "states": {
+    "empty": "Form Masuk kosong dengan label terlihat dan tanpa error sebelum submit; identifier boleh diisi oleh browser atau pengelola sandi, tetapi tidak diisi aplikasi pada perangkat bersama.",
+    "loading": "Button Masuk loading; menunggu passkey, SSO, atau konfirmasi di perangkat lain menampilkan teks \"Menunggu konfirmasi di perangkat Anda\" dengan Batal, bukan spinner tanpa teks.",
+    "error": "Validasi: ErrorSummary + error field (format identifier). Kredensial ditolak: InlineAlert C2 generik. Server: InlineAlert C1 + Retry yang tidak dihitung sebagai percobaan gagal. Kode salah: errorText PinInput + sisa percobaan.",
+    "partial": "Faktor pertama lolos, faktor kedua belum: sesi belum aktif; layar faktor kedua menyebut metode dan tujuan kode (disamarkan) dengan \"Gunakan metode lain\"; kembali ke aplikasi melanjutkan dari langkah ini selama tantangan masih berlaku.",
+    "success": "Rute asal atau beranda dengan fokus ke h1, tanpa toast \"Berhasil masuk\"; perpanjang sesi menghasilkan Toast polite \"Sesi diperpanjang\"; draf yang tertahan saat sesi habis dipulihkan."
+  },
+  "accessibility": [
+    {
+      "step": "Masuk",
+      "focus": "fokus ke h1 layar (bukan autofocus field yang melewati konteks); label terlihat; autocomplete username dan current-password (SC 1.3.5)"
+    },
+    {
+      "step": "Kredensial ditolak",
+      "focus": "fokus ke field sandi (atau identifier bila kosong) agar bisa langsung mengetik ulang; pesan terhubung lewat aria-describedby",
+      "announcement": "InlineAlert C2 (role status) diumumkan polite dan dibaca lagi lewat describedby"
+    },
+    {
+      "step": "Faktor kedua",
+      "focus": "fokus ke PinInput (satu tab stop); \"Gunakan metode lain\" dan \"Kirim ulang kode\" dapat dijangkau keyboard (SC 3.3.8)",
+      "announcement": "\"Kode baru dikirim\" dan sisa percobaan polite; CountdownTimer hanya di nol"
+    },
+    {
+      "step": "Sesi hampir habis",
+      "focus": "Modal alertdialog dengan fokus awal di judul; \"Tetap masuk\" aksi pertama; Esc dan menutup dialog = Tetap masuk (pilihan non-destruktif), bukan Keluar; fokus kembali ke elemen sebelumnya",
+      "announcement": "dialog dibaca saat muncul; sisa waktu diumumkan di ambang dan nol saja (SC 2.2.1)"
+    },
+    {
+      "step": "Sesi habis",
+      "focus": "Modal masuk kembali dengan fokus di field pertama; konten di belakang inert tetapi tidak dibuang; setelah berhasil fokus kembali ke elemen terakhir yang fokus",
+      "announcement": "assertive \"Sesi berakhir. Masuk lagi untuk melanjutkan; pekerjaan Anda disimpan.\""
+    },
+    {
+      "step": "Step-up",
+      "focus": "fokus ke field kredensial StepUpDialog; paste dan autofill diizinkan",
+      "announcement": "judul dan ringkasan aksi dibaca sebagai alertdialog"
+    },
+    {
+      "step": "Keluar",
+      "focus": "halaman Masuk: fokus ke h1; info \"Anda telah keluar\" dibaca lewat urutan baca",
+      "announcement": "tidak ada pengumuman tambahan"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Pesan kredensial ditolak tidak menyebut field mana yang salah dan tidak mengonfirmasi keberadaan akun; respons lupa sandi identik untuk akun ada dan tidak ada.",
+      "Peringatan sesi menyebut waktu tersisa, apa yang terjadi saat habis, dan bahwa pekerjaan disimpan; aksinya \"Tetap masuk\" / \"Keluar\", bukan OK/Batal.",
+      "Aturan sandi baru ditulis sebagai daftar sebelum mengetik, bukan hanya setelah gagal.",
+      "Pesan dibatasi menyebut waktu absolut kapan bisa mencoba lagi dan jalur pemulihan.",
+      "Satu istilah glosarium untuk masuk dan keluar (\"Masuk\", \"Keluar\"), tidak bergantian dengan sinonim."
+    ],
+    "examples": {
+      "en-US": [
+        "Sign in",
+        "Email or password is incorrect. Check them and try again, or reset your password.",
+        "Your session ends in 2 minutes. Select Stay signed in to keep working. Your work is saved.",
+        "Stay signed in",
+        "If an account exists for name@example.com, we've sent a link to reset the password. The link expires in 30 minutes.",
+        "Too many attempts. Try again after 14:05, or reset your password.",
+        "You've signed out"
+      ],
+      "id-ID": [
+        "Masuk",
+        "Email atau sandi tidak cocok. Periksa kembali dan coba lagi, atau atur ulang sandi.",
+        "Sesi Anda berakhir dalam 2 menit. Pilih Tetap masuk untuk melanjutkan. Pekerjaan Anda tersimpan.",
+        "Tetap masuk",
+        "Bila ada akun untuk nama@contoh.com, kami telah mengirim tautan untuk mengatur ulang sandi. Tautan berlaku 30 menit.",
+        "Terlalu banyak percobaan. Coba lagi setelah 14.05, atau atur ulang sandi.",
+        "Anda telah keluar"
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "setiap pengguna berakun menjalankan alur masuk, keluar, dan pemulihan yang sama"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi finansial, hukum, ubah kredensial, atau hapus akun: StepUpDialog dengan jalur non-ingatan (SC 3.3.4, SC 3.3.8)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "\"Tetap masuk di perangkat ini\" tidak dirender di surface perangkat bersama atau untuk role berprivilegi tinggi bila kebijakan brief melarangnya"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "Masuk dibatasi sementara karena terlalu banyak percobaan: tombol aria-disabled dengan alasan dan waktu coba lagi"
+    }
+  ],
+  "do": [
+    "Izinkan paste, autofill, pengelola sandi, dan passkey di setiap langkah kredensial (SC 3.3.8).",
+    "Peringatkan minimal 20 detik sebelum sesi habis dengan perpanjangan satu aksi (SC 2.2.1).",
+    "Simpan pekerjaan sebelum sesi berakhir dan pulihkan draf, rute, dan fokus setelah masuk kembali.",
+    "Sinkronkan status sesi antar tab: perpanjang dan keluar berlaku di semua tab.",
+    "Hitung sisa waktu sesi dari waktu server, bukan jam perangkat."
+  ],
+  "dont": [
+    {
+      "text": "Memblokir paste atau meminta karakter ke-n dari sandi/PIN sebagai tes ingatan.",
+      "ref": "SC 3.3.8"
+    },
+    {
+      "text": "Mengeluarkan pengguna tanpa peringatan atau membuang isian saat sesi habis.",
+      "ref": "SC 2.2.1"
+    },
+    {
+      "text": "CAPTCHA berbasis teka-teki tanpa alternatif yang tidak bergantung pada fungsi kognitif.",
+      "ref": "SC 3.3.8"
+    },
+    {
+      "text": "Menyebut \"email tidak terdaftar\" atau \"sandi salah\" secara terpisah."
+    },
+    {
+      "text": "Autofocus ke field sehingga pembaca layar melewati judul dan konteks di atas form.",
+      "ref": "SC 2.4.3"
+    },
+    {
+      "text": "Mengalihkan return URL ke domain lain tanpa validasi."
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "Masuk diblokir dengan alasan \"Perlu koneksi\"; sesi aktif tetap memakai data cache dan tidak dianggap habis hanya karena offline; token diperbarui saat online kembali"
+    },
+    {
+      "case": "timeout verifikasi",
+      "behaviour": "InlineAlert C1 + Retry; Retry tidak dihitung sebagai percobaan gagal; passkey/SSO yang dibatalkan atau habis waktunya kembali ke form dengan fokus di tombol metode itu"
+    },
+    {
+      "case": "data sangat banyak (akun dengan banyak organisasi atau ruang kerja)",
+      "behaviour": "setelah masuk, pemilih ruang kerja berupa daftar yang bisa dicari bila lebih dari ±7; pilihan terakhir diingat per perangkat"
+    },
+    {
+      "case": "data kosong (submit tanpa identifier atau kode)",
+      "behaviour": "error validasi field dengan ErrorSummary; tidak ada permintaan ke server"
+    },
+    {
+      "case": "aksi ganda (Masuk ditekan berulang, Kirim ulang kode beruntun)",
+      "behaviour": "klik kedua diabaikan selama loading; Kirim ulang diblokir dengan sisa waktu terlihat selama hitung mundur"
+    },
+    {
+      "case": "label dan pesan +40% (locale terpanjang)",
+      "behaviour": "label, aturan sandi, dan pesan membungkus tanpa terpotong; tombol primer boleh dua baris; PinInput lebih dari 8 sel beralih ke variant single di 320 CSS px"
+    },
+    {
+      "case": "sesi habis saat tab di latar",
+      "behaviour": "status sesi diperiksa saat tab aktif kembali sebelum aksi apa pun; peringatan yang terlewat diganti alur sesi habis dengan pemulihan draf"
+    },
+    {
+      "case": "teks 200% dan reflow",
+      "behaviour": "Modal peringatan sesi bergulir di dalam; \"Tetap masuk\" tetap terjangkau tanpa gulir horizontal"
+    }
+  ],
+  "wcag": [
+    "1.3.5",
+    "2.2.1",
+    "2.4.3",
+    "3.3.1",
+    "3.3.2",
+    "3.3.3",
+    "3.3.4",
+    "3.3.7",
+    "3.3.8",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "FormFlow",
+    "DestructiveAction",
+    "SystemPages",
+    "AppNavigation",
+    "Settings",
+    "Onboarding",
+    "PermissionRequest"
+  ],
+  "lint": [
+    "Field sandi memakai autocomplete current-password atau new-password",
+    "TextField, PasswordInput, dan PinInput tidak mencegah paste",
+    "Setiap sesi berbatas waktu punya Modal peringatan dengan aksi perpanjang",
+    "Pesan kredensial ditolak tidak menyebut nama field tertentu"
+  ]
+}

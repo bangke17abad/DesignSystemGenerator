@@ -1,0 +1,271 @@
+/* Slider · engine 1.8.0 reference (catalog/components/Slider.json). Tokens only (I3); logical properties only (§12.4).
+   html-first base: native <input type="range"> (role slider, keyboard, click-on-track single-pointer path, RTL mirroring) styled
+   through its pseudo-elements; the range variant overlays two labelled range inputs. Without JS the native track line shows.
+   Slider.js ([data-enhanced]) adds the token track + fill elements, the always-visible value text, aria-valuetext, the value
+   bubble, RTL-aware keys, track click for the range variant and the companion NumberInput(s) (SC 2.5.7).
+   Hit area: the whole input box is >= max(control-height, target-current) tall and pressing anywhere on it grabs the thumb; the
+   thumb pseudo-element itself is >= target-current (transparent border), while its visual stays icon-md. */
+.ds-slider {
+  --_tv: var(--icon-md);
+  --_hit: max(var(--target-current), var(--_tv));
+  --_row: max(var(--control-height-md), var(--_hit));
+  --_line: calc(var(--border-width-thick) * 2);
+  --_shift: -50%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+}
+.ds-slider:dir(rtl) { --_shift: 50%; }
+.ds-slider[data-size="sm"] { --_row: max(var(--control-height-sm), var(--_hit)); }
+.ds-slider[data-size="lg"] { --_hit: max(var(--target-current), var(--target-min-touch), var(--_tv)); --_row: max(var(--control-height-lg), var(--_hit)); }
+
+.ds-slider__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--space-3); min-inline-size: 0; }
+.ds-slider__label {
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-slider__value {
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-label-weight);
+  color: var(--color-structure-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.ds-slider__helper,
+.ds-slider__reason,
+.ds-slider__error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-slider__error,
+.ds-slider__reason { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-slider__error { color: var(--color-semantic-critical-strong); }
+:is(.ds-slider__error, .ds-slider__reason) .ds-icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-slider__error[hidden] { display: none; }
+
+.ds-slider__body { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-2) var(--space-4); min-inline-size: 0; }
+.ds-slider__control { position: relative; display: flex; flex-direction: column; flex: 1 1 calc(var(--layout-content-min) / 2); min-inline-size: 0; }
+.ds-slider__inputs { display: flex; flex: none; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.ds-slider__inputs-sep { color: var(--color-structure-text-secondary); }
+
+/* native range: thumb colours come from custom properties so webkit and moz rules stay identical */
+.ds-slider__range {
+  --_thumb: var(--color-interaction-default);
+  --_ring: var(--color-structure-surface-raised);
+  --_track: var(--color-structure-border-control);
+  position: relative;
+  z-index: 1;
+  display: block;
+  inline-size: 100%;
+  block-size: var(--_row);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+  touch-action: pan-y; /* vertical page scroll is never captured */
+}
+.ds-slider__range::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  block-size: var(--_hit);
+  border-block: calc((var(--_hit) - var(--_line)) / 2) solid transparent;
+  border-radius: var(--radius-full);
+  background-color: var(--_track);
+  background-clip: padding-box;
+}
+.ds-slider__range::-moz-range-track {
+  box-sizing: border-box;
+  block-size: var(--_hit);
+  border-block: calc((var(--_hit) - var(--_line)) / 2) solid transparent;
+  border-radius: var(--radius-full);
+  background-color: var(--_track);
+  background-clip: padding-box;
+}
+.ds-slider__range::-webkit-slider-thumb {
+  box-sizing: border-box;
+  inline-size: var(--_hit);
+  block-size: var(--_hit);
+  margin-block-start: calc((var(--_hit) - var(--_line)) / -2);
+  padding: var(--border-width-thick);
+  border: calc((var(--_hit) - var(--_tv)) / 2) solid transparent;
+  border-radius: var(--radius-full);
+  background-color: var(--_thumb);
+  background-clip: content-box;
+  box-shadow: inset 0 0 0 var(--border-width-thick) var(--_ring);
+  appearance: none;
+  cursor: grab;
+}
+.ds-slider__range::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: var(--_hit);
+  block-size: var(--_hit);
+  padding: var(--border-width-thick);
+  border: calc((var(--_hit) - var(--_tv)) / 2) solid transparent;
+  border-radius: var(--radius-full);
+  background-color: var(--_thumb);
+  background-clip: content-box;
+  box-shadow: inset 0 0 0 var(--border-width-thick) var(--_ring);
+  cursor: grab;
+}
+/* focus: ring 2px offset 2px around the visible thumb; the input keeps a transparent outline (visible in forced colours) */
+.ds-slider__range:focus-visible,
+.ds-slider__range[data-force~="focus"] { outline: var(--focus-ring-width) solid transparent; }
+.ds-slider__range:focus-visible::-webkit-slider-thumb { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(var(--focus-ring-offset) - (var(--_hit) - var(--_tv)) / 2); }
+.ds-slider__range[data-force~="focus"]::-webkit-slider-thumb { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(var(--focus-ring-offset) - (var(--_hit) - var(--_tv)) / 2); }
+.ds-slider__range:focus-visible::-moz-range-thumb { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(var(--focus-ring-offset) - (var(--_hit) - var(--_tv)) / 2); }
+.ds-slider__range[data-force~="focus"]::-moz-range-thumb { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(var(--focus-ring-offset) - (var(--_hit) - var(--_tv)) / 2); }
+@media (hover: hover) { .ds-slider__range:not([aria-disabled="true"], [aria-readonly="true"]):hover { --_thumb: var(--color-interaction-hover); } }
+.ds-slider__range[data-force~="hover"] { --_thumb: var(--color-interaction-hover); }
+.ds-slider__range:not([aria-disabled="true"], [aria-readonly="true"]):active,
+.ds-slider__range[data-force~="pressed"] { --_thumb: var(--color-interaction-pressed); cursor: grabbing; }
+.ds-slider__range[aria-disabled="true"] { --_thumb: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-slider__range[aria-readonly="true"] { --_thumb: var(--color-structure-surface-raised); --_ring: var(--color-structure-border-strong); cursor: default; }
+
+/* enhanced: token track + fill elements under the (transparent) native track */
+.ds-slider[data-enhanced] .ds-slider__range { --_track: transparent; }
+.ds-slider__track,
+.ds-slider__fill {
+  position: absolute;
+  inset-block-start: calc((var(--_row) - var(--_line)) / 2);
+  block-size: var(--_line);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+.ds-slider__track { inset-inline: 0; background: var(--color-structure-border-control); }
+.ds-slider__fill {
+  background: var(--color-interaction-default);
+}
+.ds-slider:not([data-variant="range"]) .ds-slider__fill { inset-inline-start: 0; inline-size: calc(var(--_a, 0) * (100% - var(--_hit)) + var(--_hit) / 2); }
+.ds-slider[data-variant="range"] .ds-slider__fill { inset-inline-start: calc(var(--_a, 0) * (100% - var(--_hit)) + var(--_hit) / 2); inline-size: calc((var(--_b, 1) - var(--_a, 0)) * (100% - var(--_hit))); }
+.ds-slider:has(.ds-slider__range[aria-disabled="true"]) .ds-slider__fill { background: var(--color-structure-text-disabled); }
+.ds-slider:has(.ds-slider__range[aria-readonly="true"]) .ds-slider__fill { background: var(--color-structure-border-strong); }
+
+/* range variant: two overlaid inputs; only the thumbs take pointer input (track click handled by Slider.js) */
+.ds-slider[data-variant="range"] .ds-slider__range { pointer-events: none; }
+.ds-slider[data-variant="range"] .ds-slider__range ~ .ds-slider__range { position: absolute; inset-block-start: 0; inset-inline: 0; }
+.ds-slider[data-variant="range"] .ds-slider__range[data-top] { z-index: 2; }
+.ds-slider[data-variant="range"] .ds-slider__range::-webkit-slider-thumb { pointer-events: auto; }
+.ds-slider[data-variant="range"] .ds-slider__range::-moz-range-thumb { pointer-events: auto; }
+.ds-slider[data-variant="range"][data-enhanced] .ds-slider__control { cursor: pointer; }
+
+/* value bubble (aria-hidden): above the thumb while pressed / dragged / keyboard-focused; complements the value text */
+.ds-slider__bubble {
+  position: absolute;
+  inset-block-start: calc((var(--_row) - var(--_tv)) / 2 - var(--space-2));
+  inset-inline-start: calc(var(--_p, 0) * (100% - var(--_hit)) + var(--_hit) / 2);
+  z-index: var(--z-tooltip);
+  display: none;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-inverse);
+  color: var(--color-structure-text-oninverse);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-weight: var(--type-caption-weight);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transform: translate(var(--_shift), -100%);
+  pointer-events: none;
+}
+.ds-slider__bubble[data-thumb="0"] { --_p: var(--_a, 0); }
+.ds-slider__bubble[data-thumb="1"] { --_p: var(--_b, 1); }
+.ds-slider__control:has(.ds-slider__range[data-thumb="0"]:is(:focus-visible, [data-force~="pressed"], [data-force~="focus"], [data-dragging])) .ds-slider__bubble[data-thumb="0"],
+.ds-slider__control:has(.ds-slider__range[data-thumb="1"]:is(:focus-visible, [data-force~="pressed"], [data-force~="focus"], [data-dragging])) .ds-slider__bubble[data-thumb="1"] { display: block; }
+.ds-slider .ds-slider__control:has(.ds-slider__range:is([aria-readonly="true"], [aria-disabled="true"])) .ds-slider__bubble[data-thumb] { display: none; }
+
+/* marks: ticks + up to ±5 named labels under the track */
+.ds-slider__marks { position: relative; display: block; block-size: calc(var(--type-caption-line) + var(--space-2)); margin: 0; padding: 0; list-style: none; }
+.ds-slider__mark {
+  position: absolute;
+  inset-block-start: var(--space-1);
+  inset-inline-start: calc(var(--_p, 0) * (100% - var(--_hit)) + var(--_hit) / 2);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  white-space: nowrap;
+  transform: translateX(var(--_shift));
+}
+.ds-slider__mark::before {
+  content: "";
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-start: 50%;
+  inline-size: var(--border-width-thin);
+  block-size: var(--space-2);
+  margin-block-end: calc(var(--space-1) / -2);
+  background: var(--color-structure-border-strong);
+}
+.ds-slider__mark[data-edge="start"] { inset-inline-start: 0; transform: none; }
+.ds-slider__mark[data-edge="end"] { inset-inline-start: auto; inset-inline-end: 0; transform: none; }
+.ds-slider__mark[data-edge="start"]::before { inset-inline-start: calc(var(--_hit) / 2); }
+.ds-slider__mark[data-edge="end"]::before { inset-inline-start: auto; inset-inline-end: calc(var(--_hit) / 2); }
+
+/* companion NumberInput: same box as TextField (height, border, focus / invalid / blocked) */
+.ds-slider__field { display: inline-flex; align-items: stretch; min-inline-size: 0; }
+.ds-slider__input {
+  --_border: var(--control-container-border);
+  --_inner: 0;
+  inline-size: calc(10ch + 2 * var(--space-3));
+  min-inline-size: 0;
+  min-block-size: var(--_row);
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  box-shadow: inset 0 0 0 var(--_inner) var(--_border);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  appearance: none;
+}
+.ds-slider__field:has(> .ds-slider__affix) > .ds-slider__input { border-start-end-radius: 0; border-end-end-radius: 0; }
+.ds-slider__affix {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-inline-start-width: 0;
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+  background: var(--control-container-background-readonly);
+  color: var(--color-structure-text-secondary);
+}
+@media (hover: hover) { .ds-slider__input:not([readonly], [aria-invalid="true"], :focus):hover { --_border: var(--control-container-border-hover); } }
+.ds-slider__input[data-force~="hover"]:not([aria-invalid="true"]) { --_border: var(--control-container-border-hover); }
+.ds-slider__input:not([readonly]):focus, .ds-slider__input[data-force~="focus"] { --_border: var(--color-interaction-default); }
+.ds-slider__input[aria-invalid="true"] { --_border: var(--control-container-border-invalid); --_inner: var(--border-width-thin); }
+.ds-slider__input[aria-disabled="true"] { --_border: var(--color-structure-border); background: var(--color-structure-surface-sunken); color: var(--color-structure-text-disabled); cursor: not-allowed; }
+
+@media (--bp-tablet-down) {
+  .ds-slider__inputs { flex: 1 1 100%; }
+  .ds-slider__inputs .ds-slider__field { flex: 1 1 0; }
+  .ds-slider__input { inline-size: 100%; }
+}
+@media (forced-colors: active) {
+  .ds-slider__range { appearance: auto; }
+  .ds-slider__range::-webkit-slider-thumb { appearance: auto; }
+  .ds-slider__track, .ds-slider__fill { forced-color-adjust: none; background: CanvasText; }
+  .ds-slider__fill { background: Highlight; }
+  .ds-slider__input { border-color: FieldText; }
+  .ds-slider__input[aria-invalid="true"] { border-style: double; border-width: var(--border-width-thick); }
+  .ds-slider__error, .ds-slider__error .ds-icon { color: CanvasText; }
+}

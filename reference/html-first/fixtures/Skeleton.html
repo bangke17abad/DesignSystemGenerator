@@ -1,0 +1,85 @@
+<!-- Skeleton fixture · variants text / shape / avatar / composed (table-rows, list-items, card, description-list) and states
+     loading, pulse (the L15-safe stand-in for shimmer), reduced-motion/static, long-wait, resolved, timeout/error.
+     Blocks are aria-hidden; the labelled region carries aria-busy. Forced-colors is exercised by the QA run. -->
+<section class="ds-demo" data-ds-demo="variant text (body, label, h3) · loading pulse">
+  <div aria-busy="true" aria-label="Loading invoice summary" role="group">
+    <div class="ds-skeleton" aria-hidden="true">
+      <div class="ds-skeleton__text" data-type="h3"><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+      <div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+      <div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant shape + avatar · static (reduced motion)">
+  <div aria-busy="true" aria-label="Loading vendor profile" role="group" data-effect="none" style="max-inline-size: 24rem">
+    <div class="ds-skeleton" aria-hidden="true">
+      <div class="ds-inline" data-gap="3" data-nowrap>
+        <span class="ds-skeleton__block ds-skeleton__avatar"></span>
+        <div class="ds-skeleton__text" data-type="label" style="flex: 1"><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+      </div>
+      <span class="ds-skeleton__block ds-skeleton__shape"></span>
+      <div class="ds-inline" data-gap="3" data-nowrap>
+        <span class="ds-skeleton__block ds-skeleton__shape" data-aspect="square" style="inline-size: 30%"></span>
+        <span class="ds-skeleton__block ds-skeleton__shape" data-aspect="photo" style="inline-size: 40%"></span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="composed table-rows (cards on phone, rows from tablet)">
+  <section aria-labelledby="sk-inv" aria-busy="true" data-ds-module="skeleton" data-ds-label="invoices">
+    <h3 class="ds-text-h3" id="sk-inv">Invoices</h3>
+    <div class="ds-skeleton" data-layout="table-rows" aria-hidden="true">
+      <div class="ds-skeleton__row"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text" data-col="secondary"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+      <div class="ds-skeleton__row"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text" data-col="secondary"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+      <div class="ds-skeleton__row"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text" data-col="secondary"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+    </div>
+  </section>
+</section>
+<section class="ds-demo" data-ds-demo="composed list-items + card">
+  <div class="ds-stack" data-gap="4" aria-busy="true" aria-label="Loading approvers" role="group">
+    <div class="ds-skeleton" data-layout="list-items" aria-hidden="true">
+      <div class="ds-skeleton__row"><span class="ds-skeleton__block ds-skeleton__avatar"></span><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+      <div class="ds-skeleton__row"><span class="ds-skeleton__block ds-skeleton__avatar"></span><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+    </div>
+    <div class="ds-skeleton" data-layout="card" aria-hidden="true">
+      <div class="ds-skeleton__card">
+        <div class="ds-skeleton__text" data-type="h3"><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+        <div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="composed description-list">
+  <div aria-busy="true" aria-label="Loading request details" role="group">
+    <div class="ds-skeleton" data-layout="description-list" aria-hidden="true">
+      <div class="ds-skeleton__pair"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+      <div class="ds-skeleton__pair"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+      <div class="ds-skeleton__pair"><div class="ds-skeleton__text" data-type="label"><span class="ds-skeleton__block ds-skeleton__line"></span></div><div class="ds-skeleton__text"><span class="ds-skeleton__block ds-skeleton__line"></span></div></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long-wait (> 10 s): status text, motion stopped">
+  <div aria-busy="true" aria-label="Loading invoices" role="group" data-effect="none">
+    <div class="ds-skeleton">
+      <p class="ds-skeleton__status">Still loading invoices. This is taking longer than usual.</p>
+      <div class="ds-skeleton__text" aria-hidden="true"><span class="ds-skeleton__block ds-skeleton__line"></span><span class="ds-skeleton__block ds-skeleton__line"></span></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="resolved (same geometry, aria-busy removed)">
+  <div class="ds-stack" data-gap="2" aria-label="Invoice summary" role="group">
+    <h3 class="ds-text-h3">INV-2041 · Office supplies</h3>
+    <p class="ds-text-label">Due <time datetime="2026-10-15"><bdi>15 Oct 2026</bdi></time></p>
+    <p class="ds-text-body"><bdi>24</bdi> line items from two vendors, paid by bank transfer after approval by the finance manager.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="timeout / error → InlineAlert C1 + Retry in place">
+  <div class="ds-inline-alert" data-status="critical" role="alert">
+    <svg class="ds-icon ds-inline-alert__icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>
+    <div class="ds-inline-alert__content">
+      <p class="ds-inline-alert__title">We couldn't load invoices</p>
+      <p class="ds-inline-alert__body">Check your connection, then try again.</p>
+      <div class="ds-inline-alert__actions"><button type="button" class="ds-button ds-target">Try again</button></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,115 @@
+{
+  "name": "DetailView",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada entitas yang bisa dilihat satu per satu, kecuali B7 pattern_exclusions memberi alasan.",
+  "problem": {
+    "problem": "Pengguna memahami satu entitas secara utuh: apa ini, dalam state apa, apa yang harus atau bisa dilakukan sekarang, bukti di balik state itu, dan apa yang telah terjadi padanya, tanpa mencari di beberapa layar.",
+    "when": [
+      "Setiap entitas di B2 yang punya identitas sendiri (pesanan, tiket, dokumen, anggota, aset) dan dapat dibuka dari daftar, tautan, notifikasi, atau pencarian.",
+      "Tujuan deep link dan isi ContextPanel di MasterDetail (komposisi yang sama, presentasi berbeda)."
+    ],
+    "when_not": [
+      "Ringkasan banyak entitas sekaligus: pakai Dashboard atau daftar.",
+      "Membuat entitas baru: pakai FormFlow atau Wizard; DetailView baru tampil setelah entitas ada.",
+      "Info singkat yang menempel pada satu kontrol: pakai Popover."
+    ]
+  },
+  "composition": [
+    { "component": "PageHeader", "parts": ["PageHeader.Breadcrumb", "PageHeader.Back", "PageHeader.Title", "PageHeader.Meta", "PageHeader.Actions"], "role_in_pattern": "h1 = nama entitas; Meta memuat StatusLabel dan identifier; Actions = maksimal satu aksi primer + Menu aksi sekunder" },
+    { "component": "StatusLabel", "role_in_pattern": "state lifecycle entitas (ikon + teks, kelas C1-C6) dengan detail alasan/tenggat; overlay stagnasi bila diam melewati batas" },
+    { "component": "Button", "role_in_pattern": "satu aksi primer yang paling mungkin dibutuhkan pada state saat ini (mis. \"Setujui\"); berganti mengikuti lifecycle" },
+    { "component": "Menu", "parts": ["Menu.Trigger", "Menu.Item", "Menu.Separator"], "role_in_pattern": "aksi sekunder (Ubah, Duplikat, Ekspor, Hapus sebagai destructive-item terakhir); item yang tak diizinkan sekarang disabled + reason" },
+    { "component": "InlineAlert", "role_in_pattern": "attention entitas (C1/C2: \"Butuh persetujuan Anda sebelum 12 Okt\") di atas atribut; error System C1 + Retry" },
+    { "component": "DescriptionList", "parts": ["DescriptionList.Item", "DescriptionList.Term", "DescriptionList.Description", "DescriptionList.Action"], "role_in_pattern": "atribut entitas sebagai pasangan istilah-nilai, dikelompokkan dengan section-heading; nilai kosong ditulis eksplisit" },
+    { "component": "CopyButton", "role_in_pattern": "menyalin identifier, tautan, atau kode referensi entitas" },
+    { "component": "Tabs", "parts": ["Tabs.List", "Tabs.Tab", "Tabs.Panel"], "role_in_pattern": "hanya bila ada > 1 seksi setara (Ringkasan, Aktivitas, Berkas); tab aktif di URL; tidak dipakai untuk satu seksi" },
+    { "component": "Timeline", "parts": ["Timeline.Group", "Timeline.Item", "Timeline.StatusChange", "Timeline.Time", "Timeline.LoadMore"], "role_in_pattern": "riwayat: siapa melakukan apa, perubahan status, alasan, dan waktu tepat" },
+    { "component": "Table", "parts": ["Table.Header", "Table.Body", "Table.Empty", "Table.LoadMore"], "role_in_pattern": "daftar terkait yang beratribut banyak (baris pesanan, transaksi); menjadi kartu bertumpuk di bawah bp-tablet" },
+    { "component": "List", "parts": ["List.Section", "List.Item", "List.Empty"], "role_in_pattern": "daftar terkait sederhana (lampiran, anggota, entitas tertaut) dengan tautan ke DetailView masing-masing" },
+    { "component": "Skeleton", "role_in_pattern": "variant composed yang meniru PageHeader, DescriptionList, dan Timeline sehingga tidak ada pergeseran saat data tiba" },
+    { "component": "EmptyState", "role_in_pattern": "kosong per daftar terkait; not-found/restricted diserahkan ke SystemPages" },
+    { "component": "Toast", "role_in_pattern": "konfirmasi aksi berhasil dan Undo untuk aksi yang bisa dibalik" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman perubahan status dan hasil aksi" }
+  ],
+  "flow": [
+    { "step": "Buka entitas", "state_class": "C5", "transition": "Skeleton yang meniru layout; nama entitas dari daftar asal langsung tampil di h1 bila sudah diketahui; aksi muncul setelah izin diketahui" },
+    { "step": "Tampilkan", "state_class": "C6", "transition": "urutan baca: nama → status → attention (bila ada) → aksi primer → atribut → daftar terkait → riwayat; kelas status mengikuti lifecycle entitas" },
+    { "step": "Perlu tindakan", "state_class": "C2", "transition": "InlineAlert attention di atas atribut menyebut apa, siapa, dan tenggat; aksi primer menyelesaikannya; C1 bila sudah terlambat atau gagal" },
+    { "step": "Jalankan aksi", "state_class": "C5", "transition": "Button primer loading dengan lebar terkunci; aksi berisiko melewati DestructiveAction; status tidak berubah sebelum server mengonfirmasi (I6)" },
+    { "step": "Aksi berhasil", "state_class": "C4", "transition": "StatusLabel diperbarui; entri baru di Timeline; aksi primer berganti sesuai state baru; Toast dengan kata kerja yang sama" },
+    { "step": "Diubah pihak lain", "state_class": "C2", "transition": "InlineAlert \"Item ini diperbarui\" + Muat ulang; nilai tidak berganti diam-diam di bawah kursor pengguna" },
+    { "step": "Tidak ditemukan", "state_class": "C3", "transition": "entitas dihapus atau tidak ada: SystemPages not-found dengan jalan kembali ke daftar; tanpa akses: restricted tanpa membocorkan keberadaan data" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "halaman penuh dengan back-link; aksi primer di action bar bawah zona jempol, aksi sekunder di IconButton \"Aksi lain\" yang membuka Menu sebagai Sheet; DescriptionList stacked; Tabs menggulir horizontal atau menjadi seksi berurutan bila ≤ 3; Table terkait menjadi kartu bertumpuk; Timeline compact" },
+    { "device_class": "tablet", "behaviour": "satu kolom maks lebar konten; DescriptionList columns bila kontainer cukup; tabel terkait melipat kolom sekunder ke baris ekspansi; dibuka dari MasterDetail sebagai ContextPanel overlay" },
+    { "device_class": "desktop", "behaviour": "judul dan aksi sebaris; DescriptionList grid 2-3 kolom dibatasi layout-measure; Timeline boleh di kolom inline-end sebagai riwayat berdampingan; di MasterDetail dirender di ContextPanel docked dengan tautan \"Buka halaman penuh\"" }
+  ],
+  "states": {
+    "empty": "Entitas baru dengan atribut belum diisi: setiap atribut tampil dengan tanda pisah + \"Tidak ada nilai\" (bukan disembunyikan); daftar terkait kosong memakai EmptyState spesifik (\"Belum ada lampiran\") dengan CTA hanya bila role boleh menambah.",
+    "loading": "Skeleton composed meniru PageHeader, DescriptionList, dan daftar; h1 berisi nama bila diketahui atau \"Memuat…\" tersembunyi; aria-busy pada region yang dimuat.",
+    "error": "Gagal memuat entitas: InlineAlert C1 + Retry menggantikan isi, PageHeader dan jalan kembali tetap; gagal memuat satu seksi: InlineAlert C1 di seksi itu saja.",
+    "partial": "Atribut inti termuat tetapi daftar terkait atau riwayat gagal: seksi yang gagal menampilkan InlineAlert C1 + Retry seksi itu; atribut tetap dapat dipakai dan aksi primer tidak diblokir bila tidak bergantung pada seksi itu.",
+    "success": "Setelah aksi: StatusLabel dan Timeline diperbarui hanya setelah konfirmasi server, Toast C4 dengan kata kerja tombol, fokus tetap di aksi atau berpindah ke aksi primer baru bila tombol lama hilang."
+  },
+  "accessibility": [
+    { "step": "Buka entitas", "focus": "fokus ke h1 (tabindex −1, dengan ring) setelah pindah rute; judul dokumen = nama entitas + nama aplikasi (SC 2.4.2)", "announcement": "nama entitas dibaca lewat fokus h1; status dibaca berikutnya karena berada tepat setelah h1 dalam DOM" },
+    { "step": "Tampilkan", "focus": "urutan DOM = urutan visual: header → attention → atribut → seksi; setiap seksi ber-heading h2 untuk navigasi heading", "announcement": "tidak ada pengumuman otomatis selain judul" },
+    { "step": "Jalankan aksi", "focus": "fokus tetap di tombol; bila tombol hilang karena state berubah, fokus ke aksi primer baru atau ke h1", "announcement": "hasil diumumkan polite; perubahan status diumumkan polite (\"Status: Disetujui\")" },
+    { "step": "Diubah pihak lain", "focus": "fokus tidak dipindah; InlineAlert dapat dijangkau dengan Tab berikutnya", "announcement": "\"Item ini diperbarui\" diumumkan polite sekali" },
+    { "step": "Tidak ditemukan", "focus": "fokus ke h1 halaman SystemPages", "announcement": "judul halaman tidak ditemukan dibaca" }
+  ],
+  "content": {
+    "rules": [
+      "h1 adalah nama entitas yang dikenali pengguna, bukan tipe (\"Pesanan #4821\", bukan \"Detail pesanan\").",
+      "Status, harga, jumlah, dan waktu tidak pernah dipotong; nama panjang membungkus.",
+      "Waktu relatif (\"2 jam lalu\") selalu punya waktu tepat dengan zona waktu di Tooltip dan nama aksesibel.",
+      "Nilai kosong ditulis \"Tidak ada nilai\" (atau istilah glosarium), bukan dihilangkan atau diisi 0.",
+      "Aksi primer memakai kata kerja spesifik dari lifecycle (\"Setujui\", \"Kirim ulang\"), sama dengan entri Timeline dan Toast."
+    ],
+    "examples": {
+      "en-US": ["Order #4821", "Needs your approval by Oct 12", "No value", "No attachments yet", "This item was updated. Reload to see the latest version.", "Approved by Sam Lee · Oct 3, 14:05 UTC+7"],
+      "id-ID": ["Pesanan #4821", "Butuh persetujuan Anda sebelum 12 Okt", "Tidak ada nilai", "Belum ada lampiran", "Item ini diperbarui. Muat ulang untuk melihat versi terbaru.", "Disetujui oleh Sam Lee · 3 Okt, 14.05 WIB"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role boleh mengubah dan menjalankan aksi lifecycle: aksi primer + Menu lengkap, DescriptionList.Action \"Ubah\" per grup" },
+    { "pattern": "read-only", "when": "role hanya melihat: tanpa aksi mutasi; nilai berkontras penuh; aksi non-mutasi (salin tautan, ekspor) tetap" },
+    { "pattern": "disabled-with-reason", "when": "aksi yang terlihat tetapi belum diizinkan oleh state (\"Hanya bisa disetujui setelah dokumen lengkap\"): aria-disabled + reason terlihat" },
+    { "pattern": "hidden", "when": "atribut atau seksi yang tidak boleh diketahui role (biaya, data pribadi) tidak dirender, termasuk dari Tabs dan Timeline" },
+    { "pattern": "step-up", "when": "aksi finansial, hukum, atau tidak bisa dibalik dari halaman detail: StepUpDialog sebelum dijalankan" }
+  ],
+  "do": [
+    "Tempatkan status dan attention tepat di bawah nama, sebelum atribut, agar keputusan dibuat tanpa menggulir.",
+    "Satu aksi primer yang mengikuti state lifecycle; sisanya di Menu.",
+    "Buat Skeleton meniru layout akhir dan pertahankan posisi gulir saat kembali dari daftar terkait.",
+    "Beri setiap tab dan entri Timeline URL yang dapat dibagikan."
+  ],
+  "dont": [
+    { "text": "Memotong status, harga, atau waktu dengan ellipsis.", "ref": "§8.2" },
+    { "text": "Memakai Tabs untuk satu seksi saja, atau menyembunyikan atribut penting di tab non-default.", "ref": "I9" },
+    { "text": "Menampilkan status baru sebelum server mengonfirmasi aksi.", "ref": "I6" },
+    { "text": "Lebih dari satu Button primer di PageHeader.", "ref": "I7" },
+    { "text": "Menyembunyikan nilai kosong sehingga struktur atribut berubah antar entitas.", "ref": "SC 1.3.1" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "data tersimpan ditampilkan dengan penanda \"Terakhir diperbarui {waktu}\"; aksi server aria-disabled + reason, atau diantrekan bertanda \"Menunggu\" bila OfflineSync dipilih (I6)" },
+    { "case": "timeout saat memuat atau menjalankan aksi", "behaviour": "memuat: InlineAlert C1 + Retry; aksi: tombol kembali normal, InlineAlert C1 menyebut aksi belum tentu diterapkan dan status dimuat ulang sebelum Retry agar tidak dobel" },
+    { "case": "daftar terkait atau riwayat sangat banyak (ribuan baris)", "behaviour": "tampilkan 10-20 terbaru + Load more atau tautan ke daftar penuh yang terfilter pada entitas ini; Timeline dikelompokkan per hari" },
+    { "case": "entitas tanpa atribut opsional dan tanpa riwayat (data kosong)", "behaviour": "semua atribut tetap tampil dengan \"Tidak ada nilai\"; Timeline menampilkan setidaknya entri pembuatan" },
+    { "case": "aksi primer ditekan ganda", "behaviour": "kiriman kedua diabaikan selama loading; idempotency key untuk aksi lifecycle; tidak ada dua entri Timeline" },
+    { "case": "nama entitas dan label +40% (locale terpanjang)", "behaviour": "h1 membungkus (tidak dipotong di halaman penuh); aksi PageHeader turun ke bawah judul; label DescriptionList membungkus" },
+    { "case": "entitas dihapus atau dipindah saat sedang dibuka", "behaviour": "InlineAlert C2 \"Item ini dihapus\" dengan jalan kembali; aksi dinonaktifkan dengan alasan; bukan error teknis" },
+    { "case": "deep link ke entitas di luar izin", "behaviour": "SystemPages restricted tanpa menyebut atribut entitas; tidak membedakan \"tidak ada\" dan \"tidak berhak\" bila brief mensyaratkan privasi" }
+  ],
+  "wcag": ["1.3.1", "1.3.2", "1.4.10", "1.4.13", "2.4.2", "2.4.3", "2.4.6", "2.4.11", "3.3.4", "4.1.2", "4.1.3"],
+  "related_patterns": ["MasterDetail", "CrudFlow", "SystemPages", "DestructiveAction", "AsyncFeedback", "FormFlow"],
+  "lint": [
+    "Setiap DetailView punya tepat satu h1 = nama entitas dan StatusLabel di PageHeader.Meta bila entitas punya lifecycle",
+    "PageHeader DetailView punya maksimal satu Button variant=primary",
+    "Tabs dengan kurang dari 2 Tabs.Tab ditolak",
+    "Kolom status, harga, dan waktu tidak boleh memakai truncate",
+    "Skeleton DetailView memakai variant composed, bukan Spinner halaman"
+  ]
+}

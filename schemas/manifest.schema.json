@@ -1,0 +1,605 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "axes": {
+      "additionalProperties": false,
+      "properties": {
+        "brand": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "density": {
+          "items": {
+            "enum": [
+              "comfortable",
+              "compact",
+              "spacious"
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "theme": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "theme",
+        "brand",
+        "density"
+      ],
+      "type": "object"
+    },
+    "brief_schema_version": {
+      "pattern": "^\\d+\\.\\d+$",
+      "type": "string"
+    },
+    "brief_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "budgets": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "item": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "limit_kb": {
+            "type": "number"
+          },
+          "measured_kb": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "source": {
+            "enum": [
+              "engine",
+              "brief",
+              "adr"
+            ]
+          }
+        },
+        "required": [
+          "item",
+          "limit_kb",
+          "measured_kb",
+          "source"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "components": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "group": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "pattern": "^[A-Z][A-Za-z0-9]*$",
+            "type": "string"
+          },
+          "pack": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "page": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "preview": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Draft",
+              "Reviewed",
+              "Stable"
+            ]
+          },
+          "target_files": {
+            "additionalProperties": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "tier": {
+            "enum": [
+              "R",
+              "S",
+              "O",
+              "domain",
+              "pack"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "tier",
+          "group",
+          "status",
+          "page",
+          "preview",
+          "target_files",
+          "assumptions"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "core_exclusions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "component": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "component",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "delivery_tier": {
+      "enum": [
+        "T0",
+        "T1",
+        "T2",
+        "T3"
+      ]
+    },
+    "doc_language": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "documents": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "enum": [
+              "05",
+              "10",
+              "20",
+              "30",
+              "40",
+              "50",
+              "60",
+              "70",
+              "80",
+              "85",
+              "90",
+              "95"
+            ]
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Draft",
+              "Reviewed",
+              "Stable"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "status"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "engine_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "generated": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "language": {
+      "additionalProperties": false,
+      "properties": {
+        "archetype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "archetype",
+            "derive",
+            "custom",
+            "inherit"
+          ]
+        },
+        "org_language": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "version": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "version"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "manual_zones": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "file",
+          "id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "namespace": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "package_version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+      "type": "string"
+    },
+    "packages": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "registry": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "version": {
+            "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "name",
+          "version",
+          "path",
+          "registry"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "packs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "config": {
+            "type": "object"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "version": {
+            "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "version",
+          "config"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "pattern_exclusions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "pattern",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "patterns": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "pattern": "^[A-Z][A-Za-z0-9]*$",
+            "type": "string"
+          },
+          "pack": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "page": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "preview": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Draft",
+              "Reviewed",
+              "Stable"
+            ]
+          },
+          "tier": {
+            "enum": [
+              "R",
+              "S",
+              "O",
+              "domain",
+              "pack"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "tier",
+          "status",
+          "page",
+          "preview"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "report_language": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_mode": {
+      "enum": [
+        "greenfield",
+        "regenerate",
+        "brownfield",
+        "tenant-add"
+      ]
+    },
+    "support_matrix": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "min": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "platform": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "brief",
+              "assumption"
+            ]
+          }
+        },
+        "required": [
+          "platform",
+          "min",
+          "source"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "surfaces": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "default_density": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "default_theme": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "modalities": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "surface_type": {
+            "enum": [
+              "operational",
+              "consumer",
+              "content",
+              "public"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "surface_type",
+          "default_theme",
+          "default_density",
+          "modalities"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "targets": {
+      "additionalProperties": false,
+      "properties": {
+        "adapters": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "production": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reference": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "reference",
+        "production"
+      ],
+      "type": "object"
+    },
+    "version_label": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "engine_version",
+    "brief_schema_version",
+    "brief_sha256",
+    "run_mode",
+    "package_version",
+    "version_label",
+    "namespace",
+    "doc_language",
+    "report_language",
+    "language",
+    "axes",
+    "surfaces",
+    "targets",
+    "components",
+    "patterns",
+    "core_exclusions",
+    "pattern_exclusions",
+    "packs",
+    "packages",
+    "budgets",
+    "support_matrix",
+    "documents",
+    "generated",
+    "manual_zones"
+  ],
+  "title": "manifest",
+  "type": "object"
+}

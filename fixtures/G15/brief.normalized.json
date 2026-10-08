@@ -1,0 +1,86 @@
+{
+  "brief_schema_version": "1.5",
+  "components": {
+    "packs": [
+      "P03-b2c-media-social",
+      "P02-b2c-commerce"
+    ]
+  },
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "Post"
+      },
+      {
+        "name": "Order"
+      }
+    ]
+  },
+  "language": {
+    "archetype": "neo-brutalist",
+    "brands": [
+      {
+        "id": "default",
+        "interaction_hex": "#FF5A1F"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "Dark"
+      }
+    ]
+  },
+  "namespace": "RKY",
+  "product_name": "Ruang Karya",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel",
+      "input_modality": [
+        "touch"
+      ],
+      "name": "member-app",
+      "os_runtime": "iOS",
+      "surface_type": "consumer"
+    },
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard",
+        "touch"
+      ],
+      "name": "member-web",
+      "os_runtime": "web",
+      "surface_type": "consumer"
+    }
+  ],
+  "targets": {
+    "adapters": [
+      "A03-shadcn-tailwind4"
+    ],
+    "primary_web_reference": "react",
+    "production_targets": [
+      "flutter"
+    ]
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

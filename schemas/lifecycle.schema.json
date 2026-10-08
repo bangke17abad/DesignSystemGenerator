@@ -1,0 +1,193 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/lifecycle.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "entities": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "assumption": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "critical_events": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "dismiss_action": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "haptic": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "name": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "severity": {
+                  "enum": [
+                    "safety",
+                    "financial",
+                    "legal"
+                  ]
+                },
+                "sound": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "treatment": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "name",
+                "severity",
+                "treatment",
+                "dismiss_action",
+                "sound",
+                "haptic"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "brief",
+              "derived"
+            ]
+          },
+          "stagnation": {
+            "additionalProperties": false,
+            "properties": {
+              "assumption": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "threshold": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "threshold"
+            ],
+            "type": "object"
+          },
+          "states": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "class": {
+                  "enum": [
+                    "C1",
+                    "C2",
+                    "C3",
+                    "C4",
+                    "C5",
+                    "C6"
+                  ]
+                },
+                "icon": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "next_actions": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "token": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "treatment": {
+                  "enum": [
+                    "quiet",
+                    "outline",
+                    "tinted",
+                    "filled"
+                  ]
+                },
+                "ui_text": {
+                  "additionalProperties": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "visible_to": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "name",
+                "class",
+                "token",
+                "icon",
+                "treatment",
+                "ui_text",
+                "visible_to",
+                "next_actions"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "source",
+          "states",
+          "critical_events"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "entities"
+  ],
+  "title": "lifecycle",
+  "type": "object"
+}

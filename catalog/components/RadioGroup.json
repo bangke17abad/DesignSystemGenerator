@@ -1,0 +1,593 @@
+{
+  "accessibility": {
+    "attributes": [
+      "fieldset/legend atau role=\"radiogroup\" + aria-labelledby ke legend",
+      "aria-checked lewat checked native; satu name per grup",
+      "aria-describedby di radiogroup ke helper dan errorText",
+      "aria-invalid dan aria-required pada radiogroup (required pada salah satu input native)",
+      "aria-readonly pada radiogroup read-only",
+      "aria-disabled per opsi atau per grup + aria-describedby ke reason",
+      "roving tabindex (native untuk input radio)"
+    ],
+    "focus_order": "satu tab stop per grup; panah di dalam grup mengikuti urutan DOM; legend tidak fokusabel",
+    "native": {
+      "compose": "Column(Modifier.selectableGroup().semantics { contentDescription = legend }) { options.forEach { Row(Modifier.selectable(selected, onClick, role = Role.RadioButton, enabled)) { RadioButton(selected, onClick = null); Text(label) } } }",
+      "flutter": "RadioGroup<T>(groupValue, onChanged, child: Column(children: [RadioListTile<T>(value, title, subtitle, enabled)])) (Flutter 3.35+; versi lama: groupValue/onChanged per RadioListTile); Semantics(container: true, label: legend, explicitChildNodes: true)",
+      "swiftui": "Picker(legend, selection: $value) { ForEach(options) { Text($0.label).tag($0.id) } }.pickerStyle(.inline) di iOS atau .radioGroup di macOS; .accessibilityHint(reason) untuk opsi diblokir"
+    },
+    "politeness": "polite",
+    "role": "radiogroup (fieldset + legend) berisi radio (<input type=\"radio\" name sama>)",
+    "sr_label": "legend dibaca saat masuk grup, lalu label opsi + \"selected\"/\"not selected\" + posisi (\"2 of 3\") + description",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "legend",
+      "role": "pertanyaan grup (≥ 16) sebagai legend fieldset / nama radiogroup; dengan optional marker",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "type-label-line",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "bantuan di bawah legend (sebelum opsi) agar dibaca sebelum memilih",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "radio",
+      "role": "lingkaran kontrol; border kontrol ≥ 3:1; tidak terpilih = kosong",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thick",
+        "radius-full",
+        "icon-md"
+      ]
+    },
+    {
+      "part": "dot",
+      "role": "titik di tengah lingkaran saat terpilih; penanda non-warna, kontras ≥ 3:1",
+      "tokens": [
+        "color-interaction-default",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "item-label",
+      "role": "teks opsi (≥ 16) di inline-end; bagian dari target",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "item-description",
+      "role": "baris kedua opsional",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "hit-area",
+      "role": "baris penuh radio + label + description; min-block-size ≥ target-current; jarak antar item ≥ space-2",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch",
+        "space-2"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon + teks error di bawah grup, terhubung aria-describedby radiogroup",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di sekitar radio aktif (card: sekitar kartu)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "pilihan berubah lewat panah, Space, klik, atau tap"
+      }
+    ],
+    "parts": [
+      "RadioGroup.Item (value, label, description, iconStart, disabled, reason)"
+    ],
+    "props": [
+      {
+        "description": "Legend grup; nama aksesibel radiogroup.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: nilai opsi terpilih.",
+        "name": "value",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "default": "null",
+        "description": "Uncontrolled: pilihan awal; null untuk pilihan berdampak.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "default": "list",
+        "description": "Tata letak opsi.",
+        "name": "variant",
+        "required": false,
+        "type": "\"list\" | \"inline\" | \"card\""
+      },
+      {
+        "description": "Nama field; dibuat otomatis bila kosong.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bantuan di bawah legend.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Wajib memilih.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi baris; area klik ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Pilihan tidak bisa diubah; kontras penuh.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan grup diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "satu tab stop per grup: masuk ke radio terpilih, atau ke radio pertama bila belum ada pilihan (roving tabindex)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus ke opsi berikut/sebelum (melingkar) dan memilihnya (seleksi mengikuti fokus); onValueChange; tidak ada perubahan konteks (SC 3.2.2). Di RTL ←/→ mengikuti arah visual",
+      "trigger": "↓/→ dan ↑/←"
+    },
+    {
+      "input": "keyboard",
+      "result": "memilih radio yang fokus bila belum terpilih (mis. setelah masuk grup tanpa pilihan)",
+      "trigger": "Space"
+    },
+    {
+      "input": "pointer",
+      "result": "memilih pada pelepasan (SC 2.5.2); tidak bisa membatalkan pilihan dengan klik ulang",
+      "trigger": "klik radio, label, atau description"
+    },
+    {
+      "input": "touch",
+      "result": "memilih; haptic-selection di native; tanpa hover menempel",
+      "trigger": "tap baris"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah untuk membaca opsi, pilihan tidak berubah",
+      "trigger": "panah pada grup read-only"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Delivery method",
+        "Standard (3–5 business days)",
+        "Express (next business day)",
+        "Pick up in store",
+        "Select a delivery method",
+        "Not available for this address"
+      ],
+      "id-ID": [
+        "Metode pengiriman",
+        "Reguler (3–5 hari kerja)",
+        "Kilat (hari kerja berikutnya)",
+        "Ambil di toko",
+        "Pilih metode pengiriman",
+        "Tidak tersedia untuk alamat ini"
+      ]
+    },
+    "rules": [
+      "Legend berupa pertanyaan atau kata benda jelas (\"Delivery method\").",
+      "Opsi pendek, paralel secara tata bahasa, saling eksklusif dan bersama-sama lengkap; tambahkan \"Other\" atau \"None\" bila perlu.",
+      "Default terpilih hanya bila ada pilihan aman dan paling umum; untuk pilihan berdampak (legal, finansial) tidak ada default.",
+      "Error: \"Select a delivery method\"; tidak menyalahkan pengguna."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Tampilkan semua opsi terlihat dan urutkan secara logis.",
+    "Pakai fieldset dan legend; satu tab stop per grup dengan panah di dalamnya.",
+    "Jadikan seluruh baris (radio + label) area klik."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Opsi terpilih hanya dibedakan lewat warna tanpa titik."
+    },
+    {
+      "text": "Memicu navigasi atau pengiriman saat pilihan berubah (panah memilih otomatis, sehingga perubahan konteks menjebak pengguna keyboard)."
+    },
+    {
+      "text": "Memakai RadioGroup untuk satu opsi tunggal atau untuk > 6 opsi panjang."
+    },
+    {
+      "ref": "UB5",
+      "text": "Area klik hanya lingkaran."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "inline membungkus ke list; label membungkus di inline-end radio; tanpa ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "radio membesar proporsional, sejajar baris pertama; card grid turun ke 1 kolom",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "grup tidak dirender; bila field wajib, error sistem di InlineAlert",
+      "case": "0 opsi"
+    },
+    {
+      "behaviour": "tidak dirender sebagai radio; tampil sebagai teks read-only (atau Checkbox persetujuan bila maknanya ya/tidak)",
+      "case": "1 opsi"
+    },
+    {
+      "behaviour": "> 6 opsi: pertimbangkan Select; > 15: Select atau Combobox",
+      "case": "jumlah opsi maksimum"
+    },
+    {
+      "behaviour": "grup aria-disabled dengan satu reason di helper, bukan reason per opsi berulang",
+      "case": "semua opsi diblokir"
+    },
+    {
+      "behaviour": "tidak ada yang terpilih; helper menjelaskan bahwa pilihan sebelumnya tidak tersedia; tidak diganti diam-diam",
+      "case": "nilai dari draft/autofill tidak lagi tersedia"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "RadioGroup tanpa legend/label ditolak",
+    "RadioGroup dengan < 2 opsi ditolak",
+    "onValueChange yang menavigasi atau submit ditolak (manual-review, SC 3.2.2)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "RadioGroup",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "error+focus",
+      "read-only+selected",
+      "inline + label +40%",
+      "RTL + panah"
+    ],
+    "states": [
+      "unselected",
+      "selected",
+      "hover",
+      "pressed",
+      "focus",
+      "error",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "list",
+      "inline",
+      "card"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memilih tepat satu dari 2–±6 opsi yang saling eksklusif dan perlu terlihat sekaligus untuk dibandingkan; nilai diterapkan saat Form dikirim. Penanda terpilih selalu titik, bukan hanya warna.",
+    "when_not_to_use": [
+      "Untuk lebih dari ±6 opsi atau ruang terbatas: pakai Select.",
+      "Untuk beralih tampilan atau mode di halaman (bukan nilai form): pakai SegmentedControl atau Tabs.",
+      "Untuk satu pilihan ya/tidak yang berlaku seketika: pakai Switch; yang dikirim bersama form: pakai Checkbox.",
+      "Untuk memilih beberapa opsi: pakai Checkbox (grup)."
+    ]
+  },
+  "related": [
+    "Select",
+    "Checkbox",
+    "SegmentedControl",
+    "Switch",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "selalu vertikal (inline dan card bertumpuk); baris penuh ≥ target-min-touch; size lg",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "inline boleh untuk 2–3 opsi pendek; card dalam grid 2 kolom; ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "list atau inline; card hingga 3 kolom dengan urutan baca per baris",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role melihat pilihan tanpa mengubah; aria-readonly atau teks nilai"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "opsi tertentu tidak tersedia untuk role atau data; reason di description"
+    },
+    {
+      "pattern": "hidden",
+      "when": "opsi yang tidak boleh diketahui role tidak dirender; bila tersisa satu opsi, tampil sebagai teks read-only"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Radio di inline-start; varian inline mengalir dari kanan; ← memindah ke opsi berikut secara visual di RTL (mengikuti arah baca); lingkaran dan titik simetris, tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "baris radio+label ≥ target-current (24 pointer; 44 di sentuh)",
+      "name": "sm",
+      "notes": "Pointer padat.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current) mencakup label",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada) mencakup label",
+      "name": "lg",
+      "notes": "Surface sentuh dan glove.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "titik tetap; state-layer hover di sekitar",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "titik + ring; kasus normal setelah memilih dengan panah",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "titik tetap terlihat diredam; nilai tetap dikirim kecuali brief menyatakan lain",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring di radio pertama setelah Form memindah fokus; errorText tetap",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "titik kontras penuh; panah tidak mengubah nilai",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "RadioGroup tidak punya loading sendiri; saat Form mengirim, input dikunci",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa hover pada opsi diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "unselected",
+      "token_swaps": {
+        "radio": "color-structure-border-control"
+      },
+      "treatment": "lingkaran kosong ber-border-control; aria-checked=\"false\""
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "dot": "color-interaction-default",
+        "radio": "color-interaction-default"
+      },
+      "treatment": "border interaction-default + dot; aria-checked=\"true\"; titik adalah penanda utama"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "radio": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover di sekitar radio; label ikut memicu; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "radio": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; state-press-transform pada lingkaran tanpa menggeser label"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px di sekitar radio yang memegang tab stop"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error": "color-semantic-critical-strong",
+        "radio": "color-semantic-critical"
+      },
+      "treatment": "border semua radio critical + ikon + errorText di bawah grup; aria-invalid=\"true\" pada radiogroup"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "item-label": "color-structure-text-disabled",
+        "radio": "color-structure-surface-sunken"
+      },
+      "treatment": "grup atau opsi aria-disabled=\"true\"; opsi diblokir tetap terbaca dan dapat dicapai panah tetapi tidak terpilih; reason di item-description; tampilan text-disabled"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "item-label": "color-structure-text-primary",
+        "radio": "color-structure-border-strong"
+      },
+      "treatment": "aria-readonly=\"true\" pada radiogroup; panah memindah fokus tetapi tidak mengubah pilihan (seleksi tidak mengikuti fokus); titik dan label kontras penuh; alternatif tampilan: hanya opsi terpilih sebagai teks"
+    }
+  ],
+  "target_hints": {
+    "compose": "Column.selectableGroup + Row.selectable dibungkus {Ns}RadioGroup",
+    "flutter": "RadioGroup + RadioListTile dibungkus {ns}_radio_group.dart",
+    "html": {
+      "element": "fieldset > legend + label > input[type=radio]",
+      "notes": "radio native memberi roving tabindex dan panah tanpa JS; appearance: none + token; aria-disabled per opsi dicegah lewat event; read-only via modul JS yang membatalkan perubahan"
+    },
+    "swiftui": "Picker .inline/.radioGroup dibungkus {Ns}RadioGroup"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default: opsi vertikal, satu per baris.",
+      "name": "list"
+    },
+    {
+      "description": "Opsi horizontal untuk 2–3 opsi pendek (mis. Yes/No) di desktop/tablet; membungkus ke vertikal di phone atau saat label +40% tidak muat.",
+      "name": "inline"
+    },
+    {
+      "description": "Tiap opsi kartu berisi label + deskripsi (+ ikon); terpilih = titik + border tebal border-width-thick, bukan hanya latar.",
+      "name": "card"
+    }
+  ]
+}

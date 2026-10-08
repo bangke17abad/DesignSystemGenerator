@@ -1,0 +1,33 @@
+<!-- FilterChip fixture · toggle chips with non-colour selected marker; collapses to "Filter (n)" on phones. -->
+<section class="ds-demo" data-ds-demo="default+selected">
+  <div class="ds-filter-bar" data-ds-module="filter-chips" data-collapsible data-active-text="{n} filters active">
+    <button type="button" class="ds-button ds-filter-bar__toggle" aria-haspopup="dialog"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-filter"/></svg><span>Filter (<span class="ds-filter-bar__count">2</span>)</span></button>
+    <ul class="ds-filter-chips" aria-label="Filter orders">
+      <li><button type="button" class="ds-filter-chip" aria-pressed="true"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Waiting for payment <span class="ds-filter-chip__count">12</span></button></li>
+      <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Processing <span class="ds-filter-chip__count">8</span></button></li>
+      <li><button type="button" class="ds-filter-chip" aria-pressed="true"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Shipped <span class="ds-filter-chip__count">31</span></button></li>
+      <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Cancelled <span class="ds-filter-chip__count">0</span></button></li>
+    </ul>
+    <button type="button" class="ds-button ds-filter-bar__clear" data-variant="tertiary">Clear filters</button>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <ul class="ds-filter-chips" aria-label="Chip states">
+    <li><button type="button" class="ds-filter-chip" aria-pressed="false" data-force="hover"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Hover</button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="true" data-force="hover"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Selected + hover</button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="true" data-force="focus"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Selected + focus</button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="false" data-force="pressed"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Pressed</button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="true" aria-disabled="true" aria-describedby="fc-r1"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Blocked + selected</button></li>
+  </ul>
+  <p class="ds-filter-chip__reason" id="fc-r1">Region filter is set by your organisation and cannot be changed.</p>
+</section>
+<section class="ds-demo" data-ds-demo="long-labels+rtl">
+  <ul class="ds-filter-chips" aria-label="Long labels">
+    <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Menunggu verifikasi pembayaran dari bank</button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="true"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Dikirim ke luar pulau</button></li>
+  </ul>
+  <ul dir="rtl" lang="ar" class="ds-filter-chips" aria-label="مرشحات">
+    <li><button type="button" class="ds-filter-chip" aria-pressed="true"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>قيد المعالجة <span class="ds-filter-chip__count"><bdi>8</bdi></span></button></li>
+    <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>تم الشحن</button></li>
+  </ul>
+</section>

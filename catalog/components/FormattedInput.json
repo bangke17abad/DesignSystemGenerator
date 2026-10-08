@@ -1,0 +1,643 @@
+{
+  "accessibility": {
+    "attributes": [
+      "inputmode=\"numeric\" untuk pola digit, \"tel\" untuk telepon, \"text\" + autocapitalize=\"characters\" untuk pola alfanumerik",
+      "autocomplete sesuai tujuan (tel, tel-national, postal-code, cc-number, dll.) untuk data pribadi (SC 1.3.5)",
+      "aria-describedby ke helper (format dalam kata + contoh), prefix, progress, dan error-text",
+      "aria-invalid saat error; aria-required saat wajib",
+      "tanpa atribut maxlength pada nilai terformat (pemisah ikut terhitung); panjang dijaga logika komponen",
+      "progress tidak berupa live region per ketukan; status \"Complete\" dapat dibaca lewat aria-describedby",
+      "aria-disabled + reason saat diblokir; aria-readonly saat read-only",
+      "nilai mentah dikirim lewat input hidden name={name} atau properti value komponen"
+    ],
+    "focus_order": "label → input → elemen berikutnya; tidak ada auto-advance ke field berikut saat lengkap (SC 3.2.2)",
+    "native": {
+      "compose": "BasicTextField/OutlinedTextField(state: TextFieldState, outputTransformation = OutputTransformation { sisipkan pemisah }) sehingga state menyimpan nilai mentah dan pemetaan caret otomatis; KeyboardOptions(keyboardType = KeyboardType.Number / Phone); Modifier.semantics { contentType = ContentType.PhoneNumber / PostalCode / CreditCardNumber }",
+      "flutter": "TextField(keyboardType: TextInputType.number / TextInputType.phone, autofillHints: [AutofillHints.telephoneNumber / postalCode / creditCardNumber], inputFormatters: [FilteringTextInputFormatter.digitsOnly, TextInputFormatter kustom yang mengembalikan TextEditingValue dengan selection terkoreksi]); nilai mentah disimpan terpisah dari controller.text",
+      "swiftui": "TextField(\"Account number\", text: $display, selection: $selection) (iOS 18) dengan pemformat di .onChange yang menyimpan raw terpisah dan menghitung ulang TextSelection; .keyboardType(.numberPad / .phonePad), .textContentType(.telephoneNumber / .postalCode / .creditCardNumber)"
+    },
+    "politeness": "polite",
+    "role": "input type=\"text\" (textbox); bukan type=number atau type=tel bila pola bukan telepon",
+    "sr_label": "\"{label}, edit text, {nilai}\" + format dari helper; pemisah dibaca sebagai jeda/spasi; pembaca layar membaca nilai terformat agar kelompok terdengar terpisah",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.4.7",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat menamai pengenal (\"Account number\")",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "bidang field; lebar sesuai panjang pola terformat + ruang caret, bukan lebar penuh",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "nilai terformat dengan pemisah tampilan; angka tabular, tracking dari type-body",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "type-body-tracking",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "prefix",
+      "role": "awalan tetap opsional di luar nilai (mis. kode negara yang dipilih), dirujuk aria-describedby; tidak ikut diedit",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "format yang diharapkan dalam kata dan contoh (\"16 digits, e.g. 1234 5678 9012 3456\"); selalu terlihat",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "progress",
+      "role": "penghitung opsional \"{n} of {total} digits\" di inline-end bawah field; teks pendukung",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error menyebut panjang/pola yang benar",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "{ raw: string; formatted: string; complete: boolean }",
+        "when": "setiap perubahan nilai (ketik, paste, autofill, hapus)"
+      },
+      {
+        "name": "onComplete",
+        "payload": "string",
+        "when": "nilai mentah mencapai panjang sah dan lolos checksum lokal"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Label terlihat; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Kelompok (satu atau beberapa panjang sah), pemisah tampilan, kelas karakter, awalan, dan checksum; dari brief.",
+        "name": "pattern",
+        "required": true,
+        "type": "{ groups: number[] | number[][]; separator: string; charset: \"digits\" | \"alphanumeric\" | \"upper-alphanumeric\"; prefix?: string; checksum?: \"luhn\" | \"mod97\" | ((raw: string) => boolean) }"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: nilai mentah tanpa pemisah.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Uncontrolled: nilai mentah awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "input",
+        "description": "Pemisah disisipkan saat mengetik atau hanya saat blur (lebih tenang bagi pembaca layar).",
+        "name": "formatTiming",
+        "required": false,
+        "type": "\"input\" | \"blur\""
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan penghitung \"{n} of {total}\".",
+        "name": "showProgress",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Diturunkan dari pattern.charset bila kosong.",
+        "name": "inputMode",
+        "required": false,
+        "type": "\"numeric\" | \"tel\" | \"text\""
+      },
+      {
+        "description": "Token autocomplete untuk data pribadi (SC 1.3.5).",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Error dari luar; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error yang menyebut format benar.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Format dalam kata + contoh; wajib karena format harus terlihat dan terbaca.",
+        "name": "helperText",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Verifikasi server berjalan.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Nilai terlihat tanpa kontrol.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Read-only: tampilkan hanya 4 karakter terakhir.",
+        "name": "masked",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Nama field Form; yang dikirim nilai mentah.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "karakter disisipkan di posisi caret; pemisah ditambahkan otomatis; caret tetap tepat setelah karakter yang diketik (dihitung dari indeks mentah, bukan indeks tampilan)",
+      "trigger": "mengetik karakter sah"
+    },
+    {
+      "input": "keyboard",
+      "result": "ditolak tanpa mengubah nilai; bila penolakan terjadi berulang, helper menyebut format (tidak ada bunyi/animasi sebagai satu-satunya umpan balik)",
+      "trigger": "mengetik karakter tidak sah atau melebihi panjang"
+    },
+    {
+      "input": "keyboard",
+      "result": "menghapus karakter mentah di sisi pemisah tersebut (bukan hanya pemisah) lalu memformat ulang; caret tetap di posisi logis",
+      "trigger": "Backspace/Delete tepat di samping pemisah"
+    },
+    {
+      "input": "keyboard",
+      "result": "diabaikan dengan diam bila caret sudah berada di batas kelompok; tidak menggandakan pemisah",
+      "trigger": "mengetik pemisah sendiri (spasi, tanda hubung)"
+    },
+    {
+      "input": "keyboard",
+      "result": "validasi panjang, pola, dan checksum (bila brief memberi); error ditampilkan; nilai tidak dikosongkan",
+      "trigger": "blur"
+    },
+    {
+      "input": "pointer",
+      "result": "spasi, tanda hubung, titik, garis miring, kurung, dan pemisah lain dibuang; digit lebar penuh dan Arab-Indic dinormalkan; awalan negara dikenali bila pola mendefinisikannya; hasil diformat dan caret di akhir",
+      "trigger": "paste atau drop teks"
+    },
+    {
+      "input": "pointer",
+      "result": "clipboard berisi nilai terformat yang terlihat; read-only menyediakan CopyButton yang menyalin nilai mentah bila brief memintanya",
+      "trigger": "menyalin nilai"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual sesuai inputmode (numeric, tel, atau text uppercase); autofill OS (telepon, kode pos, kartu) ditawarkan sesuai autocomplete",
+      "trigger": "tap field"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Account number",
+        "10 digits, e.g. 0123 4567 89",
+        "Phone number",
+        "Enter all 10 digits",
+        "2 more digits",
+        "ZIP code",
+        "Complete"
+      ],
+      "id-ID": [
+        "Nomor rekening",
+        "10 digit, contoh 0123 4567 89",
+        "Nomor telepon",
+        "Masukkan ke-10 digit",
+        "Kurang 2 digit",
+        "Kode pos",
+        "Lengkap"
+      ]
+    },
+    "rules": [
+      "Helper menyebut format dalam kata dan satu contoh fiktif: \"16 digits, e.g. 1234 5678 9012 3456\"; contoh tidak pernah berupa data nyata.",
+      "Error menyebut yang kurang: \"Enter all 16 digits\" (ICU plural untuk sisa: \"{remaining, plural, one {# more digit} other {# more digits}}\"), \"Check the number; it doesn't pass the bank check\".",
+      "Pola, panjang, pemisah, dan checksum berasal dari brief; yang tidak ada di brief dicatat `A-nn`.",
+      "Pemisah tampilan mengikuti konvensi locale/negara untuk jenis nomor itu (B1 formats), bukan selera desain.",
+      "Placeholder pola hanya sebagai pendamping helper, tidak pernah satu-satunya penjelasan format."
+    ]
+  },
+  "depends_on": [
+    "Spinner"
+  ],
+  "do": [
+    "Kirim nilai mentah tanpa pemisah; simpan format hanya di tampilan.",
+    "Normalkan paste dari format apa pun dan jaga caret pada posisi logis.",
+    "Jelaskan format dalam kata dan contoh di helper yang selalu terlihat."
+  ],
+  "dont": [
+    {
+      "text": "Memakai FormattedInput untuk tanggal atau jumlah uang."
+    },
+    {
+      "text": "Memindah fokus otomatis ke field berikutnya saat pola lengkap (SC 3.2.2)."
+    },
+    {
+      "ref": "UB10",
+      "text": "Menjelaskan format hanya di placeholder."
+    },
+    {
+      "text": "Memasang maxlength pada nilai terformat sehingga paste dengan pemisah terpotong diam-diam."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label dan helper membungkus; lebar field tetap dari pola; contoh di helper tidak dipotong",
+      "case": "label dan helper +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "field melebar sampai lebar kontainer lalu nilai bergulir horizontal di dalam input; helper membungkus; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "nilai mentah string kosong; required kosong = \"Enter your account number\"; placeholder pola tidak dikirim",
+      "case": "kosong"
+    },
+    {
+      "behaviour": "pola dengan beberapa panjang sah (mis. 15 atau 16 digit) memilih pengelompokan dari prefiks atau panjang aktual; karakter setelah panjang maksimum ditolak; paste lebih panjang = error \"This number has {n} digits; expected {total}\", tidak dipotong",
+      "case": "panjang maksimum dan pola variabel"
+    },
+    {
+      "behaviour": "\"+62 812-3456-7890\", \"(0812) 3456 7890\", \"0812.3456.7890\" dinormalkan ke pola yang sama; awalan negara ditangani sesuai pola brief (`A-nn` bila tidak ada); autofill OS diterima lalu diformat",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "menyisipkan atau menghapus di tengah memformat ulang seluruh nilai; caret tetap setelah karakter yang diubah, tidak melompat ke akhir",
+      "case": "edit di tengah nilai"
+    },
+    {
+      "behaviour": "input dir=\"ltr\" dan diisolasi (bdi saat ditampilkan di teks) sehingga kelompok tetap kiri-ke-kanan; label dan helper RTL; prefix mengikuti urutan baca nomor (inline-start sisi LTR nomor)",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "validasi lokal (panjang, checksum) tetap jalan; verifikasi server ditunda dengan catatan \"We'll verify this when you're online\"; nilai tidak terkunci",
+      "case": "offline atau verifikasi server loading"
+    },
+    {
+      "behaviour": "pemformatan menunggu compositionend; digit lebar penuh dan Arab-Indic dinormalkan ke ASCII untuk nilai mentah",
+      "case": "IME (keyboard CJK) atau digit non-ASCII"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila entitas B5 punya pengenal berpola tetap (nomor identitas, rekening, telepon, kode pos, nomor kartu, kode referensi).",
+  "lint": [
+    "FormattedInput untuk field bertipe tanggal ditolak",
+    "helperText kosong ditolak",
+    "nilai terkirim yang memuat pemisah tampilan ditolak (uji kontrak)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "FormattedInput",
+  "preview": {
+    "combinations": [
+      "pola digit 4-4-4-4",
+      "pola telepon dengan prefix",
+      "pola alfanumerik huruf besar",
+      "error+focus",
+      "error+hover",
+      "loading+focus",
+      "disabled+focus",
+      "read-only masked",
+      "paste berformat campuran",
+      "RTL + nomor"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "filled",
+      "complete",
+      "error",
+      "loading",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": []
+  },
+  "purpose": {
+    "purpose": "Field teks untuk pengenal berpola tetap yang menampilkan pemisah kelompok agar mudah dibaca dan diperiksa, sementara nilai mentah tanpa pemisah yang dikirim; paste format apa pun dinormalkan dan caret tidak melompat.",
+    "when_not_to_use": [
+      "Untuk tanggal atau waktu: pakai DatePicker atau TimePicker (format tanggal bergantung locale dan butuh validasi kalender).",
+      "Untuk kuantitas atau jumlah uang yang dihitung: pakai NumberInput.",
+      "Untuk kode verifikasi sekali pakai: pakai PinInput.",
+      "Untuk teks bebas tanpa pola tetap (nama, alamat): pakai TextField.",
+      "Untuk pola yang panjang dan polanya belum diketahui (telepon internasional tanpa negara): pakai TextField dengan autocomplete=\"tel\" dan validasi longgar, catat `A-nn`."
+    ]
+  },
+  "related": [
+    "TextField",
+    "NumberInput",
+    "PinInput",
+    "DatePicker",
+    "CopyButton"
+  ],
+  "responsive": [
+    {
+      "behaviour": "size lg; lebar penuh bila pola panjang, intrinsik bila pendek (kode pos); keyboard virtual numerik/tel",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "size md/lg; lebar intrinsik sesuai pola terformat; ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size sm/md; lebar intrinsik sesuai pola terformat + ±2 karakter",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengisi dan melihat nilai penuh"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat tetapi tidak mengubah; bila kebijakan privasi brief meminta, nilai tersamar kecuali 4 karakter terakhir dengan tombol \"Show\" yang memerlukan izin"
+    },
+    {
+      "pattern": "step-up",
+      "when": "melihat nilai penuh atau mengubah rekening tujuan dana memerlukan StepUpDialog"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "nilai terkunci setelah diverifikasi; reason di helper"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu nilai ada"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Nilai berpola selalu LTR (dir=\"ltr\" pada input, bdi saat ditampilkan dalam kalimat); urutan kelompok tidak dibalik. Label, helper, dan error mengikuti arah halaman; ikon centang dan spinner tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Sel tabel dan filter padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Formulir di phone dan kiosk.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring; error tetap dibaca",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "border critical menang atas hover",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "verifikasi server tidak mengunci input; mengubah nilai membatalkan verifikasi lama",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak ada aksi tekan; submit form diblokir sampai verifikasi selesai bila brief mewajibkan",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "nilai bisa diseleksi dan disalin; salinan berisi nilai mentah tanpa pemisah",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "input": "color-structure-text-placeholder"
+      },
+      "treatment": "kosong; placeholder boleh menampilkan bentuk pola (\"0000 0000\") hanya bila helper juga menyebutnya"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-border"
+      },
+      "treatment": "border ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px"
+    },
+    {
+      "name": "filled",
+      "token_swaps": {
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "nilai terformat dengan pemisah; penghitung menunjukkan progres"
+    },
+    {
+      "name": "complete",
+      "token_swaps": {
+        "progress": "color-structure-text-secondary"
+      },
+      "treatment": "panjang pola terpenuhi: penghitung menjadi \"Complete\" dengan ikon centang (bukan hanya warna); tidak ada fokus otomatis ke field berikut"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "panjang kurang, karakter tidak sah, atau checksum gagal (dinilai saat blur/submit): border critical + ikon + teks; nilai dipertahankan; aria-invalid"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "helper": "color-structure-text-secondary"
+      },
+      "treatment": "verifikasi server opsional (mis. pencocokan nama pemilik rekening): Spinner kecil di inline-end, aria-busy; hasil ditampilkan di helper"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "input": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; latar surface-sunken; reason di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "container": "color-structure-surface-base",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "aria-readonly; nilai terformat berteks penuh tanpa border aktif; varian tersamar (••••1234) untuk role tanpa hak lihat penuh"
+    }
+  ],
+  "target_hints": {
+    "compose": "BasicTextField(TextFieldState + OutputTransformation) dibungkus {Ns}FormattedInput",
+    "flutter": "TextField + TextInputFormatter kustom dibungkus {ns}_formatted_input.dart",
+    "html": {
+      "element": "input[type=text]",
+      "notes": "tanpa JS: field teks biasa dengan helper format; server menormalkan nilai (membuang pemisah); modul data-{ns}-module=\"formatted-input\" menambah pemformatan, pemetaan caret, dan normalisasi paste; nilai mentah di input hidden"
+    },
+    "swiftui": "TextField(text:selection:) dengan pemformat dibungkus {Ns}FormattedInput"
+  },
+  "tier": "S",
+  "variants": {
+    "not_applicable": "Perilaku ditentukan prop pattern (kelompok, pemisah, kelas karakter), bukan varian visual; tampilannya sama dengan TextField."
+  }
+}

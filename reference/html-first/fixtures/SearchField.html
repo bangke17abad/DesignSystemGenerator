@@ -1,0 +1,264 @@
+<!-- SearchField fixture · every variant × state, sizes, mandatory combinations (§6.9). <search> landmark (labelled because this page has
+     several) > form GET > TextField anatomy with input[type=search] (role searchbox). Results live in a separate region (aria-controls).
+     Text follows ui_locale en-US. Grid cells span 4 columns: 1 per row on phone, 2 on tablet, 3 on desktop. -->
+<section class="ds-demo" data-ds-demo="variants/live (filters while typing, debounce)">
+  <search class="ds-search-field" aria-label="Orders" data-variant="live" data-ds-module="search-field" data-count-one="# order" data-count-other="# orders" data-count-zero="No orders match “{query}”">
+    <form class="ds-search-field__form" method="get" action="">
+      <div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-v1">Search orders</label>
+        <div class="ds-text-field__group">
+          <svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg>
+          <input class="ds-text-field__input ds-search-field__input" id="sf-v1" name="q" type="search" enterkeyhint="search" autocomplete="off" spellcheck="false" dir="auto" placeholder="Name or order number" aria-controls="sf-v1-results" aria-describedby="sf-v1-help">
+        </div>
+        <p class="ds-text-field__helper" id="sf-v1-help">Search by customer name or order number.</p>
+      </div>
+    </form>
+  </search>
+  <div class="ds-search-field__results" id="sf-v1-results">
+    <p class="ds-search-field__count">5 orders</p>
+    <ul class="ds-search-field__list">
+      <li class="ds-search-field__item" data-search-text="20417"><span>Siti Rahmawati</span><span class="ds-search-field__meta">#20417</span></li>
+      <li class="ds-search-field__item" data-search-text="20418"><span>Budi Santoso</span><span class="ds-search-field__meta">#20418</span></li>
+      <li class="ds-search-field__item" data-search-text="20422"><span>Café Kopi Kenangan</span><span class="ds-search-field__meta">#20422</span></li>
+      <li class="ds-search-field__item" data-search-text="20431"><span>Dewi Lestari</span><span class="ds-search-field__meta">#20431</span></li>
+      <li class="ds-search-field__item" data-search-text="20440"><span>PT Nusantara Logistik</span><span class="ds-search-field__meta">#20440</span></li>
+    </ul>
+    <div class="ds-search-field__empty" hidden>
+      <p class="ds-search-field__empty-title">No orders match “<bdi class="ds-search-field__query"></bdi>”</p>
+      <p>Check the spelling or try a different word.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/submit (Enter or Search button)">
+  <search class="ds-search-field" aria-label="Help articles" data-variant="submit" data-ds-module="search-field">
+    <form class="ds-search-field__form" method="get" action="" data-ds-preview>
+      <div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-v2">Search help articles</label>
+        <div class="ds-search-field__row">
+          <div class="ds-text-field__group">
+            <svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg>
+            <input class="ds-text-field__input ds-search-field__input" id="sf-v2" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="refund" aria-controls="sf-v2-results">
+          </div>
+          <button type="submit" class="ds-button ds-search-field__submit" data-variant="primary">Search</button>
+        </div>
+      </div>
+    </form>
+  </search>
+  <div class="ds-search-field__results" id="sf-v2-results">
+    <p class="ds-search-field__count">2 results</p>
+    <ul class="ds-search-field__list">
+      <li class="ds-search-field__item" data-search-text="refund"><span>How refunds work</span><span class="ds-search-field__meta">Payments</span></li>
+      <li class="ds-search-field__item" data-search-text="refund"><span>Request a refund for a cancelled order</span><span class="ds-search-field__meta">Orders</span></li>
+    </ul>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <search class="ds-search-field" aria-label="State default" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s1">Default (empty)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s1" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" placeholder="Search members"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="State hover" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s2">Hover</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s2" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" placeholder="Search members" data-force="hover"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="State focus" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s3">Focus</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s3" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" placeholder="Search members" data-force="focus"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="State filled" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s4">Filled (Clear shown)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s4" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="Rahmawati"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="State loading" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s5">Loading (still editable)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s5" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="invoice 2026" aria-controls="sf-s5-results"><span class="ds-text-field__spinner" aria-hidden="true"></span></div>
+      </div></form>
+      <div class="ds-search-field__results" id="sf-s5-results" aria-busy="true" data-ds-static><p class="ds-search-field__count">Searching… 12 earlier results stay visible</p></div>
+    </search>
+    <search class="ds-search-field" aria-label="State error" data-ds-module="search-field" data-max-length="40" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s6">Error (too long)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s6" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="quarterly reconciliation for all warehouses in West Java" aria-invalid="true" aria-describedby="sf-s6-err"></div>
+        <p class="ds-text-field__error" id="sf-s6-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Use 40 characters or fewer</span></p>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="State blocked" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-s7">Search archive</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s7" name="q" type="search" autocomplete="off" dir="auto" placeholder="Search archive" readonly aria-disabled="true" aria-describedby="sf-s7-reason"></div>
+        <p class="ds-text-field__reason" id="sf-s7-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Search needs a connection. Showing saved results.</span></p>
+      </div></form>
+    </search>
+    <div style="grid-column: span 4">
+      <search class="ds-search-field" aria-label="State empty result" data-variant="live" data-ds-module="search-field">
+        <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+          <label class="ds-text-field__label" for="sf-s8">Empty result</label>
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-s8" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="invoce" aria-controls="sf-s8-results"></div>
+        </div></form>
+      </search>
+      <div class="ds-search-field__results" id="sf-s8-results">
+        <p class="ds-search-field__count" hidden>No results for “invoce”</p>
+        <ul class="ds-search-field__list" hidden>
+          <li class="ds-search-field__item" data-search-text="invoice" hidden><span>Invoice INV-2026-0098</span></li>
+        </ul>
+        <div class="ds-search-field__empty">
+          <p class="ds-search-field__empty-title">No results for “<bdi class="ds-search-field__query">invoce</bdi>”</p>
+          <p>Check the spelling or try a different word.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <search class="ds-search-field" aria-label="Hover plus focus" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c1">Hover + focus</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c1" name="q" type="search" autocomplete="off" dir="auto" value="Budi" data-force="hover focus"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Error plus focus" data-ds-module="search-field" data-max-length="20" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c2">Error + focus</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c2" name="q" type="search" autocomplete="off" dir="auto" value="all open purchase orders" aria-invalid="true" data-force="focus" aria-describedby="sf-c2-err"></div>
+        <p class="ds-text-field__error" id="sf-c2-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Use 20 characters or fewer</span></p>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Loading plus focus" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c3">Loading + focus</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c3" name="q" type="search" autocomplete="off" dir="auto" value="warehouse" data-force="focus"><span class="ds-text-field__spinner" aria-hidden="true"></span></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Loading plus pressed" data-variant="submit" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action="" data-ds-preview><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c4">Loading + pressed (prevented)</label>
+        <div class="ds-search-field__row">
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c4" name="q" type="search" autocomplete="off" dir="auto" value="refund"><span class="ds-text-field__spinner" aria-hidden="true"></span></div>
+          <button type="submit" class="ds-button ds-search-field__submit" data-variant="primary" aria-busy="true"><span>Search</span><span class="ds-button__spinner" aria-hidden="true"></span></button>
+        </div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Blocked plus focus" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c5">Blocked + focus</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c5" name="q" type="search" autocomplete="off" dir="auto" placeholder="Search products" readonly aria-disabled="true" data-force="focus" aria-describedby="sf-c5-reason"></div>
+        <p class="ds-text-field__reason" id="sf-c5-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>The product index is being rebuilt. Try again in a few minutes.</span></p>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="البحث في الطلبات" dir="rtl" lang="ar" data-ds-module="search-field" data-clear-label="مسح البحث" data-cleared-text="تم مسح البحث" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-c6">ابحث في الطلبات (RTL + رقم)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-c6" name="q" type="search" autocomplete="off" dir="auto" value="طلب 20417"></div>
+        <p class="ds-text-field__helper">ابحث بالاسم أو برقم الطلب <bdi dir="ltr">#20417</bdi></p>
+      </div></form>
+    </search>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+    <search class="ds-search-field" aria-label="Size small" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field" data-size="sm">
+        <label class="ds-text-field__label" for="sf-z1">Filter table (sm)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-z1" name="q" type="search" autocomplete="off" dir="auto" value="Pending"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Size medium" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-z2">Search members (md)</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-z2" name="q" type="search" autocomplete="off" dir="auto" placeholder="Search members"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Size large" data-variant="submit" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action="" data-ds-preview><div class="ds-text-field ds-search-field__field" data-size="lg">
+        <label class="ds-text-field__label" for="sf-z3">Search the catalogue (lg)</label>
+        <div class="ds-search-field__row">
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-z3" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="table tennis bat"></div>
+          <button type="submit" class="ds-button ds-search-field__submit" data-variant="primary" data-size="lg">Search</button>
+        </div>
+      </div></form>
+    </search>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="phone top bar → full-screen view (tap Search; inline from tablet up)">
+  <div class="ds-search-field__bar">
+    <p class="ds-search-field__bar-title">Orders</p>
+    <button type="button" class="ds-search-field__open" data-ds-search-open="sf-view1" aria-label="Search orders"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></button>
+  </div>
+  <div class="ds-search-field__view" id="sf-view1">
+    <div class="ds-search-field__view-head">
+      <button type="button" class="ds-search-field__back" aria-label="Back"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg></button>
+      <search class="ds-search-field" aria-label="Orders, full screen" data-variant="live" data-ds-module="search-field">
+        <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field" data-size="lg">
+          <label class="ds-text-field__label ds-vh" for="sf-f1">Search orders</label>
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-f1" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" placeholder="Search orders" aria-controls="sf-f1-results"></div>
+        </div></form>
+      </search>
+    </div>
+    <div class="ds-search-field__results" id="sf-f1-results">
+      <p class="ds-search-field__count">3 results</p>
+      <ul class="ds-search-field__list">
+        <li class="ds-search-field__item" data-search-text="20417"><span>Siti Rahmawati</span><span class="ds-search-field__meta">#20417</span></li>
+        <li class="ds-search-field__item" data-search-text="20418"><span>Budi Santoso</span><span class="ds-search-field__meta">#20418</span></li>
+        <li class="ds-search-field__item" data-search-text="20431"><span>Dewi Lestari</span><span class="ds-search-field__meta">#20431</span></li>
+      </ul>
+      <div class="ds-search-field__empty" hidden><p class="ds-search-field__empty-title">No results for “<bdi class="ds-search-field__query"></bdi>”</p><p>Check the spelling or try a different word.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="full-screen view, open (static look)">
+  <div class="ds-search-field__view" data-open data-static>
+    <div class="ds-search-field__view-head">
+      <button type="button" class="ds-search-field__back" aria-label="Back to orders"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg></button>
+      <search class="ds-search-field" aria-label="Orders, full screen preview" data-ds-module="search-field">
+        <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field" data-size="lg">
+          <label class="ds-text-field__label ds-vh" for="sf-f2">Search orders</label>
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-f2" name="q" type="search" enterkeyhint="search" autocomplete="off" dir="auto" value="Dewi" data-force="focus"></div>
+        </div></form>
+      </search>
+    </div>
+    <div class="ds-search-field__results">
+      <p class="ds-search-field__count">1 result</p>
+      <ul class="ds-search-field__list"><li class="ds-search-field__item"><span>Dewi Lestari</span><span class="ds-search-field__meta">#20431</span></li></ul>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long label + long placeholder (+40%)">
+  <div class="ds-grid">
+    <search class="ds-search-field" aria-label="Long label" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-l1">Cari berdasarkan nama pelanggan, nomor pesanan, atau nomor resi pengiriman</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-l1" name="q" type="search" autocomplete="off" dir="auto" placeholder="Cari pesanan, pelanggan, atau nomor resi pengiriman"></div>
+      </div></form>
+    </search>
+    <search class="ds-search-field" aria-label="Long value, submit" data-variant="submit" data-ds-module="search-field" style="grid-column: span 4">
+      <form class="ds-search-field__form" method="get" action="" data-ds-preview><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-l2">Cari artikel bantuan</label>
+        <div class="ds-search-field__row">
+          <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-l2" name="q" type="search" autocomplete="off" dir="auto" value="pengembalian dana untuk pesanan yang dibatalkan sebagian"></div>
+          <button type="submit" class="ds-button ds-search-field__submit" data-variant="primary">Cari artikel</button>
+        </div>
+      </div></form>
+    </search>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <search class="ds-search-field" aria-label="Zoomed" data-ds-module="search-field">
+      <form class="ds-search-field__form" method="get" action=""><div class="ds-text-field ds-search-field__field">
+        <label class="ds-text-field__label" for="sf-x1">Search orders</label>
+        <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input ds-search-field__input" id="sf-x1" name="q" type="search" autocomplete="off" dir="auto" value="Rahmawati"></div>
+      </div></form>
+    </search>
+  </div>
+</section>

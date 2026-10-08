@@ -1,0 +1,97 @@
+{
+  "name": "DataStory",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila Chart dipilih (engine 1.8.0).",
+  "problem": {
+    "problem": "Pengguna menangkap apa yang ditunjukkan data (takeaway) dan seberapa layak dipercaya (unit, rentang, sumber, kesegaran, kelengkapan), lalu bisa memeriksa angka persisnya dan membawanya keluar, tanpa bergantung pada warna, hover, atau penglihatan. Chart tidak pernah berdiri sendiri.",
+    "when": ["Tren, perbandingan, komposisi, atau distribusi data kuantitatif di Dashboard, DetailView, atau halaman laporan.", "Ambang, target, atau anomali yang perlu terlihat dalam konteks data historis."],
+    "when_not": ["Satu sampai tiga angka tanpa dimensi waktu: pakai InlineMetrics.", "Nilai yang harus dibaca tepat atau dibandingkan baris per baris: pakai Table sebagai tampilan utama.", "Progres terhadap satu target: pakai ProgressBar.", "Status satu objek: pakai StatusLabel; chart tidak menggantikan penanda status.", "Lebih dari 5 kategori tanpa agregasi \"Lainnya\": pakai Table."]
+  },
+  "composition": [
+    { "component": "Chart", "parts": ["Chart.Axis", "Chart.Legend", "Chart.Annotation", "Chart.DataTable"], "role_in_pattern": "figure dengan judul takeaway, summary (takeaway + rentang + kesegaran), plot, sumbu berunit, legenda non-warna, anotasi ambang, hatch untuk data parsial, dan tabel data setara" },
+    { "component": "Table", "parts": ["Table.HeaderCell", "Table.Cell", "Table.Footer"], "role_in_pattern": "alternatif data lewat Chart.DataTable: caption = judul chart, unit di header kolom, angka numeric rata end, baris parsial bertanda teks" },
+    { "component": "InlineMetrics", "role_in_pattern": "angka utama di atas chart dengan unit, delta + periode pembanding, dan asOf" },
+    { "component": "DateRangePicker", "role_in_pattern": "rentang waktu dengan presets; zona waktu disebut di helper" },
+    { "component": "SegmentedControl", "role_in_pattern": "granularitas (Hari / Minggu / Bulan) atau satuan tampilan (jumlah / persen)" },
+    { "component": "Select", "role_in_pattern": "metrik atau dimensi breakdown" },
+    { "component": "Grid", "parts": ["Grid.Item"], "role_in_pattern": "tata letak small multiples dengan kolom per kelas perangkat" },
+    { "component": "Card", "role_in_pattern": "wadah satu chart di dalam Dashboard; judul Card = judul chart, bukan judul ganda" },
+    { "component": "StatusLabel", "role_in_pattern": "C2 \"Data tidak terkini\" di header bila melewati batas kesegaran; status di luar plot, bukan fill seri" },
+    { "component": "ConnectionStatus", "role_in_pattern": "chart live: live / reconnecting / stale dengan \"Last updated\"" },
+    { "component": "InlineAlert", "role_in_pattern": "C1 + Retry menggantikan plot saat gagal; C2 untuk data sebagian atau periode yang gagal dimuat" },
+    { "component": "EmptyState", "role_in_pattern": "variant no-results (karena filter) dibedakan dari first-use (belum ada data sama sekali)" },
+    { "component": "Skeleton", "role_in_pattern": "variant shape meniru sumbu dan plot; judul tetap terlihat" },
+    { "component": "Menu", "parts": ["Menu.Item"], "role_in_pattern": "Ekspor: data (CSV/XLSX, kontrak ImportExport) dan gambar (PNG/SVG dengan judul, unit, sumber, asOf ikut tercetak)" },
+    { "component": "Link", "role_in_pattern": "sumber data dan \"Cara dihitung\" (definisi metrik)" },
+    { "component": "Tooltip", "role_in_pattern": "crosshair nilai saat hover/fokus; tidak pernah satu-satunya tempat nilai (UB9)" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "nilai titik aktif dan takeaway baru setelah filter berubah" }
+  ],
+  "flow": [
+    { "step": "Memuat", "state_class": "C5", "transition": "Skeleton bentuk sumbu; judul dan kontrol filter tetap terlihat; aria-busy pada figure; permintaan lama dibatalkan bila filter berubah lagi" },
+    { "step": "Membaca takeaway", "state_class": "C6", "transition": "judul menyatakan takeaway (arah + besaran + periode); summary menyebut unit, rentang waktu, zona waktu, sumber, dan \"Per {waktu}\" (I6)" },
+    { "step": "Menjelajah", "state_class": "C6", "transition": "←/→ per titik, ↑/↓ antar seri, legenda menyembunyikan/menampilkan seri (minimal satu tetap), \"Tampilkan sebagai tabel\" membuka tabel setara; filter mengubah takeaway, bukan hanya plot" },
+    { "step": "Ambang terlewati", "state_class": "C2", "transition": "Chart.Annotation berupa garis/kotak outline + ikon status terkunci + label teks di chip surface; isi seri tetap warna kategorikal; bila perlu tindakan, StatusLabel atau InlineAlert di luar plot membawa statusnya (C1 bila sudah terlambat/gagal)" },
+    { "step": "Periode belum lengkap", "state_class": "C5", "transition": "periode berjalan atau estimasi diberi hatch atau garis putus + label \"Sebagian\"/\"Estimasi\" di legenda dan tabel; celah data ditandai \"Tidak ada data\" dan tidak diinterpolasi" },
+    { "step": "Data basi", "state_class": "C2", "transition": "melewati batas kesegaran (B5/B3, selain itu A-nn): StatusLabel C2 \"Terakhir diperbarui {waktu}\" di header; angka tidak ditampilkan seolah terkini" },
+    { "step": "Gagal memuat", "state_class": "C1", "transition": "InlineAlert C1 + Retry menggantikan plot; judul tetap; data lama hanya boleh tampil dengan \"Per {waktu}\" eksplisit" },
+    { "step": "Ekspor data", "state_class": "C4", "transition": "mengekspor data di balik tampilan sesuai filter, rentang, dan granularitas aktif, dengan unit, zona waktu, sumber, dan waktu dibuat; ekspor besar mengikuti ImportExport (latar + NotificationItem)" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "satu chart selebar konten; maksimal 3 seri per chart, lebih dari itu menjadi small multiples bertumpuk vertikal masing-masing berjudul; legenda di bawah sebagai daftar; tick diringkas; tap untuk nilai; \"Tampilkan sebagai tabel\" sebagai tombol menonjol; tabel bergulir horizontal dengan kolom pertama sticky (pengecualian SC 1.4.10)" },
+    { "device_class": "tablet", "behaviour": "rasio aspect-photo; small multiples 2 kolom di Grid; legenda di bawah atau inline-end; zona deteksi titik ≥ target-min-touch, bukan ukuran marker" },
+    { "device_class": "desktop", "behaviour": "rasio aspect-video; satu chart hingga 5 seri + \"Lainnya\", atau small multiples 3-4 kolom; crosshair hover dengan padanan fokus keyboard; tabel di bawah chart lewat toggle; hindari dua sumbu Y (pakai small multiples dengan skala Y yang sama bila unitnya sama)" }
+  ],
+  "states": {
+    "empty": "Tidak ada data di rentang ini: sumbu tanpa garis nol palsu + EmptyState singkat yang menyarankan rentang lain; kosong karena filter (no-results) dibedakan dari belum ada data (first-use). Ekspor aria-disabled dengan alasan.",
+    "loading": "Skeleton bentuk plot; judul, filter, dan rentang tetap; aria-busy; pembaruan latar pada chart live tidak memunculkan Skeleton ulang.",
+    "error": "InlineAlert C1 dengan alasan dan Retry menggantikan plot; toggle tabel disembunyikan karena tidak ada data; timeout menyarankan rentang yang lebih pendek.",
+    "partial": "Sebagian periode atau sumber gagal atau belum lengkap: hatch + label teks \"Sebagian\"/\"Estimasi\"/\"Tidak ada data\" di plot, legenda, dan tabel; InlineAlert C2 menyebut periode yang terdampak; takeaway menyebut ketidaklengkapan.",
+    "success": "Chart dengan takeaway, unit, rentang, sumber, dan \"Per {waktu}\"; tabel data setara tersedia; ekspor aktif."
+  },
+  "accessibility": [
+    { "step": "Membaca takeaway", "focus": "figure dengan figcaption; judul sebagai heading; plot statis role=\"img\" berlabel judul + takeaway + rentang nilai", "announcement": "nama aksesibel plot = judul + summary; detail lewat navigasi titik atau tabel" },
+    { "step": "Menjelajah titik", "focus": "plot satu tab stop dengan roving tabindex antar titik; ring 2px focus-ring pada titik aktif; Esc menutup crosshair, fokus tetap di plot", "announcement": "polite \"{seri}, {x}: {y} {unit}\"" },
+    { "step": "Legenda dan tabel", "focus": "item legenda button aria-pressed; toggle tabel aria-expanded + aria-controls, fokus tetap di toggle; tabel dengan caption dan header sel", "announcement": "polite \"{seri} disembunyikan\" atau \"Tabel ditampilkan\"" },
+    { "step": "Filter berubah", "focus": "fokus tetap di kontrol filter; tidak ada perubahan konteks saat input (SC 3.2.2)", "announcement": "polite takeaway baru setelah data stabil (\"Jan–Mar: 4.210 pendaftaran, naik 18%\"), satu kali" },
+    { "step": "Gagal atau basi", "focus": "fokus tidak berpindah; Retry dapat dijangkau langsung setelah judul", "announcement": "gagal: InlineAlert role=alert; basi: polite saat kelas berubah" }
+  ],
+  "content": {
+    "rules": ["Judul menyatakan takeaway dengan arah, besaran, dan periode; bila tidak ada tren jelas, katakan apa adanya (\"Pendaftaran stabil di Maret\"). Takeaway yang dihitung otomatis harus jujur terhadap data parsial.", "Unit di judul sumbu atau header kolom; rentang waktu dan zona waktu di summary; angka, tanggal, dan mata uang memakai formatter locale.", "Sumber dan kesegaran selalu tertulis (\"Per {waktu} · Sumber: {sumber}\") (I6).", "Anotasi ambang memakai teks + ikon (\"Target 95%\", \"Batas terlampaui\"); skala log diberi label \"Skala log\" yang terlihat."],
+    "examples": {
+      "en-US": ["Signups rose 18% in March", "As of Oct 8, 2026, 9:00 AM UTC · Source: billing records", "Show as table", "Partial data: the current week isn't complete", "No data for this period. Try a longer date range."],
+      "id-ID": ["Pendaftaran naik 18% di bulan Maret", "Per 8 Okt 2026, 09.00 UTC · Sumber: catatan penagihan", "Tampilkan sebagai tabel", "Data sebagian: minggu berjalan belum lengkap", "Tidak ada data untuk periode ini. Coba rentang tanggal yang lebih panjang."]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role yang boleh melihat metrik: semua filter, tabel, dan ekspor" },
+    { "pattern": "hidden", "when": "seri atau breakdown untuk data di luar cakupan role tidak dikirim server; total dihitung ulang di server sehingga agregat tidak membocorkan data tersembunyi (§10)" },
+    { "pattern": "disabled-with-reason", "when": "role tanpa hak ekspor: Menu Ekspor tetap terlihat dengan item aria-disabled dan alasan; tabel data tetap tersedia karena itu alternatif aksesibilitas, bukan fitur ekspor" },
+    { "pattern": "read-only", "when": "tampilan yang dibagikan atau disematkan: filter terkunci dan ditulis sebagai teks (\"Rentang: Jan–Mar 2026\")" }
+  ],
+  "do": ["Tulis takeaway di judul dan sediakan tabel setara untuk setiap chart.", "Bedakan seri dengan bentuk marker, pola garis, atau label langsung selain warna palet L10.", "Small multiples berbagi skala sumbu bila unitnya sama; bar selalu mulai dari nol.", "Sebut unit, rentang, zona waktu, sumber, dan kesegaran di setiap chart."],
+  "dont": [
+    { "text": "Mengisi bar, area, atau garis dengan warna semantik untuk menyatakan status.", "ref": "UB12" },
+    { "text": "Legenda yang hanya swatch warna sehingga seri tidak bisa dibedakan tanpa warna.", "ref": "SC 1.4.1" },
+    { "text": "Menaruh nilai hanya di tooltip hover tanpa tabel data.", "ref": "UB9" },
+    { "text": "Menampilkan data cache atau basi tanpa waktu \"Per\" seolah terkini.", "ref": "I6" },
+    { "text": "Meletakkan label teks langsung di atas fill chart tanpa chip surface.", "ref": "UB4" },
+    { "text": "Animasi masuk lebih dari 5 detik atau yang tidak runtuh di reduced motion.", "ref": "SC 2.2.2" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "data tersimpan ditampilkan dengan \"Per {waktu}\" dan StatusLabel C2 bila melewati batas kesegaran; filter yang butuh query baru diblokir dengan alasan; ekspor data cache diberi label waktu yang sama" },
+    { "case": "timeout query", "behaviour": "InlineAlert C1 + Retry dengan saran rentang lebih pendek atau granularitas lebih kasar; hasil parsial tidak ditampilkan sebagai lengkap" },
+    { "case": "10.000+ titik data", "behaviour": "agregasi per interval yang disebut di summary; tabel dipaginasi; navigasi keyboard per bucket; ekspor tetap resolusi penuh lewat ImportExport latar" },
+    { "case": "0 titik data", "behaviour": "state empty tanpa garis nol; dibedakan antara kosong karena filter dan belum ada data" },
+    { "case": "aksi ganda (filter diganti beruntun cepat, klik ganda Ekspor)", "behaviour": "permintaan lama dibatalkan dan hanya respons terbaru dirender sehingga judul tidak pernah menjelaskan rentang yang berbeda dari plot; ekspor kedua diabaikan selama yang pertama berjalan" },
+    { "case": "label kategori +40% (locale terpanjang)", "behaviour": "bar beralih horizontal; label membungkus dua baris lalu ellipsis dengan nama lengkap di tabel dan nama aksesibel" },
+    { "case": "teks 200%", "behaviour": "tick dikurangi agar tidak tumpang tindih; legenda pindah ke bawah; small multiples turun satu kolom" },
+    { "case": "lebih dari 5 kategori", "behaviour": "5 terbesar + chart-cat-other \"Lainnya\"; rincian Lainnya di tabel" },
+    { "case": "satu titik data", "behaviour": "tidak menggambar garis; tampil sebagai InlineMetrics atau satu marker dengan label nilai" },
+    { "case": "nilai negatif, rentang ekstrem, atau batas DST", "behaviour": "garis nol tegas; skala divergen untuk di atas/bawah acuan; bucket waktu mengikuti zona waktu yang disebut, hari 23/25 jam tidak disamakan diam-diam" },
+    { "case": "forced colors dan RTL", "behaviour": "forced-color-adjust: none hanya karena tabel tersedia; bentuk dan pola tetap membedakan seri; angka tick diisolasi bidi; arah sumbu waktu dicatat A-nn bila brief tidak menetapkan" }
+  ],
+  "wcag": ["1.1.1", "1.3.1", "1.4.1", "1.4.3", "1.4.10", "1.4.11", "1.4.13", "2.1.1", "2.2.2", "2.4.6", "3.2.2", "4.1.2", "4.1.3"],
+  "related_patterns": ["Dashboard", "DetailView", "SearchAndFilter", "ImportExport", "AsyncFeedback"],
+  "lint": ["Setiap Chart punya summary takeaway, unit, asOf, dan Chart.DataTable", "Tidak ada token color-semantic-* pada series-categorical, series-sequential, atau series-diverging", "Item Chart.Legend memakai bentuk marker atau pola selain swatch", "Small multiples dengan unit sama berbagi domain sumbu Y"]
+}

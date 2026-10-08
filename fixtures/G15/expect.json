@@ -1,0 +1,24 @@
+{
+  "assertions": [
+    {
+      "file_exists": "adapters/shadcn/shadcn.css"
+    },
+    {
+      "file_exists": "assets/tailwind.theme.css"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V22"
+      ]
+    }
+  ],
+  "fixture": "G15",
+  "run_only": [
+    "Komponen P03 + P02; shares antar pack"
+  ],
+  "source": "golden-briefs.md G15"
+}

@@ -1,0 +1,134 @@
+/* Image · engine 1.8.0 reference (catalog/components/Image.json). Tokens only (I3); logical properties only (§12.4).
+   The frame reserves the space with an aspect-* token before the image loads (no layout shift); the img fills it.
+   Fallback (Image.js on error, or data-state="error" server side): image icon + the alt text, visible, inside the same frame.
+   Without JS a failed img shows the browser's own alt text inside the frame. Photos are never mirrored in RTL. */
+.ds-image {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  margin: 0;
+}
+.ds-image__frame {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: var(--aspect-photo);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-image[data-aspect="square"] .ds-image__frame { aspect-ratio: var(--aspect-square); }
+.ds-image[data-aspect="video"] .ds-image__frame { aspect-ratio: var(--aspect-video); }
+.ds-image[data-bordered] .ds-image__frame { border: var(--border-width-thin) solid var(--color-structure-border); }
+.ds-image__img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  color: var(--color-structure-text-secondary); /* the browser's alt text (no-JS failure) stays readable */
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  transition: opacity var(--motion-fast-duration) var(--motion-easing-enter);
+}
+.ds-image[data-fit="contain"] .ds-image__img { object-fit: contain; }
+
+/* loading: neutral placeholder holds the frame; the image fades in (no fade under reduced motion) */
+.ds-image[data-state="loading"] .ds-image__frame { background: var(--color-structure-skeleton); }
+.ds-image[data-state="loading"] .ds-image__img { opacity: 0; }
+
+/* error: icon + visible alt inside the frame; the frame may grow past its ratio when text is large (text 200%) */
+.ds-image__fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  overflow: hidden;
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.ds-image__fallback .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+.ds-image__fallback-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* long alt is clipped visually; the complete alt stays the accessible name */
+  overflow: hidden;
+  max-inline-size: var(--layout-measure);
+}
+.ds-image[data-state="error"] .ds-image__fallback { display: flex; }
+.ds-image[data-state="error"] .ds-image__img { visibility: hidden; }
+.ds-image[data-state="error"] .ds-image__zoom,
+.ds-image[data-state="loading"] .ds-image__zoom { display: none; } /* zoom is not offered before the image has loaded */
+
+/* caption: figcaption below the frame */
+.ds-image__caption {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  overflow-wrap: break-word;
+}
+.ds-image__credit { color: var(--color-structure-text-secondary); }
+
+/* thumbnail: small square-ish preview in List/Table/Card rows */
+.ds-image[data-variant="thumbnail"] { inline-size: calc(var(--avatar-lg) * 1.5); flex: none; }
+.ds-image[data-variant="thumbnail"] .ds-image__frame { border-radius: var(--radius-sm); }
+.ds-image[data-variant="thumbnail"] .ds-image__fallback { padding: var(--space-1); }
+.ds-image[data-variant="thumbnail"] .ds-image__fallback-text { display: none; }
+
+/* zoom-trigger: a real button over the frame corner; the image itself is never the only target */
+.ds-image__zoom {
+  position: absolute;
+  inset-block-end: var(--space-2);
+  inset-inline-end: var(--space-2);
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--control-height-sm), var(--target-current));
+  min-inline-size: var(--target-current);
+  margin: 0;
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--button-secondary-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--button-secondary-container-background);
+  color: var(--button-secondary-label-color);
+  box-shadow: var(--elevation-1);
+  text-decoration: none;
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  cursor: pointer;
+}
+.ds-image__zoom::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; }
+.ds-image__zoom .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); }
+@media (hover: hover) {
+  .ds-image__zoom:hover { background: var(--button-secondary-container-background-hover); }
+  .ds-image__zoom:hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-image__zoom[data-force~="hover"] { background: var(--button-secondary-container-background-hover); }
+.ds-image__zoom[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-image__zoom:active, .ds-image__zoom[data-force~="pressed"] { background: var(--button-secondary-container-background-pressed); }
+.ds-image__zoom[aria-disabled="true"] { cursor: progress; }
+
+/* zoom dialog content (Modal body) */
+.ds-image__full-wrap { max-block-size: 70vh; overflow: auto; border-radius: var(--radius-sm); background: var(--color-structure-surface-sunken); }
+.ds-image__full { display: block; inline-size: 100%; block-size: auto; max-block-size: 70vh; object-fit: contain; }
+.ds-image__zoom-controls { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-image__img { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-image__frame { border: var(--border-width-thin) solid CanvasText; }
+  .ds-image__zoom { border-color: ButtonText; }
+}

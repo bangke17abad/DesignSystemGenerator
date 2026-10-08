@@ -1,0 +1,5 @@
+/* FormattedInput · engine 1.8.0 reference (catalog/components/FormattedInput.json). Builds on TextField anatomy (.ds-text-field).
+   Display separators are visual only: the raw value lives in a hidden input that is the one submitted. */
+.ds-formatted-input .ds-text-field__input { font-variant-numeric: tabular-nums; letter-spacing: var(--type-body-tracking); }
+.ds-formatted-input__pattern { font-family: var(--font-mono); font-size: var(--type-body-size); }
+.ds-formatted-input__raw { color: var(--color-structure-text-secondary); }

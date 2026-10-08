@@ -1,0 +1,84 @@
+<!-- InlineMetrics fixture · variants (default, inline, with-delta), states (default, loading, updating, stale, unavailable, error),
+     mandatory combinations (error+focus on Retry, stale + StatusLabel C2, 3 items wrapping on phone, text 200%, RTL + numbers).
+     Maximum three items. Values use tabular-nums and never truncate; deltas are neutral (arrow icon + sign + direction word + period,
+     never green/red). Units are visible and written out for screen readers; abbreviated big numbers carry the full value. -->
+<section class="ds-demo" data-ds-demo="variants/with-delta (default layout) · freshness · info trigger (definition disclosure)">
+  <dl class="ds-inline-metrics" data-variant="with-delta" data-separators aria-label="Bookings this week" data-ds-module="inline-metrics">
+    <div class="ds-inline-metrics__item">
+      <dt class="ds-inline-metrics__label"><span class="ds-inline-metrics__label-row">Open items
+        <details class="ds-inline-metrics__def"><summary class="ds-inline-metrics__info" aria-label="About open items"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg></summary><p class="ds-inline-metrics__def-panel">Bookings that are confirmed but not yet checked in.</p></details></span></dt>
+      <dd class="ds-inline-metrics__value"><bdi>24</bdi></dd>
+      <dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg><span><bdi>+3</bdi> up vs last week</span></dd>
+    </div>
+    <div class="ds-inline-metrics__item">
+      <dt class="ds-inline-metrics__label">Average check-in time</dt>
+      <dd class="ds-inline-metrics__value"><bdi>3.4</bdi><span class="ds-inline-metrics__unit"><span aria-hidden="true">min</span><span class="ds-vh"> minutes</span></span></dd>
+      <dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg><span><bdi>−0.6 min</bdi> down vs last week</span></dd>
+    </div>
+    <div class="ds-inline-metrics__item">
+      <dt class="ds-inline-metrics__label">Booking fee revenue</dt>
+      <dd class="ds-inline-metrics__value"><span class="ds-inline-metrics__unit">Rp</span><span aria-hidden="true"><bdi>48.2</bdi></span><span class="ds-inline-metrics__unit" aria-hidden="true">M</span><span class="ds-vh">48,200,000 rupiah</span></dd>
+      <dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg><span><bdi>0%</bdi> no change vs last week</span></dd>
+    </div>
+  </dl>
+  <p class="ds-inline-metrics__freshness" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span>As of <time datetime="2026-10-08T09:30:00+07:00">09:30</time></span></p>
+</section>
+<section class="ds-demo" data-ds-demo="variants/default (label above value, no delta)">
+  <dl class="ds-inline-metrics" aria-label="Venue today">
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Visits</dt><dd class="ds-inline-metrics__value"><bdi>186</bdi></dd></div>
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Rooms in use</dt><dd class="ds-inline-metrics__value"><bdi>42</bdi><span class="ds-inline-metrics__unit">of <bdi>60</bdi></span></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="variants/inline (toolbar / table header)">
+  <dl class="ds-inline-metrics" data-variant="inline" aria-label="Invoice totals">
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Items</dt><dd class="ds-inline-metrics__value"><bdi>24</bdi></dd></div>
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Overdue</dt><dd class="ds-inline-metrics__value"><bdi>3</bdi></dd></div>
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Outstanding</dt><dd class="ds-inline-metrics__value">Rp <bdi>12.480.000</bdi></dd></div>
+  </dl>
+</section>
+<section class="ds-demo" data-ds-demo="states: loading (label stays, value Skeleton) · updating (old value stays)">
+  <div class="ds-stack" data-gap="6">
+    <dl class="ds-inline-metrics" aria-label="Bookings this week (loading)" aria-busy="true">
+      <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Open items</dt><dd class="ds-inline-metrics__value"><span class="ds-inline-metrics__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading</span></dd></div>
+      <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Average check-in time</dt><dd class="ds-inline-metrics__value"><span class="ds-inline-metrics__skeleton" aria-hidden="true"></span><span class="ds-vh">Loading</span></dd></div>
+    </dl>
+    <div>
+      <dl class="ds-inline-metrics" data-variant="with-delta" aria-label="Bookings this week (updating)">
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Open items</dt><dd class="ds-inline-metrics__value"><bdi>24</bdi></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg><span><bdi>+3</bdi> up vs last week</span></dd></div>
+      </dl>
+      <p class="ds-inline-metrics__freshness" data-ds-text="supporting"><span class="ds-inline-metrics__updating"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-refresh"/></svg>Updating…</span><span>As of <time datetime="2026-10-08T09:30:00+07:00">09:30</time></span></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="stale + StatusLabel C2 · unavailable (never 0) · error + focus on Retry (only that item)">
+  <dl class="ds-inline-metrics" data-variant="with-delta" data-separators aria-label="Venue sensors" data-ds-module="inline-metrics">
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Soil moisture</dt><dd class="ds-inline-metrics__value"><bdi>31</bdi><span class="ds-inline-metrics__unit">%</span></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg><span><bdi>−4%</bdi> down vs yesterday</span></dd></div>
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Rainfall</dt><dd class="ds-inline-metrics__value" data-unavailable><span aria-hidden="true">—</span><span class="ds-inline-metrics__na">Not available</span></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><span>Gauge offline since 06:00</span></dd></div>
+    <div class="ds-inline-metrics__item" data-metric-id="wind"><dt class="ds-inline-metrics__label">Wind</dt><dd class="ds-inline-metrics__error"><span><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg>Couldn't load</span><button type="button" class="ds-button" data-size="sm" data-force="focus" data-ds-retry>Retry<span class="ds-vh"> wind</span></button></dd></div>
+  </dl>
+  <p class="ds-inline-metrics__freshness" data-stale data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-time"/></svg><span>As of <time datetime="2026-10-08T06:00:00+07:00">06:00</time></span>
+    <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Data may be out of date</span></span></span></p>
+</section>
+<section class="ds-demo" data-ds-demo="3 items wrap (+40% labels, narrow) · text 200%">
+  <div class="ds-stack" data-gap="6">
+    <div style="max-inline-size: 20rem">
+      <dl class="ds-inline-metrics" data-variant="with-delta" lang="id" aria-label="Pemesanan minggu ini">
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Pemesanan yang belum check-in</dt><dd class="ds-inline-metrics__value"><bdi>24</bdi></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg><span><bdi>+3</bdi> naik dari minggu lalu</span></dd></div>
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Waktu rata-rata</dt><dd class="ds-inline-metrics__value"><bdi>3,4</bdi><span class="ds-inline-metrics__unit">jam</span></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg><span><bdi>−0,2</bdi> turun dari minggu lalu</span></dd></div>
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Pendapatan</dt><dd class="ds-inline-metrics__value"><span class="ds-inline-metrics__unit">Rp</span><span aria-hidden="true"><bdi>99,9</bdi></span><span class="ds-inline-metrics__unit" aria-hidden="true">jt</span><span class="ds-vh">99.900.000 rupiah</span></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg><span><bdi>0%</bdi> tetap dari minggu lalu</span></dd></div>
+      </dl>
+    </div>
+    <div style="zoom: 2">
+      <dl class="ds-inline-metrics" aria-label="Venue today (200%)">
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Visits</dt><dd class="ds-inline-metrics__value"><bdi>186</bdi></dd></div>
+        <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">Rooms in use</dt><dd class="ds-inline-metrics__value"><bdi>42</bdi></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + numbers (item order mirrored; up/down arrows not mirrored; numbers isolated)">
+  <dl class="ds-inline-metrics" data-variant="with-delta" data-separators dir="rtl" lang="ar" aria-label="الحجوزات هذا الأسبوع">
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">العناصر المفتوحة</dt><dd class="ds-inline-metrics__value"><bdi>24</bdi></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg><span>ارتفاع <bdi>+3</bdi> مقارنة بالأسبوع الماضي</span></dd></div>
+    <div class="ds-inline-metrics__item"><dt class="ds-inline-metrics__label">الإيرادات</dt><dd class="ds-inline-metrics__value"><bdi>48.2</bdi><span class="ds-inline-metrics__unit">مليون روبية</span></dd><dd class="ds-inline-metrics__delta" data-ds-text="supporting"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg><span>انخفاض <bdi>−2%</bdi> مقارنة بالأسبوع الماضي</span></dd></div>
+  </dl>
+</section>

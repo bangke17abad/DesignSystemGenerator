@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/wcag22.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "criteria": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "application": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "assumption": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "level": {
+            "enum": [
+              "A",
+              "AA"
+            ]
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sc": {
+            "pattern": "^\\d\\.\\d\\.\\d{1,2}$",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Applied",
+              "Applied · Not verified",
+              "N/A",
+              "Open decision"
+            ]
+          },
+          "verified_by": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "sc",
+          "name",
+          "level",
+          "status",
+          "application",
+          "verified_by"
+        ],
+        "type": "object"
+      },
+      "maxItems": 55,
+      "minItems": 55,
+      "type": "array"
+    },
+    "version": {
+      "const": "2.2"
+    }
+  },
+  "required": [
+    "version",
+    "criteria"
+  ],
+  "title": "wcag22",
+  "type": "object"
+}

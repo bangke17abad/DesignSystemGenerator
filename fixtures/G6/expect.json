@@ -1,0 +1,54 @@
+{
+  "assertions": [
+    {
+      "approx": 70,
+      "family_hue": "interaction",
+      "tol": 1
+    },
+    {
+      "eq": "#b08d57",
+      "mode": "default/Light",
+      "token_mode": "color-brand-default"
+    },
+    {
+      "eq": 17,
+      "token": "type-body-size"
+    },
+    {
+      "eq": 28,
+      "token": "type-body-line"
+    },
+    {
+      "eq": 64,
+      "token": "space-section"
+    },
+    {
+      "eq": 96,
+      "token": "space-section-lg"
+    },
+    {
+      "eq": 1200,
+      "token": "layout-content-max"
+    },
+    {
+      "eq": 0,
+      "token": "state-layer-hover-opacity"
+    },
+    {
+      "eq": "Light",
+      "lang": "decisions.L9.value.style"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "content_locale_missing": "ar-SA"
+    }
+  ],
+  "fixture": "G6",
+  "run_only": [
+    "Noto Sans Arabic di fallback dan tinggi baris +0.15 untuk ar-SA",
+    "glossary.json id-ID, en-US, ar-SA"
+  ],
+  "source": "golden-briefs.md G6"
+}

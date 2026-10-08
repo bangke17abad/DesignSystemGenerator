@@ -1,0 +1,528 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label = label (wajib); Tooltip tidak ditambahkan sebagai aria-describedby bila isinya sama dengan label (hindari dibaca dua kali)",
+      "aria-pressed untuk toggle; label tetap konstan (\"Pin\"), state dari aria-pressed, bukan label yang berganti",
+      "aria-haspopup=\"menu\" dan aria-expanded bila membuka Menu",
+      "aria-disabled (bukan disabled native) + aria-describedby ke reason",
+      "aria-busy saat loading",
+      "jumlah Badge masuk nama: \"Notifications, 3 unread\""
+    ],
+    "focus_order": "urutan DOM; IconButton berdampingan dipisah ≥ 8 (gap Inline) agar target tidak tumpang tindih",
+    "native": {
+      "compose": "IconButton(onClick) { Icon(…, contentDescription = label) } / IconToggleButton(checked, onCheckedChange); TooltipBox dengan PlainTooltip",
+      "flutter": "IconButton(icon:, tooltip: label, onPressed:, isSelected:, selectedIcon:) — tooltip juga menjadi label semantik; Semantics(button: true, toggled: …) untuk toggle",
+      "swiftui": "Button { … } label: { Label(label, systemImage: …).labelStyle(.iconOnly) } + .help(label); toggle: Toggle(isOn:).toggleStyle(.button); .accessibilityShowsLargeContentViewer() di bar"
+    },
+    "politeness": "polite",
+    "role": "button (<button type=\"button\">); toggle memakai aria-pressed",
+    "sr_label": "label kata kerja + objek bila perlu (\"Close dialog\"), tidak menyebut nama ikon (\"X icon\"); teks Tooltip sama dengan nama aksesibel (SC 2.5.3)",
+    "wcag": [
+      "1.1.1",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "bidang klik persegi; tertiary tanpa latar, secondary ber-border, primary ber-fill",
+      "tokens": [
+        "color-interaction-default",
+        "color-interaction-subtle",
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "color-semantic-critical",
+        "radius-sm",
+        "radius-full",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "icon",
+      "role": "ikon dari set L9; ikon terisi (filled) sebagai penanda non-warna saat selected",
+      "tokens": [
+        "icon-md",
+        "icon-sm",
+        "icon-lg",
+        "icon-stroke",
+        "color-structure-text-primary",
+        "color-interaction-on-solid"
+      ]
+    },
+    {
+      "part": "hit-area",
+      "role": "area klik diperluas melampaui container visual bila perlu",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "tooltip",
+      "role": "Tooltip berisi label, tampil saat hover dan fokus, long-press di sentuh",
+      "tokens": [
+        "z-tooltip"
+      ]
+    },
+    {
+      "part": "badge",
+      "role": "Badge hitungan opsional di sudut block-start/inline-end; jumlahnya masuk nama aksesibel",
+      "tokens": [
+        "color-semantic-critical",
+        "color-semantic-on-critical",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "spinner",
+      "role": "pengganti ikon saat loading; ukuran terkunci",
+      "tokens": [
+        "icon-md",
+        "motion-slow-duration"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "pelepasan pointer, Enter, atau Space"
+      },
+      {
+        "name": "onSelectedChange",
+        "payload": "boolean",
+        "when": "mode toggle: setelah onPress mengubah state"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Ikon dari set L9.",
+        "name": "icon",
+        "required": true,
+        "type": "IconName"
+      },
+      {
+        "description": "Nama aksesibel dan teks Tooltip.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "tertiary",
+        "description": "Bobot visual.",
+        "name": "variant",
+        "required": false,
+        "type": "\"primary\" | \"secondary\" | \"tertiary\" | \"destructive\""
+      },
+      {
+        "default": "md",
+        "description": "Ukuran visual; area klik selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: state toggle (aria-pressed).",
+        "name": "selected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Uncontrolled: state toggle awal; keberadaan selected/defaultSelected menjadikan tombol toggle.",
+        "name": "defaultSelected",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Hitungan Badge; masuk nama aksesibel.",
+        "name": "badgeCount",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Spinner menggantikan ikon.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya untuk aksi yang benar-benar tidak relevan; selain itu reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "onPress satu kali (Space pada pelepasan); mode toggle memanggil onSelectedChange",
+      "trigger": "Enter atau Space saat fokus"
+    },
+    {
+      "input": "keyboard",
+      "result": "Tooltip ditutup tanpa memindah fokus (SC 1.4.13)",
+      "trigger": "Esc saat Tooltip tampil"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress; menyeret keluar sebelum melepas membatalkan (SC 2.5.2)",
+      "trigger": "klik (pelepasan di dalam area)"
+    },
+    {
+      "input": "pointer",
+      "result": "Tooltip label setelah jeda; Tooltip bisa di-hover dan bertahan",
+      "trigger": "hover"
+    },
+    {
+      "input": "touch",
+      "result": "onPress pada pelepasan; tanpa hover menempel",
+      "trigger": "tap"
+    },
+    {
+      "input": "touch",
+      "result": "menampilkan Tooltip label; tidak memicu onPress",
+      "trigger": "tekan lama"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Close",
+        "More actions",
+        "Edit name",
+        "Remove filter"
+      ],
+      "id-ID": [
+        "Tutup",
+        "Aksi lainnya",
+        "Ubah nama",
+        "Hapus filter"
+      ]
+    },
+    "rules": [
+      "Label = kata kerja (+ objek bila konteks tidak jelas) dari glosarium; sentence case.",
+      "Label toggle konstan dan menamai aksi; state disampaikan aria-pressed.",
+      "Makna ikon terkunci (§5.7): ikon yang sama selalu berarti aksi yang sama dengan label yang sama (SC 3.2.4).",
+      "Bila label membutuhkan lebih dari tiga kata untuk jelas, pakai Button berlabel."
+    ]
+  },
+  "depends_on": [
+    "Tooltip",
+    "Spinner",
+    "Badge",
+    "Popover"
+  ],
+  "do": [
+    "Selalu isi label; pembaca layar dan Tooltip memakainya.",
+    "Pakai ikon terisi sebagai penanda selected, bukan hanya warna.",
+    "Jelaskan alasan blokir di Popover yang terbuka saat ditekan, bukan hanya di Tooltip."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "IconButton tanpa label atau dengan label nama ikon."
+    },
+    {
+      "ref": "UB9",
+      "text": "Alasan blokir yang hanya ada di Tooltip."
+    },
+    {
+      "ref": "UB5",
+      "text": "Area klik di bawah 44×44 pada sentuh karena ikon kecil."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "ukuran tombol tetap; Tooltip membungkus dengan lebar maksimum; nama aksesibel tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "ikon di bar tidak membesar melebihi bar; iOS memakai Large Content Viewer, web/Android tetap ≥ target-current; Tooltip ikut membesar",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Badge disembunyikan; nama tanpa hitungan",
+      "case": "badge 0 item"
+    },
+    {
+      "behaviour": "tampil \"99+\"; nama aksesibel \"more than 99\" dari ICU",
+      "case": "badge jumlah maksimum"
+    },
+    {
+      "behaviour": "onPress kedua diabaikan selama loading",
+      "case": "klik ganda cepat"
+    },
+    {
+      "behaviour": "aksi yang butuh server diblokir dengan reason \"Needs connection\" atau diantrekan sesuai OfflineSync",
+      "case": "offline"
+    },
+    {
+      "behaviour": "Spinner menggantikan ikon; ukuran terkunci; aria-busy",
+      "case": "loading"
+    },
+    {
+      "behaviour": "variant secondary dengan latar surface agar ikon ≥ 3:1; ring focus-ring-inverse",
+      "case": "di atas surface-inverse atau media"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan tercatat di manifest.",
+  "lint": [
+    "IconButton tanpa label ditolak",
+    "label yang sama dengan nama ikon atau berisi kata \"icon\"/\"ikon\" ditolak",
+    "reason wajib bila aria-disabled",
+    "Lebih dari satu IconButton variant=primary per tampilan ditolak (manual-review)"
+  ],
+  "name": "IconButton",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "hover+focus dengan Tooltip"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "selected",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "tertiary",
+      "secondary",
+      "primary",
+      "destructive"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memicu satu aksi dengan ikon saja, untuk aksi yang maknanya sudah dikenal dan ruangnya sempit; nama aksesibel wajib dari label tersembunyi yang juga tampil sebagai Tooltip.",
+    "when_not_to_use": [
+      "Untuk aksi utama tampilan atau aksi yang maknanya tidak universal: pakai Button berlabel.",
+      "Untuk navigasi: pakai Link atau Button dengan asChild (IconButton tidak polimorfik).",
+      "Untuk memilih satu dari beberapa opsi: pakai SegmentedControl; IconButton toggle hanya untuk satu state on/off.",
+      "Untuk aksi destruktif yang tidak bisa dibalik di tempat yang mudah tersentuh tak sengaja: pakai Button berlabel di Menu dengan konfirmasi."
+    ]
+  },
+  "related": [
+    "Button",
+    "Menu",
+    "Tooltip",
+    "CopyButton"
+  ],
+  "responsive": [
+    {
+      "behaviour": "md atau lg; area klik ≥ target-min-touch; Tooltip lewat tekan lama; jarak ≥ 8 antar IconButton",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "md; area klik ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sm diizinkan di toolbar dan baris tabel; Tooltip saat hover dan fokus",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak pernah boleh menjalankan aksi; IconButton tidak dirender dan jarak toolbar menutup"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi terlihat tetapi tidak diizinkan saat ini; tekan membuka Popover reason (ikon-saja tidak punya ruang teks terlihat)"
+    },
+    {
+      "pattern": "step-up",
+      "when": "aksi berisiko tinggi; membuka StepUpDialog sebelum onPress"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right",
+      "undo",
+      "redo",
+      "indent",
+      "outdent"
+    ],
+    "notes": "Ikon berarah dicerminkan; Badge pindah ke sudut inline-end (kiri atas di RTL); ikon jam, centang, media, dan logo tidak dicerminkan."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh area klik diperluas ke target-min-touch tanpa mengubah ukuran visual",
+      "name": "sm",
+      "notes": "Toolbar padat dan baris tabel pada pointer; ikon icon-sm.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default; ikon icon-md.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-current, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh, glove, atau in-motion; ikon icon-lg.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "ikon terisi tetap; state-layer hover di atas latar selected",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring ditambahkan di luar; penanda terisi tetap",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "ikon terisi diredam; aria-pressed tetap diumumkan",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tidak bisa ditekan saat loading",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "Tooltip tampil satu kali walau hover dan fokus bersamaan",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "icon": "color-structure-text-primary"
+      },
+      "treatment": "ikon varian"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-subtle"
+      },
+      "treatment": "token-swap ke interaction-subtle (tertiary) atau interaction-hover (primary), atau state-layer hover; hanya di (hover: hover); Tooltip muncul setelah jeda"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "container": "color-interaction-pressed"
+      },
+      "treatment": "interaction-pressed atau state-layer pressed; transform state-press-transform tanpa mengubah layout"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px; Tooltip label tampil"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "container": "color-interaction-subtle",
+        "icon": "color-interaction-default"
+      },
+      "treatment": "mode toggle: aria-pressed=\"true\"; ikon beralih ke versi terisi (penanda non-warna) + latar interaction-subtle atau state-layer selected"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "icon": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\"; ikon text-disabled; tetap fokusabel; saat ditekan membuka Popover berisi reason dan mengumumkannya polite (reason tidak hanya di Tooltip)"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "Spinner menggantikan ikon, ukuran terkunci, aria-busy=\"true\", tekan diabaikan"
+    }
+  ],
+  "target_hints": {
+    "compose": "IconButton/IconToggleButton dibungkus {Ns}IconButton",
+    "flutter": "IconButton dibungkus {ns}_icon_button.dart",
+    "html": {
+      "element": "button",
+      "notes": "type=\"button\"; aria-label dari label; pseudo-elemen untuk memperluas area klik tanpa mengubah layout"
+    },
+    "swiftui": "Button + Label.iconOnly dibungkus {Ns}IconButton"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Tanpa latar dan tanpa border; latar interaction-subtle saat hover. Untuk toolbar, header, baris tabel.",
+      "name": "tertiary"
+    },
+    {
+      "description": "Latar surface-raised + border-control (batas kontrol ≥ 3:1) bila ikon berdiri sendiri di atas konten.",
+      "name": "secondary"
+    },
+    {
+      "description": "Fill interaction-default, ikon on-solid; aksi utama hanya-ikon (mis. tombol tambah mengambang). Tunduk aturan satu primer per tampilan.",
+      "name": "primary"
+    },
+    {
+      "description": "Ikon atau fill semantic-critical; hanya untuk aksi yang bisa dibatalkan atau didahului konfirmasi.",
+      "name": "destructive"
+    }
+  ]
+}

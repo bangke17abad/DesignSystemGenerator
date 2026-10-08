@@ -1,0 +1,250 @@
+<!-- Select fixture · every variant × state, sizes, mandatory combinations (§6.9). Native <select> is the html-first default; the
+     custom listbox (Select.js) shows from tablet width up, phones keep the native picker (OS sheet). -->
+<section class="ds-demo" data-ds-demo="variants/native">
+  <div class="ds-grid">
+    <div class="ds-select" data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-v1">Country</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-v1" name="country" autocomplete="country" required aria-describedby="sl-v1-help">
+          <option value="">Select a country</option>
+          <option value="ID" selected>Indonesia</option>
+          <option value="MY">Malaysia</option>
+          <option value="SG">Singapore</option>
+          <option value="TH">Thailand</option>
+          <option value="VN">Vietnam</option>
+        </select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__helper" id="sl-v1-help">Used for tax and shipping.</p>
+    </div>
+    <div class="ds-select" data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-v2">Department <span class="ds-select__optional">(optional)</span></label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-v2" name="department">
+          <option value="">Select a department</option>
+          <optgroup label="Operations"><option value="lg">Logistics</option><option value="wh">Warehouse</option></optgroup>
+          <optgroup label="Corporate"><option value="fn">Finance</option><option value="hr">People and culture</option></optgroup>
+        </select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/custom (open, selected+focus, option hover, unavailable)">
+  <div class="ds-grid">
+    <div class="ds-select" data-variant="custom" data-default-open data-inline-list data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-c1">Shipping region</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-c1" name="region" required>
+          <option value="">Select a region</option>
+          <option value="jw" selected data-description="Next business day">Java</option>
+          <option value="sm" data-force="hover" data-description="2–3 business days">Sumatra</option>
+          <option value="kl" data-description="3–4 business days">Kalimantan</option>
+          <option value="pp" data-unavailable data-label="Papua" data-reason="Not available for your account">Papua (not available for your account)</option>
+        </select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" data-variant="custom" data-default-open data-inline-list data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-c2">Team (selected + hover, groups)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-c2" name="team">
+          <option value="">Select a team</option>
+          <optgroup label="Operations">
+            <option value="lg" selected data-force="hover">Logistics</option>
+            <option value="wh" data-default-active>Warehouse</option>
+          </optgroup>
+          <optgroup label="Corporate">
+            <option value="fn">Finance</option>
+            <option value="hr">People and culture</option>
+          </optgroup>
+        </select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" data-variant="custom" data-default-open data-inline-list data-empty-text="No departments yet. Ask an admin to add one." data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-c3">Department (0 options)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-c3" name="dept">
+          <option value="">Select a department</option>
+        </select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s1">Default (empty)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s1" required><option value="">Select a country</option><option value="ID">Indonesia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s2">Hover</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s2" data-force="hover" required><option value="">Select a country</option><option value="ID">Indonesia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s3">Focus</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s3" data-force="focus" required><option value="">Select a country</option><option value="ID" selected>Indonesia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s4">Pressed</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s4" data-force="pressed" required><option value="">Select a country</option><option value="ID" selected>Indonesia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s5">Selected</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s5" required><option value="">Select a country</option><option value="SG" selected>Singapore</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s6">Country of residence</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s6" autocomplete="country" required aria-invalid="true" aria-describedby="sl-s6-err"><option value="">Select a country</option><option value="ID">Indonesia</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__error" id="sl-s6-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a country to continue</span></p>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s7">Warehouse</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s7" aria-busy="true" aria-describedby="sl-s7-help"><option value="">Loading options…</option></select>
+        <span class="ds-select__spinner" aria-hidden="true"></span>
+      </div>
+      <p class="ds-select__helper" id="sl-s7-help">Loading warehouses for Java…</p>
+    </div>
+    <div class="ds-select" data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s8">Cost centre</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-s8" aria-disabled="true" aria-describedby="sl-s8-reason"><option value="">Select a cost centre</option><option value="1" selected>CC-104 Logistics</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__reason" id="sl-s8-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Set by your manager when the budget was approved.</span></p>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-s9">Currency</label>
+      <div class="ds-select__group">
+        <input class="ds-select__input" id="sl-s9" type="text" value="Indonesian rupiah (IDR)" readonly aria-readonly="true">
+        <input type="hidden" name="currency" value="IDR">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <div class="ds-select" data-ds-module="select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k1">Blocked + selected</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-k1" aria-disabled="true" aria-describedby="sl-k1-reason"><option value="">Select a plan</option><option value="b" selected>Business annual</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__reason" id="sl-k1-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only owners can change the plan.</span></p>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k2">Error + focus</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-k2" required aria-invalid="true" data-force="focus" aria-describedby="sl-k2-err"><option value="">Select a delivery day</option><option value="mon">Monday</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+      <p class="ds-select__error" id="sl-k2-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a delivery day</span></p>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k3">Loading + pressed (prevented)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-k3" aria-busy="true" data-force="pressed"><option value="">Loading options…</option></select>
+        <span class="ds-select__spinner" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k4">Read-only + focus</label>
+      <div class="ds-select__group">
+        <input class="ds-select__input" id="sl-k4" type="text" value="Jakarta (UTC+7)" readonly aria-readonly="true" data-force="focus">
+        <input type="hidden" name="tz" value="Asia/Jakarta">
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k5">Selected + hover</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-k5" data-force="hover"><option value="">Select a country</option><option value="TH" selected>Thailand</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-k6">Selected + focus</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-k6" data-force="focus"><option value="">Select a country</option><option value="VN" selected>Vietnam</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (aligned with TextField)">
+  <div class="ds-grid">
+    <div class="ds-select" data-size="sm" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-z1">Status (sm)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-z1"><option value="">All statuses</option><option value="p" selected>Pending</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-z2">Province (md)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-z2" autocomplete="address-level1"><option value="">Select a province</option><option value="jb" selected>West Java</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" data-size="lg" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-z3">Pickup point (lg)</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-z3"><option value="">Select a pickup point</option><option value="1" selected>Gate 2, Terminal 3</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long-label+RTL">
+  <div class="ds-grid">
+    <div class="ds-select" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-l1">Metode pengiriman yang paling sesuai untuk alamat penerima di luar pulau <span class="ds-select__optional">(opsional)</span></label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-l1"><option value="">Pilih metode</option><option value="1" selected>Kargo laut terjadwal dengan asuransi penuh dan pelacakan harian</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+    <div class="ds-select" dir="rtl" lang="ar" style="grid-column: span 4">
+      <label class="ds-select__label" for="sl-l2">الدولة</label>
+      <div class="ds-select__group">
+        <select class="ds-select__input" id="sl-l2" autocomplete="country"><option value="">اختر دولة</option><option value="SA" selected>المملكة العربية السعودية</option></select>
+        <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="phone (native picker = sheet)">
+  <div class="ds-select" data-variant="custom" data-size="lg" data-ds-module="select">
+    <label class="ds-select__label" for="sl-p1">Delivery window</label>
+    <div class="ds-select__group">
+      <select class="ds-select__input" id="sl-p1" name="window" aria-describedby="sl-p1-help">
+        <option value="">Select a window</option>
+        <option value="am" selected>Morning, 08:00–12:00</option>
+        <option value="pm">Afternoon, 12:00–17:00</option>
+      </select>
+      <svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg>
+    </div>
+    <p class="ds-select__helper" id="sl-p1-help">On phones this opens the system picker sheet; from tablet width up it opens the listbox.</p>
+  </div>
+</section>

@@ -1,0 +1,281 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-live, aria-atomic=\"true\"; tidak memakai aria-relevant selain default",
+      "region dibuat sekali di akar dokumen saat aplikasi dimuat, di luar subtree yang bisa di-inert atau aria-hidden oleh Modal dan drawer",
+      "lang pada region mengikuti bahasa pesan (SC 3.1.2)",
+      "pesan polite di-debounce dan digabung (mis. tiga penghapusan cepat → \"3 items removed\")",
+      "pesan yang sama berturut-turut tetap diumumkan; pesan basi dibersihkan"
+    ],
+    "focus_order": "tidak pernah menerima fokus dan tidak memindahkan fokus",
+    "native": {
+      "compose": "Modifier.semantics { liveRegion = LiveRegionMode.Polite | LiveRegionMode.Assertive } pada node status yang teksnya berubah; View.announceForAccessibility hanya fallback (didepresiasi di Android 16). Not verified against the pinned version",
+      "flutter": "SemanticsService.announce(pesan, Directionality.of(context), assertiveness: Assertiveness.polite | Assertiveness.assertive); di versi yang mendepresiasinya pakai SemanticsService.sendAnnouncement(View.of(context), …); teks status persisten memakai Semantics(liveRegion: true). Not verified against the pinned version",
+      "swiftui": "AccessibilityNotification.Announcement(pesan).post() (iOS 17+); assertive lewat AttributedString dengan accessibilitySpeechAnnouncementPriority = .high; versi lama UIAccessibility.post(notification: .announcement, argument:). Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "status (polite) dan region aria-live=\"assertive\"; keduanya non-interaktif dan tersembunyi visual",
+    "sr_label": "teks pesan apa adanya; tanpa prefiks seperti \"Alert:\" karena pembaca layar sudah memberi konteks",
+    "wcag": [
+      "4.1.3",
+      "3.3.1",
+      "2.2.1",
+      "3.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "polite-region",
+      "role": "div role=\"status\" aria-live=\"polite\" aria-atomic=\"true\", kosong saat dimuat, tersembunyi dengan pola VisuallyHidden",
+      "tokens": []
+    },
+    {
+      "part": "assertive-region",
+      "role": "div aria-live=\"assertive\" aria-atomic=\"true\", kosong saat dimuat; hanya untuk C1 dan event kritis",
+      "tokens": []
+    },
+    {
+      "part": "queue",
+      "role": "antrean pesan non-visual: debounce polite, deduplikasi, dan pembersihan region setelah pesan dibaca",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "LiveAnnouncer.Provider (sekali di akar; juga mengekspos announce(message, { politeness }))",
+      "LiveAnnouncer.Message (deklaratif; mengumumkan saat message berubah)"
+    ],
+    "props": [
+      {
+        "default": "7000",
+        "description": "Provider: jeda sebelum region dikosongkan.",
+        "name": "clearAfter",
+        "required": false,
+        "type": "number (ms)"
+      },
+      {
+        "default": "150",
+        "description": "Provider: jeda penggabungan pesan polite beruntun.",
+        "name": "debounce",
+        "required": false,
+        "type": "number (ms)"
+      },
+      {
+        "description": "LiveAnnouncer.Message: teks yang diumumkan saat nilainya berubah.",
+        "name": "message",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "polite",
+        "description": "LiveAnnouncer.Message dan announce(): tingkat sela; assertive hanya C1 dan event kritis.",
+        "name": "politeness",
+        "required": false,
+        "type": "\"polite\" | \"assertive\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "komponen pemanggil memanggil announce(\"Changes saved\", polite); fokus tidak berpindah",
+      "trigger": "pengguna menjalankan aksi (mis. Enter pada \"Save changes\")"
+    },
+    {
+      "input": "keyboard",
+      "result": "jumlah hasil diumumkan polite setelah debounce ≥ 300 ms berhenti mengetik, satu kali per hasil stabil",
+      "trigger": "mengetik di SearchField"
+    },
+    {
+      "input": "pointer",
+      "result": "pesan kedua tetap diumumkan (region dikosongkan lalu diisi ulang setelah jeda singkat ±100 ms)",
+      "trigger": "klik aksi yang menghasilkan pesan identik dua kali berturut-turut"
+    },
+    {
+      "input": "touch",
+      "result": "pesan assertive menyela ucapan berjalan; maksimal satu pesan assertive aktif, sisanya antre",
+      "trigger": "event kritis atau error sistem C1 tiba"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Changes saved",
+        "12 results",
+        "File removed",
+        "Connection lost. Changes will be sent when you're back online."
+      ],
+      "id-ID": [
+        "Perubahan disimpan",
+        "12 hasil",
+        "File dihapus",
+        "Koneksi terputus. Perubahan akan dikirim saat kembali online."
+      ]
+    },
+    "rules": [
+      "Satu kalimat lengkap yang menyebut objek dan hasil; kata kerja sama dengan tombol pemicu (\"Save\" → \"saved\").",
+      "Tanpa \"Success!\", \"Oops\", emoji, atau simbol yang dibaca aneh.",
+      "Jumlah memakai ICU plural dan formatter locale; angka tidak digabung sebagai string.",
+      "Assertive hanya untuk C1 dan event kritis; menyebut apa yang terjadi dan apa yang harus dilakukan.",
+      "Tidak membacakan nilai rahasia (kode, sandi) di dalam pesan."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Pasang provider sekali di akar aplikasi dan biarkan region kosong sejak awal.",
+    "Debounce pengumuman yang dipicu ketikan dan gabungkan pesan beruntun.",
+    "Taruh region di luar subtree yang di-inert saat overlay terbuka."
+  ],
+  "dont": [
+    {
+      "text": "Membuat region aria-live baru di setiap komponen atau saat pesan muncul."
+    },
+    {
+      "ref": "UB11",
+      "text": "Memakai assertive untuk konfirmasi simpan, hasil pencarian, atau status sehat C4-C6."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menjadikan pengumuman satu-satunya tempat informasi penting; status tetap terlihat di layar."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "pesan tidak dipotong; pesan di atas ±150 karakter ditandai lint karena terlalu panjang untuk didengar",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tidak berdampak; region tersembunyi visual",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "diabaikan; region tidak diubah",
+      "case": "pesan kosong (0 karakter)"
+    },
+    {
+      "behaviour": "polite digabung menjadi ringkasan terakhir; assertive maksimal satu aktif, berikutnya antre",
+      "case": "jumlah pesan maksimum (puluhan dalam satu detik)"
+    },
+    {
+      "behaviour": "tetap diumumkan (region dikosongkan dulu)",
+      "case": "pesan identik berturut-turut"
+    },
+    {
+      "behaviour": "perubahan konektivitas diumumkan sekali saat berubah (polite; assertive hanya bila brief menyatakannya C1), tidak diulang di setiap percobaan ulang",
+      "case": "offline"
+    },
+    {
+      "behaviour": "tunggu < 2 detik tidak diumumkan; lebih lama: \"Loading results\" sekali, lalu hasil akhirnya",
+      "case": "loading"
+    },
+    {
+      "behaviour": "region tetap aktif karena berada di luar subtree inert",
+      "case": "Modal terbuka dengan latar inert"
+    },
+    {
+      "behaviour": "bila fokus tidak dipindah ke h1, judul halaman baru diumumkan polite",
+      "case": "pindah rute"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Accessibility",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "aria-live di luar LiveAnnouncer ditolak kecuali pada node status persisten yang terdaftar (V5)",
+    "announce(…, assertive) dari komponen non-C1 ditandai (manual-review)",
+    "Region LiveAnnouncer di dalam root aplikasi yang bisa di-inert ditolak"
+  ],
+  "name": "LiveAnnouncer",
+  "preview": {
+    "combinations": [
+      "pesan identik berulang",
+      "burst pesan digabung",
+      "Modal terbuka + pengumuman",
+      "log pengumuman ditampilkan di preview"
+    ],
+    "states": [
+      "idle",
+      "announcing",
+      "cleared"
+    ],
+    "variants": [
+      "polite",
+      "assertive"
+    ]
+  },
+  "purpose": {
+    "purpose": "Satu-satunya jalur pengumuman status untuk teknologi bantu: satu region polite dan satu region assertive per aplikasi, dibuat saat aplikasi dimuat; semua komponen lain mengumumkan lewat sini.",
+    "when_not_to_use": [
+      "Untuk status yang harus terlihat dan persisten: pakai InlineAlert, Banner, atau StatusLabel (yang juga memanggil LiveAnnouncer bila berubah).",
+      "Untuk error validasi form: fokus berpindah ke ErrorSummary atau field; jangan menambah pengumuman yang mengulang apa yang dibaca karena fokus.",
+      "Untuk teks yang berubah terus-menerus (hitungan detik, progres per persen): umumkan hanya di ambang, bukan setiap perubahan.",
+      "Untuk konten yang baru tampil dan langsung menerima fokus (Modal, ErrorSummary): fokus sudah membuatnya terbaca."
+    ]
+  },
+  "related": [
+    "Toast",
+    "InlineAlert",
+    "Spinner",
+    "SearchField",
+    "ConnectionStatus"
+  ],
+  "responsive": [
+    {
+      "behaviour": "sama; Toast yang terlihat tidak punya region sendiri, pengumumannya lewat LiveAnnouncer agar tidak terbaca ganda",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sama; satu instance per jendela atau tab aplikasi",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Pengumuman mengikuti apa yang boleh dilihat role; LiveAnnouncer tidak memfilter, komponen pemanggil hanya mengumumkan data yang sudah diizinkan. Event kritis tidak pernah dibatasi izin (I5)."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Tidak ada geometri yang dicerminkan; pesan membawa arah (dir=\"auto\" di web, TextDirection pada SemanticsService.announce di Flutter) dan angka atau kode diisolasi agar urutan bidi benar."
+  },
+  "sizes": {
+    "not_applicable": "Tidak punya ukuran visual; region tersembunyi secara visual."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "idle",
+      "token_swaps": {},
+      "treatment": "kedua region ada di DOM dan kosong sejak aplikasi dimuat (region yang dibuat bersamaan dengan pesan sering tidak dibaca)"
+    },
+    {
+      "name": "announcing",
+      "token_swaps": {},
+      "treatment": "teks pesan disisipkan ke region; aria-atomic membuat seluruh pesan dibaca"
+    },
+    {
+      "name": "cleared",
+      "token_swaps": {},
+      "treatment": "region dikosongkan setelah jeda (default 7 detik) agar navigasi baca tidak menemukan pesan basi; pesan identik berikutnya tetap diumumkan karena region sudah bersih"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Announcer: node liveRegion polite dan assertive di akar komposisi + service antrean",
+    "flutter": "{ns}_announcer.dart: service yang membungkus SemanticsService dengan antrean, debounce, dan deduplikasi",
+    "html": {
+      "element": "div",
+      "notes": "dua div di akhir body di luar root aplikasi: role=status aria-live=polite aria-atomic=true dan aria-live=assertive aria-atomic=true; kelas VisuallyHidden; window.{NS}.announce()"
+    },
+    "swiftui": "{Ns}Announcer: service yang memposting AccessibilityNotification.Announcement dengan prioritas"
+  },
+  "tier": "R",
+  "variants": {
+    "not_applicable": "Tidak punya tampilan; tingkat polite atau assertive adalah opsi per pesan, bukan varian visual."
+  }
+}

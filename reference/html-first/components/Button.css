@@ -1,0 +1,119 @@
+/* Button · engine 1.8.0 reference (catalog/components/Button.json). Tokens only (I3); logical properties only (§12.4). */
+.ds-button {
+  --_bg: var(--button-secondary-container-background);
+  --_bg-hover: var(--button-secondary-container-background-hover);
+  --_bg-pressed: var(--button-secondary-container-background-pressed);
+  --_fg: var(--button-secondary-label-color);
+  --_border: var(--button-secondary-container-border);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: var(--target-current);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  box-shadow: var(--button-container-shadow);
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), transform var(--motion-fast-duration) var(--motion-easing-standard);
+}
+/* state layer (L16): opacity is 0 for token-swap languages, so the same CSS serves both strategies */
+.ds-button::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border-width-thin));
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-button[data-variant="primary"] {
+  --_bg: var(--button-primary-container-background);
+  --_bg-hover: var(--button-primary-container-background-hover);
+  --_bg-pressed: var(--button-primary-container-background-pressed);
+  --_fg: var(--button-primary-label-color);
+  --_border: var(--button-primary-container-background);
+}
+.ds-button[data-variant="tertiary"] {
+  --_bg: transparent;
+  --_bg-hover: var(--button-tertiary-container-background-hover);
+  --_bg-pressed: var(--button-tertiary-container-background-pressed);
+  --_fg: var(--button-tertiary-label-color);
+  --_border: transparent;
+  box-shadow: none;
+}
+.ds-button[data-variant="destructive"] {
+  --_bg: var(--button-destructive-container-background);
+  --_bg-hover: var(--button-destructive-container-background-hover);
+  --_bg-pressed: var(--button-destructive-container-background-pressed);
+  --_fg: var(--button-destructive-label-color);
+  --_border: var(--button-destructive-container-background);
+}
+.ds-button[data-size="sm"] { min-block-size: max(var(--control-height-sm), var(--target-current)); padding-inline: var(--space-3); }
+.ds-button[data-size="lg"] { min-block-size: max(var(--control-height-lg), var(--target-current)); padding-inline: var(--space-6); }
+.ds-button[data-block] { inline-size: 100%; }
+
+@media (hover: hover) {
+  .ds-button:not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--_bg-hover); }
+  .ds-button:not([aria-disabled="true"], [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
+}
+.ds-button[data-force~="hover"] { background: var(--_bg-hover); }
+.ds-button[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
+.ds-button:not([aria-disabled="true"], [aria-busy="true"]):active,
+.ds-button[data-force~="pressed"] { background: var(--_bg-pressed); transform: var(--state-press-transform); }
+.ds-button:not([aria-disabled="true"], [aria-busy="true"]):active::before,
+.ds-button[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+
+/* blocked with reason (UB10): aria-disabled keeps the button focusable so the reason can be read */
+.ds-button[aria-disabled="true"] {
+  --_bg: var(--color-structure-surface-sunken);
+  --_fg: var(--color-structure-text-disabled);
+  --_border: var(--color-structure-border);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.ds-button[aria-disabled="true"] .ds-icon[data-icon="restricted"] { color: var(--color-structure-text-secondary); }
+
+/* loading: label keeps its width, spinner replaces it visually */
+.ds-button[aria-busy="true"] { cursor: progress; }
+.ds-button[aria-busy="true"] > :not(.ds-button__spinner) { opacity: 0; } /* opacity keeps the accessible name */
+.ds-button__spinner {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: calc(var(--icon-md) / -2);
+  margin-inline-start: calc(var(--icon-md) / -2);
+  border: var(--border-width-thick) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--shape-circle);
+  animation: ds-spin var(--motion-slow-duration) linear infinite;
+  animation-duration: calc(var(--motion-slow-duration) * 4);
+}
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ds-button__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; } }
+
+.ds-button .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); flex: none; }
+[dir="rtl"] .ds-button .ds-icon[data-mirror] { transform: scaleX(-1); }
+.ds-button__reason { display: block; margin-block-start: var(--space-1); color: var(--color-structure-text-secondary); }
+
+@media (forced-colors: active) {
+  .ds-button { border-color: ButtonText; }
+  .ds-button[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+}

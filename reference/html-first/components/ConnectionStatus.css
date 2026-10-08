@@ -1,0 +1,108 @@
+/* ConnectionStatus · engine 1.8.0 reference (catalog/components/ConnectionStatus.json). Tokens only (I3); logical properties only (§12.4).
+   Honest freshness (I6). States map to classes: live C6 (quiet: neutral dot + text-secondary, no container, never louder than
+   stale / offline, I7, UB11), reconnecting / syncing C5, stale / offline / sync-conflict C2, offline-during-task C1. The
+   container reads --attention-cN-* (L3 decides quiet / outline / tinted / filled); geometry is identical in every state so a
+   transition never moves layout. Freshness and queue count sit after the container in text-secondary / text-primary, like
+   StatusLabel's detail, so they stay legible whatever the container fill is.
+   Markup: div.ds-connection-status[data-state] > div.__summary[role=status] (container + freshness + queue) [+ .__actions]. */
+.ds-connection-status {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2) var(--space-3);
+  max-inline-size: 100%;
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  vertical-align: top;
+}
+.ds-connection-status__summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-1) var(--space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.ds-connection-status__container {
+  /* live (C6): no container and no semantic colour — transparent box keeps the same geometry */
+  --_bg: transparent;
+  --_fg: var(--color-structure-text-secondary);
+  --_border: transparent;
+  --_icon: var(--color-structure-text-secondary);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  padding-block: calc(var(--space-1) / 2);
+  padding-inline: var(--space-2);
+  border: var(--border-width-thin) solid var(--_border);
+  border-radius: var(--radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  overflow-wrap: break-word;
+}
+.ds-connection-status:is([data-state="reconnecting"], [data-state="syncing"]) .ds-connection-status__container { --_bg: var(--attention-c5-background); --_fg: var(--attention-c5-foreground); --_border: var(--attention-c5-border); --_icon: var(--attention-c5-icon); }
+.ds-connection-status:is([data-state="stale"], [data-state="offline"], [data-state="sync-conflict"]) .ds-connection-status__container { --_bg: var(--attention-c2-background); --_fg: var(--attention-c2-foreground); --_border: var(--attention-c2-border); --_icon: var(--attention-c2-icon); }
+.ds-connection-status[data-state="offline-during-task"] .ds-connection-status__container { --_bg: var(--attention-c1-background); --_fg: var(--attention-c1-foreground); --_border: var(--attention-c1-border); --_icon: var(--attention-c1-icon); }
+
+/* icon: live = small neutral dot (decorative, not a status); other states = locked status glyph, never mirrored */
+.ds-connection-status__container > .ds-icon {
+  flex: none;
+  inline-size: var(--icon-sm);
+  block-size: var(--icon-sm);
+  margin-block: calc((var(--type-label-line) - var(--icon-sm)) / 2);
+  color: var(--_icon);
+}
+[dir="rtl"] .ds-connection-status .ds-icon { transform: none; }
+
+.ds-connection-status__freshness,
+.ds-connection-status__queue {
+  padding-block: calc(var(--space-1) / 2);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+}
+.ds-connection-status__freshness { color: var(--color-structure-text-secondary); }
+.ds-connection-status__queue { color: var(--color-structure-text-primary); }
+
+/* detailed: panel for sync / offline-first surfaces — summary lines stacked, Retry (Button tertiary) below */
+.ds-connection-status[data-variant="detailed"] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-inline-size: var(--layout-measure);
+  padding: var(--space-4);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-raised);
+}
+.ds-connection-status[data-variant="detailed"] .ds-connection-status__summary { flex-direction: column; align-items: flex-start; }
+.ds-connection-status[data-variant="detailed"] .ds-connection-status__container { margin-inline-start: calc(-1 * var(--space-2)); }
+.ds-connection-status[data-variant="detailed"] :is(.ds-connection-status__freshness, .ds-connection-status__queue) { padding-block: 0; }
+.ds-connection-status__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+
+/* phone: compact stacks label, freshness and queue on separate lines (never truncated) */
+@media (--bp-tablet-down) {
+  .ds-connection-status:not([data-variant="detailed"]) .ds-connection-status__summary { flex-direction: column; align-items: flex-start; gap: 0; }
+  .ds-connection-status:not([data-variant="detailed"]) .ds-connection-status__freshness { padding-inline-start: var(--space-2); }
+}
+
+@media (forced-colors: active) {
+  .ds-connection-status:not([data-state="live"]) .ds-connection-status__container { border-color: CanvasText; }
+  .ds-connection-status .ds-icon { color: CanvasText; }
+  .ds-connection-status[data-variant="detailed"] { border-color: CanvasText; }
+}
+/* compact on one line: a middle dot separates freshness and queue (empty alt text, so it is not read) */
+@media (--bp-tablet-up) {
+  .ds-connection-status:not([data-variant="detailed"]) .ds-connection-status__freshness:not([hidden]) + .ds-connection-status__queue::before {
+    content: "·" / "";
+    margin-inline-end: var(--space-2);
+    color: var(--color-structure-text-secondary);
+  }
+}

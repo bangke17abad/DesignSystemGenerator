@@ -1,0 +1,329 @@
+{
+  "accessibility": {
+    "attributes": [
+      "simbol (⌘, ⌥, ⇧, ⌃, ↵) aria-hidden dengan nama terbaca lengkap di VisuallyHidden atau aria-label pada pembungkus",
+      "nama terbaca memakai nama tombol penuh dari glosarium (\"Control plus K\", \"Command K\", \"Shift plus Enter\")",
+      "elemen yang punya pintasan memakai aria-keyshortcuts dengan sintaks standar (\"Control+K\", \"Meta+K\"); Kbd hanya tampilan"
+    ],
+    "focus_order": "tidak masuk urutan fokus",
+    "native": {
+      "compose": "Text dengan Modifier.semantics { contentDescription = \"Control plus K\" }; pintasan nyata lewat Modifier.onKeyEvent / onPreviewKeyEvent",
+      "flutter": "Text dengan Semantics(label: \"Control plus K\") dan ExcludeSemantics pada simbol; pintasan nyata lewat Shortcuts/CallbackShortcuts + SingleActivator; MenuItemButton(shortcut:) menampilkan pintasan bawaan",
+      "swiftui": "Text(\"⌘K\").accessibilityLabel(\"Command K\"); pintasan nyata lewat .keyboardShortcut(\"k\", modifiers: .command), yang juga ditampilkan otomatis di Menu"
+    },
+    "politeness": "polite",
+    "role": "kbd (elemen semantik, tanpa role tambahan); kombinasi = kbd luar berisi kbd per tombol",
+    "sr_label": "nama tombol terbaca penuh, bukan simbol (\"Control plus K\", bukan \"caret K\")",
+    "wcag": [
+      "1.3.1",
+      "1.3.3",
+      "1.4.3",
+      "1.4.4",
+      "2.1.4",
+      "3.2.4"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "key",
+      "role": "satu tombol: teks atau simbol di kotak berbatas tipis; tinggi mengikuti baris teks",
+      "tokens": [
+        "type-code-family",
+        "type-code-size",
+        "type-code-line",
+        "type-code-weight",
+        "color-structure-text-primary",
+        "color-structure-surface-sunken",
+        "color-structure-border-strong",
+        "border-width-thin",
+        "radius-xs",
+        "space-1"
+      ]
+    },
+    {
+      "part": "separator",
+      "role": "pemisah antar tombol kombinasi: \"+\" (Windows/Linux) atau tanpa pemisah (macOS); \"then\" untuk urutan; aria-hidden",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "accessible-label",
+      "role": "nama terbaca lengkap (\"Control plus K\", \"Command K\") sebagai teks VisuallyHidden atau aria-label",
+      "tokens": []
+    },
+    {
+      "part": "inverse",
+      "role": "tampilan di atas surface-inverse (di dalam Tooltip)",
+      "tokens": [
+        "color-structure-surface-inverse",
+        "color-structure-text-oninverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "description": "Nama tombol logis (\"Mod\", \"K\"); \"Mod\" dipetakan ke ⌘ di macOS dan Ctrl di lainnya.",
+        "name": "keys",
+        "required": true,
+        "type": "string[]"
+      },
+      {
+        "default": "combination",
+        "description": "Cara tombol digabung.",
+        "name": "variant",
+        "required": false,
+        "type": "\"single\" | \"combination\" | \"sequence\""
+      },
+      {
+        "default": "auto",
+        "description": "OS untuk simbol; auto dari user agent/platform target.",
+        "name": "platform",
+        "required": false,
+        "type": "\"auto\" | \"mac\" | \"windows\" | \"linux\""
+      },
+      {
+        "description": "Override nama terbaca; default dirakit dari glosarium.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Kbd dilewati; tidak ada tab stop",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada aksi; teks dapat diseleksi",
+      "trigger": "klik atau hover"
+    },
+    {
+      "input": "touch",
+      "result": "tidak ada aksi; di phone pintasan tidak ditampilkan",
+      "trigger": "tap"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Ctrl+K",
+        "⌘K",
+        "Esc",
+        "Shift+Enter",
+        "G then I",
+        "Control plus K"
+      ],
+      "id-ID": [
+        "Ctrl+K",
+        "⌘K",
+        "Esc",
+        "Shift+Enter",
+        "G lalu I",
+        "Control plus K"
+      ]
+    },
+    "rules": [
+      "Simbol dan urutan modifier mengikuti OS pengguna (L14): macOS ⌃ ⌥ ⇧ ⌘ tanpa pemisah; Windows/Linux Ctrl+Alt+Shift dengan \"+\".",
+      "Nama tombol ditulis seperti tercetak pada keyboard (Esc, Enter, Tab); huruf kapital untuk huruf.",
+      "Nama terbaca dirakit dari glosarium per locale (nama tombol + kata penghubung \"plus\" yang dilokalkan), tidak dari simbol.",
+      "Tidak menampilkan pintasan satu karakter tanpa modifier kecuali dapat dimatikan atau hanya aktif saat komponen fokus (SC 2.1.4)."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Tampilkan simbol sesuai OS dan nama terbaca lengkap.",
+    "Pasangkan Kbd dengan aria-keyshortcuts pada elemen yang memiliki pintasan.",
+    "Sembunyikan pintasan di surface tanpa keyboard."
+  ],
+  "dont": [
+    {
+      "text": "Membiarkan pembaca layar membaca simbol mentah (\"⌘\") tanpa nama."
+    },
+    {
+      "text": "Menampilkan pintasan Windows di macOS atau sebaliknya."
+    },
+    {
+      "ref": "SC 2.1.4",
+      "text": "Pintasan global satu karakter tanpa modifier."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "Kbd tidak membungkus di tengah satu tombol; kombinasi boleh membungkus di antara tombol",
+      "case": "nama tombol +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "key tumbuh mengikuti teks; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Kbd tidak dirender",
+      "case": "pintasan tidak didefinisikan (kosong)"
+    },
+    {
+      "behaviour": "pertimbangkan ulang pintasan; tampilkan lengkap tanpa singkatan",
+      "case": "kombinasi sangat panjang (4+ tombol)"
+    },
+    {
+      "behaviour": "Kbd membaca dari registry pintasan, bukan string tetap",
+      "case": "pengguna mengubah pintasan (remap)"
+    },
+    {
+      "behaviour": "tampilkan nama tombol logis; OS tidak terdeteksi → format Windows/Linux (A-nn)",
+      "case": "layout keyboard non-QWERTY atau OS tidak terdeteksi"
+    },
+    {
+      "behaviour": "kombinasi dirender sebagai run LTR terisolasi (bdi dir=\"ltr\") agar urutan modifier tidak terbalik",
+      "case": "RTL"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Opsional: disertakan bila produk punya pintasan keyboard yang ditampilkan (Menu, Tooltip, CommandPalette, halaman bantuan); wajib bila CommandPalette disertakan. Alasan dicatat.",
+  "lint": [
+    "Simbol modifier tanpa nama terbaca ditolak",
+    "Kbd di dalam button atau a sebagai pemicu ditolak (manual-review)",
+    "Pintasan satu karakter tanpa modifier ditolak (V6, SC 2.1.4)"
+  ],
+  "name": "Kbd",
+  "preview": {
+    "combinations": [
+      "mac vs windows",
+      "di dalam Tooltip",
+      "di dalam Menu item",
+      "teks 200%",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "on-inverse",
+      "unavailable"
+    ],
+    "variants": [
+      "single",
+      "combination",
+      "sequence"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan tombol atau kombinasi tombol keyboard secara visual dengan simbol yang mengikuti OS pengguna dan nama terbaca yang lengkap untuk teknologi bantu.",
+    "when_not_to_use": [
+      "Untuk kode, nilai, atau perintah yang diketik: pakai teks kode (type-code) atau blok kode.",
+      "Sebagai tombol yang bisa ditekan: Kbd tidak interaktif; aksi memakai Button.",
+      "Untuk instruksi sentuh atau gestur: tulis sebagai teks.",
+      "Di surface tanpa keyboard fisik (phone): sembunyikan pintasan."
+    ]
+  },
+  "related": [
+    "CommandPalette",
+    "Menu",
+    "Tooltip"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tidak dirender kecuali keyboard fisik terdeteksi",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "dirender hanya bila keyboard fisik/pointer terdeteksi (any-pointer: fine atau hardware keyboard native)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "dirender di Menu, Tooltip, CommandPalette, dan halaman bantuan dengan simbol OS",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Kbd tidak memuat aksi; pintasan yang tidak diizinkan untuk role tidak dirender bersama aksinya."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Simbol tombol tidak dicerminkan; seluruh kombinasi diisolasi sebagai run LTR; Kbd di dalam kalimat RTL mengikuti posisi logis."
+  },
+  "sizes": {
+    "not_applicable": "Kbd tidak interaktif dan mengikuti ukuran teks konteksnya (type-code-size); tidak punya prop size atau area klik."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "satu-satunya kombinasi; Kbd tidak menerima hover, tekan, atau fokus",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tidak interaktif",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "tidak masuk urutan fokus",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "key": "color-structure-surface-sunken"
+      },
+      "treatment": "key di atas surface-sunken dengan border-strong"
+    },
+    {
+      "name": "on-inverse",
+      "token_swaps": {
+        "key": "color-structure-surface-inverse"
+      },
+      "treatment": "di dalam Tooltip atau surface-inverse: teks text-oninverse, border mengikuti"
+    },
+    {
+      "name": "unavailable",
+      "token_swaps": {},
+      "treatment": "pintasan dinonaktifkan pengguna atau tidak berlaku di platform: Kbd tidak dirender (bukan diredam)"
+    }
+  ],
+  "target_hints": {
+    "compose": "Text dibungkus {Ns}Kbd",
+    "flutter": "Text + Semantics dibungkus {ns}_kbd.dart",
+    "html": {
+      "element": "kbd",
+      "notes": "kbd bersarang untuk kombinasi; simbol aria-hidden + VisuallyHidden untuk nama; tanpa JS memakai format Windows/Linux"
+    },
+    "swiftui": "Text dibungkus {Ns}Kbd"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Satu tombol (Esc, Enter, /).",
+      "name": "single"
+    },
+    {
+      "description": "Modifier + tombol ditekan bersamaan (Ctrl+K / ⌘K); urutan modifier mengikuti konvensi OS.",
+      "name": "combination"
+    },
+    {
+      "description": "Tombol ditekan berurutan (G lalu I); dipisah kata \"then\" dari glosarium; hanya untuk pintasan yang memang berurutan dan bermodifier/dapat dimatikan (SC 2.1.4).",
+      "name": "sequence"
+    }
+  ]
+}

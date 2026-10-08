@@ -1,0 +1,460 @@
+{
+  "accessibility": {
+    "attributes": [
+      "href wajib untuk tautan aktif (tanpa href, <a> bukan tautan)",
+      "aria-current=\"page\" untuk tautan ke halaman saat ini",
+      "teks VisuallyHidden \"(opens in a new tab)\" bila newTab, \"(external site)\" bila external; rel=\"noopener\" pada target=_blank",
+      "atribut download + format dan ukuran file di teks terlihat untuk tautan unduhan",
+      "aria-disabled + aria-describedby ke reason untuk tautan diblokir"
+    ],
+    "focus_order": "mengikuti urutan DOM dalam teks",
+    "native": {
+      "compose": "Text(buildAnnotatedString { withLink(LinkAnnotation.Url(url, TextLinkStyles(style = SpanStyle(textDecoration = TextDecoration.Underline)))) { append(…) } }) (Compose 1.7+); standalone memakai LinkAnnotation atau TextButton dengan LocalUriHandler",
+      "flutter": "Link (package url_launcher) dengan builder ke TextButton/Text; Semantics(link: true, linkUrl: uri); di teks berjalan TextSpan dengan recognizer (node semantik tautan terpisah) bergaris bawah",
+      "swiftui": "Link(judul, destination: url) atau Text dari AttributedString/Markdown dengan atribut .link; navigasi internal lewat .environment(\\.openURL, OpenURLAction { … })"
+    },
+    "politeness": "polite",
+    "role": "link (elemen <a href>); asChild merender komponen tautan router tetapi tetap <a href>",
+    "sr_label": "teks terlihat = nama aksesibel (SC 2.5.3); konteks tambahan sebagai akhiran VisuallyHidden, tidak menggantikan teks terlihat",
+    "wcag": [
+      "1.4.1",
+      "1.4.3",
+      "2.1.1",
+      "2.4.4",
+      "2.4.7",
+      "2.5.2",
+      "2.5.3",
+      "2.5.8",
+      "3.2.4",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "text",
+      "role": "teks tujuan; warna interaksi + garis bawah (penanda non-warna)",
+      "tokens": [
+        "color-interaction-default",
+        "border-width-thin",
+        "type-body-size",
+        "type-body-line",
+        "font-sans"
+      ]
+    },
+    {
+      "part": "underline",
+      "role": "text-decoration underline dengan tebal border-width-thin dan offset konsisten; menebal ke border-width-thick saat hover",
+      "tokens": [
+        "border-width-thin",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "icon-external",
+      "role": "ikon tautan eksternal atau unduhan di inline-end; diikuti teks VisuallyHidden",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "icon-start",
+      "role": "ikon opsional pada varian standalone (mis. chevron kembali)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "hit-area",
+      "role": "varian standalone: min-block-size dan padding-block agar area klik ≥ target-current",
+      "tokens": [
+        "target-min-pointer",
+        "target-min-touch",
+        "space-1"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px; pada tautan yang membungkus beberapa baris, ring mengikuti tiap fragmen baris",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent (dengan modifier keys)",
+        "when": "aktivasi tanpa modifier (klik kiri atau Enter); tidak dipanggil untuk Ctrl/⌘+klik dan klik tengah"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Tujuan; tanpa href tautan hanya valid saat diblokir (reason).",
+        "name": "href",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Teks tujuan; juga nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "inline",
+        "description": "Konteks tautan; menentukan area klik dan aturan garis bawah.",
+        "name": "variant",
+        "required": false,
+        "type": "\"inline\" | \"standalone\""
+      },
+      {
+        "default": "otomatis dari origin href",
+        "description": "Menambah ikon eksternal + teks tersembunyi.",
+        "name": "external",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "target=_blank + rel=noopener + pemberitahuan tersembunyi.",
+        "name": "newTab",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Menyetel aria-current=\"page\".",
+        "name": "current",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Tautan unduhan; label wajib menyebut format dan ukuran.",
+        "name": "download",
+        "required": false,
+        "type": "boolean | string"
+      },
+      {
+        "description": "Hanya varian standalone; ikon dari set L9.",
+        "name": "iconStart",
+        "required": false,
+        "type": "IconName"
+      },
+      {
+        "description": "Alasan tautan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Merender komponen tautan router sebagai elemen akar dengan perilaku dan gaya Link.",
+        "name": "asChild",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "navigasi ke href; Space tidak mengaktifkan tautan (menggulir halaman), sesuai perilaku tautan native",
+      "trigger": "Enter saat fokus"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah; tautan diblokir tetap menerima fokus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress dipanggil (router boleh mencegat untuk navigasi SPA) pada pelepasan pointer (SC 2.5.2)",
+      "trigger": "klik kiri tanpa modifier"
+    },
+    {
+      "input": "pointer",
+      "result": "diserahkan ke browser (tab baru, salin tautan); onPress tidak mencegatnya karena href asli selalu ada",
+      "trigger": "Ctrl/⌘+klik, klik tengah, menu konteks"
+    },
+    {
+      "input": "touch",
+      "result": "tap menavigasi; tekan lama menampilkan pratinjau atau menu tautan sistem, tidak ditimpa",
+      "trigger": "tap; tekan lama"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak menavigasi; reason diumumkan polite lewat LiveAnnouncer",
+      "trigger": "klik tautan diblokir"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "View all notifications",
+        "Privacy policy",
+        "Learn how permissions work",
+        "Download guide (PDF, 2 MB)"
+      ],
+      "id-ID": [
+        "Lihat semua notifikasi",
+        "Kebijakan privasi",
+        "Pelajari cara kerja izin",
+        "Unduh panduan (PDF, 2 MB)"
+      ]
+    },
+    "rules": [
+      "Teks menyebut tujuan (\"View all notifications\"), bukan \"click here\", \"read more\", atau URL mentah.",
+      "Tujuan yang sama memakai teks yang sama di seluruh produk (SC 3.2.4); tujuan berbeda tidak memakai teks sama.",
+      "Tautan unduhan menyebut format dan ukuran; tautan eksternal ditandai ikon + teks tersembunyi.",
+      "Membuka tab baru hanya bila kehilangan konteks merugikan (mis. di tengah form), dan selalu diberi tahu.",
+      "Sentence case; tanpa tanda baca di akhir teks tautan."
+    ]
+  },
+  "depends_on": [
+    "VisuallyHidden",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Selalu beri garis bawah pada tautan di teks berjalan.",
+    "Pertahankan href asli agar tab baru, salin tautan, dan menu konteks tetap bekerja.",
+    "Tandai tautan eksternal, unduhan, dan tab baru dengan ikon dan teks tersembunyi."
+  ],
+  "dont": [
+    {
+      "ref": "UB6",
+      "text": "Tautan di teks berjalan yang hanya dibedakan warna."
+    },
+    {
+      "text": "Memakai Link untuk aksi tanpa navigasi (atau Button untuk navigasi tanpa asChild)."
+    },
+    {
+      "text": "Teks \"click here\" atau \"read more\" tanpa tujuan."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "tautan inline membungkus antar baris; ring fokus dan garis bawah mengikuti tiap fragmen; standalone membungkus tanpa ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tautan inline ikut membesar bersama teks; area standalone tumbuh; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "ditolak lint; tautan hanya-ikon tidak diizinkan; navigasi berikon memakai Button asChild dengan label (IconButton tidak polimorfik)",
+      "case": "teks kosong (0 karakter)"
+    },
+    {
+      "behaviour": "lebih dari tiga tautan per kalimat dipindah ke daftar tautan agar target tidak berdesakan",
+      "case": "jumlah maksimum tautan dalam satu paragraf"
+    },
+    {
+      "behaviour": "overflow-wrap: anywhere; di RTL diisolasi LTR dengan bdi",
+      "case": "URL panjang sebagai teks"
+    },
+    {
+      "behaviour": "tautan internal tetap aktif; tujuan yang tidak tersimpan menampilkan state offline halaman tujuan, bukan tautan nonaktif",
+      "case": "offline"
+    },
+    {
+      "behaviour": "tautan tidak menampilkan spinner; main tujuan menyetel aria-busy dan Skeleton",
+      "case": "loading navigasi SPA"
+    },
+    {
+      "behaviour": "warna dan ring memakai pasangan inverse; garis bawah tetap",
+      "case": "di atas surface-inverse"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Actions",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Link di teks berjalan tanpa garis bawah ditolak (V6, UB6)",
+    "Link tanpa href dan tanpa reason ditolak",
+    "Teks tautan \"click here\", \"here\", \"read more\" (dan padanan glosarium) ditolak",
+    "newTab=true tanpa teks pemberitahuan ditolak"
+  ],
+  "name": "Link",
+  "preview": {
+    "combinations": [
+      "hover+focus",
+      "current+hover",
+      "disabled+focus",
+      "inline multi-baris + focus",
+      "external + RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "pressed",
+      "focus",
+      "current",
+      "disabled-with-reason"
+    ],
+    "variants": [
+      "inline",
+      "standalone"
+    ]
+  },
+  "purpose": {
+    "purpose": "Berpindah ke halaman, tujuan, atau sumber lain dengan teks yang menyebut tujuan; di teks berjalan selalu bergaris bawah.",
+    "when_not_to_use": [
+      "Untuk menjalankan aksi pada halaman atau data saat ini (simpan, hapus, buka dialog): pakai Button.",
+      "Untuk navigasi utama aplikasi atau tab: pakai PrimaryNav, BottomNav, atau Tabs yang membawa aria-current dan pola keyboard-nya.",
+      "Untuk jejak lokasi halaman: pakai Breadcrumb.",
+      "Untuk tautan yang harus tampil sebagai tombol (CTA navigasi): pakai Button dengan asChild."
+    ]
+  },
+  "related": [
+    "Button",
+    "Breadcrumb",
+    "PrimaryNav",
+    "VisuallyHidden"
+  ],
+  "responsive": [
+    {
+      "behaviour": "standalone sebagai baris dengan area klik ≥ target-min-touch; inline tetap di kalimat dengan line-height cukup; tekan lama tidak ditimpa",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama; area klik standalone ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "hover menebalkan garis bawah; standalone ≥ target-min-pointer",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu tujuan ada: tautan tidak dirender dan kalimat di sekitarnya ditulis ulang agar tidak menggantung"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tujuan terlihat tetapi tidak dapat diakses saat ini; ikon gembok + reason"
+    },
+    {
+      "pattern": "full",
+      "when": "default: tautan aktif"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "external-link",
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Ikon eksternal dan chevron berada di inline-end/inline-start dan dicerminkan; URL, kode, dan angka di teks tautan diisolasi LTR."
+  },
+  "sizes": {
+    "not_applicable": "Link mewarisi ukuran teks induknya dan tidak punya prop size; area klik varian standalone diatur hit-area (≥ target-current)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring ditambahkan di luar; garis bawah tetap tebal",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tautan current tetap bisa di-hover; penanda bobot tidak hilang",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "tautan diblokir tetap fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa umpan balik hover pada tautan diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "text": "color-interaction-default"
+      },
+      "treatment": "teks interaction-default + garis bawah tipis"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "text": "color-interaction-hover",
+        "underline": "border-width-thick"
+      },
+      "treatment": "token-swap ke interaction-hover dan garis bawah menebal; hanya di (hover: hover)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "text": "color-interaction-pressed"
+      },
+      "treatment": "teks ke interaction-pressed; tanpa transform"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "outline 2px focus-ring offset 2px (box-decoration-break: clone untuk multi-baris); di atas surface-inverse memakai focus-ring-inverse"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "text": "color-structure-text-primary"
+      },
+      "treatment": "aria-current=\"page\" di daftar tautan lokal (daftar isi): bobot label naik + garis bawah tetap; bukan hanya warna"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "text": "color-structure-text-disabled"
+      },
+      "treatment": "tujuan terlihat tetapi diblokir: dirender tanpa href dengan role=\"link\" aria-disabled=\"true\" tabindex=\"0\", teks text-disabled tanpa garis bawah + ikon gembok; reason terlihat dan terhubung aria-describedby"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Link membungkus LinkAnnotation.Url di AnnotatedString; standalone memakai TextButton",
+    "flutter": "{ns}_link.dart membungkus Link (url_launcher) + Semantics(link: true); helper {ns}LinkSpan untuk teks berjalan",
+    "html": {
+      "element": "a",
+      "notes": "selalu href; text-decoration-thickness dan text-underline-offset dari token; box-decoration-break: clone untuk ring multi-baris"
+    },
+    "swiftui": "{Ns}Link membungkus Link atau AttributedString .link"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Di dalam teks berjalan: mewarisi ukuran teks induk, selalu bergaris bawah (UB6). Area klik mengikuti baris teks; pengecualian inline SC 2.5.8 berlaku, jarak antar tautan dijaga lewat line-height type-body-line.",
+      "name": "inline"
+    },
+    {
+      "description": "Di luar kalimat (\"View all\", tautan di akhir kartu, back-link): bergaris bawah secara default; boleh tanpa garis bawah hanya bila L-bahasa menetapkan penanda non-warna lain (ikon chevron) dan posisinya jelas sebagai tautan. Area klik ≥ target-current.",
+      "name": "standalone"
+    }
+  ]
+}

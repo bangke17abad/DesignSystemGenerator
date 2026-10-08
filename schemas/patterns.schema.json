@@ -1,0 +1,399 @@
+{
+  "$defs": {
+    "NA": {
+      "additionalProperties": false,
+      "properties": {
+        "not_applicable": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "not_applicable"
+      ],
+      "type": "object"
+    },
+    "pattern": {
+      "additionalProperties": false,
+      "properties": {
+        "accessibility": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "announcement": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "focus": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "step": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "step",
+              "focus"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "composition": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "component": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "parts": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "role_in_pattern": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "component",
+              "role_in_pattern"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "content": {
+          "additionalProperties": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "type": "object"
+        },
+        "do": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "dont": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "ref": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "text": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "text"
+            ],
+            "type": "object"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "edge_cases": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "behaviour": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "case": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "case",
+              "behaviour"
+            ],
+            "type": "object"
+          },
+          "minItems": 5,
+          "type": "array"
+        },
+        "flow": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "state_class": {
+                "enum": [
+                  "C1",
+                  "C2",
+                  "C3",
+                  "C4",
+                  "C5",
+                  "C6"
+                ]
+              },
+              "step": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "transition": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "step",
+              "state_class",
+              "transition"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "journeys": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "manual_notes": {
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "type": "string"
+        },
+        "pack": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "preview": {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        },
+        "problem": {
+          "additionalProperties": false,
+          "properties": {
+            "problem": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "when": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "when_not": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "problem",
+            "when",
+            "when_not"
+          ],
+          "type": "object"
+        },
+        "roles": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "note": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "pattern": {
+                    "enum": [
+                      "hidden",
+                      "disabled-with-reason",
+                      "step-up",
+                      "read-only",
+                      "full"
+                    ]
+                  },
+                  "role": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "role",
+                  "pattern",
+                  "note"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        },
+        "states": {
+          "additionalProperties": false,
+          "properties": {
+            "empty": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "error": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "loading": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "partial": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "success": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "empty",
+            "loading",
+            "error",
+            "partial",
+            "success"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "Draft",
+            "Reviewed",
+            "Stable"
+          ]
+        },
+        "tier": {
+          "enum": [
+            "R",
+            "S",
+            "O",
+            "domain",
+            "pack"
+          ]
+        },
+        "variants": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "behaviour": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "device_class": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "surface": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "surface",
+                  "device_class",
+                  "behaviour"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "$ref": "#/$defs/NA"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "tier",
+        "status",
+        "problem",
+        "composition",
+        "flow",
+        "variants",
+        "states",
+        "accessibility",
+        "content",
+        "roles",
+        "do",
+        "dont",
+        "edge_cases",
+        "preview",
+        "journeys",
+        "assumptions"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://ds-engine.local/schemas/patterns.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "patterns": {
+      "items": {
+        "$ref": "#/$defs/pattern"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "patterns"
+  ],
+  "title": "patterns",
+  "type": "object"
+}

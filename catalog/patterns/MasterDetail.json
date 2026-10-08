@@ -1,0 +1,113 @@
+{
+  "name": "MasterDetail",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada daftar entitas dan surface ≥ tablet (B3), kecuali B7 pattern_exclusions memberi alasan.",
+  "problem": {
+    "problem": "Pengguna memindai dan menangani banyak item berturut-turut, melihat detail item terpilih tanpa kehilangan posisi di daftar, dan berpindah ke item berikutnya dengan satu tombol, baik dengan pointer, sentuh, maupun keyboard.",
+    "when": [
+      "Daftar kerja untuk triase atau pemrosesan berurutan (antrean, kotak masuk, daftar pesanan, tiket) di surface tablet atau desktop.",
+      "Daftar dengan atribut terbatas di baris dan detail yang lebih kaya per item."
+    ],
+    "when_not": [
+      "Surface yang hanya phone: pakai daftar + DetailView halaman penuh (presentasi phone pola ini).",
+      "Detail yang membutuhkan seluruh lebar (editor, form panjang): buka DetailView atau FormFlow halaman sendiri.",
+      "Konfirmasi atau keputusan yang memblokir: pakai Modal, bukan ContextPanel."
+    ]
+  },
+  "composition": [
+    { "component": "AppShell", "parts": ["AppShell.Nav", "AppShell.Main", "AppShell.Aside"], "role_in_pattern": "region §8.2: daftar di main, detail di aside; nav menciut ke rail bila nav + panel + layout-content-min tidak muat" },
+    { "component": "Table", "parts": ["Table.Toolbar", "Table.Header", "Table.Body", "Table.Row", "Table.RowHeader", "Table.Empty", "Table.Footer"], "role_in_pattern": "master untuk data beratribut banyak; baris ber-onPress membuka detail; row-header memuat tautan utama ke halaman penuh" },
+    { "component": "List", "parts": ["List.Item", "List.Title", "List.SupportingText", "List.Meta", "List.Empty", "List.LoadMore"], "role_in_pattern": "master untuk item sederhana (kotak masuk, percakapan); variant navigable dengan item terpilih bertanda aria-current" },
+    { "component": "StatusLabel", "role_in_pattern": "status per baris di master dan di header detail, dengan teks yang sama" },
+    { "component": "ContextPanel", "parts": ["ContextPanel.Header", "ContextPanel.Title", "ContextPanel.Actions", "ContextPanel.Body", "ContextPanel.Footer", "ContextPanel.Close", "ContextPanel.ResizeHandle"], "role_in_pattern": "detail item terpilih: docked mendorong konten (desktop), overlay tanpa scrim (tablet), halaman penuh (phone)" },
+    { "component": "DescriptionList", "role_in_pattern": "atribut item di body panel (komposisi DetailView versi ringkas)" },
+    { "component": "Timeline", "role_in_pattern": "riwayat ringkas (variant compact) di body panel" },
+    { "component": "Link", "role_in_pattern": "\"Buka halaman penuh\" di header panel menuju DetailView" },
+    { "component": "Pagination", "role_in_pattern": "halaman atau Load more di master; seleksi dan halaman aktif dipertahankan bersama di URL" },
+    { "component": "EmptyState", "role_in_pattern": "master kosong (dibedakan kosong karena data vs karena filter) dan panel tanpa seleksi (\"Pilih item untuk melihat detail\")" },
+    { "component": "Skeleton", "role_in_pattern": "baris master (table-rows/list-items) dan body panel (description-list) dimuat terpisah" },
+    { "component": "Kbd", "role_in_pattern": "petunjuk pintasan (↑/↓, Enter, Esc) di bantuan atau Tooltip, bukan satu-satunya tempat" },
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Cancel", "Modal.Action"], "role_in_pattern": "konfirmasi \"Buang perubahan?\" saat panel edit dirty dan seleksi berganti" },
+    { "component": "InlineAlert", "role_in_pattern": "error System C1 + Retry di master atau panel secara terpisah; stale \"Item ini diperbarui\"" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "nama item terpilih saat seleksi berganti dengan panah; jumlah item setelah muat" }
+  ],
+  "flow": [
+    { "step": "Muat daftar", "state_class": "C5", "transition": "Skeleton baris master; bila URL memuat item terpilih, panel memuat item itu secara paralel dan baris itu digulir ke dalam pandangan" },
+    { "step": "Pindai dan pilih", "state_class": "C6", "transition": "klik/Enter pada baris membuka panel; URL diperbarui (rute /items/{id} atau parameter selected) tanpa menambah riwayat untuk setiap perpindahan panah" },
+    { "step": "Pindah seleksi dengan panah", "state_class": "C6", "transition": "↑/↓ memindah seleksi dan mengganti isi panel tanpa memindah fokus dari daftar; muat detail di-debounce agar menahan panah tidak memicu permintaan berantai" },
+    { "step": "Bertindak di panel", "state_class": "C5", "transition": "aksi di panel memakai kata kerja yang sama dengan aksi baris; hasil memperbarui baris dan panel bersamaan setelah konfirmasi server (I6)" },
+    { "step": "Selesai dan lanjut", "state_class": "C4", "transition": "bila aksi mengeluarkan item dari daftar (mis. diarsipkan), seleksi dan fokus pindah ke item berikutnya; Toast dengan Undo bila bisa dibalik" },
+    { "step": "Ganti seleksi saat panel dirty", "state_class": "C2", "transition": "Modal \"Buang perubahan?\"; Batal mempertahankan seleksi lama dan isian; Buang berpindah ke item baru" },
+    { "step": "Tutup panel", "state_class": "C6", "transition": "Esc atau Close menutup panel (overlay dan docked); fokus kembali ke baris pemicu; URL kembali ke daftar; posisi gulir tidak berubah" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "tanpa panel: tap baris membuka DetailView halaman penuh (rute) dengan back-bar \"Kembali ke {daftar}\"; kembali memulihkan posisi gulir, filter, dan fokus pada baris semula; Table menjadi kartu bertumpuk" },
+    { "device_class": "tablet", "behaviour": "ContextPanel overlay dari inline-end di z-panel tanpa scrim; daftar tetap dapat dipakai; Esc dan Close menutup; elemen fokus di daftar tidak tertutup panel (scroll-padding-inline-end atau panel menutup bila fokus pindah ke area tertutup); landscape lebar boleh docked bila muat" },
+    { "device_class": "desktop", "behaviour": "ContextPanel docked di aside, mendorong main (bukan menutupi); kolom sekunder tabel melipat ketika main menyempit; nav menciut ke rail bila perlu; lebar panel dapat diubah (drag + panah) dan diingat per pengguna" }
+  ],
+  "states": {
+    "empty": "Master kosong: EmptyState spesifik (first-use vs no-results karena filter, dengan Hapus filter); panel tidak dibuka. Tanpa seleksi di desktop: panel menampilkan EmptyState \"Pilih item untuk melihat detail\" atau ditutup (keputusan per surface).",
+    "loading": "Master dan panel memuat terpisah: Skeleton baris di master; header panel langsung menampilkan nama item dari baris, body Skeleton description-list + aria-busy.",
+    "error": "Master gagal: InlineAlert C1 + Retry menggantikan body tabel, toolbar tetap. Panel gagal: InlineAlert C1 + Retry di body panel, master tetap dapat dipakai.",
+    "partial": "Sebagian baris gagal dimuat atau item terpilih tidak lagi ada di hasil filter: baris gagal bertanda + Retry; panel tetap menampilkan item terpilih dengan catatan \"Tidak ada di hasil filter saat ini\".",
+    "success": "Aksi selesai: baris dan panel diperbarui bersama setelah konfirmasi; Toast C4 dengan kata kerja yang sama; bila item keluar dari daftar, seleksi pindah ke item berikutnya dan namanya diumumkan."
+  },
+  "accessibility": [
+    { "step": "Pindai dan pilih", "focus": "Enter pada baris membuka panel dan memindah fokus ke judul panel (tabindex −1, dengan ring); klik pointer membuka tanpa merampas fokus dari kontrol yang diklik", "announcement": "judul panel dibaca; tidak memakai region live di seluruh panel" },
+    { "step": "Pindah seleksi dengan panah", "focus": "fokus tetap di daftar (baris berikut); item terpilih bertanda aria-selected atau aria-current, bukan hanya warna", "announcement": "nama item baru diumumkan polite, di-debounce bila panah ditahan" },
+    { "step": "Bertindak di panel", "focus": "fokus tetap di aksi; F6/Shift+F6 berpindah antar region (nav, daftar, panel) tanpa menutup panel", "announcement": "hasil aksi polite" },
+    { "step": "Selesai dan lanjut", "focus": "item hilang dari daftar → fokus ke baris berikutnya, atau ke judul daftar bila kosong (§9.5)", "announcement": "nama item berikutnya atau \"Daftar kosong\" diumumkan polite" },
+    { "step": "Tutup panel", "focus": "Esc mengembalikan fokus ke baris pemicu; bila baris sudah tidak ada, ke heading daftar", "announcement": "tidak ada pengumuman tambahan; fokus yang kembali sudah dibaca" }
+  ],
+  "content": {
+    "rules": [
+      "Judul panel = nama item, bukan \"Detail\".",
+      "Aksi di panel dan di baris memakai label glosarium yang sama.",
+      "EmptyState panel menyebut cara memunculkan isi.",
+      "Tautan ke halaman penuh menyebut tujuannya (\"Buka halaman penuh\") dan membuka DetailView yang sama, bukan versi berbeda."
+    ],
+    "examples": {
+      "en-US": ["Select an item to see details", "Close details", "Open full page", "Back to orders", "This item no longer matches your filters", "Discard changes?"],
+      "id-ID": ["Pilih item untuk melihat detail", "Tutup detail", "Buka halaman penuh", "Kembali ke pesanan", "Item ini tidak lagi cocok dengan filter Anda", "Buang perubahan?"]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "role pemroses: aksi lifecycle tersedia di baris dan panel" },
+    { "pattern": "read-only", "when": "role baca: panel variant detail tanpa aksi edit; baris tetap dapat dipilih dan dibuka" },
+    { "pattern": "disabled-with-reason", "when": "aksi panel terlihat tetapi tidak diizinkan untuk item ini sekarang: Button aria-disabled + reason" },
+    { "pattern": "hidden", "when": "kolom atau seksi panel yang tidak boleh diketahui role tidak dirender di master maupun panel" },
+    { "pattern": "step-up", "when": "aksi berisiko dari panel membuka StepUpDialog; panel tetap terbuka dan menerima fokus kembali" }
+  ],
+  "do": [
+    "Pertahankan posisi gulir, halaman, filter, dan seleksi saat panel dibuka, ditutup, atau saat kembali dari halaman penuh.",
+    "Cerminkan item terpilih di URL agar deep link, refresh, dan tombol Back bekerja.",
+    "Dorong konten di desktop alih-alih menutupinya; lipat kolom sekunder ketika main menyempit.",
+    "Pindahkan seleksi ke item berikutnya setelah item keluar dari daftar agar pemrosesan berurutan tidak terputus."
+  ],
+  "dont": [
+    { "text": "ContextPanel dengan scrim atau kunci fokus; itu Modal.", "ref": "§8.2" },
+    { "text": "Panel overlay yang menutup baris yang sedang fokus.", "ref": "SC 2.4.11" },
+    { "text": "Memindah fokus ke panel setiap kali seleksi berganti dengan panah.", "ref": "SC 3.2.1" },
+    { "text": "Menandai item terpilih hanya dengan warna latar.", "ref": "UB2" },
+    { "text": "Membuang isian panel edit saat pengguna memilih item lain tanpa konfirmasi.", "ref": "SC 3.3.4" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "master dan panel menampilkan data tersimpan dengan \"Terakhir diperbarui {waktu}\"; aksi server aria-disabled + reason atau diantrekan bertanda \"Menunggu\" bila OfflineSync dipilih (I6)" },
+    { "case": "timeout memuat detail", "behaviour": "header panel tetap dengan nama item; body InlineAlert C1 + Retry; berpindah seleksi membatalkan permintaan lama sehingga respons usang tidak menimpa item baru" },
+    { "case": "daftar sangat besar (> 1.000 item)", "behaviour": "Table variant virtualized atau paginasi server; seleksi via URL tetap berlaku walau item berada di halaman lain (panel memuat langsung, master menyebut \"Item terpilih ada di halaman 7\" + tautan)" },
+    { "case": "daftar kosong", "behaviour": "panel tidak dibuka; EmptyState master membedakan belum ada data vs tidak ada hasil filter" },
+    { "case": "klik ganda baris atau Enter berulang (aksi ganda)", "behaviour": "panel dibuka sekali; klik ganda tidak membuka halaman penuh kecuali brief menetapkan; aksi panel mengabaikan kiriman kedua selama loading" },
+    { "case": "label dan nama item +40% (locale terpanjang)", "behaviour": "judul panel membungkus maks dua baris lalu ellipsis dengan nama lengkap di Tooltip dan nama aksesibel; status dan waktu di baris tidak dipotong" },
+    { "case": "item terpilih dihapus atau berubah oleh pihak lain", "behaviour": "panel menampilkan InlineAlert \"Item ini diperbarui\" + Muat ulang, atau menutup bila dihapus; fokus ke baris berikutnya (§9.5)" },
+    { "case": "teks 200% atau jendela menyempit", "behaviour": "panel docked beralih ke overlay lalu halaman penuh ketika main akan di bawah layout-content-min; seleksi dan isian tidak hilang saat ukuran berubah" }
+  ],
+  "wcag": ["1.3.1", "1.3.2", "1.4.1", "1.4.10", "2.1.1", "2.1.2", "2.4.3", "2.4.7", "2.4.11", "2.5.7", "3.2.1", "4.1.2", "4.1.3"],
+  "related_patterns": ["DetailView", "SearchAndFilter", "CrudFlow", "BulkActions", "AppNavigation", "AsyncFeedback"],
+  "lint": [
+    "ContextPanel dalam MasterDetail tanpa scrim dan tanpa aria-modal",
+    "Baris terpilih punya aria-selected atau aria-current dan penanda non-warna",
+    "Seleksi tercermin di URL pada target web",
+    "Panel phone dirender sebagai rute halaman penuh, bukan overlay"
+  ]
+}

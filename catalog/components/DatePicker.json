@@ -1,0 +1,800 @@
+{
+  "accessibility": {
+    "attributes": [
+      "label for/id pada input; aria-describedby ke helper (format) dan errorText",
+      "calendar-button aria-label \"Choose date\" + tanggal terpilih (\"Choose date, selected 8 October 2026\"), aria-expanded, aria-controls",
+      "dialog aria-label = label field; judul bulan aria-live=\"polite\"",
+      "grid aria-labelledby judul bulan; gridcell aria-selected; tombol hari aria-label tanggal lengkap (\"Thursday, 8 October 2026\")",
+      "aria-current=\"date\" untuk hari ini",
+      "aria-disabled + aria-describedby ke alasan untuk tanggal tidak tersedia",
+      "roving tabindex di grid (satu tab stop)",
+      "autocomplete=\"bday\" (atau bday-day/-month/-year pada varian tiga field) untuk tanggal lahir (SC 1.3.5)",
+      "aria-invalid, aria-required pada input; aria-readonly untuk read-only"
+    ],
+    "focus_order": "label → input → calendar-button; saat terbuka: kontrol bulan/tahun → grid → Done; kembali ke input setelah memilih, ke calendar-button setelah Esc",
+    "native": {
+      "compose": "OutlinedTextField berformat untuk ketik + DatePickerDialog { DatePicker(state = rememberDatePickerState(selectableDates = object : SelectableDates { … }), showModeToggle = true) } di expanded width atau ModalBottomSheet { DatePicker(...) } di compact width; DisplayMode.Input tersedia sebagai mode ketik",
+      "flutter": "InputDatePickerFormField(firstDate, lastDate, selectableDayPredicate, errorFormatText, errorInvalidText) untuk ketik + IconButton yang memanggil showDatePicker(initialEntryMode: DatePickerEntryMode.calendar, selectableDayPredicate, locale) di desktop/tablet atau showModalBottomSheet berisi CalendarDatePicker di phone; Semantics(hint: alasan) pada hari tidak tersedia",
+      "swiftui": "DatePicker(label, selection: $date, in: range, displayedComponents: .date).datePickerStyle(.compact) (sheet sistem di iPhone) atau .graphical untuk varian inline; tanggal tak tersedia di luar range dijelaskan di helper Text karena DatePicker tidak mendukung pengecualian per hari (komponen kustom bila brief membutuhkannya)"
+    },
+    "politeness": "polite",
+    "role": "input: textbox; calendar-button: button dengan aria-haspopup=\"dialog\"; kalender: dialog (non-modal di popover, modal di Sheet) berisi grid dengan columnheader dan gridcell",
+    "sr_label": "input: label + format + nilai; hari: nama hari lengkap + tanggal + bulan + tahun + state (selected, today, unavailable + alasan)",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.1",
+      "1.4.3",
+      "1.4.10",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.7",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.7",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label tampak di atas (≥ 16)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "optional-marker",
+      "role": "teks \"(optional)\" bila tidak wajib",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "field teks yang selalu bisa diketik; format locale dari B1; border kontrol ≥ 3:1",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "type-body-size",
+        "color-structure-text-primary",
+        "space-3"
+      ]
+    },
+    {
+      "part": "calendar-button",
+      "role": "IconButton berlabel \"Choose date\" (+ tanggal terpilih) di inline-end input; area klik ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "format yang diterima (\"Use DD/MM/YYYY\") dan batas (\"Within the next 90 days\"); selalu tampil",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "calendar",
+      "role": "dialog non-modal (popover di z-popover) atau Sheet berisi navigasi bulan + grid tanggal",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-3"
+      ]
+    },
+    {
+      "part": "month-nav",
+      "role": "judul bulan-tahun (heading, diumumkan polite saat berganti) + IconButton \"Previous month\"/\"Next month\" + pemilih bulan/tahun untuk lompatan jauh",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-weight",
+        "color-structure-text-primary",
+        "icon-md"
+      ]
+    },
+    {
+      "part": "weekday-header",
+      "role": "singkatan hari (columnheader) mulai dari hari pertama minggu locale; nama lengkap di abbr/aria-label",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "day-cell",
+      "role": "tombol tanggal di gridcell; ≥ target-current; angka tabular",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-primary",
+        "radius-full",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "day-selected",
+      "role": "tanggal terpilih: fill interaction-default + label on-solid + bentuk lingkaran/kotak; penanda bentuk, bukan hanya warna",
+      "tokens": [
+        "color-interaction-default",
+        "color-interaction-on-solid",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "day-today",
+      "role": "hari ini: ring/garis bawah border-width-thin + aria-current=\"date\"",
+      "tokens": [
+        "color-structure-border-strong",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "day-unavailable",
+      "role": "tanggal tidak bisa dipilih: teks text-tertiary + coretan diagonal (penanda non-warna); alasan sebagai deskripsi aksesibel dan di legend kalender",
+      "tokens": [
+        "color-structure-text-tertiary",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "legend",
+      "role": "keterangan di kaki kalender yang menjelaskan tanggal tidak tersedia dan penanda hari ini",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon + teks error di bawah input, terhubung aria-describedby",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "sheet",
+      "role": "presentasi phone: Sheet berjudul label field dengan kalender, tombol \"Done\" dan tombol tutup berlabel",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-scrim",
+        "z-modal",
+        "z-overlay-scrim"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px pada input, tombol, dan day-cell (inset −2px di grid padat)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string | null (ISO 8601)",
+        "when": "tanggal valid dipilih atau diketik (pada blur/Enter), atau dikosongkan"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"outside\" | \"select\" | \"tab\" }",
+        "when": "kalender dibuka atau ditutup"
+      },
+      {
+        "name": "onBlur",
+        "payload": "FocusEvent",
+        "when": "input kehilangan fokus; titik parse dan validasi"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Label terlihat dan nama aksesibel input.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: tanggal ISO 8601 (YYYY-MM-DD).",
+        "name": "value",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "default": "null",
+        "description": "Uncontrolled: tanggal awal ISO.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string | null"
+      },
+      {
+        "description": "Controlled: kalender terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state buka awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "input-with-calendar",
+        "description": "Input + popover/Sheet atau kalender selalu terlihat.",
+        "name": "variant",
+        "required": false,
+        "type": "\"input-with-calendar\" | \"calendar-inline\""
+      },
+      {
+        "description": "Tanggal paling awal (ISO); disebut di helper.",
+        "name": "min",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Tanggal paling akhir (ISO); disebut di helper.",
+        "name": "max",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Mengembalikan alasan bila tanggal tidak bisa dipilih; null bila tersedia.",
+        "name": "isDateUnavailable",
+        "required": false,
+        "type": "(date: string) => string | null"
+      },
+      {
+        "description": "Ringkasan aturan tanggal tidak tersedia di kaki kalender.",
+        "name": "unavailableLegend",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "dari locale (B1 formats)",
+        "description": "Hari pertama minggu.",
+        "name": "firstDayOfWeek",
+        "required": false,
+        "type": "0 | 1 | 2 | 3 | 4 | 5 | 6"
+      },
+      {
+        "description": "Nama field untuk Form dan ErrorSummary.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Mis. bday untuk tanggal lahir.",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "format locale",
+        "description": "Format dan batas.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi input dan ukuran day-cell.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Teks tanggal kontras penuh tanpa kalender.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Ketersediaan tanggal sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "teks diparse menurut format locale (juga ISO YYYY-MM-DD); valid → onValueChange dengan nilai ISO dan teks dinormalkan ke format locale; tidak valid → error menyebut format, teks tidak diubah",
+      "trigger": "mengetik di input; blur"
+    },
+    {
+      "input": "keyboard",
+      "result": "kalender terbuka; fokus ke tanggal terpilih, atau hari ini, atau tanggal tersedia pertama",
+      "trigger": "Enter/Space pada calendar-button, atau Alt+↓ di input"
+    },
+    {
+      "input": "keyboard",
+      "result": "hari sebelum/berikut; minggu sebelum/berikut; awal/akhir minggu; bulan sebelum/berikut; tahun sebelum/berikut; judul bulan baru diumumkan polite",
+      "trigger": "←/→, ↑/↓, Home/End, PageUp/PageDown, Shift+PageUp/PageDown"
+    },
+    {
+      "input": "keyboard",
+      "result": "memilih tanggal (unavailable: alasan diumumkan), menutup, fokus kembali ke input; Esc menutup tanpa mengubah nilai dan mengembalikan fokus ke calendar-button",
+      "trigger": "Enter/Space pada day-cell; Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "berpindah antar bagian: pemilih bulan/tahun → tombol bulan → grid (satu tab stop) → Done (Sheet); Tab keluar dari popover menutupnya",
+      "trigger": "Tab di dalam kalender"
+    },
+    {
+      "input": "pointer",
+      "result": "memilih pada pelepasan dan menutup; klik di luar menutup tanpa mengubah nilai",
+      "trigger": "klik day-cell; klik di luar"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet dari bawah berjudul label; geser horizontal antar bulan opsional, tombol bulan selalu ada (alternatif satu-pointer, SC 2.5.7); tap tanggal memilih, Done menutup",
+      "trigger": "tap calendar-button (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Start date",
+        "Use MM/DD/YYYY, for example 10/08/2026.",
+        "Choose date",
+        "Previous month",
+        "Next month",
+        "Weekends and public holidays can't be selected.",
+        "Enter a start date in the format MM/DD/YYYY",
+        "Enter a date on or after October 8, 2026",
+        "This date is fully booked. Choose another date."
+      ],
+      "id-ID": [
+        "Tanggal mulai",
+        "Gunakan HH/BB/TTTT, contoh 08/10/2026.",
+        "Pilih tanggal",
+        "Bulan sebelumnya",
+        "Bulan berikutnya",
+        "Akhir pekan dan hari libur nasional tidak dapat dipilih.",
+        "Masukkan tanggal mulai dengan format HH/BB/TTTT",
+        "Masukkan tanggal mulai 8 Oktober 2026 atau setelahnya",
+        "Tanggal ini sudah penuh. Pilih tanggal lain."
+      ]
+    },
+    "rules": [
+      "Label menyebut tanggal apa (\"Start date\"), bukan \"Date\".",
+      "Helper menyebut format locale dengan huruf, bukan hanya contoh (\"Use DD/MM/YYYY, for example 08/10/2026\").",
+      "Tanggal tidak tersedia dijelaskan di legend dan per hari (\"Weekends can't be selected\", \"Fully booked\").",
+      "Error menyebut format atau batas yang diterima (\"Enter a date on or after 8 October 2026\").",
+      "Format tampilan, nama bulan/hari, dan hari pertama minggu dari formatter locale (B1), tidak dirangkai manual; nilai dikirim sebagai ISO 8601."
+    ]
+  },
+  "depends_on": [
+    "Popover",
+    "Sheet",
+    "IconButton",
+    "LiveAnnouncer",
+    "Skeleton"
+  ],
+  "do": [
+    "Selalu izinkan mengetik tanggal dan sebut formatnya di helper.",
+    "Jelaskan mengapa tanggal tidak bisa dipilih, di legend dan per hari.",
+    "Kirim nilai ISO 8601 dan tampilkan dengan formatter locale."
+  ],
+  "dont": [
+    {
+      "text": "Memaksa pengguna memakai kalender (input readonly) untuk tanggal yang mereka tahu."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai tanggal tidak tersedia hanya dengan warna pudar tanpa coretan atau alasan."
+    },
+    {
+      "ref": "UB5",
+      "text": "Popover kalender kecil di ponsel atau day-cell di bawah 44 pada sentuh."
+    },
+    {
+      "ref": "UB10",
+      "text": "Format tanggal hanya ditunjukkan di placeholder."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul bulan membungkus; singkatan hari memakai formatter narrow/short locale dengan nama lengkap di label aksesibel; input melebar sesuai format",
+      "case": "nama bulan/hari +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "grid kalender tidak muat di popover → beralih ke Sheet atau halaman penuh; tidak ada gulir dua arah (SC 1.4.10)",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "legend menyebut \"No dates available in October\" + tombol \"Next available date\" yang melompat ke bulan berikutnya yang tersedia",
+      "case": "semua tanggal di bulan tidak tersedia (0 pilihan)"
+    },
+    {
+      "behaviour": "navigasi bulan di luar batas aria-disabled dengan alasan; ketikan di luar batas → error yang menyebut batas",
+      "case": "batas maksimum (max) dan minimum (min)"
+    },
+    {
+      "behaviour": "diparse dengan pola locale lalu ISO lalu nama bulan locale; tanggal ambigu (03/04) mengikuti format locale dan ditampilkan ulang dengan nama bulan di helper untuk konfirmasi",
+      "case": "paste nilai berformat (\"2026-10-08\", \"8 Oct 2026\", \"08.10.2026\")"
+    },
+    {
+      "behaviour": "autocomplete bday mengisi; nilai dinormalkan ke format locale; tidak membuka kalender",
+      "case": "autofill tanggal lahir"
+    },
+    {
+      "behaviour": "nilai adalah tanggal kalender tanpa jam (bukan timestamp) agar tidak bergeser lintas zona; \"today\" dihitung di zona B1/pengguna",
+      "case": "zona waktu dan tengah malam"
+    },
+    {
+      "behaviour": "tanggal ditampilkan dengan catatan \"Availability may be out of date\" dan divalidasi ulang saat online; atau aria-disabled dengan reason bila brief mewajibkan data segar",
+      "case": "ketersediaan dari server saat offline"
+    },
+    {
+      "behaviour": "hari pertama minggu dari B1 formats; kalender selain Gregorian dicatat A-nn bila ui_locale memerlukannya",
+      "case": "kalender non-Gregorian / hari pertama minggu berbeda"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; bila dikecualikan, tanggal memakai TextField dengan format di helper.",
+  "lint": [
+    "DatePicker tanpa label ditolak",
+    "Input tanggal readonly yang memaksa kalender ditolak",
+    "Tanggal tidak tersedia tanpa alasan (isDateUnavailable mengembalikan string kosong) ditolak",
+    "Format tanggal yang dirangkai manual, bukan formatter locale, ditolak (manual-review)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "DatePicker",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "disabled+selected",
+      "error+focus",
+      "loading+pressed (dicegah)",
+      "today+selected",
+      "Sheet phone",
+      "RTL grid",
+      "teks 200%"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "open",
+      "selected",
+      "unavailable",
+      "error",
+      "loading",
+      "disabled-with-reason",
+      "read-only",
+      "empty"
+    ],
+    "variants": [
+      "input-with-calendar",
+      "calendar-inline"
+    ]
+  },
+  "purpose": {
+    "purpose": "Memasukkan satu tanggal lewat ketik (format locale) atau lewat kalender; menjelaskan tanggal yang tidak bisa dipilih; kalender menjadi popover di desktop/tablet dan Sheet di ponsel.",
+    "when_not_to_use": [
+      "Untuk rentang mulai–selesai: pakai DateRangePicker.",
+      "Untuk jam: pakai TimePicker (boleh berdampingan dengan DatePicker berlabel terpisah).",
+      "Untuk tanggal yang diketahui pengguna dan jauh di masa lalu (tanggal lahir): pakai tiga TextField/Select berlabel (hari, bulan, tahun) atau TextField berformat, bukan kalender yang harus digulir puluhan tahun.",
+      "Untuk memilih periode laporan bernama (Today, Last 7 days): pakai Select atau SegmentedControl."
+    ]
+  },
+  "related": [
+    "DateRangePicker",
+    "TimePicker",
+    "TextField",
+    "FormattedInput",
+    "Select"
+  ],
+  "responsive": [
+    {
+      "behaviour": "kalender dibuka sebagai Sheet (bukan popover) dengan day-cell ≥ target-min-touch dan tombol Done; input ketik tetap tersedia dengan inputmode numeric",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "popover menempel input di z-popover; day-cell ≥ target-min-touch di mode sentuh; beralih ke Sheet bila ruang tidak cukup",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "popover non-modal di z-popover, flip/shift di tepi viewport; boleh menampilkan dua bulan berdampingan untuk penjadwalan",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role melihat tanggal tanpa mengubah: teks terformat dengan elemen time"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tanggal dikunci oleh state data (mis. setelah disetujui); reason terlihat"
+    },
+    {
+      "pattern": "hidden",
+      "when": "field tanggal tidak relevan bagi role; tidak dirender"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Grid mengalir dari kanan di RTL (hari pertama di inline-start); tombol bulan sebelum/berikut dan chevron-nya dicerminkan; ←/→ mengikuti arah visual; ikon kalender tidak dicerminkan; angka tanggal dan format numerik diisolasi LTR bila locale memakai angka Latin."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "input max(control-height-sm, target-current); day-cell ≥ target-current",
+      "name": "sm",
+      "notes": "Filter tabel pointer. Teks tetap ≥ 16.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "input max(control-height-md, target-current); day-cell ≥ target-current dengan jarak ≥ 8 bila sentuh",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "input dan day-cell ≥ target-min-touch (target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Sentuh, glove; kalender di Sheet.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanggal terpilih + state-layer hover di atas fill",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fill + ring di luar sel (focus-ring-inverse bila di atas fill gelap)",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "tanggal terpilih tetap terlihat di input yang diblokir + reason",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring; teks yang salah tetap ada untuk diperbaiki",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tanggal tidak bisa dipilih sebelum ketersediaannya dimuat",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "day-cell unavailable tidak memberi hover; fokus panah tetap untuk membaca alasan",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "teks tanggal fokusabel, tidak membuka kalender",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "input": "color-structure-border-control"
+      },
+      "treatment": "input kosong atau berisi tanggal terformat; tombol kalender text-secondary"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "day-cell": "color-structure-selection",
+        "input": "color-structure-border-strong"
+      },
+      "treatment": "input border-strong; day-cell state-layer hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px pada input atau tombol; di grid, day-cell aktif mendapat ring (roving tabindex)"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "day-cell": "color-interaction-pressed"
+      },
+      "treatment": "day-cell/tombol state-layer pressed tanpa transform yang mengubah layout"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "calendar-button": "color-interaction-default"
+      },
+      "treatment": "kalender tampil (popover atau Sheet); calendar-button aria-expanded=\"true\"; fokus ke tanggal terpilih atau hari ini"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "day-cell": "color-interaction-default",
+        "day-selected": "color-interaction-on-solid"
+      },
+      "treatment": "day-selected fill + bentuk; aria-selected=\"true\"; input menampilkan tanggal terformat"
+    },
+    {
+      "name": "unavailable",
+      "token_swaps": {
+        "day-cell": "color-structure-text-tertiary"
+      },
+      "treatment": "day-cell aria-disabled=\"true\" dengan coretan + text-tertiary; tetap fokusabel lewat panah agar alasannya terbaca; Enter mengumumkan alasan, tidak memilih"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error": "color-semantic-critical-strong",
+        "input": "color-semantic-critical"
+      },
+      "treatment": "tanggal tidak terbaca, di luar batas, atau tidak tersedia: border critical + ikon + errorText yang menyebut format/batas; aria-invalid=\"true\"; teks yang diketik tidak dihapus"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "day-cell": "color-structure-skeleton"
+      },
+      "treatment": "ketersediaan tanggal dimuat (mis. slot): grid aria-busy=\"true\" + Skeleton day-cell; navigasi bulan tetap bisa"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "day-cell": "color-structure-text-disabled",
+        "input": "color-structure-surface-sunken"
+      },
+      "treatment": "aria-disabled pada input dan tombol (input readonly); latar surface-sunken, teks text-disabled; reason di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "day-cell": "color-structure-text-primary",
+        "input": "color-structure-border"
+      },
+      "treatment": "tanggal sebagai teks terformat kontras penuh tanpa tombol kalender; aria-readonly pada input; elemen time dengan datetime ISO"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "input": "color-structure-text-placeholder"
+      },
+      "treatment": "input kosong; placeholder opsional berisi pola format locale, tetapi format juga di helper"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}DatePicker: OutlinedTextField + DatePickerDialog / ModalBottomSheet dengan SelectableDates",
+    "flutter": "{ns}_date_picker.dart: InputDatePickerFormField + showDatePicker / bottom sheet CalendarDatePicker",
+    "html": {
+      "element": "label + input[type=text][inputmode=numeric] + button[aria-haspopup=dialog] + div[role=dialog] > table[role=grid]",
+      "notes": "fallback tanpa JS: input teks berformat dengan helper (bukan input type=date yang formatnya ikut browser); modul JS menambah kalender di portal z-popover, Sheet di phone, roving tabindex di grid"
+    },
+    "swiftui": "{Ns}DatePicker membungkus DatePicker .compact/.graphical; kustom bila perlu pengecualian per hari"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default: input teks berformat + tombol kalender. Mengetik adalah jalur utama; kalender opsional.",
+      "name": "input-with-calendar"
+    },
+    {
+      "description": "Kalender selalu terlihat di halaman (penjadwalan, pemilihan slot) tanpa input; tetap menampilkan tanggal terpilih sebagai teks dan menyediakan input ketik di bawahnya.",
+      "name": "calendar-inline"
+    }
+  ]
+}

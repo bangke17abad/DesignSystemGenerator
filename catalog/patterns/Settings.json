@@ -1,0 +1,116 @@
+{
+  "name": "Settings",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada preferensi pengguna atau organisasi, kecuali B7 pattern_exclusions memberi alasan.",
+  "problem": {
+    "problem": "Pengguna menemukan, memahami, dan mengubah preferensi pribadi atau organisasi dengan tahu persis kapan perubahan berlaku (seketika atau setelah Simpan), siapa yang terdampak, dan cara membatalkannya.",
+    "when": [
+      "Preferensi pengguna (notifikasi, bahasa, tampilan, privasi) atau pengaturan organisasi/ruang kerja (anggota, kebijakan, integrasi).",
+      "Pengaturan yang berlaku untuk seluruh akun atau seluruh produk, bukan untuk satu entitas.",
+      "Tempat mengulang Onboarding dan meninjau izin yang pernah diberikan."
+    ],
+    "when_not": [
+      "Atribut satu entitas (nama proyek, alamat pesanan): pakai DetailView + FormFlow pada entitas itu.",
+      "Penyiapan awal berurutan yang wajib selesai sebelum produk dipakai: pakai Wizard.",
+      "Filter atau tampilan sementara sebuah daftar: pakai SearchAndFilter; state itu tidak disimpan sebagai pengaturan."
+    ]
+  },
+  "composition": [
+    { "component": "PageHeader", "parts": ["PageHeader.Back", "PageHeader.Title", "PageHeader.Description"], "role_in_pattern": "judul \"Pengaturan\" atau nama topik; deskripsi menyebut cakupan (akun pribadi vs organisasi)" },
+    { "component": "List", "parts": ["List.Section", "List.Item", "List.Title", "List.SupportingText", "List.Meta"], "role_in_pattern": "indeks topik navigable; supporting text meringkas nilai saat ini (\"Email, push\"); di phone menjadi layar akar" },
+    { "component": "Tabs", "parts": ["Tabs.List", "Tabs.Tab", "Tabs.Panel"], "role_in_pattern": "variant links vertikal sebagai navigasi topik di desktop bila topik ≤ 8; setiap tab punya URL" },
+    { "component": "Switch", "role_in_pattern": "satu pengaturan boolean yang berlaku seketika (optimistic + rollback); tidak pernah di dalam grup yang memakai Simpan" },
+    { "component": "Form", "parts": ["Form.Header", "Form.Section", "Form.Actions", "Form.Submit", "Form.Cancel"], "role_in_pattern": "grup pengaturan yang saling terkait atau berisiko dan baru berlaku setelah Simpan eksplisit; satu Form per grup" },
+    { "component": "RadioGroup", "role_in_pattern": "pilihan eksklusif yang perlu dibandingkan (frekuensi ringkasan, tingkat privasi) di dalam Form" },
+    { "component": "Select", "role_in_pattern": "pilihan panjang dari daftar tetap (bahasa, zona waktu, format tanggal)" },
+    { "component": "SegmentedControl", "role_in_pattern": "pilihan 2-5 opsi yang langsung mengganti tampilan (tema terang/gelap/sistem, kepadatan); berlaku seketika seperti Switch" },
+    { "component": "Checkbox", "role_in_pattern": "opsi boolean di dalam Form yang berlaku saat Simpan (pengganti Switch di grup ber-Simpan)" },
+    { "component": "DescriptionList", "parts": ["DescriptionList.Item", "DescriptionList.Term", "DescriptionList.Description", "DescriptionList.Action"], "role_in_pattern": "nilai read-only dan pengaturan yang diwarisi dari organisasi, dengan aksi \"Ubah\" bila role mengizinkan" },
+    { "component": "InlineAlert", "role_in_pattern": "error System C1 + Retry di atas grup; Policy C2 untuk aturan organisasi; Offline C2 persisten" },
+    { "component": "Modal", "parts": ["Modal.Title", "Modal.Description", "Modal.Cancel", "Modal.Action"], "role_in_pattern": "konfirmasi perubahan berisiko yang tidak bisa dibalik (hapus akun, cabut akses semua sesi) lewat DestructiveAction" },
+    { "component": "StepUpDialog", "role_in_pattern": "otorisasi ulang sebelum mengubah kredensial, metode masuk, atau pengaturan finansial/hukum" },
+    { "component": "Toast", "role_in_pattern": "konfirmasi \"Pengaturan disimpan\" setelah Simpan; Undo untuk perubahan instan yang bisa dibalik" },
+    { "component": "Skeleton", "role_in_pattern": "muat pertama meniru baris pengaturan (label + kontrol)" },
+    { "component": "SearchField", "role_in_pattern": "pencarian pengaturan bila total pengaturan > 30 atau topik > 8; hasil menautkan langsung ke baris pengaturan" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman hasil perubahan instan dan rollback" }
+  ],
+  "flow": [
+    { "step": "Buka pengaturan", "state_class": "C6", "transition": "fokus ke h1; topik dikelompokkan per tujuan pengguna (bukan per struktur backend); nilai saat ini terlihat tanpa membuka setiap topik" },
+    { "step": "Ubah pengaturan instan", "state_class": "C5", "transition": "Switch/SegmentedControl berpindah optimistic + Spinner kecil; input berikutnya pada kontrol yang sama diantrekan, nilai terakhir menang; berhasil kembali ke C6 dan diumumkan polite" },
+    { "step": "Perubahan instan gagal", "state_class": "C1", "transition": "rollback ke nilai sebelumnya; alasan + Retry di description kontrol; diumumkan polite; tidak memakai toast saja" },
+    { "step": "Ubah grup ber-Simpan", "state_class": "C6", "transition": "isian diubah lokal; penanda \"Perubahan belum disimpan\" di action bar; meninggalkan topik meminta konfirmasi" },
+    { "step": "Simpan grup", "state_class": "C5", "transition": "tombol Simpan loading dengan lebar terkunci; klik ganda diabaikan; error validasi dan server mengikuti FormFlow" },
+    { "step": "Perubahan berisiko", "state_class": "C2", "transition": "perubahan yang menghapus data atau mencabut akses melewati DestructiveAction (Modal yang menamai akibat) dan bila perlu StepUpDialog sebelum diterapkan" },
+    { "step": "Berhasil disimpan", "state_class": "C4", "transition": "Toast \"Pengaturan disimpan\" dengan kata kerja sama dengan tombol; fokus tetap di grup; ringkasan nilai di indeks topik diperbarui" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "indeks topik sebagai List navigable di layar akar; tiap topik halaman sendiri dengan back-link; Switch sebagai baris penuh lebar (label inline-start, track inline-end); action bar Simpan sticky di zona jempol dan naik di atas keyboard; Select menjadi Sheet" },
+    { "device_class": "tablet", "behaviour": "portrait: sama dengan phone dengan konten maks 600dp di tengah; landscape: dua pane (indeks topik · isi topik) bila lebar ≥ bp-desktop; posisi gulir indeks dipertahankan saat berganti topik" },
+    { "device_class": "desktop", "behaviour": "dua kolom: navigasi topik (Tabs links vertikal atau List) di inline-start dan isi topik dengan lebar dibatasi layout-measure agar label dan kontrol tidak berjauhan; action bar di akhir grup, bukan di akhir halaman" }
+  ],
+  "states": {
+    "empty": "Role tidak punya pengaturan yang dapat diubah di topik ini: EmptyState variant restricted yang menyebut siapa yang bisa mengubahnya; topik tanpa isi tidak ditampilkan di indeks.",
+    "loading": "Skeleton meniru baris label + kontrol per grup; kontrol tidak dapat dioperasikan sampai nilai server dimuat (tidak menampilkan default palsu yang lalu melompat).",
+    "error": "Gagal memuat: InlineAlert C1 + Retry di atas topik, indeks tetap dapat dipakai; gagal mengubah instan: rollback + alasan di kontrol; gagal Simpan: InlineAlert C1, isian dipertahankan.",
+    "partial": "Sebagian grup gagal dimuat atau disimpan (mis. integrasi pihak ketiga): grup itu menampilkan InlineAlert C2 + Retry khusus grup; grup lain tetap dapat diubah.",
+    "success": "Perubahan instan: kontrol di posisi baru tanpa toast, diumumkan polite; Simpan: Toast C4 \"Pengaturan disimpan\" dan penanda belum tersimpan hilang."
+  },
+  "accessibility": [
+    { "step": "Buka pengaturan", "focus": "fokus ke h1 halaman/topik; navigasi topik bertanda aria-current pada topik aktif; urutan DOM = urutan visual", "announcement": "judul topik dibaca lewat judul dokumen yang diperbarui" },
+    { "step": "Ubah pengaturan instan", "focus": "fokus tetap di Switch/SegmentedControl; tidak ada perubahan konteks saat toggle (SC 3.2.2) selain efek yang dinamai di label", "announcement": "hasil diumumkan polite (\"Notifikasi email aktif\")" },
+    { "step": "Perubahan instan gagal", "focus": "fokus tetap di kontrol; alasan terhubung lewat aria-describedby", "announcement": "rollback dan alasan diumumkan polite sekali" },
+    { "step": "Simpan grup", "focus": "mengikuti FormFlow: error → ErrorSummary/field pertama; berhasil → fokus tetap di grup", "announcement": "berhasil diumumkan polite; jumlah error assertive" },
+    { "step": "Perubahan berisiko", "focus": "Modal/StepUpDialog mengunci fokus; setelah ditutup fokus kembali ke kontrol pemicu (§9.5)", "announcement": "judul dialog dan akibatnya dibaca saat dialog terbuka" }
+  ],
+  "content": {
+    "rules": [
+      "Label pengaturan menyebut hasil, bukan mekanisme (\"Kirim ringkasan mingguan\", bukan \"Weekly digest flag\").",
+      "Label Switch tidak berubah saat toggle; state dinyatakan oleh posisi + state text bila perlu, bukan dengan mengganti label.",
+      "Description menyebut cakupan dan siapa yang terdampak bila bukan hanya pengguna sendiri (\"Berlaku untuk semua anggota\").",
+      "Pengaturan yang dikunci organisasi menyebut alasannya dan siapa yang dapat mengubahnya.",
+      "Grup ber-Simpan memakai tombol \"Simpan perubahan\"; toast memakai kata kerja yang sama."
+    ],
+    "examples": {
+      "en-US": ["Settings", "Email notifications", "Applies to all members of this workspace", "Managed by your organization. Contact an admin to change it.", "Save changes", "Settings saved", "Couldn't turn on email notifications. Try again."],
+      "id-ID": ["Pengaturan", "Notifikasi email", "Berlaku untuk semua anggota ruang kerja ini", "Dikelola organisasi Anda. Hubungi admin untuk mengubahnya.", "Simpan perubahan", "Pengaturan disimpan", "Notifikasi email gagal diaktifkan. Coba lagi."]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "pemilik akun atau admin organisasi mengubah pengaturan dalam cakupannya" },
+    { "pattern": "read-only", "when": "anggota melihat pengaturan organisasi yang berlaku padanya: DescriptionList berkontras penuh, tanpa kontrol" },
+    { "pattern": "disabled-with-reason", "when": "pengaturan pribadi dikunci kebijakan organisasi: kontrol aria-disabled + reason (\"Dikelola organisasi Anda\")" },
+    { "pattern": "hidden", "when": "topik yang tidak relevan untuk role (penagihan, keamanan organisasi) tidak dirender dan tidak muncul di indeks maupun pencarian" },
+    { "pattern": "step-up", "when": "mengubah sandi, metode masuk, email akun, atau data finansial: StepUpDialog sebelum perubahan diterapkan (SC 3.3.8)" }
+  ],
+  "do": [
+    "Kelompokkan per topik tujuan pengguna dan tampilkan nilai saat ini di indeks agar pengguna tidak membuka setiap topik.",
+    "Pakai Switch hanya untuk perubahan yang berlaku seketika; pakai Checkbox + Simpan bila perubahan saling bergantung atau perlu ditinjau bersama.",
+    "Satu Form dan satu tombol Simpan per grup, ditempatkan di akhir grup itu.",
+    "Sediakan tautan \"Ulangi pengenalan\" bila Onboarding dipilih."
+  ],
+  "dont": [
+    { "text": "Mencampur Switch yang berlaku seketika dengan field yang butuh Simpan di grup yang sama, sehingga pengguna tidak tahu apa yang sudah berlaku.", "ref": "SC 3.2.2" },
+    { "text": "Menampilkan pengaturan instan sebagai sudah berlaku sebelum server mengonfirmasi, atau tidak melakukan rollback saat gagal.", "ref": "I6" },
+    { "text": "Menyembunyikan kontrol yang dikunci organisasi tanpa alasan, atau menonaktifkannya tanpa alasan terlihat.", "ref": "UB10" },
+    { "text": "Menghapus data atau mencabut akses langsung dari Switch tanpa DestructiveAction.", "ref": "SC 3.3.4" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "InlineAlert C2 persisten di atas topik; Switch aria-disabled + reason \"Butuh koneksi\"; bila OfflineSync dipilih, perubahan diantrekan dengan penanda \"Menunggu\" dan tidak tampil terkonfirmasi (I6)" },
+    { "case": "timeout perubahan instan (tidak ada jawaban dalam batas brief, default A-nn)", "behaviour": "rollback + \"Belum tersimpan\" + Retry pada kontrol itu; tidak ada percobaan ulang diam-diam yang mengubah nilai belakangan" },
+    { "case": "toggle cepat berulang (aksi ganda)", "behaviour": "permintaan diserialkan per kontrol; nilai terakhir yang dipilih pengguna yang dikirim; respons usang diabaikan sehingga thumb tidak berkedip" },
+    { "case": "sangat banyak pengaturan (> 30 atau > 8 topik)", "behaviour": "SearchField di atas indeks; hasil menautkan ke baris dan menyorotnya dengan fokus program; topik tidak dipecah menjadi tab bertingkat" },
+    { "case": "role tanpa pengaturan yang dapat diubah (data kosong)", "behaviour": "EmptyState restricted menyebut siapa yang dapat mengubah; tidak ada indeks kosong" },
+    { "case": "label dan description +40% (locale terpanjang)", "behaviour": "label membungkus; track Switch tetap di inline-end sejajar baris pertama label; tidak ada label terpotong" },
+    { "case": "pengaturan diubah di perangkat atau sesi lain", "behaviour": "saat kembali fokus ke halaman, nilai dimuat ulang; grup dengan isian belum tersimpan menampilkan InlineAlert C2 \"Pengaturan ini diubah di tempat lain\" + Muat ulang, isian tidak ditimpa diam-diam" },
+    { "case": "teks 200%", "behaviour": "dua pane menjadi satu kolom; action bar sticky tidak menutup kontrol yang fokus (SC 2.4.11)" }
+  ],
+  "wcag": ["1.3.1", "2.4.3", "2.4.6", "2.4.11", "3.2.2", "3.2.3", "3.3.2", "3.3.4", "3.3.8", "4.1.2", "4.1.3"],
+  "related_patterns": ["FormFlow", "DestructiveAction", "AuthAndSession", "Onboarding", "PermissionRequest", "AsyncFeedback", "SearchAndFilter"],
+  "lint": [
+    "Switch tidak boleh berada di dalam Form yang punya Form.Submit",
+    "Setiap Form pengaturan punya tepat satu Button variant=primary di akhir grupnya",
+    "Kontrol pengaturan aria-disabled wajib punya reason",
+    "Perubahan pengaturan bertanda destructive wajib melewati Modal variant=destructive"
+  ]
+}

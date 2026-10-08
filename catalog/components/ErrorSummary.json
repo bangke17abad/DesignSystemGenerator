@@ -1,0 +1,449 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke title",
+      "tabindex=\"-1\" pada container agar fokus program bisa ditempatkan tanpa menambah tab stop",
+      "tidak memakai role=alert bersamaan dengan fokus atau pengumuman LiveAnnouncer (mencegah pembacaan ganda); satu jalur pengumuman",
+      "href ke id input field; modul JS memanggil focus() dan scrollIntoView dengan offset header sticky",
+      "status-icon aria-hidden; title sudah memuat makna",
+      "judul dokumen: penanda error glosarium + judul halaman asli"
+    ],
+    "focus_order": "setelah header form dan sebelum field pertama di DOM; item-link dalam urutan field; fokus program hanya pada render server atau bila brief memilih ringkasan sebagai target fokus",
+    "native": {
+      "compose": "Column(Modifier.focusRequester(summaryFocus).focusable().semantics { heading() pada judul }) { errors.forEach { TextButton(onClick = { fieldRequesters[id].requestFocus() }) { Text(message) } } }; BringIntoViewRequester untuk field",
+      "flutter": "Semantics(container: true, label: title, liveRegion: false) berisi Text(title) dengan Semantics(header: true) dan TextButton per error yang memanggil focusNode.requestFocus() + Scrollable.ensureVisible(context); pengumuman lewat SemanticsService.announce",
+      "swiftui": "VStack { Text(title).accessibilityAddTraits(.isHeader); ForEach(errors) { Button(message) { focusedField = id } } }.accessibilityElement(children: .contain) dengan @AccessibilityFocusState untuk memindah fokus VoiceOver ke ringkasan bila diperlukan"
+    },
+    "politeness": "assertive",
+    "role": "region berlabel judul (<section aria-labelledby> atau <div role=\"region\">) dengan tabindex −1; daftar <ul> berisi <a href=\"#field-id\">",
+    "sr_label": "judul berjumlah (\"There are 2 problems\") lalu daftar tautan \"Email address: Enter an email address in the format name@example.com\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.4",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.8",
+      "3.3.1",
+      "3.3.3",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "region di atas form, setelah header; border/aksen critical sesuai L3 (outline atau tinted), bukan hanya warna; tabindex −1 agar bisa menerima fokus",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-semantic-critical",
+        "color-semantic-critical-subtle",
+        "border-width-thick",
+        "radius-md",
+        "space-4",
+        "space-3"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "ikon status critical terkunci (§5.7) di samping judul; dekoratif bagi pembaca layar karena judul sudah bermakna",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-critical-strong"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "judul dari glosarium dengan jumlah (\"There are 2 problems\"); heading level satu di bawah judul form",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-weight",
+        "type-h3-line",
+        "type-h3-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "kalimat opsional bila perlu konteks (\"Fix the following to submit the request\")",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "list",
+      "role": "daftar berurutan sama dengan urutan field di DOM",
+      "tokens": [
+        "space-2",
+        "space-1"
+      ]
+    },
+    {
+      "part": "item-link",
+      "role": "tautan berisi pesan error (sama dengan errorText inline, boleh diawali label field); bergaris bawah; area klik ≥ target-current",
+      "tokens": [
+        "color-semantic-critical-strong",
+        "color-interaction-default",
+        "type-body-size",
+        "type-body-line",
+        "border-width-thin",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px pada container saat menerima fokus program dan pada tiap item-link",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "{ fieldId: string }",
+        "when": "item-link diaktifkan; default memindah fokus ke field"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Error dalam urutan field; kosong = tidak dirender.",
+        "name": "errors",
+        "required": true,
+        "type": "Array<{ fieldId: string; label: string; message: string }>"
+      },
+      {
+        "default": "glosarium (ICU plural berdasarkan jumlah)",
+        "description": "Judul ringkasan.",
+        "name": "title",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Konteks tambahan di bawah judul.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "page",
+        "description": "Menentukan apakah judul dokumen diubah.",
+        "name": "variant",
+        "required": false,
+        "type": "\"page\" | \"embedded\""
+      },
+      {
+        "default": "false (true pada render server)",
+        "description": "Ringkasan menerima fokus saat muncul.",
+        "name": "autoFocus",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "2",
+        "description": "Level heading judul agar hierarki halaman benar.",
+        "name": "headingLevel",
+        "required": false,
+        "type": "2 | 3 | 4"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "ErrorSummary dirender; fokus ke field invalid pertama (aturan Form); jumlah dan error pertama diumumkan assertive; ringkasan dapat dicapai dengan Shift+Tab atau navigasi heading",
+      "trigger": "submit gagal (validasi klien)"
+    },
+    {
+      "input": "keyboard",
+      "result": "container menerima fokus (autofocus/tabindex −1) sehingga judul dan daftar dibaca; judul dokumen diawali penanda error",
+      "trigger": "halaman dirender ulang server dengan error (tanpa JS)"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah ke input field (bukan hanya menggulir): grup radio/checkbox → opsi pertama atau terpilih; DatePicker → input teks; field di section terlipat/Accordion → dibuka dulu; field digulir agar label terlihat di atas dan tidak tertutup header sticky",
+      "trigger": "Enter pada item-link"
+    },
+    {
+      "input": "pointer",
+      "result": "sama dengan Enter; pada pelepasan (SC 2.5.2); URL hash diperbarui tanpa menambah riwayat yang menjebak tombol back",
+      "trigger": "klik item-link"
+    },
+    {
+      "input": "touch",
+      "result": "fokus ke field dan keyboard virtual muncul untuk field teks; field digulir di atas keyboard",
+      "trigger": "tap item-link"
+    },
+    {
+      "input": "keyboard",
+      "result": "ErrorSummary dihapus, judul dokumen dipulihkan, sukses diumumkan polite oleh Form",
+      "trigger": "submit ulang berhasil"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "There is 1 problem",
+        "There are 3 problems",
+        "Email address: Enter an email address in the format name@example.com",
+        "Start date: Enter a start date in the format DD/MM/YYYY",
+        "Delivery method: Select a delivery method",
+        "Error: Request access"
+      ],
+      "id-ID": [
+        "Ada 1 masalah",
+        "Ada 3 masalah",
+        "Alamat email: Masukkan alamat email dengan format nama@contoh.com",
+        "Tanggal mulai: Masukkan tanggal mulai dengan format HH/BB/TTTT",
+        "Metode pengiriman: Pilih metode pengiriman",
+        "Kesalahan: Minta akses"
+      ]
+    },
+    "rules": [
+      "Judul dari glosarium dengan ICU plural: \"{n, plural, one {There is # problem} other {There are # problems}}\".",
+      "Teks item sama dengan errorText inline (boleh diawali label field) agar pengguna mengenali field; menyebut apa yang salah dan cara memperbaiki.",
+      "Urutan item = urutan field; satu item per field (error pertama field itu).",
+      "Penanda judul dokumen dari glosarium (mis. \"Error: \"); tanpa \"Oops\", tanpa menyalahkan pengguna.",
+      "Tidak memuat error sistem atau policy."
+    ]
+  },
+  "depends_on": [
+    "Link",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Tautkan setiap item ke input field sehingga fokus benar-benar berpindah.",
+    "Pakai teks error yang sama dengan error inline dan urutan yang sama dengan field.",
+    "Perbarui ringkasan hanya saat submit, bukan per ketikan."
+  ],
+  "dont": [
+    {
+      "text": "Memakai ErrorSummary untuk error sistem atau server (gunakan InlineAlert C1 + Retry)."
+    },
+    {
+      "text": "Tautan yang hanya menggulir tanpa memindah fokus ke field."
+    },
+    {
+      "ref": "UB2",
+      "text": "Ringkasan tanpa ikon atau judul, hanya kotak merah."
+    },
+    {
+      "text": "Menggabungkan role=alert dengan fokus program sehingga diumumkan dua kali."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "item membungkus; tidak ada ellipsis; tautan multi-baris tetap satu target dengan ring per fragmen",
+      "case": "teks error +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "ringkasan tumbuh tinggi; tidak dibuat sticky; field tujuan digulir dengan offset yang memperhitungkan ukuran teks",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak dirender sama sekali",
+      "case": "0 error"
+    },
+    {
+      "behaviour": "semua item tetap ditampilkan (tidak dipotong); bila form multi-langkah, hanya error langkah ini; jumlah di judul selalu total sebenarnya",
+      "case": "jumlah error maksimum (mis. > 10)"
+    },
+    {
+      "behaviour": "section/tab/Accordion dibuka sebelum fokus dipindah (§6.5 Accordion: panel berisi error terbuka otomatis)",
+      "case": "field tujuan berada di section terlipat, tab, atau Accordion"
+    },
+    {
+      "behaviour": "tidak ditautkan; dipindah ke InlineAlert sebagai error sistem agar tidak menautkan ke target yang tidak ada",
+      "case": "error berasal dari server untuk field yang tidak terlihat bagi role"
+    },
+    {
+      "behaviour": "tidak dirender untuk masalah koneksi; validasi klien tetap menghasilkan ErrorSummary, koneksi ditangani InlineAlert C2",
+      "case": "offline saat submit"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "ErrorSummary yang berisi error sistem/policy ditolak (manual-review)",
+    "item tanpa fieldId yang ada di DOM ditolak",
+    "role=alert bersama autoFocus ditolak",
+    "urutan item yang berbeda dari urutan field ditolak (manual-review)"
+  ],
+  "name": "ErrorSummary",
+  "preview": {
+    "combinations": [
+      "error+focus (render server)",
+      "item hover+focus",
+      "1 vs banyak error (plural)",
+      "RTL",
+      "teks 200%"
+    ],
+    "states": [
+      "hidden",
+      "visible",
+      "focus",
+      "item-hover",
+      "item-pressed",
+      "stale",
+      "loading"
+    ],
+    "variants": [
+      "page",
+      "embedded"
+    ]
+  },
+  "purpose": {
+    "purpose": "Merangkum semua error validasi di atas form setelah submit gagal, sebagai daftar tautan yang memindahkan fokus ke field terkait, dengan urutan yang sama dengan urutan field.",
+    "when_not_to_use": [
+      "Untuk error sistem atau server (gagal simpan, timeout): pakai InlineAlert C1 dengan Retry (§12.2).",
+      "Untuk aturan bisnis yang tidak terpenuhi (policy): pakai InlineAlert C2 berisi aturan dan saran.",
+      "Untuk validasi saat mengetik sebelum submit: cukup error inline di field; ErrorSummary hanya setelah submit.",
+      "Untuk peringatan atau info yang tidak memblokir pengiriman: pakai InlineAlert warning/info."
+    ]
+  },
+  "related": [
+    "Form",
+    "InlineAlert",
+    "TextField",
+    "Accordion"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh di atas form; item-link sebagai baris ≥ target-min-touch; halaman digulir ke atas saat dirender server",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar form; item-link ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar dibatasi layout-measure; item-link ≥ target-min-pointer; offset gulir memperhitungkan header sticky",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "ErrorSummary hanya merangkum error field yang sudah dirender untuk role tersebut; perilaku per role ditentukan oleh Form dan field."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon status di inline-start dan tidak dicerminkan; daftar dan teks rata inline-start; label field dan pesan tetap dalam urutan baca locale."
+  },
+  "sizes": {
+    "not_applicable": "ErrorSummary mengikuti lebar form (layout-measure) dan tingginya mengikuti jumlah item; area klik tiap tautan diatur item-link ≥ target-current."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "container menerima fokus program (render server) dengan ring di luar border critical",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "hover",
+      "note": "item-link hover + fokus: garis bawah tebal + ring",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "error",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tautan tetap bisa diaktifkan saat submit ulang berjalan karena hanya memindah fokus",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "ErrorSummary tidak punya state diblokir; bila form diblokir, alasan tampil di InlineAlert",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "hidden",
+      "token_swaps": {},
+      "treatment": "tidak dirender sebelum submit pertama atau saat tidak ada error; tidak ada region kosong"
+    },
+    {
+      "name": "visible",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "title": "color-structure-text-primary"
+      },
+      "treatment": "dirender setelah submit gagal; judul berjumlah; daftar tautan; diumumkan assertive lewat LiveAnnouncer (atau menerima fokus saat render server)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "container menerima fokus program: outline 2px focus-ring offset 2px; item-link fokus: outline per tautan"
+    },
+    {
+      "name": "item-hover",
+      "token_swaps": {
+        "item-link": "color-interaction-hover"
+      },
+      "treatment": "garis bawah menebal ke border-width-thick; hanya di (hover: hover)"
+    },
+    {
+      "name": "item-pressed",
+      "token_swaps": {
+        "item-link": "color-interaction-pressed"
+      },
+      "treatment": "warna tautan interaction-pressed; tanpa transform"
+    },
+    {
+      "name": "stale",
+      "token_swaps": {},
+      "treatment": "pengguna sudah memperbaiki sebagian field sebelum submit ulang: ringkasan tidak berubah (tidak menggeser layout atau mengumumkan per ketikan) sampai submit berikutnya; item yang sudah benar tetap menautkan ke field yang kini valid"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "submit ulang berjalan: ringkasan tetap terlihat; setelah respons diperbarui (jumlah baru diumumkan) atau dihapus bila valid"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}ErrorSummary: Column + TextButton yang memanggil FocusRequester",
+    "flutter": "{ns}_error_summary.dart: Column berisi heading dan TextButton yang memindah FocusNode",
+    "html": {
+      "element": "section[aria-labelledby][tabindex=-1] > h2 + ul > li > a[href=#id]",
+      "notes": "berfungsi tanpa JS lewat hash link; modul JS memastikan fokus ke input, membuka section terlipat, dan memperhitungkan scroll-padding"
+    },
+    "swiftui": "{Ns}ErrorSummary: VStack + Button yang mengubah @FocusState"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Di atas form halaman, di bawah header; judul dokumen ikut diawali penanda error.",
+      "name": "page"
+    },
+    {
+      "description": "Di bagian atas isi Modal, Sheet, atau ContextPanel (di bawah judul overlay, di dalam area gulir); judul dokumen tidak diubah, judul overlay tetap.",
+      "name": "embedded"
+    }
+  ]
+}

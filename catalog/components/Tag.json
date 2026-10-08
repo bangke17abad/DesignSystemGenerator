@@ -1,0 +1,448 @@
+{
+  "accessibility": {
+    "attributes": [
+      "ul aria-label atau aria-labelledby ke label grup",
+      "remove-button aria-label=\"Remove {label}\"",
+      "label terpotong: teks lengkap tersedia sebagai nama aksesibel",
+      "penghapusan diumumkan lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "tag-list dalam urutan visual; remove-button setiap Tag; setelah hapus fokus ke Tag tetangga",
+    "native": {
+      "compose": "SuggestionChip/AssistChip statis atau Surface + Text; InputChip(selected = false, onClick, label, trailingIcon = { Icon(…, contentDescription = \"Remove $label\") }) dalam FlowRow",
+      "flutter": "Chip (statis) / InputChip(label, onDeleted, deleteButtonTooltipMessage: \"Remove {label}\") dalam Wrap; Semantics(label:) pada grup",
+      "swiftui": "Text dalam Capsule untuk statis; HStack Text + Button(action: remove) { Image(systemName: \"xmark\") }.accessibilityLabel(\"Remove \\(label)\") untuk removable; FlowLayout kustom via Layout"
+    },
+    "politeness": "polite",
+    "role": "teks dalam li di ul berlabel (\"Tags\"); remove-button = button; varian link = a",
+    "sr_label": "\"{label}\" untuk Tag; tombol \"Remove {label}\"; grup menyebut jumlah bila dinamis",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.4",
+      "2.4.7",
+      "2.5.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "pil atau persegi membulat netral; border atau tonal sesuai L6; tidak memakai warna semantik",
+      "tokens": [
+        "color-structure-surface-sunken",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-full",
+        "radius-sm",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "teks metadata; boleh ellipsis dengan teks lengkap di nama aksesibel dan Tooltip",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "icon-start",
+      "role": "ikon kategori opsional dari L9 (bukan ikon status terkunci)",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "remove-button",
+      "role": "IconButton \"Remove {label}\" di inline-end; area klik diperluas",
+      "tokens": [
+        "icon-sm",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "tag-list",
+      "role": "ul pembungkus kumpulan Tag; Inline dengan wrap",
+      "tokens": [
+        "space-1",
+        "space-2"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onRemove",
+        "payload": "{ label: string }",
+        "when": "remove-button diaktifkan"
+      }
+    ],
+    "parts": [
+      "Tag.List (label)",
+      "Tag.RemoveButton"
+    ],
+    "props": [
+      {
+        "description": "Teks metadata; juga nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "static",
+        "description": "Perilaku Tag.",
+        "name": "variant",
+        "required": false,
+        "type": "\"static\" | \"removable\" | \"link\""
+      },
+      {
+        "default": "sm",
+        "description": "Tinggi Tag; remove-button selalu ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\""
+      },
+      {
+        "description": "Tujuan untuk variant link.",
+        "name": "href",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Ikon kategori dari set L9 (bukan ikon status).",
+        "name": "iconStart",
+        "required": false,
+        "type": "IconName"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila penghapusan tidak relevan; selain itu reason.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan Tag tidak bisa dihapus.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Tag statis dilewati; remove-button dan Tag link menerima fokus dalam urutan DOM",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "Tag dihapus; fokus pindah ke remove-button Tag berikutnya, atau sebelumnya, atau ke input/heading pemilik bila kosong; \"{label} removed\" diumumkan polite",
+      "trigger": "Enter atau Space pada remove-button"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus ke Tag terakhir; Backspace kedua menghapusnya (konvensi Combobox multi)",
+      "trigger": "Backspace di input Combobox kosong"
+    },
+    {
+      "input": "pointer",
+      "result": "menghapus pada pelepasan; klik label tidak menghapus",
+      "trigger": "klik remove-button"
+    },
+    {
+      "input": "touch",
+      "result": "menghapus; area ≥ target-min-touch; Undo tersedia lewat Toast bila penghapusan berdampak",
+      "trigger": "tap remove-button"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Design",
+        "Quarterly",
+        "External",
+        "Remove Design",
+        "Design removed"
+      ],
+      "id-ID": [
+        "Desain",
+        "Kuartalan",
+        "Eksternal",
+        "Hapus Desain",
+        "Desain dihapus"
+      ]
+    },
+    "rules": [
+      "Kata benda atau frasa pendek (1–3 kata), sentence case kecuali nama diri.",
+      "Tidak memakai kata status (\"Pending\", \"Overdue\", \"Done\"); itu StatusLabel.",
+      "Tag dari pengguna ditampilkan apa adanya; batas panjang diterapkan saat input dengan helper."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Tooltip",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai Tag hanya untuk metadata netral.",
+    "Beri remove-button nama yang menyebut Tag-nya.",
+    "Pindahkan fokus ke Tag tetangga setelah menghapus."
+  ],
+  "dont": [
+    {
+      "ref": "UB12",
+      "text": "Memakai Tag berwarna semantik untuk menyatakan status."
+    },
+    {
+      "ref": "UB2",
+      "text": "Membedakan kategori Tag hanya dengan warna latar."
+    },
+    {
+      "ref": "UB5",
+      "text": "Remove-button dengan area klik di bawah 44 di sentuh atau bertumpuk dengan Tag tetangga."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "Tag melebar sampai lebar maksimum lalu ellipsis; teks lengkap di nama aksesibel dan Tooltip",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "Tag tumbuh tinggi; tag-list membungkus; remove-button tetap terlihat",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tag-list tidak dirender; di editor tampil helper \"No tags yet\"",
+      "case": "0 Tag"
+    },
+    {
+      "behaviour": "tampilkan sebagian + \"+N\" yang membuka daftar lengkap; editor menyediakan pencarian",
+      "case": "50+ Tag pada satu objek"
+    },
+    {
+      "behaviour": "Tag bertanda Pending sampai sinkron (I6); gagal: Tag kembali + InlineAlert/Toast error",
+      "case": "hapus offline atau gagal"
+    },
+    {
+      "behaviour": "remove-button di inline-end (kiri); urutan Tag mengikuti arah baca; angka di label diisolasi bidi",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "Token color-semantic-* pada Tag ditolak (token-rule, I1)",
+    "Label Tag berisi kata status dari glosarium lifecycle ditolak (manual-review)",
+    "remove-button tanpa aria-label yang menyebut label Tag ditolak"
+  ],
+  "name": "Tag",
+  "preview": {
+    "combinations": [
+      "hover+focus (remove)",
+      "disabled+focus (gembok)",
+      "loading+pressed (dicegah)",
+      "ringkasan +N",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "pressed",
+      "removing",
+      "disabled-with-reason",
+      "read-only"
+    ],
+    "variants": [
+      "static",
+      "removable",
+      "link"
+    ]
+  },
+  "purpose": {
+    "purpose": "Label metadata netral (kategori, kata kunci, atribut) yang melekat pada objek, opsional dapat dihapus; tidak pernah menyatakan status.",
+    "when_not_to_use": [
+      "Untuk status lifecycle (C1–C6): pakai StatusLabel (I1).",
+      "Untuk hitungan atau perhatian (belum dibaca): pakai Badge.",
+      "Untuk menyaring daftar: pakai FilterChip (dapat dipilih, aria-pressed).",
+      "Untuk memilih banyak nilai di form: pakai Combobox multi yang merender Tag terpilih.",
+      "Untuk metadata tunggal yang cukup sebagai teks inline: tulis sebagai teks biasa."
+    ]
+  },
+  "related": [
+    "StatusLabel",
+    "Badge",
+    "FilterChip",
+    "Combobox"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tag-list membungkus; lebih dari ±5 Tag di kartu diringkas \"+N\" yang membuka Sheet; remove-button ≥ target-min-touch; size md di editor",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "membungkus; remove-button ≥ target-min-touch di sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "membungkus; size sm di Table dan List; ringkasan \"+N\" di sel Table",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role tidak boleh mengubah metadata: Tag tampil tanpa remove-button"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "Tag tertentu terkunci (mis. diberikan sistem): ikon gembok + reason"
+    },
+    {
+      "pattern": "hidden",
+      "when": "Tag yang mengungkap informasi terbatas tidak dirender"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "remove-button di inline-end logis; ikon silang tidak dicerminkan; tag-list membungkus mengikuti arah baca."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "Tag statis tidak interaktif; remove-button dan varian link max(control-height-sm, target-current), di sentuh diperluas ke target-min-touch tanpa tumpang tindih dengan Tag tetangga",
+      "name": "sm",
+      "notes": "Default di Table, List, dan Card.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); remove-button ≥ target-min-touch di sentuh",
+      "name": "md",
+      "notes": "Editor metadata dan Combobox multi di surface sentuh.",
+      "size_token": "control-height-md"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "remove-button hover + ring",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ikon gembok fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "remove-button tidak bisa ditekan saat penghapusan sebelumnya sedang diproses",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "Tag tidak punya state terpilih; seleksi adalah FilterChip",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "label": "color-structure-text-primary"
+      },
+      "treatment": "latar netral surface-sunken, label text-primary"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "remove-button": "color-interaction-hover"
+      },
+      "treatment": "remove-button atau varian link di (hover: hover): state-layer hover pada target saja"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "remove-button": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px pada remove-button atau Tag link"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "remove-button": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed pada target"
+    },
+    {
+      "name": "removing",
+      "token_swaps": {},
+      "treatment": "Tag hilang seketika (atau fade motion-fast); bila penghapusan butuh server dan gagal, Tag kembali dengan pesan error"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "remove-button": "color-structure-text-disabled"
+      },
+      "treatment": "Tag tidak boleh dihapus oleh role/kondisi ini: remove-button diganti ikon gembok dengan reason di Tooltip dan teks helper editor"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {},
+      "treatment": "tanpa remove-button; tampilan sama dengan static"
+    }
+  ],
+  "target_hints": {
+    "compose": "InputChip/Surface dalam FlowRow dibungkus {Ns}Tag",
+    "flutter": "Chip/InputChip dalam Wrap dibungkus {ns}_tag.dart",
+    "html": {
+      "element": "ul > li > span (+ button)",
+      "notes": "variant link = a; tanpa JS remove-button adalah tombol submit di dalam form editor"
+    },
+    "swiftui": "View kustom dalam Layout flow dibungkus {Ns}Tag"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Metadata baca-saja; tidak fokusabel.",
+      "name": "static"
+    },
+    {
+      "description": "Memiliki remove-button; dipakai di editor metadata dan nilai terpilih Combobox multi.",
+      "name": "removable"
+    },
+    {
+      "description": "Tag adalah tautan ke daftar objek bertag sama; penanda non-warna (garis bawah saat hover dan fokus) dan nama tujuan jelas.",
+      "name": "link"
+    }
+  ]
+}

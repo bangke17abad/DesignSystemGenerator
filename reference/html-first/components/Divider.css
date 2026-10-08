@@ -1,0 +1,72 @@
+/* Divider · engine 1.8.0 reference (catalog/components/Divider.json). Tokens only (I3); logical properties only (§12.4).
+   Markup: <hr class="ds-divider"> (semantic, horizontal) · <div class="ds-divider" aria-hidden="true"> (decorative)
+   · <div class="ds-divider" role="separator" aria-orientation="vertical" data-orientation="vertical"> · labelled (see fixture).
+   The line is a border (never a background) so it survives forced colours; no margin: spacing comes from Stack/Inline gap. */
+.ds-divider {
+  --_line: var(--color-structure-border);
+  --_weight: var(--border-width-thin);
+  display: block;
+  flex: none;
+  align-self: stretch;
+  inline-size: auto;
+  block-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-block-start: var(--_weight) solid var(--_line);
+  color: inherit;
+  background: none;
+  overflow: visible;
+}
+.ds-divider[data-weight="thick"] { --_weight: var(--border-width-thick); }
+/* emphasis: the line is the only boundary of a group (semantic) → border-strong (SC 1.4.11) */
+.ds-divider[data-emphasis] { --_line: var(--color-structure-border-strong); }
+@media (prefers-contrast: more) { .ds-divider { --_line: var(--color-structure-border-strong); } }
+[data-ds-on="inverse"] .ds-divider { --_line: var(--color-structure-border-strong); }
+
+.ds-divider[data-orientation="vertical"] {
+  display: inline-block;
+  align-self: stretch;
+  inline-size: 0;
+  block-size: auto;
+  min-block-size: 1lh;
+  border-block-start: 0;
+  border-inline-start: var(--_weight) solid var(--_line);
+}
+
+/* labelled: text with decorative line segments drawn as pseudo-elements (not in the accessibility tree) */
+.ds-divider[data-variant="labelled"] {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  block-size: auto;
+  border-block-start: 0;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  color: var(--color-structure-text-secondary);
+}
+.ds-divider[data-variant="labelled"]::before,
+.ds-divider[data-variant="labelled"]::after {
+  content: "";
+  flex: 1 1 var(--space-6);
+  min-inline-size: var(--space-6);
+  /* line sits on the middle of the first label line, at any text size */
+  block-size: calc(1lh / 2);
+  border-block-end: var(--_weight) solid var(--_line);
+}
+.ds-divider[data-variant="labelled"][data-label-align="start"]::before { display: none; }
+.ds-divider__label { flex: 0 1 auto; min-inline-size: 0; overflow-wrap: anywhere; text-align: center; }
+.ds-divider[data-label-align="start"] .ds-divider__label { text-align: start; }
+[data-ds-on="inverse"] .ds-divider[data-variant="labelled"] { color: var(--color-structure-text-oninverse); }
+
+/* forced-colors preview twin: renders the system-colour result in a normal static preview */
+[data-force~="forced-colors"] { background: Canvas; color: CanvasText; }
+[data-force~="forced-colors"] .ds-divider { --_line: CanvasText; }
+[data-force~="forced-colors"] .ds-divider[data-variant="labelled"] { color: CanvasText; }
+@media (forced-colors: active) {
+  .ds-divider { --_line: CanvasText; }
+  .ds-divider[aria-hidden="true"] { --_line: GrayText; }
+  .ds-divider[data-variant="labelled"] { color: CanvasText; }
+}

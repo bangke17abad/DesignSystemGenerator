@@ -1,0 +1,39 @@
+<!-- VisuallyHidden fixture · default + focusable × hidden / focus-revealed, link context, icon status text, lang, RTL, accessibility tree shown (catalog preview, §6.9). Class .ds-vh (base.css); the "Accessibility tree" lines show what assistive technology reads. -->
+<section class="ds-demo" data-ds-demo="variant default · link + hidden context">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline" data-gap="4">
+      <a class="ds-link" data-variant="standalone" href="#profile-edit">Edit<span class="ds-vh"> profile</span></a>
+      <a class="ds-link" data-variant="standalone" href="#billing-edit">Edit<span class="ds-vh"> billing address</span></a>
+    </div>
+    <p class="ds-text-secondary">Accessibility tree: <code class="ds-text-code">link "Edit profile"</code>, <code class="ds-text-code">link "Edit billing address"</code> — the visible word comes first (SC 2.5.3).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant default · status icon + hidden text">
+  <div class="ds-stack" data-gap="3">
+    <p class="ds-inline" data-gap="2"><svg class="ds-icon" aria-hidden="true" style="color: var(--color-semantic-positive)"><use href="#ds-i-positive"/></svg><span class="ds-vh">Paid: </span><span>Invoice INV-2041</span></p>
+    <p class="ds-inline" data-gap="2"><svg class="ds-icon" aria-hidden="true" style="color: var(--color-semantic-warning)"><use href="#ds-i-warning"/></svg><span class="ds-vh">Overdue: </span><span>Invoice INV-2038</span></p>
+    <p class="ds-text-secondary">Accessibility tree: <code class="ds-text-code">"Paid: Invoice INV-2041"</code>, <code class="ds-text-code">"Overdue: Invoice INV-2038"</code></p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="hidden text in another language (lang)">
+  <div class="ds-stack" data-gap="3">
+    <a class="ds-link" data-variant="standalone" href="#id-version">Bahasa Indonesia<span class="ds-vh" lang="en"> (switch the interface language)</span></a>
+    <p class="ds-text-secondary">Accessibility tree: <code class="ds-text-code">link "Bahasa Indonesia (switch the interface language)"</code>, the hidden part read with English pronunciation (SC 3.1.2).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant focusable · state hidden (Tab to reveal)">
+  <div class="ds-stack" data-gap="3">
+    <p>Tab to the next stop: a hidden shortcut appears in its place.</p>
+    <span class="ds-vh" data-variant="focusable"><a class="ds-link" data-variant="standalone" href="#vh-results">Jump to search results</a></span>
+    <p class="ds-text-secondary">The shortcut stays in the focus order (never display:none or visibility:hidden).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant focusable · state focus-revealed (static twin)">
+  <span data-variant="focusable" data-force="revealed"><a class="ds-link" data-variant="standalone" href="#vh-results-2" data-force="focus">Jump to search results</a></span>
+</section>
+<section class="ds-demo" data-ds-demo="focusable + RTL" dir="rtl" lang="ar">
+  <span data-variant="focusable" data-force="revealed"><a class="ds-link" data-variant="standalone" href="#vh-results-ar" data-force="focus">انتقل إلى نتائج البحث</a></span>
+</section>
+<section class="ds-demo" data-ds-demo="state empty (not rendered)">
+  <p>An empty VisuallyHidden is not rendered at all: an empty node makes some screen readers read “blank”. Nothing to show here by design.</p>
+</section>

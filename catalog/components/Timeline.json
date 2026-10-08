@@ -1,0 +1,536 @@
+{
+  "accessibility": {
+    "attributes": [
+      "time datetime=\"YYYY-MM-DDThh:mm:ssZ\" ISO 8601 dengan zona",
+      "nama aksesibel time = waktu tepat terformat locale (aria-label) sementara teks terlihat relatif; time fokusabel (tabindex 0) hanya bila waktu tepat tidak terlihat",
+      "marker Avatar/ikon aria-hidden bila aktor sudah tertulis di kalimat; ikon status disertai teks StatusLabel",
+      "Link objek menyebut nama objek, bukan \"this\"",
+      "aria-busy saat loading; aria-setsize/aria-posinset bila dimuat bertahap",
+      "entri baru tidak diumumkan satu per satu; ringkasan per batch lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "day-header → entri berurutan (Link, time, aksi) → load-more; new-entries di awal daftar",
+    "native": {
+      "compose": "LazyColumn dengan stickyHeader per hari; Modifier.semantics(mergeDescendants = true) { contentDescription = kalimat + waktu tepat }; TooltipBox untuk waktu tepat",
+      "flutter": "ListView berisi Semantics(label: kalimat lengkap + waktu tepat) per entri; Tooltip(message: waktu tepat) pada teks relatif; ExcludeSemantics pada rail",
+      "swiftui": "List/LazyVStack; Text(date, style: .relative) dengan .accessibilityLabel(date.formatted(date: .long, time: .shortened)) dan .help(waktu tepat); .accessibilityElement(children: .combine) per entri"
+    },
+    "politeness": "polite",
+    "role": "list (ol) berlabel \"Activity\"/\"Audit log\" dengan li per entri; day-header heading; time elemen time",
+    "sr_label": "kalimat lengkap \"{aktor} {kata kerja} {objek}\" + alasan + waktu tepat; perubahan status dibaca \"from {lama} to {baru}\"",
+    "wcag": [
+      "1.1.1",
+      "1.3.1",
+      "1.3.2",
+      "1.4.1",
+      "1.4.13",
+      "2.1.1",
+      "2.4.4",
+      "2.4.7",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "ol berlabel; urutan kronologis (terbaru di atas default)",
+      "tokens": [
+        "space-4",
+        "color-structure-surface-base"
+      ]
+    },
+    {
+      "part": "day-header",
+      "role": "heading pemisah per hari/periode; sticky opsional",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "color-structure-surface-raised",
+        "z-sticky"
+      ]
+    },
+    {
+      "part": "rail",
+      "role": "garis vertikal penghubung marker; dekoratif",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "marker",
+      "role": "Avatar aktor, atau ikon kejadian, atau ikon status terkunci untuk perubahan status (kelas C dari §7); bentuk + ikon, bukan warna saja",
+      "tokens": [
+        "avatar-sm",
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "radius-full"
+      ]
+    },
+    {
+      "part": "sentence",
+      "role": "kalimat kejadian: aktor + kata kerja + Link ke objek target (+ nilai lama → baru)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "reason",
+      "role": "alasan atau komentar yang menyertai kejadian; kutipan teks",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary",
+        "color-structure-surface-sunken",
+        "radius-sm",
+        "space-3"
+      ]
+    },
+    {
+      "part": "status-change",
+      "role": "StatusLabel sebelum → sesudah; ikon terkunci + teks",
+      "tokens": [
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "time",
+      "role": "elemen time ber-datetime ISO 8601; teks relatif, waktu tepat saat hover/fokus (Tooltip) dan di nama aksesibel; varian audit menampilkan waktu tepat terlihat",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "load-more",
+      "role": "Button \"Show older activity\"; fokus terjaga",
+      "tokens": [
+        "control-height-md",
+        "space-4"
+      ]
+    },
+    {
+      "part": "new-entries",
+      "role": "pemberitahuan \"{n} new\" di atas daftar yang menyisipkan kejadian baru saat diaktifkan, tanpa menggeser yang sedang dibaca",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-interaction-default",
+        "elevation-1",
+        "type-label-size"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onLoadMore",
+        "payload": "void",
+        "when": "Show older activity diaktifkan"
+      },
+      {
+        "name": "onShowNew",
+        "payload": "void",
+        "when": "new-entries diaktifkan"
+      },
+      {
+        "name": "onRetry",
+        "payload": "{ entryId?: string }",
+        "when": "Retry muat atau kirim"
+      }
+    ],
+    "parts": [
+      "Timeline.Group (label)",
+      "Timeline.Item (entryId, actor, pending, highlighted)",
+      "Timeline.Marker (avatar | icon | status)",
+      "Timeline.Sentence",
+      "Timeline.Reason",
+      "Timeline.StatusChange (from, to)",
+      "Timeline.Time (dateTime, format: \"relative\" | \"absolute\")",
+      "Timeline.LoadMore"
+    ],
+    "props": [
+      {
+        "default": "activity",
+        "description": "Jenis riwayat.",
+        "name": "variant",
+        "required": false,
+        "type": "\"activity\" | \"audit\" | \"compact\""
+      },
+      {
+        "description": "Nama aksesibel daftar (\"Activity\", \"Audit log\").",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "newest-first",
+        "description": "Urutan kronologis.",
+        "name": "order",
+        "required": false,
+        "type": "\"newest-first\" | \"oldest-first\""
+      },
+      {
+        "default": "day",
+        "description": "Pengelompokan dengan day-header.",
+        "name": "groupBy",
+        "required": false,
+        "type": "\"day\" | \"none\""
+      },
+      {
+        "default": "false",
+        "description": "Skeleton entri.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error muat.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menampilkan Show older activity.",
+        "name": "hasMore",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "0",
+        "description": "Jumlah entri baru yang menunggu disisipkan.",
+        "name": "newCount",
+        "required": false,
+        "type": "number"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke Link objek, time (bila waktu tepat tidak terlihat), aksi entri, lalu load-more dalam urutan DOM",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "Tooltip waktu tepat (tanggal, jam, zona waktu); Esc menutup",
+      "trigger": "fokus pada time"
+    },
+    {
+      "input": "keyboard",
+      "result": "menyisipkan entri baru di atas; fokus pindah ke entri baru pertama; jumlah diumumkan polite",
+      "trigger": "Enter pada new-entries"
+    },
+    {
+      "input": "keyboard",
+      "result": "entri lama ditambahkan di bawah; fokus tetap di tombol; \"{n} older entries loaded\" diumumkan",
+      "trigger": "Enter pada load-more"
+    },
+    {
+      "input": "pointer",
+      "result": "Tooltip waktu tepat; dapat di-hover dan Esc menutup (SC 1.4.13)",
+      "trigger": "hover time"
+    },
+    {
+      "input": "touch",
+      "result": "waktu tepat tampil; detail entri (nilai lama → baru) dibuka di Accordion/Sheet",
+      "trigger": "tekan lama time atau tap entri"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Alex approved Request 1042",
+        "System changed status from Pending to Overdue",
+        "Reason: missing attachment",
+        "5 minutes ago",
+        "Show older activity",
+        "3 new updates"
+      ],
+      "id-ID": [
+        "Alex menyetujui Permintaan 1042",
+        "Sistem mengubah status dari Menunggu menjadi Terlambat",
+        "Alasan: lampiran belum ada",
+        "5 menit lalu",
+        "Tampilkan aktivitas lama",
+        "3 pembaruan baru"
+      ]
+    },
+    "rules": [
+      "Kalimat = aktor + kata kerja lampau + objek bertaut (\"Alex approved Request 1042\"); kata kerja sama dengan label tombol aksinya.",
+      "Aktor sistem/otomasi disebut eksplisit (\"System\", nama otomasi), tidak dikosongkan.",
+      "Waktu relatif untuk < 7 hari, absolut setelahnya; varian audit selalu absolut dengan zona waktu.",
+      "Perubahan nilai ditulis \"from {lama} to {baru}\"; nilai sensitif disamarkan sesuai kebijakan brief."
+    ]
+  },
+  "depends_on": [
+    "Avatar",
+    "StatusLabel",
+    "Link",
+    "Tooltip",
+    "Button",
+    "Skeleton",
+    "EmptyState",
+    "InlineAlert",
+    "Accordion",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Tulis setiap kejadian sebagai kalimat lengkap dengan tautan ke objeknya.",
+    "Sediakan waktu tepat lewat hover, fokus, dan nama aksesibel, serta datetime ISO.",
+    "Tunjukkan perubahan status dengan ikon terkunci dan teks lama → baru."
+  ],
+  "dont": [
+    {
+      "text": "Menyisipkan entri baru otomatis di atas posisi baca pengguna sehingga konten dan fokus bergeser."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai jenis atau status kejadian hanya dengan warna marker."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menampilkan waktu tepat hanya di tooltip pada varian audit."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "kalimat membungkus; time pindah ke baris sendiri; nama objek panjang ellipsis dengan nama lengkap di Link",
+      "case": "kalimat +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "marker tetap rata atas; rail menyesuaikan tinggi; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "EmptyState spesifik",
+      "case": "0 kejadian"
+    },
+    {
+      "behaviour": "Show older activity per halaman; filter jenis dan rentang tanggal; varian audit menyediakan ekspor",
+      "case": "10.000+ kejadian"
+    },
+    {
+      "behaviour": "waktu ditampilkan di zona pengguna dengan singkatan zona di waktu tepat; datetime ISO menyimpan offset",
+      "case": "zona waktu pengguna berbeda dari server"
+    },
+    {
+      "behaviour": "entri tersimpan tampil dengan penanda kesegaran; komentar baru Pending; gagal → Not sent + Retry",
+      "case": "offline"
+    },
+    {
+      "behaviour": "kalimat tetap dengan nama objek sebagai teks tanpa tautan + \"(deleted)\"",
+      "case": "sebagian entri gagal dimuat (objek terhapus)"
+    },
+    {
+      "behaviour": "rail dan marker di inline-start (kanan); ID objek, angka, dan waktu diisolasi bidi; panah lama → baru dicerminkan",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Opsional: disertakan bila journey atau entitas di brief memerlukan riwayat atau jejak audit (perubahan state, komentar, persetujuan); alasan dicatat.",
+  "lint": [
+    "time tanpa atribut datetime ISO ditolak",
+    "Waktu relatif tanpa waktu tepat di nama aksesibel ditolak",
+    "Marker status tanpa ikon terkunci dan teks ditolak (UB2)",
+    "Entri tanpa aktor (termasuk sistem) ditolak (manual-review)"
+  ],
+  "name": "Timeline",
+  "preview": {
+    "combinations": [
+      "hover+focus (time)",
+      "error+focus (Retry kirim)",
+      "read-only (audit)",
+      "loading+pressed (dicegah)",
+      "perubahan status C1/C2",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "loading",
+      "empty",
+      "error",
+      "new-available",
+      "highlighted",
+      "pending-sync",
+      "time-focus"
+    ],
+    "variants": [
+      "activity",
+      "audit",
+      "compact"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan riwayat kejadian sebuah objek atau ruang kerja secara kronologis: siapa melakukan apa pada objek mana, mengapa, dan kapan, termasuk perubahan status dan jejak audit.",
+    "when_not_to_use": [
+      "Untuk notifikasi yang perlu ditindaklanjuti pengguna: pakai NotificationItem.",
+      "Untuk langkah proses yang akan datang: pakai Stepper.",
+      "Untuk tren kuantitatif sepanjang waktu: pakai Chart.",
+      "Untuk daftar objek yang hanya diurutkan menurut waktu tanpa aktor/kejadian: pakai List atau Table."
+    ]
+  },
+  "related": [
+    "NotificationItem",
+    "List",
+    "Stepper",
+    "Table"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant compact atau marker kecil; rail disembunyikan; detail nilai lama → baru di Accordion; waktu tepat lewat tekan lama dan di halaman detail",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "rail + Avatar; kalimat membungkus; aksi entri ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "rail + Avatar; di ContextPanel memakai compact; filter jenis kejadian di toolbar",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "entri tentang objek atau aktor yang tidak boleh dilihat role disaring di server; jumlah total tidak membocorkan entri tersembunyi"
+    },
+    {
+      "pattern": "read-only",
+      "when": "variant audit dan role tanpa izin komentar: tanpa komposer dan aksi entri"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi entri (balas, sunting komentar) terlihat tetapi diblokir: gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Rail dan marker memakai inline-start; panah lama → baru dicerminkan; tanggal dan angka diisolasi bidi; urutan kronologis vertikal tidak berubah."
+  },
+  "sizes": {
+    "not_applicable": "Tidak ada prop size; marker memakai avatar-sm/icon-sm dan jarak dari sumbu kepadatan (§5.9)."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "time: hover dan fokus menampilkan satu Tooltip waktu tepat",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "entri gagal kirim: fokus pada Retry",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "variant audit selalu read-only",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "Load more tidak bisa ditekan saat memuat",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "entri dengan marker, kalimat, waktu"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "marker": "color-structure-skeleton"
+      },
+      "treatment": "Skeleton marker + dua baris teks × 3–5 entri; aria-busy"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "EmptyState spesifik (\"No activity yet\" + kapan akan terisi)"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "InlineAlert C1 + Retry; entri yang sudah dimuat tetap"
+    },
+    {
+      "name": "new-available",
+      "token_swaps": {
+        "new-entries": "color-structure-surface-raised"
+      },
+      "treatment": "new-entries tampil; diumumkan polite sekali per batch; daftar tidak bergeser sampai diaktifkan"
+    },
+    {
+      "name": "highlighted",
+      "token_swaps": {
+        "sentence": "color-structure-highlight"
+      },
+      "treatment": "entri yang dirujuk deep link: latar highlight + ring fokus saat dibuka; highlight memudar tanpa animasi di reduced motion"
+    },
+    {
+      "name": "pending-sync",
+      "token_swaps": {
+        "time": "color-structure-text-secondary"
+      },
+      "treatment": "komentar/aksi yang dibuat offline: ikon jam + \"Sending…\" sampai dikonfirmasi; gagal → \"Not sent\" + Retry (I6)"
+    },
+    {
+      "name": "time-focus",
+      "token_swaps": {
+        "time": "color-focus-ring"
+      },
+      "treatment": "time fokusabel menampilkan waktu tepat di Tooltip; ring 2px focus-ring"
+    }
+  ],
+  "target_hints": {
+    "compose": "LazyColumn + stickyHeader dibungkus {Ns}Timeline",
+    "flutter": "ListView + Semantics dibungkus {ns}_timeline.dart",
+    "html": {
+      "element": "ol > li + time[datetime]",
+      "notes": "h3 untuk day-header; Tooltip waktu tepat lewat modul JS, tanpa JS waktu tepat ada di atribut aria-label dan teks VisuallyHidden; Show older activity sebagai tautan halaman tanpa JS"
+    },
+    "swiftui": "List/LazyVStack dibungkus {Ns}Timeline"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Feed aktivitas dengan waktu relatif, komentar, dan pengelompokan per hari.",
+      "name": "activity"
+    },
+    {
+      "description": "Jejak audit tak dapat diubah: waktu tepat dengan zona waktu terlihat, aktor lengkap (termasuk sistem/otomasi), nilai lama → baru, tanpa aksi edit/hapus, dapat diekspor.",
+      "name": "audit"
+    },
+    {
+      "description": "Untuk panel sempit: marker ikon kecil, tanpa rail, satu baris per kejadian dengan detail di Accordion.",
+      "name": "compact"
+    }
+  ]
+}

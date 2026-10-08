@@ -1,0 +1,235 @@
+<!-- DateRangePicker fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases. Text follows ui_locale
+     en-US (id-ID and RTL demos at the end); data-today pins "today" to 8 Oct 2026. The first demo is live: the calendar button
+     opens a modal dialog anchored under the fields (2 months on desktop, 1 on tablet) or a full-screen Sheet on phones.
+     Static open dialogs render in flow (data-default-open, data-draft). Without JS: two labelled text fields with the format. -->
+<section class="ds-demo" data-ds-demo="variants/calendar (live)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-v1" data-today="2026-10-08" data-max-days="90"
+            data-unavailable='{"dates":{"2026-10-20":"Office closed for maintenance."}}' data-legend="Oct 20: office closed for maintenance.">
+    <legend class="ds-date-range-picker__legend">Report period</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-v1-s">Start date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-v1-s" name="period_start" type="text" inputmode="numeric" autocomplete="off" required aria-describedby="drp-v1-help"></div>
+        </div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-v1-e">End date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-v1-e" name="period_end" type="text" inputmode="numeric" autocomplete="off" required aria-describedby="drp-v1-help"></div>
+        </div>
+      </div>
+    </div>
+    <p class="ds-date-range-picker__helper" id="drp-v1-help">MM/DD/YYYY, e.g. 03/03/2026. Up to 90 days.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="states/open + selected (range ribbon, start/end markers, unavailable inside allowed, legend)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-o1" data-default-open data-today="2026-10-08" data-allow-unavailable
+            data-unavailable='{"weekdays":[0,6],"weekdaysReason":"No deliveries on weekends."}' data-legend="Weekends: no deliveries (allowed inside a report range)." data-force-days="2026-10-15:hover">
+    <legend class="ds-date-range-picker__legend">Delivery report</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-o1-s">Start date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-o1-s" type="text" inputmode="numeric" autocomplete="off" value="10/12/2026" aria-describedby="drp-o1-help"></div>
+        </div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-o1-e">End date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-o1-e" type="text" inputmode="numeric" autocomplete="off" value="10/23/2026" aria-describedby="drp-o1-help"></div>
+        </div>
+      </div>
+    </div>
+    <p class="ds-date-range-picker__helper" id="drp-o1-help">MM/DD/YYYY, e.g. 03/03/2026.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="states/selecting-end (preview ribbon to the hovered day; max 14 days → later days unavailable with reason)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-e1" data-default-open data-today="2026-10-08" data-max-days="14" data-months="1"
+            data-draft="2026-10-13/" data-hover="2026-10-22" data-force-days="2026-10-22:focus">
+    <legend class="ds-date-range-picker__legend">Leave period</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-e1-s">First day of leave</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-e1-s" type="text" inputmode="numeric" autocomplete="off" aria-describedby="drp-e1-help"></div>
+        </div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-e1-e">Last day of leave</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-e1-e" type="text" inputmode="numeric" autocomplete="off" aria-describedby="drp-e1-help"></div>
+        </div>
+      </div>
+    </div>
+    <p class="ds-date-range-picker__helper" id="drp-e1-help">MM/DD/YYYY. Up to 14 days per request.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="variants/with-presets (invalid draft: unavailable day inside the range explained, Apply blocked)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-p1" data-variant="with-presets" data-default-open data-today="2026-10-08" data-months="1"
+            data-presets='[{"label":"Last 7 days","from":-6,"to":0},{"label":"Last 30 days","from":-29,"to":0},{"label":"This month","month":0},{"label":"Last month","month":-1}]'
+            data-unavailable='{"dates":{"2026-10-05":"Fully booked"}}' data-legend="Oct 5 is fully booked." data-draft="2026-10-02/2026-10-08">
+    <legend class="ds-date-range-picker__legend">Stay dates</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-p1-s">Check-in</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-p1-s" type="text" inputmode="numeric" autocomplete="off" aria-describedby="drp-p1-help"></div>
+        </div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-p1-e">Check-out</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-p1-e" type="text" inputmode="numeric" autocomplete="off" aria-describedby="drp-p1-help"></div>
+        </div>
+      </div>
+    </div>
+    <p class="ds-date-range-picker__helper" id="drp-p1-help">MM/DD/YYYY, e.g. 10/08/2026.</p>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="states (error: end before start + focus, disabled-with-reason + selected, read-only, trigger hover)">
+  <div class="ds-stack" data-gap="6">
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-s1" data-today="2026-10-08">
+      <legend class="ds-date-range-picker__legend">Campaign dates</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s1-s">Start date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s1-s" type="text" inputmode="numeric" autocomplete="off" value="11/20/2026" aria-describedby="drp-s1-help"></div>
+          </div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s1-e">End date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s1-e" type="text" inputmode="numeric" autocomplete="off" value="11/02/2026" aria-invalid="true" data-force="focus" aria-describedby="drp-s1-err drp-s1-help"></div>
+          </div>
+        </div>
+      </div>
+      <p class="ds-date-range-picker__error" id="drp-s1-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>End date must be on or after the start date</span></p>
+      <p class="ds-date-range-picker__helper" id="drp-s1-help">MM/DD/YYYY, e.g. 03/03/2026.</p>
+    </fieldset>
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-s2" data-today="2026-10-08">
+      <legend class="ds-date-range-picker__legend">Reporting period</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s2-s">Start date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s2-s" type="text" value="09/01/2026" readonly aria-disabled="true" aria-describedby="drp-s2-reason"></div>
+          </div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s2-e">End date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s2-e" type="text" value="09/30/2026" readonly aria-disabled="true" aria-describedby="drp-s2-reason"></div>
+          </div>
+        </div>
+      </div>
+      <p class="ds-date-range-picker__reason" id="drp-s2-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>The September report is closed. Reopen it to change the period.</span></p>
+    </fieldset>
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-s3" data-today="2026-10-08">
+      <legend class="ds-date-range-picker__legend">Contract term</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s3-s">Start date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s3-s" type="text" value="01/01/2026" readonly aria-readonly="true"></div>
+          </div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s3-e">End date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s3-e" type="text" value="12/31/2026" readonly aria-readonly="true"></div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-s4" data-today="2026-10-08" data-force-trigger="hover">
+      <legend class="ds-date-range-picker__legend">Trigger hover</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s4-s">Start date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s4-s" type="text" inputmode="numeric" autocomplete="off" data-force="hover" value="10/01/2026"></div>
+          </div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-s4-e">End date</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-s4-e" type="text" inputmode="numeric" autocomplete="off" value="10/07/2026"></div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/loading (availability; days not selectable, months still navigable)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-l1" data-default-open data-loading data-today="2026-10-08" data-months="1" data-force-days="2026-10-14:pressed">
+    <legend class="ds-date-range-picker__legend">Booking dates</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-l1-s">Start date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-l1-s" type="text" inputmode="numeric" autocomplete="off"></div>
+        </div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field">
+          <label class="ds-date-picker__label" for="drp-l1-e">End date</label>
+          <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-l1-e" type="text" inputmode="numeric" autocomplete="off"></div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="Sheet phone (full screen, typed fields on top, Apply in a sticky bar)">
+  <div style="max-inline-size: calc(var(--layout-modal-sm) - var(--space-4))">
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-ph" data-default-open data-presentation="sheet" data-size="lg" data-today="2026-10-08">
+      <legend class="ds-date-range-picker__legend">Trip dates</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-ph-s">Departure</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-ph-s" type="text" inputmode="numeric" autocomplete="off" value="10/09/2026"></div>
+          </div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field">
+            <label class="ds-date-picker__label" for="drp-ph-e">Return</label>
+            <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-ph-e" type="text" inputmode="numeric" autocomplete="off" value="10/09/2026"></div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, lg) + label +40% (id-ID)">
+  <div class="ds-stack" data-gap="6">
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-z1" data-size="sm" data-today="2026-10-08">
+      <legend class="ds-date-range-picker__legend">Filter (sm)</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-z1-s">From</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-z1-s" type="text" inputmode="numeric" autocomplete="off" value="10/01/2026"></div></div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-z1-e">To</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-z1-e" type="text" inputmode="numeric" autocomplete="off" value="10/08/2026"></div></div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-z2" data-size="lg" lang="id-ID" data-today="2026-10-08"
+              data-i18n-choose="Pilih tanggal" data-i18n-apply="Terapkan" data-i18n-cancel="Batal" data-i18n-close="Tutup" data-i18n-choose-start="Pilih tanggal mulai" data-i18n-choose-end="Pilih tanggal selesai"
+              data-i18n-error-order="Tanggal selesai harus sama dengan atau setelah tanggal mulai">
+      <legend class="ds-date-range-picker__legend">Periode penugasan karyawan di kantor cabang regional sesuai surat keputusan</legend>
+      <div class="ds-date-range-picker__row">
+        <div class="ds-date-range-picker__fields">
+          <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-z2-s">Tanggal mulai</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-z2-s" type="text" inputmode="numeric" autocomplete="off" value="03/03/2026" aria-describedby="drp-z2-help"></div></div>
+          <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+          <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-z2-e">Tanggal selesai</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-z2-e" type="text" inputmode="numeric" autocomplete="off" value="07/03/2026" aria-describedby="drp-z2-help"></div></div>
+        </div>
+      </div>
+      <p class="ds-date-range-picker__helper" id="drp-z2-help">DD/MM/YYYY, contoh 03/03/2026.</p>
+    </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL + numbers (ribbon flows right to left, separator mirrored)">
+  <fieldset class="ds-date-range-picker" data-ds-module="date-range-picker" id="drp-r1" dir="rtl" lang="ar" data-default-open data-today="2026-10-08" data-months="1" data-first-day="6"
+            data-i18n-choose="اختر التواريخ" data-i18n-apply="تطبيق" data-i18n-cancel="إلغاء" data-i18n-close="إغلاق" data-i18n-prev="الشهر السابق" data-i18n-next="الشهر التالي" data-i18n-today="اليوم"
+            data-i18n-legend-ends="تاريخ البدء والانتهاء" data-i18n-legend-range="الأيام ضمن الفترة" data-i18n-legend-today="اليوم (مسطّر)">
+    <legend class="ds-date-range-picker__legend">فترة التقرير</legend>
+    <div class="ds-date-range-picker__row">
+      <div class="ds-date-range-picker__fields">
+        <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-r1-s">تاريخ البدء</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-r1-s" type="text" inputmode="numeric" autocomplete="off" value="2026-10-05"></div></div>
+        <svg class="ds-icon ds-date-range-picker__separator" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg>
+        <div class="ds-date-range-picker__field"><label class="ds-date-picker__label" for="drp-r1-e">تاريخ الانتهاء</label><div class="ds-date-picker__group"><input class="ds-date-picker__input" id="drp-r1-e" type="text" inputmode="numeric" autocomplete="off" value="2026-10-14"></div></div>
+      </div>
+    </div>
+  </fieldset>
+</section>

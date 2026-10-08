@@ -1,0 +1,471 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: polite default, assertive hanya critical (C1). Di web node role=status/alert terdaftar (V5) sehingga role-nya yang membacakan dan LiveAnnouncer tidak dipanggil lagi untuk teks yang sama (tidak terbaca ganda)",
+      "wadah role dirender sejak tampilan dimuat (kosong bila tidak ada alert) agar penyisipan isi terbaca; alert yang sudah ada saat halaman dimuat tidak diumumkan ulang dan dibaca lewat urutan baca biasa",
+      "ikon aria-hidden; judul menyebut kondisi, bukan nama warna",
+      "aria-labelledby ke judul bila ada aksi di dalamnya",
+      "error System dari submit: fokus TIDAK dipindah ke alert (berbeda dari ErrorSummary); tombol Retry berada tepat sesudah judul dalam urutan fokus",
+      "tombol tutup berlabel \"Dismiss: {title}\""
+    ],
+    "focus_order": "berada sebelum konten yang dipengaruhinya dalam DOM; aksi di dalamnya mengikuti urutan baca; tidak mencuri fokus saat muncul",
+    "native": {
+      "compose": "Column(Modifier.semantics { liveRegion = LiveRegionMode.Polite /* Assertive untuk critical */; paneTitle = title }). Not verified against the pinned version",
+      "flutter": "Semantics(container: true, liveRegion: true, child: …) untuk kelas non-kritis; critical: SemanticsService.announce(pesan, textDirection, assertiveness: Assertiveness.assertive) lewat {ns}_announcer. Not verified against the pinned version",
+      "swiftui": "VStack dengan .accessibilityElement(children: .contain) dan .accessibilityLabel(title); AccessibilityNotification.Announcement(pesan).post() saat muncul (prioritas .high untuk critical). Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "role=\"alert\" untuk critical (C1); role=\"status\" untuk kelas lain. Di web wadahnya terdaftar sebagai node status persisten (pengecualian V5 LiveAnnouncer); di native pengumuman lewat LiveAnnouncer",
+    "sr_label": "judul + body dibaca sebagai satu pesan; tanpa prefiks \"Error:\" karena role sudah memberi konteks",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "3.3.1",
+      "3.3.3",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "wadah blok selebar konten; perlakuan L3 per kelas (quiet: tanpa latar dengan garis batas netral; outline: border semantik; tinted: latar -subtle; filled: latar solid)",
+      "tokens": [
+        "color-semantic-critical-subtle",
+        "color-semantic-warning-subtle",
+        "color-semantic-positive-subtle",
+        "color-semantic-info-subtle",
+        "color-semantic-neutral-negative-subtle",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative",
+        "color-structure-border",
+        "radius-md",
+        "border-width-thin",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph terkunci §5.7, sejajar baris pertama judul; dekoratif bagi teknologi bantu karena judul menyebut kondisinya",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "apa yang terjadi, satu kalimat (teks isi)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "penyebab dan cara memperbaiki; boleh berisi Link",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "actions",
+      "role": "maksimal dua aksi (mis. Retry + Link detail); Button secondary/tertiary, tidak pernah primary halaman",
+      "tokens": [
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "ikon dan teks di atas fill solid bila L3 memberi filled untuk kelas itu",
+      "tokens": [
+        "color-semantic-on-critical",
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative",
+        "color-focus-ring-inverse"
+      ]
+    },
+    {
+      "part": "dismiss",
+      "role": "IconButton tutup opsional; hanya untuk C3-C5 dan hanya bila informasinya juga tersedia di tempat lain",
+      "tokens": [
+        "icon-md",
+        "target-min-touch",
+        "target-min-pointer"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "boolean",
+        "when": "pengguna menutup alert (hanya C3-C5)"
+      }
+    ],
+    "parts": [
+      "InlineAlert.Actions (wadah Button/Link aksi, maks 2)"
+    ],
+    "props": [
+      {
+        "description": "Keluarga semantik dari kelas C1-C5.",
+        "name": "status",
+        "required": true,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "default": "standard",
+        "description": "Kepadatan tampilan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"standard\" | \"compact\""
+      },
+      {
+        "description": "Judul: apa yang terjadi.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Body: penyebab dan cara memperbaiki.",
+        "name": "description",
+        "required": false,
+        "type": "string | Node"
+      },
+      {
+        "default": "false",
+        "description": "Hanya berlaku untuk positive, info, neutral-negative; diabaikan untuk critical dan warning.",
+        "name": "dismissible",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Controlled visibility (pasangan onOpenChange).",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus berpindah ke aksi di dalam alert sesuai urutan DOM; alert sendiri tidak fokusabel",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "aksi diulang; fokus tetap di Retry selama loading; bila berhasil dan alert hilang, fokus ke heading konten yang dimuat ulang",
+      "trigger": "Enter pada Retry"
+    },
+    {
+      "input": "keyboard",
+      "result": "alert hilang; fokus ke elemen fokusabel berikutnya atau heading seksi (§9.5)",
+      "trigger": "Enter pada tombol tutup (C3-C5)"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress aksi; alert tidak menutup sendiri kecuali kondisi pulih",
+      "trigger": "klik aksi"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan pointer; area klik ≥ target-min-touch",
+      "trigger": "tap aksi atau tutup"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "We couldn't load invoices. Check your connection, then try again.",
+        "This amount exceeds the approval limit of 5,000. Split the request or ask a manager to approve it.",
+        "You're offline. Changes are saved on this device and will be sent when you're back online.",
+        "12 rows were imported. 3 rows were skipped because the date is missing."
+      ],
+      "id-ID": [
+        "Faktur tidak dapat dimuat. Periksa koneksi Anda, lalu coba lagi.",
+        "Jumlah ini melebihi batas persetujuan 5.000. Pecah permintaan atau minta manajer menyetujuinya.",
+        "Anda sedang offline. Perubahan disimpan di perangkat ini dan akan dikirim saat kembali online.",
+        "12 baris diimpor. 3 baris dilewati karena tanggal kosong."
+      ]
+    },
+    "rules": [
+      "Judul: apa yang terjadi, dalam suara sistem (\"We couldn't load invoices\"), tidak menyalahkan pengguna, tanpa \"Oops\".",
+      "Body: penyebab bila diketahui + cara memperbaiki atau apa yang terjadi berikutnya.",
+      "Aksi: kata kerja spesifik (\"Try again\", \"Review rules\"); maksimal dua.",
+      "Offline: sebut bahwa pekerjaan antre dan akan dikirim saat online.",
+      "Tidak menampilkan kode error mentah sebagai judul; kode boleh di body sebagai rujukan dukungan (di-bdi)."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "Link",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Pakai InlineAlert C1 dengan Retry untuk error server, bukan Toast (§12.2).",
+    "Tempatkan alert tepat sebelum konten yang dipengaruhinya.",
+    "Biarkan alert C1 dan C2 tetap tampil sampai kondisinya pulih.",
+    "Tulis apa yang terjadi dan cara memperbaikinya dalam dua kalimat pendek."
+  ],
+  "dont": [
+    {
+      "text": "Memakai InlineAlert untuk dekorasi, tips, atau promosi dengan warna semantik (I1)."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menampilkan status hanya lewat warna latar tanpa ikon dan judul."
+    },
+    {
+      "ref": "UB11",
+      "text": "Membuat alert C4 sukses lebih keras daripada alert C2 di layar yang sama."
+    },
+    {
+      "text": "Menumpuk lebih dari satu alert untuk masalah yang sama; gabungkan menjadi satu dengan daftar."
+    },
+    {
+      "text": "Menambah aria-live sendiri di luar node terdaftar, atau memanggil LiveAnnouncer untuk teks yang sudah dibacakan role (terbaca ganda)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul dan body membungkus; aksi pindah ke baris sendiri; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi tumbuh; ikon tetap sejajar baris pertama; aksi menumpuk vertikal",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "alert tidak dirender (mis. impor tanpa baris dilewati tidak memunculkan alert C3 kosong)",
+      "case": "0 item terdampak"
+    },
+    {
+      "behaviour": "satu alert dengan hitungan + tautan \"View 240 rows\"; tidak menampilkan daftar penuh di dalam alert",
+      "case": "jumlah item terdampak maksimum (ratusan baris gagal)"
+    },
+    {
+      "behaviour": "InlineAlert C2 persisten di atas konten yang terdampak; aksi antre ditandai \"Will send when online\"; hilang saat koneksi pulih dan antrean terkirim",
+      "case": "offline"
+    },
+    {
+      "behaviour": "satu alert yang diperbarui, bukan alert baru; pengumuman ulang hanya bila teks berubah",
+      "case": "pembaruan beruntun cepat (retry berulang gagal)"
+    },
+    {
+      "behaviour": "maksimal dua alert, C1 di atas; masalah sejenis digabung; urutan C1 > C2 > C3-C5",
+      "case": "beberapa status bersamaan (C1 sistem + C2 policy di satu form)"
+    },
+    {
+      "behaviour": "alert untuk konten di dalam Modal dirender di dalam Modal; alert halaman di belakang ditunda pengumumannya sampai Modal ditutup",
+      "case": "alert muncul saat Modal terbuka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "InlineAlert status=critical tanpa aksi pemulihan ditandai (manual-review)",
+    "dismissible pada critical atau warning ditolak",
+    "InlineAlert tanpa ikon status ditolak (UB2)",
+    "Teks \"Oops\" atau tanda seru di judul ditolak (V3)"
+  ],
+  "name": "InlineAlert",
+  "preview": {
+    "combinations": [
+      "kelima status × perlakuan L3",
+      "filled + fokus pada aksi (focus-ring-inverse)",
+      "C1 + C2 bertumpuk",
+      "compact pada teks 200%",
+      "offline + aksi antre"
+    ],
+    "states": [
+      "critical (C1)",
+      "warning (C2)",
+      "neutral-negative (C3)",
+      "positive (C4)",
+      "info (C5)",
+      "focus (aksi di dalam)",
+      "loading (retry berjalan)",
+      "updated"
+    ],
+    "variants": [
+      "standard",
+      "compact"
+    ]
+  },
+  "purpose": {
+    "purpose": "Pesan persisten di dalam konten (di atas form, tabel, atau seksi) yang menyatakan apa yang terjadi dan apa yang bisa dilakukan, dengan ikon status terkunci dan perlakuan L3 per kelas; jalur baku untuk error System (C1 + Retry), Policy (C2), dan Offline (C2) di §12.2.",
+    "when_not_to_use": [
+      "Untuk error validasi per field: inline di bawah field (TextField) dan ErrorSummary setelah submit.",
+      "Untuk konfirmasi singkat atas aksi pengguna yang tidak perlu tetap terlihat: pakai Toast.",
+      "Untuk kondisi tingkat sistem atau halaman (pemeliharaan, mode offline global, langganan): pakai Banner.",
+      "Untuk menamai state entitas: pakai StatusLabel.",
+      "Untuk event kritis (I5): pakai perlakuan khusus event kritis; InlineAlert hanya pelengkap.",
+      "Untuk tips atau promosi tanpa status: pakai teks biasa atau Card; jangan memakai warna semantik untuk dekorasi (I1)."
+    ]
+  },
+  "related": [
+    "Banner",
+    "Toast",
+    "ErrorSummary",
+    "StatusLabel",
+    "ConnectionStatus",
+    "EmptyState"
+  ],
+  "responsive": [
+    {
+      "behaviour": "selebar konten; aksi pindah ke bawah body dan boleh lebar penuh; ikon tetap di baris judul",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "selebar kontainer konten; aksi di bawah body, inline",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "dibatasi layout-measure untuk keterbacaan bila berdiri sendiri; aksi di bawah body atau di inline-end bila cukup ruang",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role dapat menjalankan aksi pemulihan (Retry, ubah data)"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi pemulihan terlihat tetapi butuh role lain (\"Ask an admin to restore access\"); alasan tertulis di body"
+    },
+    {
+      "pattern": "hidden",
+      "when": "aksi pemulihan tidak relevan bagi role; pesan tetap tampil tanpa aksi"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon status tidak dicerminkan; ikon di inline-start, tombol tutup di inline-end; kode error dan angka diisolasi dengan bdi."
+  },
+  "sizes": {
+    "not_applicable": "Lebar mengikuti kontainer (Stack); tinggi mengikuti isi. Area klik ditentukan Button dan IconButton di dalamnya."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "critical (C1)",
+      "token_swaps": {
+        "border-outline": "color-semantic-critical",
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "icon": "color-semantic-critical",
+        "title-quiet": "color-semantic-critical-strong"
+      },
+      "treatment": "perlakuan C1 dari L3 (quiet / outline / tinted / filled); judul dan body text-primary pada quiet/outline/tinted, on-critical pada filled; tidak bisa ditutup sampai kondisi pulih; error System selalu punya Retry"
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "icon": "color-semantic-warning",
+        "title-quiet": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3; untuk Policy dan Offline; tidak bisa ditutup sampai kondisi pulih"
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "border-outline": "color-semantic-neutral-negative",
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "icon": "color-semantic-neutral-negative",
+        "title-quiet": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "perlakuan C3 dari L3 (umumnya quiet); untuk akhir negatif yang sah (mis. \"This request was withdrawn\")"
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "border-outline": "color-semantic-positive",
+        "container-filled": "color-semantic-positive",
+        "container-tinted": "color-semantic-positive-subtle",
+        "content-filled": "color-semantic-on-positive",
+        "icon": "color-semantic-positive",
+        "title-quiet": "color-semantic-positive-strong"
+      },
+      "treatment": "perlakuan C4 dari L3; konfirmasi yang harus tetap terlihat (mis. hasil impor); tidak lebih keras daripada C1-C2 di layar yang sama"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "border-outline": "color-semantic-info",
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "icon": "color-semantic-info",
+        "title-quiet": "color-semantic-info-strong"
+      },
+      "treatment": "perlakuan C5 dari L3; proses pihak lain atau konteks yang memengaruhi tugas"
+    },
+    {
+      "name": "focus (aksi di dalam)",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring",
+        "focus-ring-on-filled": "color-focus-ring-inverse"
+      },
+      "treatment": "ring fokus pada Button/Link di dalam; di atas fill solid memakai focus-ring-inverse"
+    },
+    {
+      "name": "loading (retry berjalan)",
+      "token_swaps": {},
+      "treatment": "tombol Retry loading (Spinner, aria-busy, lebar terkunci); alert tetap tampil sampai hasil diketahui; berhasil → alert hilang dan hasil diumumkan polite"
+    },
+    {
+      "name": "updated",
+      "token_swaps": {},
+      "treatment": "isi berubah saat tampil (mis. jumlah baris gagal): diumumkan ulang sekali, polite (assertive hanya bila berubah menjadi C1)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}InlineAlert: Surface + Row dengan semantics liveRegion",
+    "flutter": "{ns}_inline_alert.dart: Container + Row; perlakuan dari ThemeExtension attention policy; pengumuman lewat {ns}_announcer",
+    "html": {
+      "element": "div",
+      "notes": "div[role=status|alert].{ns}-inline-alert[data-status][data-treatment]; wadah role dirender kosong sejak awal bila alert dapat muncul dinamis"
+    },
+    "swiftui": "{Ns}InlineAlert: View dengan GroupBox-style container dan ViewModifier perlakuan L3"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Judul + body + aksi. Default untuk System, Policy, dan Offline.",
+      "name": "standard"
+    },
+    {
+      "description": "Satu baris ikon + kalimat (+ satu aksi tertiary). Untuk ruang sempit (panel, kartu); membungkus bila panjang.",
+      "name": "compact"
+    }
+  ]
+}

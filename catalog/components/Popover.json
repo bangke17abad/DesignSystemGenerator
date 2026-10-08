@@ -1,0 +1,446 @@
+{
+  "accessibility": {
+    "attributes": [
+      "trigger: aria-haspopup=\"dialog\", aria-expanded, aria-controls",
+      "content: role=\"dialog\" + aria-labelledby ke title (atau aria-label)",
+      "content di DOM tepat setelah trigger (atau dipetakan lewat aria-owns/portal dengan urutan fokus terkelola) agar urutan baca logis",
+      "aria-busy saat loading",
+      "tanpa aria-modal dan tanpa inert pada halaman",
+      "elemen fokus di halaman tidak boleh tertutup popover yang tetap terbuka (SC 2.4.11): popover menutup saat fokus keluar"
+    ],
+    "focus_order": "trigger → (saat terbuka) isi popover → elemen setelah trigger; menutup mengembalikan fokus ke trigger",
+    "native": {
+      "compose": "Popup(alignment / popupPositionProvider, onDismissRequest, properties = PopupProperties(focusable = true, dismissOnBackPress = true, dismissOnClickOutside = true)) dengan Modifier.semantics { paneTitle = title }; compact: ModalBottomSheet",
+      "flutter": "OverlayPortal + CompositedTransformTarget/CompositedTransformFollower (atau RawMenuAnchor) dengan TapRegion untuk klik di luar dan Shortcuts Esc; Semantics(scopesRoute: false, label); phone: showModalBottomSheet",
+      "swiftui": ".popover(isPresented:attachmentAnchor:arrowEdge:) { … } + .presentationCompactAdaptation(.popover) untuk info pendek atau (.sheet) untuk form di iPhone"
+    },
+    "politeness": "polite",
+    "role": "dialog non-modal (tanpa aria-modal) berlabel; trigger button",
+    "sr_label": "trigger \"{label}, collapsed/expanded, button\"; content \"{title}, dialog\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.10",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.8",
+      "3.2.1",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "trigger",
+      "role": "Button atau IconButton dengan aria-haspopup=\"dialog\" dan aria-expanded",
+      "tokens": [
+        "icon-md",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "panel di portal pada z-popover; lebar maksimum layout-modal-sm; tinggi maksimum viewport − margin dengan gulir internal",
+      "tokens": [
+        "z-popover",
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "layout-modal-sm",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "arrow",
+      "role": "penunjuk opsional ke pemicu (dekoratif); mengikuti flip",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border"
+      ]
+    },
+    {
+      "part": "title",
+      "role": "judul singkat (heading) yang menjadi nama aksesibel; boleh VisuallyHidden bila isi sudah jelas",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "body",
+      "role": "isi bebas: teks, DescriptionList ringkas, satu-dua field, tautan",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "aksi opsional (maks dua) atau tautan \"Learn more\"",
+      "tokens": [
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "close-button",
+      "role": "IconButton \"Close\" opsional; wajib bila Popover berisi field atau di sentuh",
+      "tokens": [
+        "icon-sm",
+        "control-height-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada kontrol; container yang menerima fokus memakai ring inset",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"outside\" | \"focus-out\" | \"close-button\" | \"action\" }",
+        "when": "popover dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "Popover.Trigger",
+      "Popover.Content",
+      "Popover.Title",
+      "Popover.Body",
+      "Popover.Footer",
+      "Popover.Close",
+      "Popover.Arrow"
+    ],
+    "props": [
+      {
+        "description": "Controlled: popover terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "info",
+        "description": "Isi baca atau form singkat.",
+        "name": "variant",
+        "required": false,
+        "type": "\"info\" | \"form\""
+      },
+      {
+        "description": "Nama aksesibel; boleh disembunyikan secara visual.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "block-end",
+        "description": "Sisi pilihan terhadap trigger (logis); flip otomatis.",
+        "name": "side",
+        "required": false,
+        "type": "\"block-start\" | \"block-end\" | \"inline-start\" | \"inline-end\""
+      },
+      {
+        "default": "start",
+        "description": "Perataan terhadap trigger.",
+        "name": "align",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\""
+      },
+      {
+        "default": "false",
+        "description": "Isi sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "membuka; fokus ke field pertama (form) atau container berlabel bertabindex −1 (info)",
+      "trigger": "Enter atau Space pada trigger"
+    },
+    {
+      "input": "keyboard",
+      "result": "menutup (form: tanpa menyimpan) dan fokus kembali ke trigger",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "fokus keluar ke elemen setelah/sebelum trigger dalam urutan DOM logis dan popover menutup (light dismiss); tidak ada kunci fokus",
+      "trigger": "Tab dari elemen terakhir / Shift+Tab dari pertama"
+    },
+    {
+      "input": "keyboard",
+      "result": "Apply; popover menutup, fokus ke trigger, hasil diumumkan polite",
+      "trigger": "Enter di field (form)"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle buka/tutup; klik di luar menutup tanpa menyimpan; Popover tidak pernah dibuka oleh hover (bila hover dibutuhkan, pakai Tooltip dengan aturan SC 1.4.13)",
+      "trigger": "klik trigger; klik di luar"
+    },
+    {
+      "input": "touch",
+      "result": "variant form dan isi yang tidak muat menjadi Sheet dari bawah; info pendek tetap Popover dengan Close ≥ target-min-touch",
+      "trigger": "tap trigger (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "About this score",
+        "Rename",
+        "Apply",
+        "Cancel",
+        "Learn more",
+        "Close"
+      ],
+      "id-ID": [
+        "Tentang skor ini",
+        "Ganti nama",
+        "Terapkan",
+        "Batal",
+        "Pelajari lebih lanjut",
+        "Tutup"
+      ]
+    },
+    "rules": [
+      "Judul 1-4 kata menyebut isi; trigger berlabel yang menyiratkan ada isi lebih lanjut.",
+      "Isi maksimal ±3 kalimat atau dua field; lebih dari itu pindah ke Sheet, Modal, atau ContextPanel.",
+      "Tidak memuat satu-satunya salinan informasi penting.",
+      "Aksi footer kata kerja spesifik; Cancel hanya di variant form."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "IconButton",
+    "Sheet"
+  ],
+  "do": [
+    "Beri judul atau aria-label pada setiap Popover.",
+    "Kembalikan fokus ke trigger setelah Esc atau Apply.",
+    "Pindahkan isi panjang atau form ke Sheet di phone."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Membuka Popover dengan hover atau memakainya sebagai Tooltip."
+    },
+    {
+      "ref": "UB9",
+      "text": "Menaruh satu-satunya salinan informasi penting di dalam Popover."
+    },
+    {
+      "text": "Mengunci fokus di Popover atau memberi scrim; itu Modal."
+    },
+    {
+      "text": "Popover di dalam Popover lebih dari satu tingkat."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "popover melebar sampai layout-modal-sm lalu teks membungkus; aksi footer menumpuk",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi melebihi ruang → gulir internal dengan fokus terlihat; di phone/tablet beralih ke Sheet",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "satu kalimat kosong spesifik; trigger tidak dirender bila diketahui sebelumnya",
+      "case": "0 item (isi asinkron kosong)"
+    },
+    {
+      "behaviour": "> ±3 kalimat atau > 2 field ditolak lint; pindah ke Sheet/Modal/ContextPanel",
+      "case": "isi maksimum"
+    },
+    {
+      "behaviour": "Skeleton + aria-busy; offline: data tersimpan atau pesan \"Needs connection\" di body; Apply aria-disabled dengan reason",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "content di portal; flip ke sisi berlawanan; tidak pernah terpotong",
+      "case": "trigger di tepi viewport atau di dalam kontainer overflow"
+    },
+    {
+      "behaviour": "popover menutup dan fokus tetap/kembali ke trigger",
+      "case": "trigger menggulir keluar layar saat terbuka"
+    },
+    {
+      "behaviour": "variant form beralih ke Sheet di atas keyboard; di desktop popover flip ke atas trigger",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    },
+    {
+      "behaviour": "z-popover berada di atas z-modal; Esc menutup popover dulu, Esc berikutnya menutup Modal",
+      "case": "Popover di dalam Modal"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Overlays",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "Popover tanpa title/aria-label ditolak",
+    "Popover dengan aria-modal atau scrim ditolak",
+    "Popover yang dibuka oleh hover ditolak",
+    "Popover variant form tanpa Sheet di phone ditolak (manual-review)"
+  ],
+  "name": "Popover",
+  "preview": {
+    "combinations": [
+      "open + flip di tepi viewport",
+      "form + error",
+      "Popover di dalam Modal",
+      "phone → Sheet",
+      "RTL inline-end"
+    ],
+    "states": [
+      "closed",
+      "open",
+      "loading",
+      "error",
+      "trigger-disabled-with-reason"
+    ],
+    "variants": [
+      "info",
+      "form"
+    ]
+  },
+  "purpose": {
+    "purpose": "Panel non-modal berlabel yang menempel pada pemicu dan dibuka dengan klik/tap untuk konten singkat yang dapat berinteraksi (detail ringkas, pengaturan kecil, filter, form satu-dua field), tanpa memblokir halaman.",
+    "when_not_to_use": [
+      "Untuk label atau deskripsi singkat non-interaktif saat hover/fokus: pakai Tooltip.",
+      "Untuk daftar aksi: pakai Menu.",
+      "Untuk memilih nilai form: pakai Select, Combobox, atau DatePicker.",
+      "Untuk keputusan yang harus dijawab sebelum melanjutkan: pakai Modal.",
+      "Untuk detail panjang objek: pakai ContextPanel.",
+      "Sebagai satu-satunya tempat informasi penting: tampilkan inline."
+    ]
+  },
+  "related": [
+    "Tooltip",
+    "Menu",
+    "Sheet",
+    "Modal",
+    "ContextPanel"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant form dan isi tinggi menjadi Sheet bottom; info pendek tetap Popover selebar viewport − margin 16 dengan Close ≥ target-min-touch; safe-area dihormati",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "Popover menempel trigger; area klik ≥ target-min-touch; berpindah ke Sheet bila ruang vertikal tidak cukup",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "Popover di z-popover dengan flip/shift; klik di luar dan Esc menutup",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "disabled-with-reason",
+      "when": "trigger terlihat tetapi isi/aksi tidak diizinkan; trigger aria-disabled + reason"
+    },
+    {
+      "pattern": "read-only",
+      "when": "variant form untuk role baca menjadi variant info yang menampilkan nilai"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu isi; trigger tidak dirender"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "side dan align memakai nilai logis sehingga inline-start/end bertukar di RTL; arrow mengikuti; Close di inline-end."
+  },
+  "sizes": {
+    "not_applicable": "Lebar mengikuti isi sampai layout-modal-sm; kontrol di dalamnya memakai size masing-masing dan area klik ≥ target-current."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "closed",
+      "token_swaps": {},
+      "treatment": "content tidak dirender; trigger aria-expanded=\"false\""
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "content": "color-structure-surface-overlay",
+        "trigger": "color-interaction-pressed"
+      },
+      "treatment": "content tampil di z-popover menempel trigger (flip/shift agar tetap di viewport); trigger aria-expanded=\"true\" dengan latar pressed; fade satu frame di reduced motion"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "isi asinkron: satu baris Skeleton/Spinner + aria-busy; ukuran popover dikunci agar tidak melompat"
+    },
+    {
+      "name": "error",
+      "token_swaps": {},
+      "treatment": "gagal memuat atau validasi field: teks error + ikon di body; popover tetap terbuka"
+    },
+    {
+      "name": "trigger-disabled-with-reason",
+      "token_swaps": {
+        "trigger": "color-structure-text-disabled"
+      },
+      "treatment": "trigger aria-disabled + reason; popover tidak dibuka; reason diumumkan saat Enter"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Popover: Popup dengan PopupProperties(focusable = true)",
+    "flutter": "{ns}_popover.dart: OverlayPortal + CompositedTransformFollower; Sheet di phone",
+    "html": {
+      "element": "button[popovertarget] + div[popover=auto][role=dialog]",
+      "notes": "atribut popover native memberi top layer, light dismiss, dan Esc; posisi lewat CSS anchor positioning dengan fallback JS flip/shift sesuai matriks dukungan; modul JS menambah fokus awal dan pengembalian fokus"
+    },
+    "swiftui": "{Ns}Popover: .popover + presentationCompactAdaptation"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Isi baca dengan tautan atau satu aksi; fokus ke container berlabel saat dibuka.",
+      "name": "info"
+    },
+    {
+      "description": "Satu-dua field + Apply/Cancel (mis. filter cepat, ubah nama); fokus ke field pertama; Esc membatalkan tanpa menyimpan.",
+      "name": "form"
+    }
+  ]
+}

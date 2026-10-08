@@ -1,0 +1,657 @@
+{
+  "accessibility": {
+    "attributes": [
+      "autocomplete=\"one-time-code\" untuk OTP",
+      "inputmode=\"numeric\" dan pattern=\"[0-9]*\" untuk kode digit; inputmode=\"text\" + autocapitalize=\"characters\" untuk alfanumerik",
+      "tanpa maxlength yang memotong paste berspasi; panjang dijaga logika normalisasi",
+      "aria-describedby ke description, helper, dan error-text; aria-invalid saat error; aria-required",
+      "PIN rahasia: tampilan titik; tombol \"Show PIN\" opsional berlabel; paste dan pengelola sandi tidak diblokir (SC 3.3.8)",
+      "aria-busy pada form saat verifikasi",
+      "aria-disabled + reason saat dikunci; CountdownTimer role=timer hanya diumumkan di nol",
+      "sukses, error, dan \"New code sent\" lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "label → input (satu tab stop untuk seluruh sel) → tombol Verify → resend → jalur alternatif (\"Use another method\")",
+    "native": {
+      "compose": "BasicTextField(state = TextFieldState, inputTransformation = InputTransformation.maxLength(6) dengan filter digit, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword), decorator = { Row sel }) + Modifier.semantics { contentType = ContentType.SmsOtpCode; contentDescription = label }; sel dengan Modifier.clearAndSetSemantics { }",
+      "flutter": "satu TextField(autofillHints: [AutofillHints.oneTimeCode], keyboardType: TextInputType.number, inputFormatters: [formatter normalisasi digit lalu batas panjang], showCursor: false) di bawah Row sel yang digambar dari controller.text dan dibungkus ExcludeSemantics; Semantics(label, value) pada field",
+      "swiftui": "TextField(\"\", text: $code) .textContentType(.oneTimeCode) .keyboardType(.numberPad) transparan di atas HStack sel; HStack .accessibilityHidden(true); field .accessibilityLabel(\"Verification code\") .accessibilityValue(\"\\(code.count) of 6 digits\")"
+    },
+    "politeness": "polite",
+    "role": "satu textbox (input type=\"text\") berlabel; sel tampilan aria-hidden; bukan N field terpisah",
+    "sr_label": "\"{label}, edit text, {n} of {length} digits entered\" + helper; tidak ada pengumuman \"digit 1 of 6\" per sel",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.11",
+      "2.1.1",
+      "2.2.1",
+      "2.4.7",
+      "2.5.3",
+      "2.5.8",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label terlihat menamai kode (\"Verification code\") di atas sel",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "ke mana kode dikirim, dengan tujuan tersamar sebagian (\"Sent to ••• ••• 4821\")",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "satu input nyata yang menerima fokus, caret, ketikan, paste, dan autofill; teksnya tidak terlihat dan menutupi seluruh baris sel",
+      "tokens": [
+        "type-body-lg-size",
+        "font-mono"
+      ]
+    },
+    {
+      "part": "cell",
+      "role": "kotak tampilan per digit (aria-hidden), ≥ control-height-lg, berjarak space-2; mencerminkan karakter dari value",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-lg",
+        "type-h3-size",
+        "type-h3-weight",
+        "font-mono",
+        "color-structure-text-primary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "cell-active",
+      "role": "sel di posisi caret saat fokus: border tebal + caret tiruan berkedip (statis di reduced motion)",
+      "tokens": [
+        "color-interaction-default",
+        "border-width-thick",
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "mask-dot",
+      "role": "titik pengganti digit pada varian tersamar (PIN rahasia)",
+      "tokens": [
+        "icon-sm",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "resend",
+      "role": "Button tertiary \"Resend code\" dengan CountdownTimer \"in 0:30\" sebelum aktif; aria-disabled + reason selama hitung mundur",
+      "tokens": [
+        "type-label-size",
+        "color-interaction-default",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "panjang dan jenis kode (\"Enter the 6-digit code\"), masa berlaku bila diketahui",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error; menyebut sisa percobaan bila kebijakan ada di brief",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px mengelilingi seluruh baris sel (satu fokus), bukan per sel",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "kode berubah (ketik, hapus, paste, autofill)"
+      },
+      {
+        "name": "onComplete",
+        "payload": "string",
+        "when": "panjang kode tercapai"
+      },
+      {
+        "name": "onResend",
+        "payload": "void",
+        "when": "Resend ditekan setelah hitung mundur"
+      }
+    ],
+    "parts": [
+      "PinInput.Label",
+      "PinInput.Input",
+      "PinInput.Cells",
+      "PinInput.Resend"
+    ],
+    "props": [
+      {
+        "description": "Label terlihat; nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Ke mana kode dikirim.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "segmented",
+        "description": "Tampilan sel per digit atau satu field.",
+        "name": "variant",
+        "required": false,
+        "type": "\"segmented\" | \"single\""
+      },
+      {
+        "default": "lg",
+        "description": "Tinggi sel; sm dipetakan ke md (sel kode tidak pernah lebih kecil dari control-height-md).",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "6",
+        "description": "Panjang kode (4-8 untuk segmented).",
+        "name": "length",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "digits",
+        "description": "Kelas karakter; menentukan inputmode.",
+        "name": "charset",
+        "required": false,
+        "type": "\"digits\" | \"alphanumeric\""
+      },
+      {
+        "default": "false",
+        "description": "Tampilkan titik (PIN rahasia); tombol Show PIN opsional.",
+        "name": "masked",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Controlled: kode mentah.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"\"",
+        "description": "Uncontrolled: kode awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Verifikasi saat lengkap; hanya bila helper menyatakannya.",
+        "name": "autoVerify",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Detik sebelum Resend aktif.",
+        "name": "resendAfter",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Sisa percobaan dari kebijakan brief; null bila tidak diungkap.",
+        "name": "attemptsLeft",
+        "required": false,
+        "type": "number | null"
+      },
+      {
+        "default": "true",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Kode ditolak; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error dengan jalan keluar.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Panjang dan jenis kode.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Verifikasi berjalan.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan dikunci; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Nama field Form.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "karakter masuk di posisi caret, caret maju ke sel berikut; karakter tidak sah diabaikan; tidak ada perpindahan fokus antar field (hanya satu field)",
+      "trigger": "mengetik digit"
+    },
+    {
+      "input": "keyboard",
+      "result": "perilaku teks normal pada satu input: hapus karakter sebelum/sesudah caret, caret bergerak antar sel, Home/End ke awal/akhir",
+      "trigger": "Backspace / Delete, ← / →, Home / End"
+    },
+    {
+      "input": "keyboard",
+      "result": "spasi, tanda hubung, dan teks pengantar dibuang; digit pertama sepanjang length diambil; semua sel terisi sekaligus; onComplete dipicu",
+      "trigger": "paste (Ctrl/⌘+V) atau autofill one-time-code"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengirim form/verifikasi (sama dengan tombol Verify)",
+      "trigger": "Enter saat lengkap"
+    },
+    {
+      "input": "keyboard",
+      "result": "verifikasi otomatis hanya bila helper sudah menyatakannya sebelumnya (SC 3.2.2); tombol Verify tetap ada",
+      "trigger": "kode lengkap tanpa Enter"
+    },
+    {
+      "input": "pointer",
+      "result": "memfokuskan input dan menaruh caret di akhir nilai (bukan di sel kosong di tengah)",
+      "trigger": "klik sel mana pun"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard numerik terbuka dengan saran kode dari SMS/email (iOS QuickType, Android autofill); tap saran mengisi semua sel",
+      "trigger": "tap baris sel"
+    },
+    {
+      "input": "touch",
+      "result": "aktif setelah hitung mundur; mengirim ulang, nilai lama tidak dihapus otomatis, \"New code sent\" diumumkan polite",
+      "trigger": "tap \"Resend code\""
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Verification code",
+        "Enter the 6-digit code we sent to ••• ••• 4821",
+        "Verify",
+        "Resend code in 0:30",
+        "That code isn't right. 2 attempts left.",
+        "This code has expired. Send a new code.",
+        "New code sent",
+        "Verified"
+      ],
+      "id-ID": [
+        "Kode verifikasi",
+        "Masukkan kode 6 digit yang kami kirim ke ••• ••• 4821",
+        "Verifikasi",
+        "Kirim ulang kode dalam 0:30",
+        "Kode tidak sesuai. Sisa 2 percobaan.",
+        "Kode ini sudah kedaluwarsa. Kirim kode baru.",
+        "Kode baru terkirim",
+        "Terverifikasi"
+      ]
+    },
+    "rules": [
+      "Description menyebut ke mana kode dikirim dengan tujuan tersamar sebagian; helper menyebut panjang kode dalam kata.",
+      "Error membedakan salah dan kedaluwarsa, dan menyebut jalan keluar: \"That code isn't right. Check the latest message or resend.\"",
+      "Sisa percobaan disebut hanya bila kebijakan ada di brief (ICU plural: \"{n, plural, one {# attempt left} other {# attempts left}}\"); selain itu dicatat `A-nn`.",
+      "Selalu ada jalur alternatif terlihat (\"Use another method\", \"Resend code\") agar langkah tidak hanya mengandalkan ingatan (SC 3.3.8).",
+      "Hitung mundur resend memakai format waktu locale dan angka tabular."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "CountdownTimer",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Gunakan satu input nyata dengan autocomplete one-time-code; sel hanya tampilan.",
+    "Dukung paste dan autofill yang mengisi semua sel sekaligus.",
+    "Pertahankan kode yang salah agar bisa diperiksa; seleksi semua saat fokus kembali.",
+    "Sediakan resend dan jalur alternatif yang terlihat."
+  ],
+  "dont": [
+    {
+      "text": "Membuat N input terpisah dengan auto-advance fokus (pembaca layar mendengar N field tanpa konteks; paste dan autofill rusak)."
+    },
+    {
+      "text": "Mengosongkan kode otomatis setelah error atau saat resend."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai error atau sukses hanya dengan warna sel atau animasi goyang."
+    },
+    {
+      "text": "Memblokir paste pada PIN atau OTP (SC 3.3.8)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "teks membungkus; baris sel tidak menyempit di bawah target-min-touch per sel, beralih ke varian single bila tidak muat",
+      "case": "description dan helper +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "sel tumbuh; bila 6 sel tidak muat dalam lebar, berpindah ke varian single dengan tracking lebar; tidak ada digit terpotong",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "error \"Enter the 6-digit code\"; fokus tetap di input",
+      "case": "kosong lalu Verify"
+    },
+    {
+      "behaviour": "\"Your code is 482 913\" → digit diekstrak menjadi \"482913\"; bila jumlah digit di teks tempelan bukan length, field diisi apa adanya sampai length dan helper menyarankan memeriksa",
+      "case": "panjang maksimum terlampaui (paste teks panjang)"
+    },
+    {
+      "behaviour": "autofill one-time-code dari SMS/email/pengelola sandi diterima; Android SMS Retriever/User Consent opsional lewat platform (Not verified: needs device test); autofill tidak memicu verifikasi tanpa pernyataan di helper",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "Verify diblokir dengan reason \"Needs connection\" (kode selalu diverifikasi server); kode tidak dihapus; verifikasi > 2 detik mempertahankan Spinner di tombol dengan teks status",
+      "case": "offline atau verifikasi lambat"
+    },
+    {
+      "behaviour": "tidak ada pengosongan; setelah Verify, error kedaluwarsa + Resend aktif; CountdownTimer masa berlaku (bila ada) diumumkan hanya di ambang dan di nol (SC 2.2.1)",
+      "case": "kode kedaluwarsa saat mengetik"
+    },
+    {
+      "behaviour": "input dan sel dir=\"ltr\" sehingga digit pertama di kiri dalam semua locale; label, description, dan tombol RTL; tujuan tersamar (\"••• 4821\") diisolasi bdi",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "dinormalkan ke ASCII sebelum disimpan dan ditampilkan sebagai digit locale bila B1 memintanya",
+      "case": "digit non-ASCII (Arab-Indic, lebar penuh)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Opsional: wajib bila StepUpDialog dipilih (§6.1) atau journey memuat verifikasi kode (OTP via SMS/email/aplikasi autentikator, PIN transaksi); selain itu disertakan bila brief memerlukannya (alasan dicatat).",
+  "lint": [
+    "PinInput yang dirender sebagai lebih dari satu input ditolak",
+    "PinInput OTP tanpa autocomplete=\"one-time-code\" ditolak",
+    "onPaste yang memanggil preventDefault ditolak (SC 3.3.8)",
+    "autoVerify tanpa helperText yang menyatakannya ditolak (SC 3.2.2)",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "PinInput",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "error+hover",
+      "loading+focus",
+      "loading+pressed (dicegah)",
+      "disabled+focus",
+      "masked",
+      "di dalam StepUpDialog",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "filled",
+      "loading",
+      "error",
+      "disabled-with-reason",
+      "success"
+    ],
+    "variants": [
+      "segmented",
+      "single"
+    ]
+  },
+  "purpose": {
+    "purpose": "Satu field logis untuk kode pendek berpanjang tetap (kode verifikasi atau PIN) yang boleh ditampilkan per digit, mendukung paste dan autofill kode sekali pakai, dan tidak pernah mengosongkan isi tanpa aksi pengguna.",
+    "when_not_to_use": [
+      "Untuk sandi atau passphrase berpanjang bebas: pakai PasswordInput.",
+      "Untuk pengenal berpola yang panjang (rekening, identitas): pakai FormattedInput.",
+      "Untuk kuantitas angka: pakai NumberInput.",
+      "Untuk kode lebih dari 8 karakter atau alfanumerik panjang (kode pemulihan): pakai TextField dengan font-mono dan pemisah kelompok di helper."
+    ]
+  },
+  "related": [
+    "PasswordInput",
+    "StepUpDialog",
+    "CountdownTimer",
+    "FormattedInput"
+  ],
+  "responsive": [
+    {
+      "behaviour": "size lg; sel melebar merata mengisi lebar (maks. 8 sel tanpa gulir di 320 CSS px, sisanya beralih ke varian single); keyboard numerik dengan saran kode",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "size lg; lebar intrinsik di tengah dialog; baris sel ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size md/lg; lebar intrinsik; paste dari aplikasi autentikator adalah jalur utama",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "PinInput memverifikasi pengguna itu sendiri sehingga tidak berbeda per role; penguncian percobaan adalah state disabled-with-reason, dan siapa yang wajib step-up ditentukan StepUpDialog."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Kode selalu dir=\"ltr\" dan urutan sel tidak dibalik di locale RTL; ikon centang dan error tidak dicerminkan; teks pendamping dan posisi tombol mengikuti arah halaman."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "seluruh baris sel adalah satu area klik ≥ max(control-height-md, target-current); tap sel mana pun memfokuskan input",
+      "name": "md",
+      "notes": "Desktop pada pointer.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "baris sel ≥ target-min-touch tinggi (target-min-extended bila ada); resend ≥ target-min-touch",
+      "name": "lg",
+      "notes": "Default di phone, tablet, dan di dalam StepUpDialog.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring baris + border critical; teks error dibaca lewat aria-describedby",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus tetap di input saat verifikasi; ketikan diabaikan sampai selesai",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "Verify tidak bisa ditekan ulang saat memverifikasi",
+      "supported": false
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "border critical menang atas hover",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokusabel agar alasan penguncian dan waktu buka terbaca",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "kode verifikasi tidak pernah ditampilkan read-only",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "cell": "color-structure-border-control"
+      },
+      "treatment": "sel kosong dengan border-control; helper menyebut panjang kode"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "cell": "color-interaction-border"
+      },
+      "treatment": "border sel ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "cell-active": "color-interaction-default",
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring di sekeliling baris + sel aktif dengan border tebal di posisi caret"
+    },
+    {
+      "name": "filled",
+      "token_swaps": {
+        "cell": "color-structure-border-control"
+      },
+      "treatment": "digit tampil di sel (atau titik pada varian tersamar); tombol Verify aktif saat lengkap"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "cell": "color-structure-surface-sunken"
+      },
+      "treatment": "kode sedang diverifikasi: aria-busy, Spinner di tombol Verify (lebar terkunci); input tetap terbaca dan tidak dikosongkan"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "cell": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "kode salah/kedaluwarsa: semua sel border critical + ikon dan teks error di bawah; nilai dipertahankan dan diseleksi seluruhnya saat fokus kembali sehingga ketikan baru menggantinya; tidak ada animasi goyang sebagai satu-satunya tanda"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "cell": "color-structure-surface-sunken",
+        "mask-dot": "color-structure-text-disabled"
+      },
+      "treatment": "terlalu banyak percobaan atau kode kedaluwarsa tanpa pengiriman ulang: aria-disabled=\"true\", sel diredam, reason + waktu buka (CountdownTimer) terlihat"
+    },
+    {
+      "name": "success",
+      "token_swaps": {
+        "helper": "color-semantic-positive-strong"
+      },
+      "treatment": "kode diterima: ikon centang + \"Verified\" di helper (polite), lalu alur berlanjut; sel tidak menjadi hijau saja"
+    }
+  ],
+  "target_hints": {
+    "compose": "BasicTextField + decorator sel dibungkus {Ns}PinInput",
+    "flutter": "satu TextField + sel dibungkus {ns}_pin_input.dart",
+    "html": {
+      "element": "input[type=text][autocomplete=one-time-code]",
+      "notes": "tanpa JS: varian single (satu field dengan tracking lebar) yang sepenuhnya berfungsi; modul data-{ns}-module=\"pin-input\" menambah sel tampilan, normalisasi paste, dan resend; jangan membuat beberapa input"
+    },
+    "swiftui": "TextField .oneTimeCode + sel dibungkus {Ns}PinInput"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Sel per digit terlihat di atas satu input; untuk OTP 4-8 digit.",
+      "name": "segmented"
+    },
+    {
+      "description": "Satu field biasa dengan tracking lebar dan font-mono; dipakai untuk kode alfanumerik, di tampilan sangat sempit, atau sebagai fallback tanpa JS.",
+      "name": "single"
+    }
+  ]
+}

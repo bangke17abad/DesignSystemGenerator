@@ -1,0 +1,91 @@
+/* Skeleton · engine 1.8.0 reference (catalog/components/Skeleton.json). Tokens only (I3); logical properties only (§12.4).
+   Blocks are aria-hidden and sized from the tokens of the content they stand in for, so resolving causes no layout shift.
+   Motion is an opacity pulse (no gradient sheen: several languages ban gradients in L13/L15); it runs a finite number of
+   cycles (< 5 s, SC 2.2.2) and is off under reduced motion. The skeleton appears only after --timing-indicator-delay. */
+.ds-skeleton {
+  --_line: var(--type-body-line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  animation: ds-skeleton-appear var(--motion-instant-duration) linear var(--timing-indicator-delay) backwards;
+}
+.ds-skeleton__block {
+  display: block;
+  flex: none;
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-skeleton-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) var(--timing-indicator-delay) 4 alternate both;
+}
+[data-effect="none"] .ds-skeleton__block,
+.ds-skeleton[data-effect="none"] .ds-skeleton__block { animation: none; }
+
+/* text: a bar of half the line box, centred in a full line box, so N lines take exactly N × line-height */
+.ds-skeleton__text { display: flex; flex-direction: column; min-inline-size: 0; }
+.ds-skeleton__line {
+  block-size: calc(var(--_line) / 2);
+  margin-block: calc(var(--_line) / 4);
+  inline-size: 100%;
+}
+.ds-skeleton__line:last-child:not(:only-child) { inline-size: 60%; } /* last line ends short, at inline-end of the text, in either direction */
+.ds-skeleton__text[data-type="label"] { --_line: var(--type-label-line); }
+.ds-skeleton__text[data-type="h3"] { --_line: var(--type-h3-line); }
+.ds-skeleton__text[data-type="h3"] .ds-skeleton__line { inline-size: 40%; }
+
+/* shape: media or chart at an aspect-* ratio */
+.ds-skeleton__shape { inline-size: 100%; aspect-ratio: var(--aspect-video); border-radius: var(--radius-sm); }
+.ds-skeleton__shape[data-aspect="photo"] { aspect-ratio: var(--aspect-photo); }
+.ds-skeleton__shape[data-aspect="square"] { aspect-ratio: var(--aspect-square); }
+
+/* avatar */
+.ds-skeleton__avatar { inline-size: var(--avatar-md); block-size: var(--avatar-md); border-radius: var(--shape-circle); }
+.ds-skeleton__avatar[data-size="sm"] { inline-size: var(--avatar-sm); block-size: var(--avatar-sm); }
+
+/* composed rows: table row or list item height comes from the real component */
+.ds-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-block-size: var(--layout-row-height);
+  padding-block: var(--space-3);
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+}
+.ds-skeleton__row > .ds-skeleton__text { flex: 1 1 0; }
+.ds-skeleton__row > .ds-skeleton__text[data-col="secondary"] { display: none; }
+.ds-skeleton__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+}
+.ds-skeleton__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--space-4); }
+
+/* table-rows: stacked cards on phone (like Table), rows from tablet up; secondary columns from desktop up */
+.ds-skeleton[data-layout="table-rows"] .ds-skeleton__row { flex-direction: column; align-items: stretch; gap: 0; }
+@media (--bp-tablet-up) {
+  .ds-skeleton[data-layout="table-rows"] .ds-skeleton__row { flex-direction: row; align-items: center; gap: var(--space-4); }
+}
+@media (--bp-desktop-up) {
+  .ds-skeleton__row > .ds-skeleton__text[data-col="secondary"] { display: flex; }
+}
+
+/* long wait (> 10 s): readable status above the blocks */
+.ds-skeleton__status {
+  margin: 0;
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-skeleton__status[hidden] { display: none; }
+
+@keyframes ds-skeleton-appear { from { visibility: hidden; } }
+@keyframes ds-skeleton-pulse { to { opacity: 0.5; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-skeleton__block { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-skeleton__block { border: var(--border-width-thin) solid GrayText; }
+}

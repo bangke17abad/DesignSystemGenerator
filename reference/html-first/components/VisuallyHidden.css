@@ -1,0 +1,20 @@
+/* VisuallyHidden · engine 1.8.0 reference (catalog/components/VisuallyHidden.json). The clip pattern itself is .ds-vh in
+   base.css (position absolute, 1px, clip-path inset(50%), nowrap; released on :focus / :focus-within). Never display:none,
+   visibility:hidden, [hidden], aria-hidden or font-size 0: those remove the text from assistive technology.
+   This file adds the focusable variant's revealed look. data-force~="revealed" is its static preview twin. */
+[data-variant="focusable"]:is(.ds-vh:focus-within, [data-force~="revealed"]) {
+  position: relative;
+  z-index: var(--z-tooltip);
+  display: inline-block;
+  max-inline-size: 100%;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-raised);
+  box-shadow: var(--elevation-2);
+  color: var(--color-structure-text-primary);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (forced-colors: active) {
+  [data-variant="focusable"].ds-vh:focus-within { border: var(--border-width-thin) solid CanvasText; }
+}

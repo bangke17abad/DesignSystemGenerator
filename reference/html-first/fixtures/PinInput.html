@@ -1,0 +1,32 @@
+<!-- PinInput fixture · one logical field with per-digit visuals (SC 3.3.8: paste and autofill allowed). -->
+<section class="ds-demo" data-ds-demo="default">
+  <div class="ds-pin-input" data-ds-module="pin-input">
+    <label class="ds-text-field__label" for="pin-1">Verification code</label>
+    <p class="ds-text-field__helper" id="pin-1-help">Enter the 6-digit code we sent by SMS. You can paste it.</p>
+    <div class="ds-pin-input__frame" style="--_len: 6"><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span>
+      <input class="ds-pin-input__field" id="pin-1" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-describedby="pin-1-help"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="filled+focus">
+  <div class="ds-pin-input" data-ds-module="pin-input">
+    <label class="ds-text-field__label" for="pin-2">Verification code</label>
+    <div class="ds-pin-input__frame" style="--_len: 6"><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span>
+      <input class="ds-pin-input__field" id="pin-2" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="4821" data-force="focus"></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="error">
+  <div class="ds-pin-input" data-ds-module="pin-input">
+    <label class="ds-text-field__label" for="pin-3">Verification code</label>
+    <div class="ds-pin-input__frame" style="--_len: 6"><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span>
+      <input class="ds-pin-input__field" id="pin-3" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="482190" aria-invalid="true" aria-describedby="pin-3-err"></div>
+    <p class="ds-text-field__error" id="pin-3-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>That code is not correct. Check the latest SMS or request a new code.</span></p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="blocked-with-reason+4-digit">
+  <div class="ds-pin-input" data-ds-module="pin-input">
+    <label class="ds-text-field__label" for="pin-4">Card PIN</label>
+    <div class="ds-pin-input__frame" style="--_len: 4"><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span><span class="ds-pin-input__cell"></span>
+      <input class="ds-pin-input__field" id="pin-4" type="password" inputmode="numeric" autocomplete="off" maxlength="4" readonly aria-disabled="true" aria-describedby="pin-4-r"></div>
+    <p class="ds-text-field__reason" id="pin-4-r"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Too many attempts. Try again in 5 minutes.</span></p>
+  </div>
+</section>

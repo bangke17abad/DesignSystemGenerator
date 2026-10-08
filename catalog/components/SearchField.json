@@ -1,0 +1,668 @@
+{
+  "accessibility": {
+    "attributes": [
+      "input type=\"search\" (role searchbox implisit) dengan label terlihat atau aria-labelledby ke label tersembunyi",
+      "aria-label pada landmark bila lebih dari satu landmark search di halaman (\"Search orders\", \"Search help\")",
+      "aria-describedby ke helper dan teks error; aria-invalid saat error",
+      "aria-controls ke region hasil bila hasil di halaman yang sama",
+      "aria-busy=\"true\" pada region hasil saat loading, bukan pada input",
+      "aria-disabled + reason terlihat saat diblokir",
+      "enterkeyhint=\"search\", autocomplete=\"off\" (kecuali riwayat browser memang diinginkan), spellcheck sesuai locale",
+      "clear-button: button berlabel \"Clear search\"; ikon kaca pembesar aria-hidden",
+      "jumlah hasil lewat LiveAnnouncer polite (ICU plural), sekali per hasil stabil, bukan per ketukan"
+    ],
+    "focus_order": "landmark search → input → clear-button → submit-button → region hasil; fokus tidak pernah dipindah otomatis ke hasil pada varian live; varian submit yang membuka halaman hasil memindah fokus ke h1 halaman hasil (§9.5)",
+    "native": {
+      "compose": "SearchBar(inputField = { SearchBarDefaults.InputField(query, onQueryChange, onSearch, expanded, onExpandedChange, placeholder, leadingIcon, trailingIcon = clear IconButton(contentDescription = \"Clear search\")) }, expanded, onExpandedChange) atau DockedSearchBar; KeyboardOptions(imeAction = ImeAction.Search); hasil diumumkan lewat Modifier.semantics { liveRegion = LiveRegionMode.Polite } pada teks jumlah",
+      "flutter": "SearchBar(controller, hintText, leading: Icon(search), trailing: [IconButton(tooltip: 'Clear search')]) atau SearchAnchor.bar untuk tampilan penuh; TextField(textInputAction: TextInputAction.search, onSubmitted); SemanticsService.announce(jumlah hasil, TextDirection) setelah debounce",
+      "swiftui": ".searchable(text: $query, placement:, prompt: Text(\"Search orders\")) + .onSubmit(of: .search); tombol clear bawaan; AccessibilityNotification.Announcement(\"12 results\").post() setelah debounce"
+    },
+    "politeness": "polite",
+    "role": "landmark search (elemen search atau form role=search) berisi input type=search dengan role searchbox; hasil di region terpisah",
+    "sr_label": "\"{label}, search text field, {kueri}\"; landmark diumumkan sebagai \"search\"; jumlah hasil \"{n} results\" diumumkan setelah debounce",
+    "wcag": [
+      "1.3.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "2.1.1",
+      "2.1.4",
+      "2.4.3",
+      "2.4.5",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.3",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "landmark",
+      "role": "elemen search (atau form role=search) yang membungkus field dan tombol; berlabel bila ada lebih dari satu landmark search di halaman",
+      "tokens": []
+    },
+    {
+      "part": "label",
+      "role": "label terlihat, atau label tersembunyi (VisuallyHidden) bila konteks visual sudah jelas dan tombol Search/ikon serta placeholder menyebut objek; nama aksesibel selalu ada",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "container",
+      "role": "bidang field; radius dari bahasa desain (boleh radius-full); tinggi dari size",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "radius-full",
+        "control-height-md",
+        "space-2",
+        "space-3"
+      ]
+    },
+    {
+      "part": "search-icon",
+      "role": "ikon kaca pembesar di inline-start; dekoratif (aria-hidden)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "input",
+      "role": "teks kueri; teks isi ≥ 16 (juga mencegah zoom otomatis di browser seluler)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "spinner",
+      "role": "indikator mencari di inline-end sebelum clear-button; tidak menggantikan clear",
+      "tokens": [
+        "icon-sm",
+        "motion-slow-duration"
+      ]
+    },
+    {
+      "part": "clear-button",
+      "role": "IconButton \"Clear search\" di inline-end; tampil hanya bila ada teks; area klik ≥ target-current",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "submit-button",
+      "role": "Button \"Search\" untuk varian submit; berada di dalam landmark setelah field",
+      "tokens": [
+        "control-height-md",
+        "type-label-size"
+      ]
+    },
+    {
+      "part": "result-count",
+      "role": "teks jumlah hasil terlihat di dekat daftar hasil (bukan di dalam field); salinannya diumumkan lewat LiveAnnouncer",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "petunjuk opsional (mis. \"Search by name or ID\") atau pesan minimum karakter",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar container",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "setiap perubahan teks (tanpa debounce), termasuk Clear dan Esc"
+      },
+      {
+        "name": "onSearch",
+        "payload": "{ query: string; reason: \"debounce\" | \"enter\" | \"submit\" | \"clear\" }",
+        "when": "pencarian perlu dijalankan: setelah debounce (live), Enter, tombol Search, atau Clear"
+      }
+    ],
+    "parts": [
+      "SearchField.Label",
+      "SearchField.Input",
+      "SearchField.Clear",
+      "SearchField.Submit",
+      "SearchField.ResultCount"
+    ],
+    "props": [
+      {
+        "description": "Nama aksesibel; terlihat kecuali labelHidden.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Menyembunyikan label secara visual (VisuallyHidden), tetap dibaca.",
+        "name": "labelHidden",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "live",
+        "description": "Kapan pencarian dijalankan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"live\" | \"submit\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi kontrol.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: kueri.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"\"",
+        "description": "Uncontrolled: kueri awal (mis. dari URL).",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "300",
+        "description": "Jeda sebelum onSearch pada varian live; minimum 300.",
+        "name": "debounceMs",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Jumlah hasil untuk ditampilkan dan diumumkan; null saat belum ada pencarian.",
+        "name": "resultCount",
+        "required": false,
+        "type": "number | null"
+      },
+      {
+        "description": "Label landmark search bila ada lebih dari satu di halaman.",
+        "name": "landmarkLabel",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Objek yang dicari; tidak menggantikan label.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "256",
+        "description": "Panjang kueri maksimum.",
+        "name": "maxLength",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Petunjuk cakupan pencarian.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Kueri tidak dapat diproses; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error kueri.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Pencarian berjalan; region hasil aria-busy.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila pencarian benar-benar tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan pencarian diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "id region hasil untuk aria-controls.",
+        "name": "resultsId",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "hasil diperbarui setelah debounce ≥ 300 ms tanpa memindah fokus; selama komposisi IME pencarian ditunda sampai compositionend; jumlah hasil diumumkan polite setelah hasil stabil",
+      "trigger": "mengetik (varian live)"
+    },
+    {
+      "input": "keyboard",
+      "result": "varian submit: menjalankan pencarian (kueri di-trim; kosong diabaikan); varian live: menjalankan segera tanpa menunggu debounce; tidak pernah mengirim form induk lain",
+      "trigger": "Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengosongkan kueri bila berisi (fokus tetap di field, hasil kembali ke daftar penuh, \"Search cleared\" diumumkan); bila sudah kosong, tidak melakukan apa pun kecuali di tampilan pencarian layar penuh (menutup dan fokus kembali ke pemicu)",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "ke clear-button (bila ada) lalu submit-button lalu region hasil; tidak ada perubahan konteks saat fokus keluar (SC 3.2.1)",
+      "trigger": "Tab dari field"
+    },
+    {
+      "input": "keyboard",
+      "result": "opsional, hanya bermodifier dan dapat diubah (SC 2.1.4); tidak memakai \"/\" tunggal kecuali dapat dimatikan",
+      "trigger": "pintasan global ke pencarian"
+    },
+    {
+      "input": "pointer",
+      "result": "kueri dikosongkan pada pelepasan, fokus kembali ke input, hasil di-reset",
+      "trigger": "klik clear-button"
+    },
+    {
+      "input": "touch",
+      "result": "tampilan pencarian layar penuh dengan field lg di atas, keyboard terbuka dengan tombol aksi \"search\" (enterkeyhint), tombol Back/Cancel berlabel; hasil di bawah field",
+      "trigger": "tap field atau IconButton \"Search\" di bar atas (phone)"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual boleh ditutup; kueri dan posisi hasil tetap",
+      "trigger": "gulir hasil"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Search orders",
+        "Clear search",
+        "Search",
+        "24 results",
+        "No results for \"invoce\"",
+        "Check the spelling or try a different word.",
+        "Search cleared"
+      ],
+      "id-ID": [
+        "Cari pesanan",
+        "Hapus pencarian",
+        "Cari",
+        "24 hasil",
+        "Tidak ada hasil untuk \"invoce\"",
+        "Periksa ejaan atau coba kata lain.",
+        "Pencarian dihapus"
+      ]
+    },
+    "rules": [
+      "Placeholder menyebut objek yang dicari (\"Search orders\"), bukan instruksi panjang; label atau nama aksesibel tetap ada.",
+      "Jumlah hasil memakai ICU plural: \"{count, plural, =0 {No results for {query}} one {# result} other {# results}}\"; angka diformat locale.",
+      "Empty state menyebut kueri dan saran konkret (periksa ejaan, coba kata lain, hapus filter), bukan \"Nothing here\".",
+      "Tombol hapus berlabel \"Clear search\"; tombol varian submit berlabel \"Search\".",
+      "Kueri pengguna yang ditampilkan ulang diapit tanda kutip locale dan diisolasi (bdi)."
+    ]
+  },
+  "depends_on": [
+    "IconButton",
+    "Button",
+    "Spinner",
+    "LiveAnnouncer",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Umumkan jumlah hasil secara polite setelah debounce, sekali per hasil stabil.",
+    "Kembalikan fokus ke input setelah Clear dan pertahankan hasil lama terlihat selama memuat.",
+    "Bungkus field dengan landmark search berlabel.",
+    "Tampilkan EmptyState spesifik yang mengulang kueri."
+  ],
+  "dont": [
+    {
+      "text": "Memindah fokus ke daftar hasil atau membuka halaman baru saat pengguna masih mengetik (SC 3.2.2)."
+    },
+    {
+      "ref": "UB5",
+      "text": "Ikon clear tanpa nama aksesibel atau dengan area klik selebar ikon saja."
+    },
+    {
+      "ref": "UB10",
+      "text": "Placeholder sebagai satu-satunya label tanpa nama aksesibel."
+    },
+    {
+      "text": "Mengumumkan jumlah hasil pada setiap ketukan atau secara assertive."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "placeholder boleh terpotong dengan ellipsis karena nama aksesibel memuat teks penuh; tombol Search melebar; di toolbar sempit field turun ke baris sendiri",
+      "case": "placeholder dan label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi container tumbuh; ikon tetap sejajar baris pertama; tampilan penuh phone digulir tanpa menutup field (SC 2.4.11)",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "dianggap kosong: daftar penuh tampil, Enter diabaikan, tidak ada pengumuman",
+      "case": "kueri kosong / hanya spasi"
+    },
+    {
+      "behaviour": "maxLength dari brief (default 256 karakter, `A-nn`); kelebihan tidak dipotong diam-diam tetapi ditandai error \"Use 256 characters or fewer\"",
+      "case": "kueri panjang maksimum"
+    },
+    {
+      "behaviour": "varian live menyaring data lokal/cache dengan catatan \"Showing saved results\"; pencarian server diblokir dengan reason \"Needs connection\"; loading > 2 detik mengganti spinner dengan Skeleton di region hasil",
+      "case": "offline atau loading lambat"
+    },
+    {
+      "behaviour": "teks tempelan dengan baris baru dinormalkan menjadi spasi; paste memicu pencarian setelah debounce yang sama; autofill browser dimatikan kecuali riwayat diizinkan brief",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "ikon cari di inline-start (kanan), clear di inline-end (kiri); input dir=\"auto\"; kueri yang ditampilkan ulang di pesan diisolasi bdi agar nomor tetap LTR",
+      "case": "RTL dengan angka (nomor pesanan) di kueri"
+    },
+    {
+      "behaviour": "jumlah total diumumkan (\"1,240 results\"), daftar memakai Pagination atau \"Load more\"; jumlah besar diformat locale",
+      "case": "hasil lebih dari satu halaman"
+    },
+    {
+      "behaviour": "pencocokan menormalkan huruf besar/kecil dan diakritik sesuai locale (\"cafe\" menemukan \"café\"); karakter operator tidak menyebabkan error",
+      "case": "karakter khusus atau diakritik"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila surface punya banyak halaman (SC 2.4.5) atau daftar/tabel yang bisa melebihi satu layar.",
+  "lint": [
+    "input type=search di luar landmark search ditolak",
+    "clear-button tanpa label ditolak",
+    "debounceMs < 300 ditolak",
+    "jumlah hasil diumumkan assertive ditolak",
+    "pintasan satu karakter tanpa opsi mematikan ditolak (SC 2.1.4)"
+  ],
+  "name": "SearchField",
+  "preview": {
+    "combinations": [
+      "hover+focus",
+      "error+focus",
+      "loading+focus",
+      "loading+pressed (dicegah, submit)",
+      "disabled+focus",
+      "tampilan penuh phone",
+      "RTL + nomor"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "filled",
+      "loading",
+      "error",
+      "disabled-with-reason",
+      "empty"
+    ],
+    "variants": [
+      "live",
+      "submit"
+    ]
+  },
+  "purpose": {
+    "purpose": "Field teks di dalam landmark search untuk mencari konten atau menyaring daftar di halaman, dengan tombol hapus berlabel dan jumlah hasil yang diumumkan.",
+    "when_not_to_use": [
+      "Untuk memilih nilai field form dari daftar: pakai Combobox.",
+      "Untuk menjalankan perintah atau berpindah tujuan lewat keyboard: pakai CommandPalette.",
+      "Untuk menyaring dengan kriteria terstruktur (status, tanggal, pemilik): pakai FilterChip, Select, atau DateRangePicker; SearchField hanya untuk teks bebas.",
+      "Untuk saran saat mengetik (recent, autosuggest): komposisikan Combobox di dalam landmark search, bukan SearchField dengan daftar tempelan."
+    ]
+  },
+  "related": [
+    "Combobox",
+    "CommandPalette",
+    "FilterChip",
+    "EmptyState",
+    "Pagination"
+  ],
+  "responsive": [
+    {
+      "behaviour": "di atas daftar: lebar penuh size lg; di bar atas: IconButton \"Search\" yang membuka tampilan pencarian layar penuh; clear-button ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar penuh kontainer daftar atau ±layout-measure di toolbar; size md/lg; area klik ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "di toolbar atau PageHeader, lebar tetap minimal untuk ±30 karakter dan maksimal layout-measure; size sm/md",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "semua role yang boleh melihat daftar boleh mencarinya"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak punya akses ke koleksi yang dicari; landmark search tidak dirender"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "pencarian sementara tidak tersedia (indeks dibangun ulang, pencarian server saat offline); reason di helper"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon kaca pembesar dan clear (x) tidak dicerminkan; posisinya mengikuti inline-start/inline-end; tombol Back di tampilan pencarian penuh memakai arrow yang dicerminkan (milik IconButton); kueri dir=\"auto\"."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "container max(control-height-sm, target-current); clear-button ≥ target-min-pointer pada pointer dan target-min-touch di mode sentuh (area diperluas ke luar ikon)",
+      "name": "sm",
+      "notes": "Toolbar tabel dan panel padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current); clear-button ≥ target-current",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Pencarian utama halaman, tampilan pencarian layar penuh di phone.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "hover",
+      "note": "ring fokus di luar; border hover tetap",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical + ring fokus; pesan error tetap terbaca lewat aria-describedby",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "pengguna tetap mengetik; spinner tidak mencuri fokus",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "submit-button tidak bisa ditekan ulang saat pencarian submit berjalan (aria-busy, lebar terkunci)",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokusabel agar reason dibaca",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "kueri bukan data milik role; role read-only tetap boleh mencari, jadi tidak ada state read-only",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "container": "color-structure-surface-raised",
+        "input": "color-structure-text-placeholder"
+      },
+      "treatment": "kosong; placeholder menyebut objek (\"Search orders\"); tanpa clear-button"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "container": "color-interaction-border"
+      },
+      "treatment": "border ke interaction-border; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px; placeholder tetap sampai mengetik"
+    },
+    {
+      "name": "filled",
+      "token_swaps": {
+        "clear-button": "color-structure-text-secondary",
+        "input": "color-structure-text-primary"
+      },
+      "treatment": "teks kueri text-primary; clear-button tampil"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "spinner": "color-interaction-default"
+      },
+      "treatment": "spinner kecil di inline-end setelah debounce; region hasil aria-busy=\"true\"; input tetap bisa diketik; hasil lama tetap terlihat sampai hasil baru siap"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "container": "color-semantic-critical",
+        "helper": "color-semantic-critical-strong"
+      },
+      "treatment": "hanya untuk kueri yang tidak dapat diproses (mis. melebihi panjang maksimum): border critical + teks error; kegagalan server ditampilkan sebagai InlineAlert C1 di region hasil, bukan di field"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "container": "color-structure-surface-sunken",
+        "input": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" (mis. indeks sedang dibangun ulang, offline untuk pencarian server); latar surface-sunken; reason di helper; tetap fokusabel"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "result-count": "color-structure-text-secondary"
+      },
+      "treatment": "kueri tanpa hasil: region hasil menampilkan EmptyState spesifik (\"No results for {query}\") + saran (periksa ejaan, hapus filter); field tidak berubah"
+    }
+  ],
+  "target_hints": {
+    "compose": "SearchBar/DockedSearchBar dibungkus {Ns}SearchField",
+    "flutter": "SearchBar/SearchAnchor dibungkus {ns}_search_field.dart",
+    "html": {
+      "element": "search > input[type=search]",
+      "notes": "elemen <search> (fallback <form role=\"search\">); varian submit bekerja tanpa JS sebagai form GET dengan parameter q; varian live diperkaya modul data-{ns}-module=\"search-field\"; sembunyikan tombol cancel bawaan WebKit agar hanya clear-button berlabel yang tampil"
+    },
+    "swiftui": ".searchable pada NavigationStack, dibungkus {Ns}SearchField untuk penggunaan inline"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Menyaring daftar di halaman yang sama saat mengetik, debounce ≥ 300 ms; tanpa tombol Search; fokus tidak pernah berpindah.",
+      "name": "live"
+    },
+    {
+      "description": "Mencari saat Enter atau tombol Search; untuk pencarian server yang mahal atau yang membuka halaman hasil. Enter dengan kueri kosong tidak mengirim.",
+      "name": "submit"
+    }
+  ]
+}

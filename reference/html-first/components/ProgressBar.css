@@ -1,0 +1,178 @@
+/* ProgressBar · engine 1.8.0 reference (catalog/components/ProgressBar.json). Tokens only (I3); logical properties only (§12.4).
+   Markup: .ds-progress-bar[data-status][data-variant][data-size] > header (label + value-text) · track[role=progressbar] >
+   indicator · status-line (a composed StatusLabel: locked icon + text, L3 treatment per class) · actions (Button).
+   The indicator is a graphic (like a status glyph), so it is the solid semantic colour of the phase, never interaction or brand
+   (UB12); the outcome is always carried by the status-line icon + text, never by bar colour alone (I2).
+   The value is a custom property set inline (style="--ds-progress: 45%"), so the bar renders without JS and mirrors in RTL. */
+.ds-progress-bar {
+  --_bar: var(--color-semantic-info);
+  --_h: var(--space-2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label value"
+    "track track"
+    "status status"
+    "actions actions";
+  align-items: center;
+  column-gap: var(--space-3);
+  min-inline-size: 0;
+  max-inline-size: var(--layout-measure);
+  color: var(--color-structure-text-primary);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-progress-bar[data-status="positive"] { --_bar: var(--color-semantic-positive); }
+.ds-progress-bar[data-status="critical"] { --_bar: var(--color-semantic-critical); }
+.ds-progress-bar[data-status="warning"] { --_bar: var(--color-semantic-warning); }
+.ds-progress-bar[data-status="neutral-negative"] { --_bar: var(--color-semantic-neutral-negative); }
+.ds-progress-bar[data-size="sm"] { --_h: var(--space-1); }
+
+.ds-progress-bar__label {
+  grid-area: label;
+  min-inline-size: 0;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  overflow-wrap: break-word;
+}
+.ds-progress-bar__value {
+  grid-area: value;
+  justify-self: end;
+  font-family: var(--font-sans);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* track: full length always visible (border-control ≥ 3:1), indicator fills from inline-start */
+.ds-progress-bar__track {
+  grid-area: track;
+  position: relative;
+  display: flex;
+  box-sizing: content-box;
+  block-size: var(--_h);
+  margin-block: var(--space-2);
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-progress-bar__indicator {
+  display: block;
+  flex: none;
+  inline-size: var(--ds-progress, 0%);
+  max-inline-size: 100%;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--_bar);
+  transition: inline-size var(--motion-base-duration) var(--motion-easing-standard);
+}
+
+/* segmented: phases in order (upload → validate → import), still one progressbar for assistive tech */
+.ds-progress-bar__track[data-segmented] {
+  gap: var(--space-1);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  block-size: calc(var(--_h) + 2 * var(--border-width-thin));
+}
+.ds-progress-bar__segment {
+  display: flex;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--color-structure-border-control);
+  border-radius: var(--radius-full);
+  background: var(--color-structure-surface-sunken);
+}
+.ds-progress-bar__phases {
+  grid-area: status;
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  margin-block-end: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+.ds-progress-bar__phases > li {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: break-word;
+}
+.ds-progress-bar__phases > li[aria-current] { color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); }
+.ds-progress-bar:has(.ds-progress-bar__phases) { grid-template-areas: "label value" "track track" "status status" "detail detail" "actions actions"; }
+.ds-progress-bar:has(.ds-progress-bar__phases) .ds-progress-bar__status { grid-area: detail; }
+
+/* indeterminate: a segment sweeps along the track; the label names the stage */
+.ds-progress-bar[data-variant="indeterminate"] .ds-progress-bar__indicator {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -40%;
+  inline-size: 40%;
+  animation: ds-progress-bar-sweep calc(var(--motion-slow-duration) * 6) var(--motion-easing-standard) infinite;
+}
+@keyframes ds-progress-bar-sweep { to { inset-inline-start: 100%; } }
+
+.ds-progress-bar__status {
+  grid-area: status;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2) var(--space-3);
+  min-inline-size: 0;
+}
+.ds-progress-bar__actions {
+  grid-area: actions;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-block-start: var(--space-3);
+}
+.ds-progress-bar__reason { flex-basis: 100%; margin: 0; color: var(--color-structure-text-secondary); }
+
+/* tablet up: actions at inline-end of the status-line */
+@media (--bp-tablet-up) {
+  .ds-progress-bar:has(.ds-progress-bar__actions) { grid-template-areas: "label value" "track track" "status actions"; }
+  .ds-progress-bar:has(.ds-progress-bar__actions):has(.ds-progress-bar__phases) { grid-template-areas: "label value" "track track" "status status" "detail actions"; }
+  .ds-progress-bar__actions { justify-content: flex-end; margin-block-start: 0; }
+  .ds-progress-bar__reason { text-align: end; }
+}
+/* phone: label above the bar, value-text below it, actions full width */
+@media (--bp-tablet-down) {
+  .ds-progress-bar:not([data-size="sm"]) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "label" "track" "value" "status" "actions";
+  }
+  .ds-progress-bar:not([data-size="sm"]):has(.ds-progress-bar__phases) { grid-template-areas: "label" "track" "value" "status" "detail" "actions"; }
+  .ds-progress-bar:not([data-size="sm"]) .ds-progress-bar__value { justify-self: start; text-align: start; margin-block-end: var(--space-2); }
+  .ds-progress-bar__actions { flex-direction: column; align-items: stretch; }
+}
+
+/* sm in a table row / list item: bar and value-text side by side in one cell, label usually visually hidden */
+.ds-progress-bar[data-size="sm"] { grid-template-areas: "label label" "track value" "status status"; row-gap: 0; }
+.ds-progress-bar[data-size="sm"] .ds-progress-bar__track { margin-block: 0; }
+.ds-progress-bar[data-size="sm"] .ds-progress-bar__value { justify-self: start; }
+
+/* concurrent processes: aggregate summary + one labelled bar per process */
+.ds-progress-bar-group { display: flex; flex-direction: column; gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
+.ds-progress-bar-group__summary { margin: 0; margin-block-end: var(--space-3); font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+
+/* reduced motion: indeterminate does not move. No gradient hatch (several languages ban gradients): the track turns into a
+   dashed outline in the phase colour with no fill, so it never reads as a measured amount; the label carries the meaning */
+@media (prefers-reduced-motion: reduce) {
+  .ds-progress-bar__indicator { transition: none; }
+  .ds-progress-bar[data-variant="indeterminate"] .ds-progress-bar__track { border: var(--border-width-thick) dashed var(--_bar); }
+  .ds-progress-bar[data-variant="indeterminate"] .ds-progress-bar__indicator { display: none; animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-progress-bar__track, .ds-progress-bar__segment { border-color: CanvasText; }
+  .ds-progress-bar__indicator { background: Highlight; forced-color-adjust: none; }
+}

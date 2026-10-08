@@ -1,0 +1,204 @@
+/* DateRangePicker · engine 1.8.0 reference (catalog/components/DateRangePicker.json). Tokens only (I3); logical properties only (§12.4).
+   fieldset + legend with two labelled typed date fields (start, end) that submit without JS; the fields reuse the DatePicker field
+   parts (.ds-date-picker__label / __group / __input) and the calendar reuses the DatePicker calendar (depends_on DatePicker).
+   DateRangePicker.js adds the "Choose dates" IconButton and a labelled modal dialog: anchored popover (2 months on desktop,
+   1 on tablet), full-screen Sheet on phones with the same typed fields on top and Apply in a sticky bar. */
+.ds-date-range-picker {
+  --_h: max(var(--control-height-md), var(--target-current));
+  --_cell: max(var(--control-height-md), var(--target-current));
+  --_months: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  inline-size: 100%;
+  max-inline-size: var(--layout-measure);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ds-date-range-picker[data-size="sm"] { --_h: max(var(--control-height-sm), var(--target-current)); --_cell: max(var(--control-height-sm), var(--target-current)); }
+.ds-date-range-picker[data-size="lg"] { --_h: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); --_cell: max(var(--control-height-lg), var(--target-min-touch), var(--target-current)); }
+@media (--bp-desktop-down) { .ds-date-range-picker { --_months: 1; } }
+
+.ds-date-range-picker__legend {
+  float: inline-start;
+  inline-size: 100%;
+  margin-block-end: var(--space-2);
+  padding: 0;
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-date-range-picker__legend + * { clear: both; }
+.ds-date-range-picker__row { display: flex; align-items: flex-end; gap: var(--space-2); min-inline-size: 0; }
+.ds-date-range-picker__fields { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2); min-inline-size: 0; }
+.ds-date-range-picker__field { display: flex; flex: 1 1 calc(var(--layout-content-min) / 2); flex-direction: column; gap: var(--space-1); min-inline-size: 0; }
+.ds-date-range-picker__field > .ds-date-picker__label { font-weight: var(--type-body-weight); }
+.ds-date-range-picker__separator {
+  flex: none;
+  align-self: flex-end;
+  inline-size: var(--icon-sm);
+  block-size: var(--_h);
+  color: var(--color-structure-text-secondary);
+}
+[dir="rtl"] .ds-date-range-picker__separator[data-mirror] { transform: scaleX(-1); }
+.ds-date-range-picker__trigger { inline-size: var(--_h); block-size: var(--_h); border: var(--border-width-thin) solid var(--control-container-border); background: var(--control-container-background); }
+.ds-date-range-picker__trigger:focus-visible, .ds-date-range-picker__trigger[data-force~="focus"] { outline-offset: var(--focus-ring-offset); }
+
+.ds-date-range-picker__helper,
+.ds-date-range-picker__reason,
+.ds-date-range-picker__error,
+.ds-date-range-picker__draft-error {
+  margin: 0;
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+  overflow-wrap: anywhere;
+}
+.ds-date-range-picker__error,
+.ds-date-range-picker__reason,
+.ds-date-range-picker__draft-error { display: flex; align-items: flex-start; gap: var(--space-1); }
+.ds-date-range-picker__error,
+.ds-date-range-picker__draft-error { color: var(--color-semantic-critical-strong); }
+:is(.ds-date-range-picker__error, .ds-date-range-picker__reason, .ds-date-range-picker__draft-error) .ds-icon { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+:is(.ds-date-range-picker__error, .ds-date-range-picker__draft-error)[hidden] { display: none; }
+
+/* dialog: modal, anchored like a popover from tablet up (JS sets top/left), full-screen Sheet on phones */
+.ds-date-range-picker__dialog {
+  position: fixed;
+  inset: auto;
+  z-index: var(--z-popover);
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 2 * var(--space-4));
+  max-block-size: calc(100dvh - 2 * var(--space-4));
+  margin: 0;
+  padding: var(--space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  font-family: var(--font-sans);
+}
+.ds-date-range-picker__dialog:not([open]) { display: none; }
+.ds-date-range-picker__dialog[open] { display: flex; flex-direction: column; gap: var(--space-3); }
+.ds-date-range-picker__dialog::backdrop { background: transparent; }
+.ds-date-range-picker__dialog[data-static] { position: relative; z-index: var(--z-base); max-inline-size: 100%; max-block-size: none; margin-block-start: var(--space-2); }
+:root:has(.ds-date-range-picker__dialog[data-presentation="sheet"]:modal) { overflow: hidden; }
+.ds-date-range-picker__dialog[data-presentation="sheet"] {
+  --_cell: max(var(--control-height-md), var(--target-min-touch), var(--target-current));
+  inline-size: 100%;
+  max-inline-size: 100%;
+  padding-block: max(var(--space-3), env(safe-area-inset-top)) 0;
+  padding-inline: max(var(--space-4), env(safe-area-inset-left)) max(var(--space-4), env(safe-area-inset-right));
+}
+.ds-date-range-picker__dialog[data-presentation="sheet"]:modal {
+  inset: 0;
+  z-index: var(--z-modal);
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  border: 0;
+  border-radius: 0;
+}
+.ds-date-range-picker__dialog[data-presentation="sheet"]::backdrop { background: var(--color-structure-scrim); }
+
+.ds-date-range-picker__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: var(--space-2); }
+.ds-date-range-picker__title {
+  margin: 0;
+  font-family: var(--type-h3-family);
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+  overflow-wrap: anywhere;
+}
+.ds-date-range-picker__instruction { grid-column: 1; margin: 0; color: var(--color-structure-text-secondary); }
+.ds-date-range-picker__instruction[data-phase="end"] { color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); }
+.ds-date-range-picker__close { grid-column: 2; grid-row: 1 / span 2; display: none; }
+[data-presentation="sheet"] .ds-date-range-picker__close { display: grid; }
+.ds-date-range-picker__sheet-fields:empty { display: none; }
+.ds-date-range-picker__sheet-fields .ds-date-range-picker__fields { flex-direction: column; align-items: stretch; }
+.ds-date-range-picker__sheet-fields .ds-date-range-picker__separator { display: none; }
+
+.ds-date-range-picker__body { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-4) var(--space-6); min-inline-size: 0; }
+.ds-date-range-picker__body > .ds-date-picker__calendar { flex: 1 1 auto; min-inline-size: 0; }
+@media (--bp-desktop-up) { .ds-date-range-picker__body { flex-wrap: nowrap; } }
+.ds-date-range-picker__instruction, .ds-date-range-picker__draft-error, .ds-date-range-picker__title { contain: inline-size; }
+.ds-date-range-picker__presets {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  padding-inline-end: var(--space-4);
+  border: 0;
+  border-inline-end: var(--border-width-thin) solid var(--color-structure-border);
+}
+.ds-date-range-picker__presets-legend { margin-block-end: var(--space-1); padding: 0; color: var(--color-structure-text-secondary); font-size: var(--type-body-size); line-height: var(--type-body-line); }
+.ds-date-range-picker__preset {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--layout-row-height), var(--target-current));
+  padding-inline: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ds-date-range-picker__preset input { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); margin: 0; accent-color: var(--color-interaction-default); }
+.ds-date-range-picker__preset:has(input:checked) { background: var(--color-structure-selection); font-weight: var(--type-label-weight); }
+.ds-date-range-picker__preset:has(input:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
+@media (hover: hover) { .ds-date-range-picker__preset:not(:has(input:checked)):hover { background: var(--row-background-hover); } }
+.ds-date-range-picker__preset[data-force~="hover"] { background: var(--row-background-hover); }
+@media (--bp-desktop-down) {
+  .ds-date-range-picker__presets { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; padding: 0; border: 0; }
+  .ds-date-range-picker__presets-legend { flex: 1 1 100%; }
+  .ds-date-range-picker__preset { border: var(--border-width-thin) solid var(--color-structure-border); border-radius: var(--radius-full); white-space: normal; }
+}
+
+.ds-date-range-picker__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2) var(--space-3);
+  padding-block-start: var(--space-3);
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+}
+.ds-date-range-picker__summary { margin-inline-end: auto; color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); }
+.ds-date-range-picker__footer .ds-button { min-block-size: max(var(--control-height-md), var(--target-current)); }
+[data-presentation="sheet"] > .ds-date-range-picker__footer {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 1;
+  margin-block-start: auto;
+  padding-block: var(--space-3) max(var(--space-3), env(safe-area-inset-bottom));
+  background: var(--color-structure-surface-overlay);
+}
+[data-presentation="sheet"] > .ds-date-range-picker__footer .ds-button { flex: 1 1 auto; min-block-size: max(var(--control-height-lg), var(--target-current)); }
+
+@media (--bp-tablet-down) {
+  .ds-date-range-picker__row { flex-wrap: wrap; }
+  .ds-date-range-picker__fields { flex-direction: column; align-items: stretch; }
+  .ds-date-range-picker__field { flex-basis: auto; }
+  .ds-date-range-picker__separator { display: none; }
+}
+@media (forced-colors: active) {
+  .ds-date-range-picker__dialog { border-color: CanvasText; }
+  .ds-date-range-picker__trigger { border-color: ButtonText; }
+  .ds-date-range-picker__trigger[aria-disabled="true"] { color: GrayText; border-color: GrayText; }
+  :is(.ds-date-range-picker__error, .ds-date-range-picker__draft-error), :is(.ds-date-range-picker__error, .ds-date-range-picker__draft-error) .ds-icon { color: CanvasText; }
+  .ds-date-range-picker__preset:has(input:checked) { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+}

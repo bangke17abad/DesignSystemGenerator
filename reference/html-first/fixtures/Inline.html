@@ -1,0 +1,73 @@
+<!-- Inline fixture · gap variants, divider, baseline alignment, wrapping at 320 px, empty, RTL, 200% text (catalog preview, §6.9). Dashed boxes are preview chrome. -->
+<section class="ds-demo" data-ds-demo="gap space-1 · space-2 · space-4">
+  <div class="ds-stack" data-gap="3">
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-1</span>
+    <div class="ds-inline" data-gap="1"><span class="ds-demo__swatch">Draft</span><span class="ds-demo__swatch">Finance</span><span class="ds-demo__swatch">Q3</span></div>
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-2 (default)</span>
+    <div class="ds-inline"><span class="ds-demo__swatch">Draft</span><span class="ds-demo__swatch">Finance</span><span class="ds-demo__swatch">Q3</span></div>
+    <span class="ds-text-caption ds-demo__caption" data-ds-text="supporting">gap space-4</span>
+    <div class="ds-inline" data-gap="4"><span class="ds-demo__swatch">Draft</span><span class="ds-demo__swatch">Finance</span><span class="ds-demo__swatch">Q3</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="divider (vertical, decorative)">
+  <div class="ds-inline" data-gap="3" data-ds-module="inline">
+    <span>Updated 12 Mar 2026</span>
+    <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+    <span>Owner: Dana Pratama</span>
+    <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+    <span>3 attachments</span>
+    <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+    <span>Visible to the finance team</span>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="align baseline + mixed text">
+  <div class="ds-inline" data-gap="3" data-align="baseline">
+    <span class="ds-text-h2">1,284</span>
+    <span class="ds-text-secondary">open invoices</span>
+    <a class="ds-link" data-variant="standalone" href="#overdue">View the overdue list</a>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="align start · end · justify space-between">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline ds-demo__frame" data-gap="2" data-align="start"><span class="ds-demo__swatch">Start</span><span class="ds-demo__swatch">Two<br>lines</span><span class="ds-demo__swatch">Aligned to the top</span></div>
+    <div class="ds-inline ds-demo__frame" data-gap="2" data-align="end"><span class="ds-demo__swatch">End</span><span class="ds-demo__swatch">Two<br>lines</span><span class="ds-demo__swatch">Aligned to the bottom</span></div>
+    <div class="ds-inline ds-demo__frame" data-gap="2" data-justify="space-between"><span class="ds-demo__swatch">Title</span><span class="ds-demo__swatch">Action at inline-end</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state wrapped (narrow container, row-gap space-2)">
+  <div class="ds-demo__frame" style="max-inline-size: 18em">
+    <div class="ds-inline" data-gap="3" data-row-gap="2" data-ds-module="inline">
+      <span class="ds-demo__swatch">Finance</span>
+      <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+      <span class="ds-demo__swatch">Quarterly review</span>
+      <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+      <span class="ds-demo__swatch">Approved</span>
+      <span class="ds-divider" data-orientation="vertical" aria-hidden="true"></span>
+      <span class="ds-demo__swatch">Jakarta office</span>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long unbreakable child (URL)">
+  <div class="ds-inline" data-gap="2">
+    <span class="ds-text-secondary">Webhook</span>
+    <code class="ds-text-code"><bdi>https://hooks.example.com/v2/finance/invoices/2026-03/overdue-reminders?token=7f3a9c</bdi></code>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state empty">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-demo__swatch">Before</div>
+    <div class="ds-inline" data-gap="4"></div>
+    <div class="ds-demo__swatch">After: the empty Inline renders no space</div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL" dir="rtl" lang="ar">
+  <div class="ds-stack" data-gap="3">
+    <div class="ds-inline" data-gap="2"><span class="ds-demo__swatch">مسودة</span><span class="ds-demo__swatch">المالية</span><span class="ds-demo__swatch">الربع <bdi>Q3</bdi></span></div>
+    <div class="ds-inline ds-demo__frame" data-justify="space-between"><span class="ds-demo__swatch">العنوان</span><span class="ds-demo__swatch">الإجراء في النهاية</span></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text 200% + longest locale (+40%)">
+  <div data-ds-zoom="200">
+    <div class="ds-inline" data-gap="2"><span class="ds-demo__swatch">Menunggu persetujuan</span><span class="ds-demo__swatch">Keuangan</span><span class="ds-demo__swatch">Kuartal ketiga</span></div>
+  </div>
+</section>

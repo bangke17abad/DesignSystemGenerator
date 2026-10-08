@@ -1,0 +1,305 @@
+{
+  "name": "SearchAndFilter",
+  "engine_version": "1.8.0",
+  "tier": "S",
+  "inclusion": "Disertakan bila ada daftar lebih dari satu layar (M08 §11.2), kecuali B7 pattern_exclusions memberi alasan.",
+  "problem": {
+    "problem": "Pengguna mempersempit koleksi besar ke item yang dicari dengan teks bebas dan kriteria terstruktur, selalu tahu kriteria apa yang aktif dan berapa hasilnya, bisa menghapus kriteria satu per satu, dan bisa membagikan atau kembali ke hasil yang sama.",
+    "when": [
+      "Daftar atau tabel yang melebihi satu layar.",
+      "Pencarian global lintas tujuan sebagai jalan kedua ke konten (SC 2.4.5)."
+    ],
+    "when_not": [
+      "Daftar yang muat dalam satu layar: cukup urutan yang jelas, tanpa kontrol pencarian.",
+      "Memilih nilai field form dari daftar: Combobox.",
+      "Menjalankan perintah atau berpindah tujuan dengan keyboard: CommandPalette.",
+      "Mengganti tampilan yang saling eksklusif (Daftar/Papan): SegmentedControl atau Tabs."
+    ]
+  },
+  "composition": [
+    {
+      "component": "SearchField",
+      "parts": [
+        "SearchField.Label",
+        "SearchField.Input",
+        "SearchField.Clear",
+        "SearchField.ResultCount"
+      ],
+      "role_in_pattern": "teks bebas; variant live untuk daftar di halaman, submit untuk pencarian global atau kueri server yang berat"
+    },
+    {
+      "component": "FilterChip",
+      "parts": [
+        "FilterChip.Group",
+        "FilterChip.ClearAll",
+        "FilterChip.SheetTrigger"
+      ],
+      "role_in_pattern": "kriteria terstruktur; chip terpilih = filter aktif yang terlihat dan bisa dihapus satu per satu"
+    },
+    {
+      "component": "Select",
+      "role_in_pattern": "urutan (\"Urutkan menurut\") di phone dan filter bernilai tunggal"
+    },
+    {
+      "component": "Combobox",
+      "role_in_pattern": "variant multiple untuk filter dengan banyak nilai yang perlu dicari (pemilik, kategori)"
+    },
+    {
+      "component": "DateRangePicker",
+      "role_in_pattern": "filter rentang tanggal bila entitas punya atribut tanggal"
+    },
+    {
+      "component": "Checkbox",
+      "role_in_pattern": "filter multi-nilai di Sheet atau panel filter"
+    },
+    {
+      "component": "RadioGroup",
+      "role_in_pattern": "filter nilai tunggal dengan 2-5 opsi di Sheet"
+    },
+    {
+      "component": "Popover",
+      "role_in_pattern": "isi chip options di tablet dan desktop"
+    },
+    {
+      "component": "Sheet",
+      "role_in_pattern": "semua filter di phone (bottom) atau panel filter lanjutan di layar lebar (side); diterapkan lewat \"Tampilkan n hasil\""
+    },
+    {
+      "component": "Table",
+      "role_in_pattern": "region hasil dengan aria-busy saat memuat; urut lewat header kolom di desktop"
+    },
+    {
+      "component": "List",
+      "role_in_pattern": "region hasil untuk record yang dibaca berurutan; sorotan kata cocok dengan penanda non-warna"
+    },
+    {
+      "component": "Pagination",
+      "role_in_pattern": "hasil bertahap; kembali ke halaman 1 saat kriteria berubah"
+    },
+    {
+      "component": "Skeleton",
+      "role_in_pattern": "muat pertama hasil"
+    },
+    {
+      "component": "EmptyState",
+      "role_in_pattern": "variant no-results (kosong karena kriteria) dibedakan dari first-use (kosong karena data)"
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "pencarian gagal (C1 + Retry) dan hasil dipotong batas server (C2)"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "jumlah hasil sekali per hasil stabil"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Ketik kueri",
+      "state_class": "C6",
+      "transition": "variant live: hasil diperbarui setelah debounce ≥ 300 ms dan ditunda selama komposisi IME; variant submit: Enter menjalankan; kueri di-trim, kueri kosong diabaikan"
+    },
+    {
+      "step": "Terapkan filter",
+      "state_class": "C6",
+      "transition": "tablet/desktop: chip toggle atau options langsung memperbarui hasil; phone: perubahan dikumpulkan di Sheet dan diterapkan lewat \"Tampilkan n hasil\" (n diperbarui langsung); menutup Sheet tanpa menerapkan tidak mengubah filter aktif"
+    },
+    {
+      "step": "Memuat hasil",
+      "state_class": "C5",
+      "transition": "hasil lama tetap dengan aria-busy pada region hasil (bukan input); respons basi dibuang berdasarkan id permintaan; Pagination kembali ke halaman 1"
+    },
+    {
+      "step": "Hasil",
+      "state_class": "C6",
+      "transition": "jumlah hasil tampil di ResultCount; filter aktif terlihat; URL diperbarui (replace saat mengetik, push saat filter diterapkan) sehingga back dan tautan bagikan menghasilkan hasil yang sama"
+    },
+    {
+      "step": "Tanpa hasil",
+      "state_class": "C3",
+      "transition": "EmptyState no-results menyebut kueri dan filter aktif dengan aksi \"Hapus filter\" atau \"Hapus pencarian\"; berbeda dari koleksi kosong (first-use)"
+    },
+    {
+      "step": "Hapus kriteria",
+      "state_class": "C6",
+      "transition": "hapus satu chip, Clear filters, atau Esc/Clear di field; hasil kembali melebar dan jumlah baru tampil"
+    },
+    {
+      "step": "Gagal",
+      "state_class": "C1",
+      "transition": "InlineAlert C1 + Retry di region hasil; kueri dan filter dipertahankan; tidak pernah ditampilkan sebagai \"tidak ada hasil\""
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "SearchField lebar penuh size lg di atas daftar, atau IconButton yang membuka pencarian layar penuh; FilterChip menjadi tombol \"Filter (n)\" yang membuka Sheet berisi semua filter dan \"Tampilkan n hasil\"; 1-2 chip terpenting boleh tampil di samping tombol; urutan lewat Select; filter aktif diringkas di bawah field dan masing-masing bisa dihapus"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "SearchField selebar kontainer daftar; baris chip membungkus atau bergulir horizontal dengan chip fokus selalu terlihat; options membuka Popover; filter lanjutan di Sheet side"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "toolbar di atas Table: SearchField (±30 karakter), chip membungkus, Clear filters di akhir baris; urut lewat header kolom; lebih dari ±8 filter dipindah ke panel filter (Sheet side) dengan Checkbox, Select, Combobox, dan DateRangePicker"
+    }
+  ],
+  "states": {
+    "empty": "Dua kosong dibedakan: koleksi kosong (EmptyState first-use; kontrol pencarian tidak ditampilkan bila belum ada yang bisa dicari) vs kosong karena kriteria (EmptyState no-results yang menyebut kueri/filter dan menawarkan menghapusnya).",
+    "loading": "Muat pertama: Skeleton. Perubahan kriteria: hasil lama tetap dengan aria-busy dan indikator kecil; tidak ada skeleton ulang per ketukan.",
+    "error": "InlineAlert C1 + Retry di region hasil; kueri dan filter tetap. Kueri tidak valid (terlalu panjang, sintaks) sebagai errorText SearchField yang menyebut batas dan cara memperbaiki.",
+    "partial": "Sebagian sumber gagal (pencarian lintas sumber) atau hasil dipotong batas server: hasil tampil dengan InlineAlert C2 yang menyebut apa yang tidak termasuk dan cara mempersempit.",
+    "success": "Hasil dengan jumlah, kata yang cocok disorot dengan penanda non-warna (tebal), filter aktif terlihat, dan URL yang dapat dibagikan."
+  },
+  "accessibility": [
+    {
+      "step": "Ketik kueri",
+      "focus": "fokus tetap di field; tidak pernah dipindah otomatis ke hasil (variant live); variant submit yang membuka halaman hasil memindah fokus ke h1 halaman itu",
+      "announcement": "jumlah hasil polite sekali per hasil stabil, dengan ICU plural"
+    },
+    {
+      "step": "Terapkan filter",
+      "focus": "fokus tetap di chip; Sheet phone: fokus ke judul Sheet saat dibuka, \"Tampilkan n hasil\" menutup Sheet dan fokus ke tombol \"Filter (n)\"",
+      "announcement": "jumlah hasil polite setelah debounce; nama tombol filter memuat jumlah filter aktif"
+    },
+    {
+      "step": "Tanpa hasil",
+      "focus": "fokus tetap di kontrol terakhir yang dipakai",
+      "announcement": "\"Tidak ada hasil untuk {kueri}\" polite"
+    },
+    {
+      "step": "Hapus kriteria",
+      "focus": "Clear filters → fokus ke chip pertama; hapus satu chip → chip berikutnya; Esc atau Clear di field → fokus tetap di field",
+      "announcement": "\"Filter dihapus, {n} hasil\" polite"
+    },
+    {
+      "step": "Gagal",
+      "focus": "fokus tidak dipindah; Retry tepat sesudah judul alert",
+      "announcement": "assertive lewat InlineAlert role alert"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Label field menyebut cakupan (\"Cari item\"); placeholder bukan label dan ikon kaca pembesar bukan nama.",
+      "Jumlah hasil memakai ICU plural dan formatter angka locale.",
+      "No-results mengutip kueri apa adanya (diisolasi dengan bdi) dan menawarkan aksi yang membantu: hapus filter, periksa ejaan, cari di semua tujuan.",
+      "Label chip = nama kriteria; chip options menampilkan nilai terpilih (\"Status: Aktif\").",
+      "Tombol terapkan di Sheet menyebut jumlah (\"Tampilkan 24 hasil\")."
+    ],
+    "examples": {
+      "en-US": [
+        "Search items",
+        "24 results",
+        "No results for \"invoice 2041\". Check the spelling or clear filters.",
+        "Clear filters",
+        "Filter, 2 active",
+        "Show 24 results"
+      ],
+      "id-ID": [
+        "Cari item",
+        "24 hasil",
+        "Tidak ada hasil untuk \"faktur 2041\". Periksa ejaan atau hapus filter.",
+        "Hapus filter",
+        "Filter, 2 aktif",
+        "Tampilkan 24 hasil"
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role melihat semua kriteria atas atribut yang boleh dilihatnya"
+    },
+    {
+      "pattern": "hidden",
+      "when": "filter atas atribut yang tidak boleh dilihat role tidak dirender; hasil dan jumlah hanya menghitung item yang boleh dilihat role, sehingga total tidak membocorkan data"
+    }
+  ],
+  "do": [
+    "Simpan kueri, filter, urutan, dan halaman di URL (web) dan pulihkan saat kembali dari detail.",
+    "Bedakan kosong karena kriteria dari kosong karena data.",
+    "Debounce ≥ 300 ms dan buang respons basi.",
+    "Tampilkan setiap filter aktif dan sediakan hapus per filter serta hapus semua."
+  ],
+  "dont": [
+    {
+      "text": "Filter yang tetap aktif tanpa penanda terlihat (mis. tersimpan di Sheet yang tertutup).",
+      "ref": "§11.2"
+    },
+    {
+      "text": "Memindah fokus ke hasil atau menavigasi otomatis saat pengguna mengetik.",
+      "ref": "SC 3.2.2"
+    },
+    {
+      "text": "Menampilkan error pencarian sebagai \"Tidak ada hasil\".",
+      "ref": "§12.2"
+    },
+    {
+      "text": "Menandai chip terpilih hanya dengan warna.",
+      "ref": "UB2"
+    },
+    {
+      "text": "Placeholder sebagai satu-satunya label field pencarian.",
+      "ref": "UB10"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "pencarian atas data ter-cache bila ada, berlabel \"Hasil dari data tersimpan · {waktu}\" (I6); pencarian server diblokir dengan alasan; filter tetap bisa diubah dan diterapkan saat online"
+    },
+    {
+      "case": "timeout",
+      "behaviour": "kueri berat melewati batas: hasil lama tetap, InlineAlert C1 \"Pencarian memakan waktu terlalu lama\" + Retry + saran mempersempit; permintaan dibatalkan"
+    },
+    {
+      "case": "data sangat banyak",
+      "behaviour": "jumlah boleh perkiraan (\"lebih dari 10.000 hasil\"); paginasi server; jumlah per opsi filter dihitung terbatas atau dihilangkan; tidak ada \"pilih semua hasil\" tanpa menyebut jumlah"
+    },
+    {
+      "case": "data kosong",
+      "behaviour": "koleksi kosong → first-use tanpa kontrol pencarian; kriteria tanpa hasil → no-results dengan jalan menghapus kriteria"
+    },
+    {
+      "case": "aksi ganda (Enter berulang, ketik cepat, Clear lalu ketik ulang)",
+      "behaviour": "debounce + id permintaan; hasil kueri lama tidak pernah tampil setelah kueri baru"
+    },
+    {
+      "case": "label chip dan teks +40% (locale terpanjang), RTL, aksara campuran",
+      "behaviour": "label chip membungkus atau ellipsis dengan nama lengkap aksesibel; \"Tampilkan n hasil\" tidak terpotong; kueri campuran arah diisolasi (bdi)"
+    },
+    {
+      "case": "diakritik, huruf besar, dan IME",
+      "behaviour": "pencarian tidak peka diakritik dan huruf besar sesuai collation locale; pencarian ditunda sampai compositionend"
+    },
+    {
+      "case": "kembali dari detail",
+      "behaviour": "kueri, filter, halaman, dan posisi gulir dipulihkan; fokus ke item asal"
+    }
+  ],
+  "wcag": [
+    "1.3.1",
+    "1.4.1",
+    "2.1.1",
+    "2.4.3",
+    "2.4.5",
+    "3.2.2",
+    "3.3.2",
+    "4.1.2",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "CrudFlow",
+    "AppNavigation",
+    "BulkActions",
+    "MasterDetail",
+    "AsyncFeedback",
+    "Dashboard"
+  ],
+  "lint": [
+    "Setiap SearchField punya label (terlihat atau labelHidden), bukan placeholder saja",
+    "FilterChip.Group dengan ≥ 2 chip punya FilterChip.ClearAll",
+    "Region hasil memakai aria-busy saat memuat; EmptyState no-results terpisah dari first-use",
+    "State pencarian dan filter disinkronkan ke URL di surface web"
+  ]
+}

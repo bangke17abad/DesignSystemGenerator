@@ -1,0 +1,167 @@
+<!-- RadioGroup fixture · every variant × state, sizes, mandatory combinations (§6.9). fieldset[role=radiogroup] + legend; static focus is forced on the radio. -->
+<section class="ds-demo" data-ds-demo="variants/list">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-v1-legend" aria-describedby="rg-v1-help" data-ds-module="radio-group">
+    <legend class="ds-radio-group__legend" id="rg-v1-legend">Delivery method</legend>
+    <p class="ds-radio-group__helper" id="rg-v1-help">Delivery costs are shown at checkout.</p>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="del" value="std" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Standard (3–5 business days)</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="del" value="exp" aria-describedby="rg-v1-d2"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Express (next business day)</span><span class="ds-radio-group__description" id="rg-v1-d2"><span>Order before 14:00.</span></span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="del" value="pick"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Pick up in store</span></span></label>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="variants/inline">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-v2-legend" data-variant="inline" data-ds-module="radio-group">
+    <legend class="ds-radio-group__legend" id="rg-v2-legend">Is this a business address?</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="biz" value="yes"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Yes</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="biz" value="no" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">No</span></span></label>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="variants/card">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-v3-legend" data-variant="card" data-ds-module="radio-group">
+    <legend class="ds-radio-group__legend" id="rg-v3-legend">Plan</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="plan" value="basic" aria-describedby="rg-v3-d1"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Basic</span><span class="ds-radio-group__description" id="rg-v3-d1"><span>Up to 3 members, email support.</span></span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="plan" value="team" checked aria-describedby="rg-v3-d2"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Team</span><span class="ds-radio-group__description" id="rg-v3-d2"><span>Up to 20 members, priority support.</span></span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="plan" value="ent" data-force="focus" aria-describedby="rg-v3-d3"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Enterprise</span><span class="ds-radio-group__description" id="rg-v3-d3"><span>Talk to sales about your organisation.</span></span></span></label>
+    </div>
+  </fieldset>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s1-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s1-legend">States (unselected)</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s1" value="a"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Unselected</span></span></label>
+      <label class="ds-radio-group__item" data-force="hover"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s1" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Hover</span></span></label>
+      <label class="ds-radio-group__item" data-force="pressed"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s1" value="c"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Pressed</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s1" value="d" data-force="focus"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Focus</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s2-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s2-legend">Selected</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s2" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Selected</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s2" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Not selected</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s3-legend" aria-describedby="rg-s3-err" aria-invalid="true" aria-required="true" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s3-legend">Payment method</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s3" value="card"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Card</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s3" value="va"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Virtual account</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s3" value="cod"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Cash on delivery</span></span></label>
+    </div>
+    <p class="ds-radio-group__error" id="rg-s3-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a payment method</span></p>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s4-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s4-legend">Courier</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s4" value="jne" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">JNE</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s4" value="sicepat"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">SiCepat</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s4" value="sea" aria-disabled="true" aria-describedby="rg-s4-r"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Sea freight</span><span class="ds-radio-group__description" id="rg-s4-r"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Not available for this address.</span></span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s5-legend" aria-describedby="rg-s5-reason" aria-disabled="true" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s5-legend">Billing cycle</legend>
+    <p class="ds-radio-group__reason" id="rg-s5-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only owners can change billing.</span></p>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s5" value="m" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Monthly</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s5" value="y"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Yearly</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-s6-legend" aria-readonly="true" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-s6-legend">Contract type (read-only)</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s6" value="perm" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Permanent</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="s6" value="fix"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Fixed term</span></span></label>
+    </div>
+  </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-c1-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-c1-legend">Selected + hover</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item" data-force="hover"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c1" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Weekly</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c1" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Monthly</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-c2-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-c2-legend">Selected + focus</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c2" value="a"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Weekly</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c2" value="b" checked data-force="focus"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Monthly</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-c3-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-c3-legend">Blocked + selected</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c3" value="a" checked aria-disabled="true" aria-describedby="rg-c3-r"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Head office</span><span class="ds-radio-group__description" id="rg-c3-r"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Set by your administrator.</span></span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c3" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Branch</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-c4-legend" aria-describedby="rg-c4-err" aria-invalid="true" aria-required="true" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-c4-legend">Error + focus</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c4" value="a" data-force="focus"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Morning</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c4" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Afternoon</span></span></label>
+    </div>
+    <p class="ds-radio-group__error" id="rg-c4-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Select a delivery slot</span></p>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-c5-legend" aria-readonly="true" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-c5-legend">Read-only + selected</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c5" value="a"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Individual</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="c5" value="b" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Company</span></span></label>
+    </div>
+  </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-z1-legend" data-size="sm" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-z1-legend">Small</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z1" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option A</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z1" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option B</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-z2-legend" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-z2-legend">Medium</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z2" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option A</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z2" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option B</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-z3-legend" data-size="lg" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-z3-legend">Large</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z3" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option A</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="z3" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Option B</span></span></label>
+    </div>
+  </fieldset>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="inline+long-label / RTL+arrows">
+  <div class="ds-grid">
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-l1-legend" data-variant="inline" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-l1-legend">Apakah alamat penagihan sama dengan alamat pengiriman yang Anda masukkan sebelumnya?</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="l1" value="ya" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Ya, gunakan alamat pengiriman</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="l1" value="tidak"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Tidak, saya akan memasukkan alamat penagihan lain</span></span></label>
+    </div>
+  </fieldset>
+  <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="rg-l2-legend" dir="rtl" lang="ar" data-variant="inline" data-ds-module="radio-group" style="grid-column: span 4">
+    <legend class="ds-radio-group__legend" id="rg-l2-legend">طريقة التوصيل</legend>
+    <div class="ds-radio-group__items">
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="l2" value="a" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">عادي</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="l2" value="b"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">سريع</span></span></label>
+      <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="l2" value="c"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">الاستلام من المتجر</span></span></label>
+    </div>
+  </fieldset>
+  </div>
+</section>

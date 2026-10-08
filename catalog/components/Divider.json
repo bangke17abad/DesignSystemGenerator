@@ -1,0 +1,293 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-hidden=\"true\" pada varian decorative dan pada segmen garis varian labelled",
+      "aria-orientation=\"vertical\" hanya pada separator vertikal (horizontal adalah default)",
+      "tidak pernah tabindex, aria-valuenow, atau aria-label pada separator non-fokusabel"
+    ],
+    "focus_order": "tidak pernah ada di urutan fokus",
+    "native": {
+      "compose": "HorizontalDivider() / VerticalDivider() dengan Modifier.clearAndSetSemantics {} bila perlu memastikan tidak ada node; grup bermakna memakai Modifier.semantics { heading() } pada judul grup",
+      "flutter": "Divider() / VerticalDivider() dibungkus ExcludeSemantics (decorative); pengelompokan bermakna di native dinyatakan lewat Semantics(header: true) pada judul grup, bukan lewat garis",
+      "swiftui": "Divider().accessibilityHidden(true); grup bermakna memakai Section dengan header atau .accessibilityAddTraits(.isHeader) pada judul grup"
+    },
+    "role": "decorative: tanpa role, aria-hidden=\"true\"; semantic: hr (role separator implisit, horizontal) atau role=\"separator\" + aria-orientation=\"vertical\"; labelled: teks biasa, garis aria-hidden",
+    "sr_label": "decorative tidak dibaca; semantic diumumkan sebagai \"separator\" oleh sebagian pembaca layar; labelled dibaca hanya teks labelnya",
+    "wcag": [
+      "1.3.1",
+      "1.4.11",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "line",
+      "role": "garis border-block-start (horizontal) atau border-inline-start (vertikal); digambar dengan border, bukan background, agar tetap tampil di forced colors",
+      "tokens": [
+        "border-width-thin",
+        "border-width-thick",
+        "color-structure-border",
+        "color-structure-border-strong"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "teks opsional di tengah atau di awal garis (mis. pemisah tanggal); teks pendukung, tetap ≥ 16",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "label-gap",
+      "role": "jarak antara label dan segmen garis",
+      "tokens": [
+        "space-2",
+        "space-3"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "decorative",
+        "description": "Peran garis bagi teknologi bantu.",
+        "name": "variant",
+        "required": false,
+        "type": "\"decorative\" | \"semantic\" | \"labelled\""
+      },
+      {
+        "default": "horizontal",
+        "description": "Arah garis; vertikal hanya di dalam Inline.",
+        "name": "orientation",
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\""
+      },
+      {
+        "default": "thin",
+        "description": "Tebal garis dari border-width-thin atau border-width-thick.",
+        "name": "weight",
+        "required": false,
+        "type": "\"thin\" | \"thick\""
+      },
+      {
+        "description": "Wajib untuk variant=\"labelled\"; teks dari glosarium.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "center",
+        "description": "Posisi label; logis.",
+        "name": "labelAlign",
+        "required": false,
+        "type": "\"start\" | \"center\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Divider tidak pernah fokusabel (separator fokusabel adalah splitter, di luar cakupan); fokus melompatinya",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada umpan balik dan tidak ada aksi; kursor tidak berubah",
+      "trigger": "hover atau klik"
+    },
+    {
+      "input": "touch",
+      "result": "tidak ada aksi; Divider tidak menangkap gestur",
+      "trigger": "tap atau drag"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Today",
+        "Earlier",
+        "Or"
+      ],
+      "id-ID": [
+        "Hari ini",
+        "Sebelumnya",
+        "Atau"
+      ]
+    },
+    "rules": [
+      "Divider tanpa label tidak memiliki teks.",
+      "Label berupa kata benda atau keterangan waktu singkat dari glosarium, sentence case, tanpa titik.",
+      "Label waktu relatif memakai formatter locale, bukan penggabungan string."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Biarkan Divider dekoratif secara default dan naikkan ke semantic hanya bila grup tidak punya judul.",
+    "Gambar garis dengan border agar tetap tampil di forced colors.",
+    "Pakai border-strong bila garis menjadi satu-satunya batas antar grup."
+  ],
+  "dont": [
+    {
+      "ref": "UB1",
+      "text": "Memberi Divider margin-block untuk menciptakan jarak; jarak datang dari gap primitif layout."
+    },
+    {
+      "ref": "UB12",
+      "text": "Memakai warna semantik atau interaksi untuk garis Divider."
+    },
+    {
+      "ref": "UB7",
+      "text": "Membuat Divider fokusabel atau bisa diseret tanpa alternatif keyboard."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus maksimal dua baris; segmen garis memendek, minimal space-6 di tiap sisi, lalu disembunyikan bila tidak muat",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "label tumbuh; garis tetap tebal token (tidak diskalakan) dan sejajar dengan tengah baris pertama label",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Divider tidak dirender di awal, akhir, atau di antara grup kosong; Stack/Inline dengan prop divider menangani ini otomatis",
+      "case": "0 item di sekitar"
+    },
+    {
+      "behaviour": "dua Divider berurutan karena grup tersembunyi diciutkan menjadi satu",
+      "case": "jumlah maksimum (Divider berurutan)"
+    },
+    {
+      "behaviour": "Divider di antara grup Skeleton tetap dirender agar tidak ada pergeseran saat data tiba",
+      "case": "loading"
+    },
+    {
+      "behaviour": "garis memakai border-strong pada tema inverse; tidak memakai warna status",
+      "case": "di atas surface-inverse atau fill semantik"
+    },
+    {
+      "behaviour": "decorative naik ke border-strong",
+      "case": "prefers-contrast: more"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Divider tidak boleh memiliki margin (css-pattern)",
+    "Garis Divider memakai border, bukan background-color (css-pattern)",
+    "variant=\"labelled\" tanpa label ditolak",
+    "Divider dengan tabindex ditolak"
+  ],
+  "name": "Divider",
+  "preview": {
+    "combinations": [
+      "vertikal di Inline",
+      "labelled + label panjang",
+      "RTL labelAlign start",
+      "tema inverse"
+    ],
+    "states": [
+      "default",
+      "emphasis",
+      "forced-colors"
+    ],
+    "variants": [
+      "decorative",
+      "semantic",
+      "labelled"
+    ]
+  },
+  "purpose": {
+    "purpose": "Garis tipis yang memisahkan grup konten atau aksi; dekoratif secara default, atau pemisah bermakna (role separator) bila memisahkan grup yang tidak berjudul.",
+    "when_not_to_use": [
+      "Untuk menciptakan jarak: pakai gap Stack atau Inline; Divider tidak membawa margin.",
+      "Untuk memisahkan seksi yang punya judul: judul (heading) sudah menjadi pemisah; Divider hanya dekoratif atau tidak perlu.",
+      "Untuk pemisah yang bisa diseret untuk mengubah ukuran pane (splitter): itu bukan Divider; butuh komponen domain dengan alternatif keyboard (UB7).",
+      "Di antara setiap baris List atau Table: garis baris adalah bagian dari komponen itu, bukan Divider terpisah."
+    ]
+  },
+  "related": [
+    "Stack",
+    "Inline",
+    "Menu",
+    "List"
+  ],
+  "responsive": [
+    {
+      "behaviour": "horizontal lebar penuh kontainer; Divider vertikal di Inline disembunyikan saat Inline membungkus",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "sama; Divider vertikal di toolbar tetap selama satu baris",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "sama; tidak pernah dipakai untuk menggantikan whitespace antar seksi besar (space-section)",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Divider tidak memuat aksi atau data; bila grup di sekitarnya tersembunyi karena role, Divider ikut tidak dirender."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "labelAlign start menempel ke tepi kanan di RTL; Divider vertikal berpindah sisi bersama urutan Inline; garis sendiri simetris."
+  },
+  "sizes": {
+    "not_applicable": "Divider tidak interaktif; tebal garis dipilih lewat prop weight (border-width-thin atau border-width-thick), bukan size."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "line": "color-structure-border"
+      },
+      "treatment": "garis color-structure-border; tidak ada state interaksi"
+    },
+    {
+      "name": "emphasis",
+      "token_swaps": {
+        "line": "color-structure-border-strong"
+      },
+      "treatment": "pemisah semantik yang menjadi satu-satunya batas grup, atau mode kontras ditingkatkan (prefers-contrast: more): garis ke border-strong"
+    },
+    {
+      "name": "forced-colors",
+      "token_swaps": {},
+      "treatment": "border memakai warna sistem CanvasText/GrayText otomatis; karena digambar sebagai border, garis tidak hilang"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Divider membungkus HorizontalDivider/VerticalDivider(thickness, color dari token)",
+    "flutter": "{ns}_divider.dart membungkus Divider/VerticalDivider + ExcludeSemantics; thickness dari token",
+    "html": {
+      "element": "hr",
+      "notes": "hr untuk semantic horizontal; div role=separator aria-orientation=vertical untuk vertikal; div aria-hidden untuk decorative; border-block-start, bukan background"
+    },
+    "swiftui": "{Ns}Divider: Divider().overlay(token).accessibilityHidden(true)"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Garis visual saja; disembunyikan dari teknologi bantu (aria-hidden). Warna color-structure-border; tidak tunduk 3:1 karena bukan satu-satunya penanda pengelompokan.",
+      "name": "decorative"
+    },
+    {
+      "description": "Pemisah grup bermakna yang tidak punya judul (mis. grup item Menu, grup aksi di toolbar): role=\"separator\". Bila garis adalah satu-satunya penanda batas, warna naik ke color-structure-border-strong (≥ 3:1, SC 1.4.11).",
+      "name": "semantic"
+    },
+    {
+      "description": "Garis dengan teks (\"Today\", \"Earlier\"). Teks dibaca sebagai teks biasa atau heading kecil; segmen garis dekoratif.",
+      "name": "labelled"
+    }
+  ]
+}

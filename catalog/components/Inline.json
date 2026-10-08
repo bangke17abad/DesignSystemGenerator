@@ -1,0 +1,296 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tidak menambahkan aria-*; meneruskan id, className, dan data-* ke akar",
+      "Divider vertikal selalu dekoratif (aria-hidden=\"true\")"
+    ],
+    "focus_order": "urutan sumber; flex-direction: row-reverse dan order dilarang; arah inline mengikuti dir dokumen",
+    "native": {
+      "compose": "FlowRow(horizontalArrangement = Arrangement.spacedBy(…), verticalArrangement = Arrangement.spacedBy(…)) atau Row; start/end mengikuti LocalLayoutDirection",
+      "flutter": "Wrap(spacing: …, runSpacing: …) untuk wrap, Row(spacing: …) untuk satu baris; arah dari Directionality; tanpa Semantics tambahan",
+      "swiftui": "HStack(spacing:) untuk satu baris; Layout kustom (flow) atau ViewThatFits(in: .horizontal) untuk wrap; leading/trailing, bukan left/right"
+    },
+    "role": "tidak ada (div generik); grup aksi yang bermakna mendapat role=\"group\" + aria-label dari komponen pemanggil, bukan dari Inline",
+    "sr_label": "tidak punya nama aksesibel",
+    "wcag": [
+      "1.3.2",
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "2.4.3",
+      "2.5.8"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "wadah flex arah inline dengan flex-wrap; tanpa latar, border, padding, atau warna",
+      "tokens": []
+    },
+    {
+      "part": "gap",
+      "role": "jarak inline antar anak; hanya token space-*",
+      "tokens": [
+        "space-1",
+        "space-2",
+        "space-3",
+        "space-4",
+        "space-6",
+        "space-8"
+      ]
+    },
+    {
+      "part": "row-gap",
+      "role": "jarak blok antar baris saat membungkus; default sama dengan gap",
+      "tokens": [
+        "space-1",
+        "space-2",
+        "space-3",
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "child",
+      "role": "anak langsung; lebar intrinsik, tidak memberi margin luar sendiri",
+      "tokens": []
+    },
+    {
+      "part": "divider",
+      "role": "Divider vertikal dekoratif opsional di antara anak pada baris yang sama; token garis milik Divider",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "space-2",
+        "description": "Jarak inline antar anak; hanya token.",
+        "name": "gap",
+        "required": false,
+        "type": "\"space-1\" | \"space-2\" | \"space-3\" | \"space-4\" | \"space-6\" | \"space-8\""
+      },
+      {
+        "description": "Jarak antar baris saat membungkus; default sama dengan gap.",
+        "name": "rowGap",
+        "required": false,
+        "type": "\"space-1\" | \"space-2\" | \"space-3\" | \"space-4\" | \"space-6\""
+      },
+      {
+        "default": "center",
+        "description": "Perataan anak pada sumbu blok.",
+        "name": "align",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\" | \"baseline\" | \"stretch\""
+      },
+      {
+        "default": "start",
+        "description": "Distribusi anak pada sumbu inline; nilai logis.",
+        "name": "justify",
+        "required": false,
+        "type": "\"start\" | \"center\" | \"end\" | \"space-between\""
+      },
+      {
+        "default": "true",
+        "description": "Membungkus ke baris berikut; false hanya untuk anak yang dijamin muat (mis. dua IconButton).",
+        "name": "wrap",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Menyisipkan Divider vertikal dekoratif di antara anak pada baris yang sama.",
+        "name": "divider",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Inline bukan tab stop; fokus mengikuti urutan sumber (inline-start ke inline-end, lalu baris berikut); arrow key tidak dicegat",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada aksi; area klik anak tidak diperluas ke gap, jarak gap ikut menjaga jarak ≥ 8 antar target (M06 §9.1)",
+      "trigger": "klik di area gap"
+    },
+    {
+      "input": "touch",
+      "result": "tidak pernah terjadi pada wrap=true; Inline membungkus agar tidak ada gulir dua arah di 320 CSS px (SC 1.4.10)",
+      "trigger": "gulir horizontal"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Save changes",
+        "Cancel",
+        "Updated 5 minutes ago"
+      ],
+      "id-ID": [
+        "Simpan perubahan",
+        "Batal",
+        "Diperbarui 5 menit lalu"
+      ]
+    },
+    "rules": [
+      "Inline tidak memiliki string UI sendiri; tidak menyisipkan pemisah teks seperti \"·\" atau \"|\" (pemisah visual memakai Divider dekoratif).",
+      "Contoh di bawah adalah anak tipikal (label aksi dan metadata) untuk uji wrap pada locale terpanjang."
+    ]
+  },
+  "depends_on": [
+    "Divider"
+  ],
+  "do": [
+    "Biarkan wrap aktif secara default dan uji dengan locale terpanjang.",
+    "Pakai gap Inline untuk menjaga jarak antar target interaktif, bukan padding tambahan pada anak.",
+    "Pakai align=\"baseline\" bila anak berbeda ukuran teks agar garis dasar sejajar."
+  ],
+  "dont": [
+    {
+      "text": "Mematikan wrap lalu memotong anak dengan overflow hidden; status, harga, dan waktu tidak boleh terpotong."
+    },
+    {
+      "ref": "UB1",
+      "text": "Menulis margin-left atau padding-right pada anak sebagai pengganti gap."
+    },
+    {
+      "text": "Memakai row-reverse untuk memindahkan aksi primer ke kanan; urutan fokus menjadi terbalik."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "anak yang tidak muat membungkus ke baris berikut; tidak ada pemotongan teks",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "baris makin banyak; tinggi tumbuh; align baseline tetap berlaku per baris",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak merender ruang apa pun",
+      "case": "0 anak"
+    },
+    {
+      "behaviour": "membungkus ke banyak baris; komponen pemanggil wajib membatasi dengan \"+n lainnya\" atau Menu, bukan Inline",
+      "case": "jumlah anak maksimum (mis. 30 Tag)"
+    },
+    {
+      "behaviour": "anak memakai overflow-wrap: anywhere dan min-inline-size: 0 agar tidak memaksa gulir horizontal",
+      "case": "satu anak sangat panjang tanpa spasi (URL, kode)"
+    },
+    {
+      "behaviour": "Skeleton anak memakai lebar perkiraan dan gap yang sama sehingga tidak ada pergeseran saat data tiba",
+      "case": "loading"
+    },
+    {
+      "behaviour": "Divider di awal atau akhir baris disembunyikan agar tidak ada garis yatim",
+      "case": "Divider vertikal saat membungkus"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Inline.gap dan Inline.rowGap hanya menerima token space-* (token-rule)",
+    "Dilarang flex-direction: row-reverse atau order di Inline (css-pattern)",
+    "Anak langsung Inline tidak boleh memiliki margin-inline (css-pattern)",
+    "Inline wrap=false berisi teks dari glosarium ditandai untuk tinjauan +40% (manual-review)"
+  ],
+  "name": "Inline",
+  "preview": {
+    "combinations": [
+      "align baseline + teks campuran",
+      "wrap pada 320 px",
+      "RTL",
+      "teks 200%"
+    ],
+    "states": [
+      "default",
+      "wrapped",
+      "empty"
+    ],
+    "variants": [
+      "gap space-1",
+      "gap space-2",
+      "gap space-4",
+      "divider"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyusun anak sebaris pada sumbu inline dengan jarak dari token space-*, membungkus ke baris berikut bila ruang tidak cukup.",
+    "when_not_to_use": [
+      "Untuk susunan vertikal: pakai Stack.",
+      "Untuk kolom yang harus sejajar antar baris (kartu, field formulir dua kolom): pakai Grid.",
+      "Untuk memilih satu opsi dari beberapa tombol berdampingan: pakai SegmentedControl atau RadioGroup, bukan Inline berisi Button.",
+      "Untuk deretan aksi yang lebih dari dua aksi sekunder: kelompokkan sisanya ke Menu, bukan Inline yang terus memanjang."
+    ]
+  },
+  "related": [
+    "Stack",
+    "Grid",
+    "Divider",
+    "Button"
+  ],
+  "responsive": [
+    {
+      "behaviour": "wrap selalu aktif; grup aksi boleh beralih ke Stack (aksi lebar penuh) lewat prop responsif pada lebar kontainer < bp-tablet; gap minimal space-2 agar jarak antar target ≥ 8",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar intrinsik anak; wrap bila perlu; justify tidak berubah",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "satu baris pada umumnya; wrap tetap aktif untuk teks 200% dan zoom 400%",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Inline tidak memuat aksi atau data; perilaku per role diterapkan pada anak."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Urutan visual anak dicerminkan otomatis (anak pertama di tepi kanan) karena flex mengikuti dir; justify start/end logis; Inline sendiri tidak memuat ikon, ikon berarah di dalam anak mengikuti aturan anak."
+  },
+  "sizes": {
+    "not_applicable": "Inline tidak interaktif dan tidak punya tinggi sendiri; tinggi baris = anak tertinggi pada baris itu."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "Tidak ada state visual; Inline tidak menerima fokus dan tidak menukar token."
+    },
+    {
+      "name": "wrapped",
+      "token_swaps": {},
+      "treatment": "Anak yang tidak muat pindah ke baris berikut dengan row-gap; urutan sumber tetap; Divider vertikal di awal baris baru disembunyikan."
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "0 anak: tidak merender ruang apa pun."
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Inline membungkus FlowRow atau Row dengan Arrangement.spacedBy",
+    "flutter": "{ns}_inline.dart membungkus Wrap (wrap=true) atau Row (wrap=false) dengan spacing",
+    "html": {
+      "element": "div",
+      "notes": "display:flex; flex-wrap:wrap; gap: var(--space-*); align-items logis; tanpa row-reverse"
+    },
+    "swiftui": "{Ns}Inline membungkus HStack atau Layout flow kustom"
+  },
+  "tier": "R",
+  "variants": {
+    "not_applicable": "Inline tidak punya varian visual; perilaku diatur lewat prop gap, align, justify, wrap, dan divider."
+  }
+}

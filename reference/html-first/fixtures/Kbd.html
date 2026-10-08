@@ -1,0 +1,51 @@
+<!-- Kbd fixture · variants single / combination / sequence, mac vs windows, states default / on-inverse / unavailable,
+     inside Tooltip and Menu item, text 200%, long names, RTL. Static markup is the Windows/Linux format (the no-JS fallback);
+     Kbd.js re-renders data-platform="auto" keys with macOS symbols on Apple devices. Symbols are aria-hidden; the full readable
+     name is VisuallyHidden text. Kbd is display only: the element that owns the shortcut carries aria-keyshortcuts. -->
+<section class="ds-demo" data-ds-demo="variants (single, combination, sequence)">
+  <div class="ds-stack" data-gap="3">
+    <p>Press <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Escape" data-variant="single" dir="ltr"><span class="ds-vh">Escape</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Esc</kbd></span></kbd> to close the panel.</p>
+    <p>Press <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Mod+K" data-variant="combination" dir="ltr"><span class="ds-vh">Control plus K</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">K</kbd></span></kbd> to search and run commands.</p>
+    <p>Press <kbd class="ds-kbd" data-ds-module="kbd" data-keys="G I" data-variant="sequence" dir="ltr"><span class="ds-vh">G then I</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">G</kbd><span class="ds-kbd__sep">then</span><kbd class="ds-kbd__key">I</kbd></span></kbd> to go to the inbox (sequence shortcuts can be turned off in settings).</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="mac vs windows (modifier order per OS, L14)">
+  <div class="ds-stack" data-gap="3">
+    <p>macOS: <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Mod+Shift+P" data-platform="mac" dir="ltr"><span class="ds-vh">Shift Command P</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">⇧</kbd><kbd class="ds-kbd__key">⌘</kbd><kbd class="ds-kbd__key">P</kbd></span></kbd> — no separator, ⌃ ⌥ ⇧ ⌘ order.</p>
+    <p>Windows / Linux: <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Mod+Shift+P" data-platform="windows" dir="ltr"><span class="ds-vh">Control plus Shift plus P</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Shift</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">P</kbd></span></kbd> — “+” between keys.</p>
+    <p>macOS: <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Shift+Enter" data-platform="mac" dir="ltr"><span class="ds-vh">Shift Return</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">⇧</kbd><kbd class="ds-kbd__key">↵</kbd></span></kbd> · Windows: <kbd class="ds-kbd" data-ds-module="kbd" data-keys="Shift+Enter" data-platform="windows" dir="ltr"><span class="ds-vh">Shift plus Enter</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Shift</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Enter</kbd></span></kbd> adds a line break.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="on-inverse">
+  <div class="ds-kbd-demo-inverse" data-ds-on="inverse">
+    <span>Search</span>
+    <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Control plus K</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">K</kbd></span></kbd>
+    <span>Close</span>
+    <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Escape</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Esc</kbd></span></kbd>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="inside Tooltip">
+  <span class="ds-tooltip-demo" data-side="block-end">
+    <button type="button" class="ds-tooltip__demo-trigger" data-icon-only aria-label="Search" aria-keyshortcuts="Control+K"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg></button>
+    <span class="ds-tooltip" role="tooltip" data-static data-side="block-end" aria-hidden="true">Search <kbd class="ds-kbd" dir="ltr"><span class="ds-kbd__keys"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">K</kbd></span></kbd></span>
+  </span>
+</section>
+<section class="ds-demo" data-ds-demo="inside Menu item">
+  <div class="ds-menu__content" data-static role="menu" aria-label="Edit">
+    <div class="ds-menu__item" role="menuitem" tabindex="-1" aria-keyshortcuts="Control+Z"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-history"/></svg><span class="ds-menu__label">Undo</span><kbd class="ds-kbd ds-menu__shortcut" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus Z</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Z</kbd></span></kbd></div>
+    <div class="ds-menu__item" role="menuitem" tabindex="-1" aria-keyshortcuts="Control+C"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-copy"/></svg><span class="ds-menu__label">Copy</span><kbd class="ds-kbd ds-menu__shortcut" data-tone="quiet" dir="ltr"><span class="ds-vh">Control plus C</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">C</kbd></span></kbd></div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="unavailable (not rendered, never dimmed)">
+  <p class="ds-text-secondary">When a shortcut is turned off by the user or does not exist on this platform, the Kbd is not rendered at all: “Archive” below has no shortcut.</p>
+  <p>Archive booking</p>
+</section>
+<section class="ds-demo" data-ds-demo="long names / 4+ keys (wraps between keys)">
+  <p style="max-inline-size: 18rem">Pindah ke halaman berikutnya: <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Control plus Alt plus Shift plus Page down</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Alt</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Shift</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">PgDn</kbd></span></kbd></p>
+</section>
+<section class="ds-demo" data-ds-demo="text 200%">
+  <p style="--type-code-size: 1em; --type-caption-size: 0.75em; --type-caption-line: 1.4; font-size: 2em; line-height: 1.4">Save <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Control plus S</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">S</kbd></span></kbd></p>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (isolated LTR run)" dir="rtl" lang="ar">
+  <p>اضغط <kbd class="ds-kbd" dir="ltr"><span class="ds-vh">Control plus Shift plus F</span><span class="ds-kbd__keys" aria-hidden="true"><kbd class="ds-kbd__key">Ctrl</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">Shift</kbd><span class="ds-kbd__sep">+</span><kbd class="ds-kbd__key">F</kbd></span></kbd> للبحث في كل الملفات.</p>
+</section>

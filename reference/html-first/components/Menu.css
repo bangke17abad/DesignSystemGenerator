@@ -1,0 +1,210 @@
+/* Menu · engine 1.8.0 reference (catalog/components/Menu.json). Tokens only (I3); logical properties only (§12.4).
+   No-JS: details.ds-menu > summary (Button / IconButton look) + .ds-menu__content with real buttons and links (disclosure).
+   Menu.js upgrades it to button[aria-haspopup=menu] + .ds-menu__content[role=menu][popover=manual] (top layer, never clipped),
+   roving focus, typeahead, Esc / Tab / outside press, and on phone presents the items in a bottom Sheet.
+   Item anatomy: [check] [icon] label (+ reason line) [shortcut / submenu chevron]; destructive items sit in the last group,
+   after a separator. Highlight = selection background + inset focus ring (keyboard) or selection only (hover). */
+.ds-menu { position: relative; display: inline-block; max-inline-size: 100%; }
+.ds-menu > summary { list-style: none; }
+.ds-menu > summary::-webkit-details-marker { display: none; }
+.ds-menu__trigger .ds-icon[data-chevron] { inline-size: var(--icon-sm); block-size: var(--icon-sm); transition: transform var(--motion-fast-duration) var(--motion-easing-standard); }
+:is(.ds-menu[open] > .ds-menu__trigger, .ds-menu__trigger[aria-expanded="true"]) .ds-icon[data-chevron] { transform: rotate(180deg); }
+/* open trigger: pressed background (Button / IconButton expose --_bg-pressed) */
+.ds-menu[open] > .ds-menu__trigger, .ds-menu__trigger[aria-expanded="true"] { background: var(--_bg-pressed); }
+
+.ds-menu__content {
+  --_row: var(--control-height-md);
+  z-index: var(--z-popover);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  inline-size: max-content;
+  min-inline-size: min(calc(var(--layout-nav-width) * 0.75), calc(100vw - 2 * var(--space-4)));
+  max-inline-size: min(var(--layout-modal-sm), calc(100vw - 2 * var(--space-4)));
+  max-block-size: min(calc(var(--layout-row-height) * 12), calc(100dvh - 2 * var(--space-4)));
+  margin: 0;
+  padding: var(--space-1);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-family: var(--font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-align: start;
+}
+.ds-menu__content[data-size="sm"] { --_row: var(--control-height-sm); }
+.ds-menu__content[data-size="lg"] { --_row: var(--control-height-lg); }
+/* no-JS disclosure panel: anchored under the summary */
+details.ds-menu > .ds-menu__content { position: absolute; inset-block-start: calc(100% + var(--space-1)); inset-inline-start: 0; }
+details.ds-menu[data-align="end"] > .ds-menu__content { inset-inline-start: auto; inset-inline-end: 0; }
+/* enhanced: top-layer popover placed by Menu.js (UA [popover] hides it while closed) */
+.ds-menu__content[popover] { position: fixed; inset: auto; }
+.ds-menu__content[popover]:not(:popover-open) { display: none; }
+.ds-menu__content[popover]:popover-open { animation: ds-menu-in var(--motion-fast-duration) var(--motion-easing-enter); }
+@keyframes ds-menu-in { from { opacity: 0; } to { opacity: 1; } }
+.ds-menu__content[aria-busy="true"] { cursor: progress; }
+
+.ds-menu__group { display: flex; flex-direction: column; }
+.ds-menu__group-label {
+  margin: 0;
+  padding-block: var(--space-2) var(--space-1);
+  padding-inline: var(--space-3);
+  color: var(--color-structure-text-secondary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-menu__separator {
+  flex: none;
+  block-size: 0;
+  margin-block: var(--space-1);
+  margin-inline: calc(-1 * var(--space-1));
+  border: 0;
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+}
+
+.ds-menu__item {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: max(var(--_row), var(--target-current));
+  margin: 0;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-structure-text-primary);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-menu__item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-menu__item > .ds-icon { color: var(--color-structure-text-secondary); }
+.ds-menu__label { flex: 1 1 auto; min-inline-size: 0; overflow-wrap: anywhere; } /* labels wrap, never ellipsis */
+.ds-menu__text { display: flex; flex-direction: column; flex: 1 1 auto; min-inline-size: 0; }
+.ds-menu__reason { color: var(--color-structure-text-secondary); overflow-wrap: anywhere; }
+.ds-menu__shortcut { flex: none; margin-inline-start: auto; padding-inline-start: var(--space-4); color: var(--color-structure-text-secondary); }
+.ds-menu__item > .ds-icon[data-sub] { margin-inline-start: auto; }
+[dir="rtl"] .ds-menu__item > .ds-icon[data-mirror] { transform: scaleX(-1); }
+/* check / radio slot: reserved in groups that have checkable items so labels align; non-colour marker */
+.ds-menu__check { flex: none; inline-size: var(--icon-sm); block-size: var(--icon-sm); color: var(--color-interaction-default); visibility: hidden; }
+:is([aria-checked="true"], [aria-pressed="true"]) > .ds-menu__check { visibility: visible; }
+.ds-menu__item[aria-disabled="true"] > .ds-menu__check { color: var(--color-structure-text-disabled); }
+
+/* hover (pointer only) and keyboard highlight */
+@media (hover: hover) {
+  .ds-menu__item:not([aria-disabled="true"], [data-static-row]):hover { background: var(--color-structure-selection); }
+}
+.ds-menu__item[data-force~="hover"], .ds-menu__item[data-active] { background: var(--color-structure-selection); }
+.ds-menu__item:focus-visible, .ds-menu__item[data-force~="focus"] { background: var(--color-structure-selection); outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
+.ds-menu__item[aria-disabled="true"]:focus-visible, .ds-menu__item[aria-disabled="true"][data-force~="focus"] { background: var(--color-structure-surface-sunken); }
+.ds-menu__item:not([aria-disabled="true"], [data-static-row]):active::before,
+.ds-menu__item[data-force~="pressed"]::before { opacity: var(--state-layer-pressed-opacity); }
+.ds-menu__item:not([aria-disabled="true"], [data-static-row]):active, .ds-menu__item[data-force~="pressed"] { background: var(--color-structure-selection); } /* no transform */
+.ds-menu__item[aria-expanded="true"] { background: var(--color-structure-selection); } /* open SubTrigger */
+
+/* destructive: clear verb, critical-strong text and icon; always in the last group after a separator (lint) */
+.ds-menu__item[data-variant="destructive"], .ds-menu__item[data-variant="destructive"] > .ds-icon { color: var(--color-semantic-critical-strong); }
+
+/* blocked with reason: lock icon + reason line, still focusable; Enter announces the reason, the menu stays open */
+.ds-menu__item[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
+.ds-menu__item[aria-disabled="true"] > .ds-icon[data-icon="restricted"] { color: var(--color-structure-text-secondary); }
+.ds-menu__item[aria-disabled="true"][data-variant="destructive"] { color: var(--color-structure-text-disabled); }
+.ds-menu__item[aria-disabled="true"] { align-items: flex-start; }
+.ds-menu__item[aria-disabled="true"] > .ds-icon { margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2); }
+
+/* loading / empty rows (non-pressable) */
+.ds-menu__status { display: flex; align-items: center; gap: var(--space-3); min-block-size: max(var(--_row), var(--target-current)); padding-inline: var(--space-3); color: var(--color-structure-text-secondary); }
+.ds-menu__spinner {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  border: var(--border-width-thick) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--shape-circle);
+  animation: ds-menu-spin calc(var(--motion-slow-duration) * 4) linear infinite;
+}
+@keyframes ds-menu-spin { to { transform: rotate(360deg); } }
+
+/* submenu: one level, opens to inline-end; drill-down Back row only in the Sheet presentation */
+.ds-menu__sub { display: contents; }
+.ds-menu__sub > summary { list-style: none; }
+.ds-menu__sub > summary::-webkit-details-marker { display: none; }
+details.ds-menu__sub > .ds-menu__content { position: static; box-shadow: none; border: 0; padding: 0; padding-inline-start: var(--space-4); min-inline-size: 0; } /* no-JS: nested disclosure */
+.ds-menu__back { display: none; }
+
+/* shortcuts only where a keyboard is likely (Kbd responsive): hidden on touch-only devices */
+@media not all and (any-pointer: fine) {
+  .ds-menu__shortcut { display: none; }
+}
+
+/* Sheet presentation (phone): rows grow to lg; menu roles are dropped (plain buttons in a labelled dialog) */
+.ds-menu__content[data-sheet] {
+  --_row: var(--control-height-lg);
+  inline-size: auto;
+  min-inline-size: 0;
+  max-inline-size: none;
+  max-block-size: none;
+  margin-inline: calc(-1 * var(--space-4));
+  padding: 0 var(--space-1);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  animation: none;
+}
+.ds-menu__content[data-sheet] .ds-menu__item { min-block-size: max(var(--_row), var(--target-min-touch)); }
+.ds-menu__content[data-sheet] .ds-menu__shortcut { display: none; }
+.ds-menu__content[data-sheet] .ds-menu__content[data-sub] { display: none; }
+.ds-menu__content[data-sheet][data-drill] > :not([data-drill-active]) { display: none; }
+.ds-menu__content[data-sheet][data-drill] .ds-menu__content[data-sub][data-drill-active] { position: static; display: flex; inset: auto; padding: 0; border: 0; box-shadow: none; background: transparent; max-inline-size: none; inline-size: auto; }
+.ds-menu__content[data-sheet] .ds-menu__back { display: flex; }
+
+/* Static preview twin: the open content in flow under its trigger (no top layer) */
+.ds-menu-demo { display: inline-flex; flex-direction: column; align-items: flex-start; align-self: flex-start; gap: var(--space-1); max-inline-size: 100%; }
+.ds-menu-demo[data-align="end"] { align-items: flex-end; }
+.ds-menu-demo__pair { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-1); max-inline-size: 100%; }
+.ds-menu__content[data-static] { position: relative; inset: auto; z-index: var(--z-base); max-inline-size: min(var(--layout-modal-sm), 100%); max-block-size: none; }
+.ds-menu-target { padding: var(--space-4); border: var(--border-width-thin) dashed var(--color-structure-border-strong); border-radius: var(--radius-md); background: var(--color-structure-surface-raised); }
+.ds-menu-target:focus-visible { outline-offset: var(--focus-ring-offset); }
+
+/* no-JS on phone: the disclosure panel flows in the page instead of floating */
+@media (--bp-tablet-down) {
+  details.ds-menu { display: block; }
+  details.ds-menu > .ds-menu__content { position: static; inline-size: auto; margin-block-start: var(--space-1); }
+  .ds-menu__content[data-static] { --_row: var(--control-height-lg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-menu__content[popover]:popover-open { animation: none; }
+  .ds-menu__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; }
+  .ds-menu__trigger .ds-icon[data-chevron] { transition: none; }
+}
+@media (forced-colors: active) {
+  .ds-menu__content { border: var(--border-width-thin) solid CanvasText; }
+  .ds-menu__item:focus-visible, .ds-menu__item[data-active] { outline: var(--focus-ring-width) solid Highlight; }
+  .ds-menu__item[aria-disabled="true"] { color: GrayText; }
+  .ds-menu__separator { border-color: CanvasText; }
+}

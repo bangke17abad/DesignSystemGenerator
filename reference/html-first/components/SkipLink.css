@@ -1,0 +1,47 @@
+/* SkipLink · engine 1.8.0 reference (catalog/components/SkipLink.json). Tokens only (I3); logical properties only (§12.4).
+   Markup: <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#main">Skip to main content</a> (max 3)</div> as the
+   first element of body (or of a contained AppShell). Hidden with the focusable VisuallyHidden pattern (.ds-vh), never
+   display:none, so it stays in the focus order; on focus it is placed at the block-start/inline-start corner above sticky bars. */
+.ds-skip-links { position: relative; z-index: var(--z-tooltip); block-size: 0; }
+
+.ds-skip-link {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: var(--z-tooltip);
+  display: inline-flex;
+  align-items: center;
+  inline-size: max-content;
+  max-inline-size: calc(100% - 2 * var(--space-2));
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: var(--target-current);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-raised);
+  box-shadow: var(--elevation-2);
+  color: var(--color-interaction-default);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  overflow-wrap: anywhere;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  .ds-skip-link:hover { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-skip-link[data-force~="hover"] { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+.ds-skip-link:active,
+.ds-skip-link[data-force~="pressed"] { color: var(--color-interaction-pressed); }
+
+/* target: main (tabindex="-1") gets an inset ring so it never overflows the viewport; static twin of base.css :focus-visible rule */
+:where(main, [data-ds-focus-target])[tabindex="-1"][data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+@media (forced-colors: active) {
+  .ds-skip-link { border-color: LinkText; color: LinkText; }
+}

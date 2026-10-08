@@ -1,0 +1,117 @@
+/* Popover · engine 1.8.0 reference (catalog/components/Popover.json). Tokens only (I3); logical properties only (§12.4).
+   button[popovertarget][aria-haspopup=dialog] + div.ds-popover[popover=auto][role=dialog][aria-labelledby]. The native popover
+   attribute gives the top layer (never clipped, above a Modal), light dismiss and Esc without JS; the UA centres it then.
+   Popover.js anchors it to the trigger (flip/shift, logical side + align), moves focus in, returns it, closes on focus-out,
+   and presents the form variant as a bottom Sheet on phone. Non-modal: no scrim, no aria-modal, no focus trap. */
+.ds-popover {
+  z-index: var(--z-popover);
+  box-sizing: border-box;
+  inline-size: max-content;
+  min-inline-size: min(calc(var(--layout-modal-sm) / 2), calc(100vw - 2 * var(--space-4)));
+  max-inline-size: min(var(--layout-modal-sm), calc(100vw - 2 * var(--space-4)));
+  max-block-size: calc(100dvh - 2 * var(--space-4));
+  padding: 0;
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-md);
+  background: var(--color-structure-surface-overlay);
+  color: var(--color-structure-text-primary);
+  box-shadow: var(--elevation-2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-family: var(--font-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  text-align: start;
+}
+/* display only when shown, so the UA [popover]:not(:popover-open) { display: none } still hides it */
+.ds-popover:popover-open, .ds-popover[data-static] { display: flex; flex-direction: column; }
+.ds-popover:popover-open { animation: ds-popover-in var(--motion-fast-duration) var(--motion-easing-enter); }
+@keyframes ds-popover-in { from { opacity: 0; } to { opacity: 1; } }
+/* anchored by Popover.js: physical coordinates come from getBoundingClientRect, the logical side is in data-side */
+.ds-popover[data-placed] { position: fixed; inset: auto; margin: 0; }
+.ds-popover[aria-busy="true"] { cursor: progress; }
+/* the container receives focus for the info variant: inset ring so it is never clipped */
+.ds-popover:focus-visible, .ds-popover[data-force~="focus"] { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
+
+.ds-popover__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-block: var(--space-3) 0;
+  padding-inline: var(--space-4) var(--space-2);
+}
+.ds-popover__title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--space-1);
+  font-family: var(--type-label-family);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  overflow-wrap: anywhere;
+}
+.ds-popover__header > .ds-icon-button { margin-block-start: calc(-1 * var(--space-1)); }
+.ds-popover__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block: var(--space-2) var(--space-3);
+  padding-inline: var(--space-4);
+  overflow-wrap: anywhere;
+}
+.ds-popover__header + .ds-popover__body { padding-block-start: var(--space-1); }
+.ds-popover__body > p { max-inline-size: var(--layout-measure); }
+.ds-popover__body a:not([class]) { color: var(--color-interaction-default); }
+.ds-popover__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding-block: 0 var(--space-3);
+  padding-inline: var(--space-4);
+}
+.ds-popover__footer > * { flex: 0 1 auto; }
+.ds-popover__reason { flex: 1 1 100%; color: var(--color-structure-text-secondary); text-align: end; }
+.ds-popover__error { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--color-semantic-critical-strong); }
+.ds-popover__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); margin-block-start: var(--space-1); }
+.ds-popover__dl { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-3); margin: 0; }
+.ds-popover__dl dt { color: var(--color-structure-text-secondary); }
+.ds-popover__dl dd { margin: 0; font-variant-numeric: tabular-nums; }
+/* loading: one skeleton line; the popover keeps its size so it does not jump */
+.ds-popover__skeleton {
+  display: block;
+  inline-size: 100%;
+  block-size: var(--type-body-line);
+  border-radius: var(--radius-xs);
+  background: var(--color-structure-skeleton);
+  animation: ds-popover-pulse calc(var(--motion-slow-duration) * 4) var(--motion-easing-standard) infinite alternate;
+}
+.ds-popover__skeleton + .ds-popover__skeleton { inline-size: 70%; }
+@keyframes ds-popover-pulse { from { opacity: 1; } to { opacity: 0.55; } }
+.ds-popover[aria-busy="true"] .ds-popover__body { min-block-size: calc(var(--type-body-line) * 3); }
+
+/* trigger: pressed background while open (Button / IconButton already style aria-expanded on IconButton) */
+.ds-button[aria-haspopup="dialog"][aria-expanded="true"] { background: var(--_bg-pressed); }
+.ds-popover__trigger-reason { display: block; margin-block-start: var(--space-1); color: var(--color-structure-text-secondary); }
+
+/* phone: info stays a Popover the width of the viewport minus 16 on each side; form becomes a Sheet (Popover.js) */
+@media (--bp-tablet-down) {
+  .ds-popover[data-placed] { inline-size: calc(100vw - 2 * var(--space-4)); max-inline-size: none; }
+  .ds-popover__header > .ds-icon-button { min-block-size: max(var(--control-height-sm), var(--target-min-touch)); min-inline-size: max(var(--control-height-sm), var(--target-min-touch)); }
+}
+
+/* Static preview twin: the open panel in flow under its trigger (no top layer), so demos never overflow at 320 px */
+.ds-popover[data-static] { position: relative; inset: auto; z-index: var(--z-base); margin: 0; animation: none; }
+.ds-popover-demo { display: inline-flex; flex-direction: column; align-items: flex-start; align-self: flex-start; gap: var(--space-2); max-inline-size: 100%; }
+.ds-popover-demo[data-align="end"] { align-items: flex-end; }
+.ds-popover-demo[data-side="block-start"] { flex-direction: column-reverse; }
+.ds-popover-demo > .ds-popover[data-static] { max-inline-size: min(var(--layout-modal-sm), 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-popover:popover-open { animation: none; }
+  .ds-popover__skeleton { animation: none; }
+}
+@media (forced-colors: active) {
+  .ds-popover { border: var(--border-width-thin) solid CanvasText; }
+}

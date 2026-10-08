@@ -1,0 +1,493 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-expanded pada trigger",
+      "aria-controls dari trigger ke id panel",
+      "panel hidden saat tertutup (hidden=\"until-found\" bila didukung agar pencarian halaman dapat membuka panel)",
+      "aria-disabled + aria-describedby ke reason pada item diblokir",
+      "error-indicator dibaca sebagai bagian nama trigger (\"Address, 2 errors\")",
+      "aria-busy pada panel saat loading"
+    ],
+    "focus_order": "trigger berurutan; konten panel terbuka berada tepat setelah trigger-nya di DOM",
+    "native": {
+      "compose": "Tidak ada Accordion bawaan: Row clickable dengan Modifier.semantics { heading(); stateDescription = …; if (open) collapse { … } else expand { … } } + AnimatedVisibility untuk panel",
+      "flutter": "ExpansionTile (title, subtitle, initiallyExpanded, onExpansionChanged) atau ExpansionPanelList; Semantics(header: true) pada title; state expanded diumumkan oleh ExpansionTile",
+      "swiftui": "DisclosureGroup(isExpanded: $open) { … } label: { Text(judul).accessibilityAddTraits(.isHeader) }"
+    },
+    "politeness": "polite",
+    "role": "heading (level dari prop) berisi button; panel role=\"region\" dengan aria-labelledby trigger (hanya bila item ≤ ±6, agar tidak membanjiri landmark)",
+    "sr_label": "judul trigger + summary + state expanded/collapsed dari role; level heading diumumkan",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "2.1.1",
+      "2.4.3",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.8",
+      "3.3.1",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "tumpukan item dengan pemisah; tidak memakai kartu di dalam kartu",
+      "tokens": [
+        "color-structure-border",
+        "border-width-thin",
+        "color-structure-surface-base"
+      ]
+    },
+    {
+      "part": "heading",
+      "role": "elemen heading dengan level sesuai struktur halaman; membungkus trigger",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "trigger",
+      "role": "button lebar penuh di dalam heading: judul + ringkasan opsional + chevron; area klik seluruh baris",
+      "tokens": [
+        "control-height-md",
+        "space-3",
+        "space-4",
+        "color-focus-ring",
+        "state-layer-hover-opacity"
+      ]
+    },
+    {
+      "part": "chevron",
+      "role": "ikon arah buka/tutup di inline-end; berputar 180° (tanpa animasi di reduced motion)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "motion-fast-duration",
+        "motion-easing-standard"
+      ]
+    },
+    {
+      "part": "summary",
+      "role": "teks pendukung opsional di trigger (jumlah item, nilai ringkas); error count bila panel berisi error",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-indicator",
+      "role": "ikon kritis + teks \"{n} errors\" di trigger saat panel berisi field invalid",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "panel",
+      "role": "region berlabel trigger; padding dari space-*; tinggi mengikuti isi",
+      "tokens": [
+        "space-4",
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "motion-base-duration",
+        "motion-easing-enter",
+        "motion-easing-exit"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string[]",
+        "when": "kumpulan item terbuka berubah"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ itemId: string; open: boolean }",
+        "when": "satu Accordion.Item dibuka atau ditutup"
+      }
+    ],
+    "parts": [
+      "Accordion.Item (value, open, defaultOpen, onOpenChange, disabled, reason, invalid, errorCount)",
+      "Accordion.Trigger (summary)",
+      "Accordion.Panel (loading)"
+    ],
+    "props": [
+      {
+        "default": "multiple",
+        "description": "Berapa item yang boleh terbuka bersamaan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"multiple\" | \"single\""
+      },
+      {
+        "description": "Controlled: id item terbuka.",
+        "name": "value",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "default": "[]",
+        "description": "Uncontrolled: item terbuka awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string[]"
+      },
+      {
+        "description": "Level heading trigger sesuai struktur halaman.",
+        "name": "headingLevel",
+        "required": true,
+        "type": "2 | 3 | 4 | 5 | 6"
+      },
+      {
+        "default": "md",
+        "description": "Tinggi trigger; area klik ≥ target-current.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "membuka atau menutup panel; fokus tetap di trigger",
+      "trigger": "Enter atau Space pada trigger"
+    },
+    {
+      "input": "keyboard",
+      "result": "berpindah antar trigger dan ke konten interaktif di panel terbuka dalam urutan DOM",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus antar trigger tanpa membuka panel",
+      "trigger": "↓/↑, Home/End pada trigger (opsional, bila grup > 5 item)"
+    },
+    {
+      "input": "keyboard",
+      "result": "panel berisi error terbuka otomatis; ErrorSummary menaut ke field di dalamnya dan membuka panelnya bila tertutup",
+      "trigger": "submit Form gagal"
+    },
+    {
+      "input": "pointer",
+      "result": "toggle pada pelepasan",
+      "trigger": "klik di mana pun pada trigger"
+    },
+    {
+      "input": "touch",
+      "result": "toggle; area ≥ target-min-touch; panel yang dibuka di-scroll agar judulnya terlihat (tidak tertutup header sticky)",
+      "trigger": "tap trigger"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Billing address",
+        "How do refunds work?",
+        "Advanced settings",
+        "2 errors",
+        "3 items"
+      ],
+      "id-ID": [
+        "Alamat penagihan",
+        "Bagaimana pengembalian dana berjalan?",
+        "Pengaturan lanjutan",
+        "2 kesalahan",
+        "3 item"
+      ]
+    },
+    "rules": [
+      "Judul = topik atau pertanyaan spesifik, sentence case; tidak memakai \"More\" atau \"Details\" saja.",
+      "Summary menyebut apa yang ada di dalam (\"3 items\", nilai terpilih) agar pengguna tidak membuka semua.",
+      "Konten wajib (persetujuan, harga total, peringatan) tidak disembunyikan di panel tertutup."
+    ]
+  },
+  "depends_on": [
+    "Skeleton",
+    "Divider"
+  ],
+  "do": [
+    "Bungkus trigger dengan heading berlevel benar.",
+    "Buka otomatis panel yang berisi error setelah submit.",
+    "Tulis summary agar isi panel dapat ditebak tanpa membukanya."
+  ],
+  "dont": [
+    {
+      "ref": "UB9",
+      "text": "Menyembunyikan informasi wajib atau peringatan di panel yang tertutup default."
+    },
+    {
+      "text": "Memakai variant single sehingga pengguna kehilangan panel yang sedang dibaca saat membuka yang lain tanpa alasan."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai panel terbuka hanya lewat perubahan warna trigger."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul membungkus; chevron tetap rata atas di inline-end; tidak ada ellipsis",
+      "case": "judul +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "trigger tumbuh; summary pindah ke baris bawah judul",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "komponen tidak dirender",
+      "case": "0 item"
+    },
+    {
+      "behaviour": "panah ↑/↓ antar trigger diaktifkan; tambahkan SearchField di atas; tombol Expand all/Collapse all",
+      "case": "50+ item (FAQ panjang)"
+    },
+    {
+      "behaviour": "Skeleton lalu isi; offline: pesan \"Needs connection\" + Retry di panel, trigger tetap bisa ditutup",
+      "case": "panel memuat data saat dibuka (lazy) dan offline"
+    },
+    {
+      "behaviour": "hidden=\"until-found\" membuka panel dan memperbarui aria-expanded; tanpa dukungan, panel ditandai di hasil pencarian internal",
+      "case": "pencarian halaman (Ctrl+F) mengenai teks di panel tertutup"
+    },
+    {
+      "behaviour": "panel terbuka dan fokus ke target",
+      "case": "deep link ke anchor di dalam panel"
+    },
+    {
+      "behaviour": "chevron di inline-end (kiri); chevron arah bawah tidak dicerminkan; angka di summary diisolasi bidi",
+      "case": "RTL"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "Trigger tanpa heading pembungkus ditolak",
+    "Trigger tanpa aria-expanded atau aria-controls ditolak",
+    "headingLevel yang melompati level di struktur halaman (manual-review)"
+  ],
+  "name": "Accordion",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "error+hover",
+      "disabled+focus",
+      "loading + tutup",
+      "panel error terbuka otomatis setelah submit",
+      "RTL"
+    ],
+    "states": [
+      "collapsed",
+      "expanded",
+      "hover",
+      "focus",
+      "pressed",
+      "error",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "multiple",
+      "single"
+    ]
+  },
+  "purpose": {
+    "purpose": "Tumpukan seksi berjudul yang masing-masing dapat dibuka dan ditutup, untuk memadatkan konten sekunder (FAQ, detail lanjutan, kelompok pengaturan) tanpa memindah pengguna dari halaman.",
+    "when_not_to_use": [
+      "Untuk konten yang dibutuhkan semua pengguna untuk menyelesaikan tugas: tampilkan terbuka.",
+      "Untuk berpindah antar tampilan setara yang saling eksklusif: pakai Tabs.",
+      "Untuk langkah berurutan: pakai Stepper.",
+      "Untuk satu blok detail tunggal: pakai disclosure (details/summary) atau satu Accordion.Item tanpa grup.",
+      "Untuk hierarki bertingkat yang dinavigasi: pakai Tree."
+    ]
+  },
+  "related": [
+    "Tabs",
+    "Stepper",
+    "Tree",
+    "Form",
+    "ErrorSummary"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh; trigger size lg ≥ target-min-touch; panel yang dibuka digulir agar judulnya tetap terlihat di bawah header sticky",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar dibatasi layout-measure untuk konten teks; trigger ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "size md; konten panjang lebih baik dipecah ke seksi terbuka atau Tabs",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "seksi yang seluruh isinya terlarang bagi role tidak dirender"
+    },
+    {
+      "pattern": "read-only",
+      "when": "panel menampilkan nilai sebagai teks (DescriptionList), bukan field"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "seksi terlihat tetapi belum dapat dibuka (prasyarat belum terpenuhi): gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Chevron menunjuk bawah/atas sehingga tidak dicerminkan; posisinya di inline-end logis; padding panel memakai properti logis."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-sm, target-current); di mode sentuh trigger naik ke target-min-touch",
+      "name": "sm",
+      "notes": "Panel pengaturan padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current)",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch)",
+      "name": "lg",
+      "notes": "FAQ dan konten konsumen di surface sentuh.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "trigger dengan error-indicator + ring",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "state-layer di atas; error-indicator tetap",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "aria-disabled tetap fokusabel agar reason terbaca",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "menutup panel yang memuat tetap diizinkan dan membatalkan pemuatan",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa hover pada item diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "collapsed",
+      "token_swaps": {},
+      "treatment": "aria-expanded=\"false\"; panel hidden; chevron menunjuk ke bawah"
+    },
+    {
+      "name": "expanded",
+      "token_swaps": {},
+      "treatment": "aria-expanded=\"true\"; panel tampil; chevron berputar; tidak ada perubahan warna sebagai satu-satunya penanda"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "trigger": "color-interaction-hover"
+      },
+      "treatment": "state-layer hover pada trigger di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "trigger": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px pada trigger lebar penuh"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "trigger": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed; tanpa transform"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error-indicator": "color-semantic-critical-strong"
+      },
+      "treatment": "panel berisi field invalid: dibuka otomatis setelah submit gagal; error-indicator di trigger tetap tampil walau ditutup ulang"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "heading": "color-structure-text-disabled"
+      },
+      "treatment": "item tidak bisa dibuka untuk role/kondisi ini: aria-disabled, judul text-disabled, ikon gembok, reason di summary"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "panel": "color-structure-skeleton"
+      },
+      "treatment": "isi panel dimuat saat dibuka: Skeleton di panel; panel aria-busy"
+    }
+  ],
+  "target_hints": {
+    "compose": "Row + AnimatedVisibility dibungkus {Ns}Accordion",
+    "flutter": "ExpansionTile dibungkus {ns}_accordion.dart",
+    "html": {
+      "element": "h2–h6 > button + div[role=region]",
+      "notes": "fallback tanpa JS: details/summary per item (summary membawa heading di dalamnya); hidden=\"until-found\" bila didukung matriks browser"
+    },
+    "swiftui": "DisclosureGroup dibungkus {Ns}Accordion"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Beberapa item boleh terbuka bersamaan; paling aman untuk membandingkan isi.",
+      "name": "multiple"
+    },
+    {
+      "description": "Membuka satu item menutup yang lain; dipakai hanya bila konten panjang dan saling eksklusif. Item terbuka boleh ditutup (collapsible).",
+      "name": "single"
+    }
+  ]
+}

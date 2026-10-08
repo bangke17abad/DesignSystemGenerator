@@ -1,0 +1,414 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby dl ke section-heading bila ada",
+      "nilai kosong memakai teks VisuallyHidden \"No value\"; tanda pisah aria-hidden",
+      "aria-busy=\"true\" saat loading",
+      "inline-action menyebut atributnya (\"Copy reference number\", \"Edit address\")"
+    ],
+    "focus_order": "urutan DOM pasangan dari atas ke bawah lalu kolom berikut; layout grid tidak mengubah urutan baca",
+    "native": {
+      "compose": "Column/Row per pasangan dengan Modifier.semantics(mergeDescendants = true); FlowRow untuk variant grid",
+      "flutter": "Column/Wrap berisi MergeSemantics per pasangan; Semantics(label: term, value: nilai) bila nilai hanya teks; Text dengan FontFeature.tabularFigures() untuk angka",
+      "swiftui": "LabeledContent(term) { Text(value) } dalam Form/List/Grid; .accessibilityElement(children: .combine) pada layout kustom"
+    },
+    "politeness": "polite",
+    "role": "dl/dt/dd; native: elemen gabungan per pasangan dengan label term dan value description",
+    "sr_label": "term dibaca sebelum description; satuan dan mata uang tertulis penuh",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "2.4.6",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "dl; satu atau dua kolom pasangan; pemisah antar baris opsional",
+      "tokens": [
+        "space-3",
+        "space-4",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "group",
+      "role": "div pembungkus satu pasangan dt/dd (diizinkan HTML) untuk tata letak dan pemisah",
+      "tokens": [
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "term",
+      "role": "dt; label atribut; tidak dipotong",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "dd; nilai; angka/harga/waktu tabular-nums; status, harga, waktu tidak pernah dipotong; boleh berisi StatusLabel, Link, Tag, CopyButton",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "empty-value",
+      "role": "nilai kosong: tanda pisah terlihat + nama aksesibel \"No value\"",
+      "tokens": [
+        "color-structure-text-tertiary"
+      ]
+    },
+    {
+      "part": "inline-action",
+      "role": "aksi opsional per baris (Copy, Edit) sebagai IconButton/Link di inline-end",
+      "tokens": [
+        "icon-sm",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "section-heading",
+      "role": "heading opsional di atas grup atribut",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-weight",
+        "color-structure-text-primary"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onRetry",
+        "payload": "{ term: string }",
+        "when": "Retry pada nilai yang gagal"
+      }
+    ],
+    "parts": [
+      "DescriptionList.Item",
+      "DescriptionList.Term",
+      "DescriptionList.Description (empty, pending, errorText)",
+      "DescriptionList.Action"
+    ],
+    "props": [
+      {
+        "default": "stacked",
+        "description": "Tata letak pasangan; jatuh ke stacked saat sempit.",
+        "name": "variant",
+        "required": false,
+        "type": "\"stacked\" | \"columns\" | \"grid\""
+      },
+      {
+        "description": "Nama aksesibel bila tidak ada heading yang dirujuk.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Garis pemisah antar pasangan.",
+        "name": "dividers",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Skeleton pada semua nilai.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "hanya elemen interaktif di description (Link, CopyButton, inline-action) yang menerima fokus",
+      "trigger": "Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "nilai dapat diseleksi dan disalin tanpa menyeret term",
+      "trigger": "seleksi teks pada description"
+    },
+    {
+      "input": "touch",
+      "result": "menjalankan aksi; area ≥ target-min-touch",
+      "trigger": "tap inline-action"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Reference number",
+        "Created",
+        "March 4, 2026",
+        "Owner",
+        "No value"
+      ],
+      "id-ID": [
+        "Nomor referensi",
+        "Dibuat",
+        "4 Maret 2026",
+        "Pemilik",
+        "Tidak ada nilai"
+      ]
+    },
+    "rules": [
+      "Term = kata benda dari glosarium, sama dengan label field di form padanannya.",
+      "Nilai terformat locale (B1); unit ditulis; tanggal absolut di halaman detail.",
+      "Atribut yang tidak berlaku untuk record ini disembunyikan; atribut berlaku tetapi kosong ditampilkan sebagai \"No value\"."
+    ]
+  },
+  "depends_on": [
+    "StatusLabel",
+    "Link",
+    "CopyButton",
+    "IconButton",
+    "Skeleton",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Pakai dl/dt/dd untuk semua pasangan label–nilai.",
+    "Samakan term dengan label field form padanannya.",
+    "Biarkan nilai status, harga, dan waktu utuh dan membungkus."
+  ],
+  "dont": [
+    {
+      "text": "Membangun pasangan label–nilai dengan table atau div tanpa semantik dl/dt/dd."
+    },
+    {
+      "ref": "UB9",
+      "text": "Memotong nilai status, harga, atau waktu dengan ellipsis."
+    },
+    {
+      "text": "Menampilkan atribut terlarang sebagai nilai tersamar (\"•••\") bila role tidak boleh tahu atribut itu ada."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "term membungkus; variant columns jatuh ke stacked bila term melebihi sepertiga lebar",
+      "case": "term +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "stacked otomatis; tidak ada tinggi tetap",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "dl tidak dirender; seksi menampilkan teks spesifik \"No details yet\"",
+      "case": "0 pasangan"
+    },
+    {
+      "behaviour": "overflow-wrap: anywhere; CopyButton di sampingnya",
+      "case": "nilai sangat panjang tanpa spasi (URL, ID)"
+    },
+    {
+      "behaviour": "term tetap, nilai Skeleton",
+      "case": "loading"
+    },
+    {
+      "behaviour": "nilai tersimpan dengan penanda kesegaran di seksi; nilai lokal Pending (I6)",
+      "case": "offline"
+    },
+    {
+      "behaviour": "hanya baris yang gagal menampilkan error + Retry",
+      "case": "gagal sebagian"
+    },
+    {
+      "behaviour": "term di inline-start (kanan) pada columns; angka, tanggal, dan ID diisolasi bidi",
+      "case": "RTL dengan angka"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Data display",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
+  "lint": [
+    "Pasangan label–nilai tanpa dl/dt/dd ditolak (manual-review)",
+    "dd berisi status, harga, atau waktu dengan text-overflow: ellipsis ditolak",
+    "Angka di dd tanpa tabular-nums ditolak (css-pattern)"
+  ],
+  "name": "DescriptionList",
+  "preview": {
+    "combinations": [
+      "error+focus (Retry)",
+      "read-only",
+      "columns jatuh ke stacked",
+      "teks 200%",
+      "RTL + angka"
+    ],
+    "states": [
+      "default",
+      "loading",
+      "empty-value",
+      "error",
+      "changed",
+      "pending-sync"
+    ],
+    "variants": [
+      "stacked",
+      "columns",
+      "grid"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menampilkan atribut satu record sebagai pasangan istilah–nilai (label: nilai) di halaman detail, panel konteks, kartu, dan baris ekspansi Table.",
+    "when_not_to_use": [
+      "Untuk membandingkan atribut banyak record: pakai Table.",
+      "Untuk nilai yang bisa diedit: pakai Form dengan field berlabel (DescriptionList boleh menjadi tampilan read-only form).",
+      "Untuk maksimal tiga angka ringkasan: pakai InlineMetrics.",
+      "Untuk teks panjang berparagraf: pakai heading + teks biasa."
+    ]
+  },
+  "related": [
+    "Table",
+    "InlineMetrics",
+    "Card",
+    "ContextPanel",
+    "Form"
+  ],
+  "responsive": [
+    {
+      "behaviour": "variant apa pun dirender stacked; satu kolom; inline-action ≥ target-min-touch",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "columns bila lebar kontainer cukup (container query), selain itu stacked",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "columns atau grid 2–3 kolom; panjang baris dibatasi layout-measure",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "atribut yang tidak boleh dilihat role tidak dirender sama sekali (bukan disamarkan); tidak meninggalkan baris kosong"
+    },
+    {
+      "pattern": "read-only",
+      "when": "default; inline-action Edit tidak dirender untuk role tanpa izin ubah"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "inline-action terlihat tetapi diblokir: ikon gembok + reason"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Kolom term/description memakai properti logis; tidak ada ikon berarah; angka dan kode diisolasi bidi."
+  },
+  "sizes": {
+    "not_applicable": "Tidak interaktif; ukuran teks dari skala tipe dan jarak dari space-* sesuai sumbu kepadatan, bukan prop size."
+  },
+  "state_combinations": [
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "keadaan normal: nilai kontras penuh, tanpa border kontrol",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "fokus pada Retry di baris yang gagal",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "baris tidak interaktif; hanya inline-action yang punya hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "description": "color-structure-text-primary",
+        "term": "color-structure-text-secondary"
+      },
+      "treatment": "term text-secondary, description text-primary"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "description": "color-structure-skeleton"
+      },
+      "treatment": "term tetap; description Skeleton satu baris; aria-busy pada dl"
+    },
+    {
+      "name": "empty-value",
+      "token_swaps": {
+        "description": "color-structure-text-tertiary"
+      },
+      "treatment": "tanda pisah tertiary + \"No value\" untuk pembaca layar; baris tetap tampil agar struktur konsisten"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "description": "color-semantic-critical-strong"
+      },
+      "treatment": "nilai gagal dimuat: ikon kritis + teks singkat + Retry di description baris itu"
+    },
+    {
+      "name": "changed",
+      "token_swaps": {
+        "group": "color-structure-highlight"
+      },
+      "treatment": "nilai baru diperbarui (live): latar highlight sementara + teks \"Updated\" tersembunyi diumumkan polite sekali; tanpa animasi di reduced motion"
+    },
+    {
+      "name": "pending-sync",
+      "token_swaps": {
+        "description": "color-structure-text-secondary"
+      },
+      "treatment": "nilai disimpan lokal belum dikonfirmasi: ikon jam + \"Pending\" (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "Column/FlowRow dibungkus {Ns}DescriptionList",
+    "flutter": "Column/Wrap dibungkus {ns}_description_list.dart",
+    "html": {
+      "element": "dl > div > dt + dd",
+      "notes": "container query untuk columns/grid; tanpa JS berfungsi penuh"
+    },
+    "swiftui": "LabeledContent dalam Grid/Form dibungkus {Ns}DescriptionList"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Term di atas description; aman untuk semua lebar dan teks 200%.",
+      "name": "stacked"
+    },
+    {
+      "description": "Term dan description sejajar dalam dua kolom (term ±1/3 lebar); jatuh ke stacked saat lebar tidak cukup.",
+      "name": "columns"
+    },
+    {
+      "description": "Beberapa pasangan per baris (2–3 kolom) untuk ringkasan pendek di desktop; jatuh ke stacked di phone.",
+      "name": "grid"
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+<!-- NumberInput fixture · every variant × state, sizes, mandatory combinations (§6.9). TextField anatomy; input type="text"
+     role="spinbutton" (never type=number). ± render after NumberInput.js enhances the field; the raw value is submitted through a
+     hidden input that takes over the name. Helper always states the range. Text follows ui_locale en-US unless lang says otherwise. -->
+<section class="ds-demo" data-ds-demo="variants/stepper + plain">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-v1">Quantity</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-v1" name="quantity" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="2" required aria-describedby="ni-v1-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-v1-help">From 1 to 99</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="plain" data-min="0" data-max="100" data-step="0.5" data-valuetext="{value} percent" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-v2">Discount</label>
+      <div class="ds-text-field__group">
+        <input class="ds-text-field__input ds-number-input__input" id="ni-v2" name="discount" type="text" role="spinbutton" inputmode="decimal" autocomplete="off" size="6" dir="ltr" value="12.5" aria-describedby="ni-v2-suffix ni-v2-help">
+        <span class="ds-text-field__affix" data-affix="end" id="ni-v2-suffix">%</span>
+      </div>
+      <p class="ds-text-field__helper" id="ni-v2-help">From 0 to 100, in steps of 0.5</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="0" data-max="5000" data-step="0.1" data-unit-text="kilograms" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-v3">Parcel weight</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-v3" name="weight" type="text" role="spinbutton" inputmode="decimal" autocomplete="off" size="7" dir="ltr" value="1250.5" aria-describedby="ni-v3-suffix ni-v3-help">
+        <span class="ds-text-field__affix" data-affix="end" id="ni-v3-suffix">kg</span>
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-v3-help">From 0 to 5,000, in steps of 0.1</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="20" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s1">Default (empty)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s1" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" aria-describedby="ni-s1-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s1-help">From 1 to 20</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="20" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s2">Hover (field + Increase)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s2" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="3" data-force="hover" aria-describedby="ni-s2-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1" data-force="hover"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s2-help">From 1 to 20</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="20" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s3">Focus</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s3" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="4" data-force="focus" aria-describedby="ni-s3-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s3-help">From 1 to 20</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="20" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s4">Pressed (Decrease)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1" data-force="pressed"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s4" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="7" aria-describedby="ni-s4-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s4-help">From 1 to 20</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="20" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s5">At limit (maximum)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s5" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="20" aria-describedby="ni-s5-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s5-help">From 1 to 20</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s6">Seats</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s6" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="140" aria-invalid="true" aria-describedby="ni-s6-err ni-s6-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__error" id="ni-s6-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a number from 1 to 99</span></p>
+      <p class="ds-text-field__helper" id="ni-s6-help">From 1 to 99</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="10" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s7">Licences</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s7" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="5" readonly aria-disabled="true" aria-describedby="ni-s7-reason">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__reason" id="ni-s7-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only billing admins can change licences.</span></p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-unit-text="kilograms" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s8">Read-only</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s8" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="6" dir="ltr" value="1250" readonly aria-readonly="true" aria-describedby="ni-s8-suffix">
+        <span class="ds-text-field__affix" data-affix="end" id="ni-s8-suffix">kg</span>
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="40" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-s9">Loading (checking stock)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-s9" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="6" dir="ltr" value="12" aria-busy="true" aria-describedby="ni-s9-help"><span class="ds-text-field__spinner" aria-hidden="true"></span>
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-s9-help">From 1 to 40. Checking stock…</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c1">Error + focus</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c1" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="0" aria-invalid="true" data-force="focus" aria-describedby="ni-c1-err ni-c1-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__error" id="ni-c1-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a number from 1 to 99</span></p>
+      <p class="ds-text-field__helper" id="ni-c1-help">From 1 to 99</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c2">Pressed + focus (focus stays in input)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c2" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="8" data-force="focus" aria-describedby="ni-c2-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1" data-force="pressed"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-c2-help">From 1 to 99</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="40" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c3">Loading + pressed (prevented)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c3" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="6" dir="ltr" value="12" aria-busy="true"><span class="ds-text-field__spinner" aria-hidden="true"></span>
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="10" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c4">Blocked + focus</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c4" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="3" readonly aria-disabled="true" data-force="focus" aria-describedby="ni-c4-reason">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__reason" id="ni-c4-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>The order is already packed.</span></p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="plain" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c5">Read-only + focus</label>
+      <div class="ds-text-field__group">
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c5" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="8" dir="ltr" value="48210" readonly aria-readonly="true" data-force="focus">
+      </div>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="0" data-max="99" data-ds-module="number-input" dir="rtl" lang="ar" data-increase-label="زيادة" data-decrease-label="إنقاص" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-c6">الوزن (RTL + affix)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1" aria-label="إنقاص الوزن"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-c6" type="text" role="spinbutton" inputmode="decimal" autocomplete="off" size="5" dir="ltr" value="12" aria-describedby="ni-c6-suffix ni-c6-help">
+        <span class="ds-text-field__affix" data-affix="end" id="ni-c6-suffix">كغ</span>
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1" aria-label="زيادة الوزن"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-c6-help">من <bdi>0</bdi> إلى <bdi>99</bdi></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="currency id-ID vs en-US (plain, prefix affix)">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-variant="plain" data-min="0" data-step="1" lang="id-ID" data-msg-format="Masukkan angka, misalnya 1.250.000" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-m1">Harga satuan</label>
+      <div class="ds-text-field__group">
+        <span class="ds-text-field__affix" data-affix="start" id="ni-m1-prefix">Rp</span>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-m1" name="price_idr" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="11" dir="ltr" value="1250000" aria-describedby="ni-m1-prefix ni-m1-help">
+      </div>
+      <p class="ds-text-field__helper" id="ni-m1-help">Minimal 0, tanpa sen</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="plain" data-min="0" data-step="0.01" data-fraction-digits="2" lang="en-US" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-m2">Unit price</label>
+      <div class="ds-text-field__group">
+        <span class="ds-text-field__affix" data-affix="start" id="ni-m2-prefix">$</span>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-m2" name="price_usd" type="text" role="spinbutton" inputmode="decimal" autocomplete="off" size="11" dir="ltr" value="1250.5" aria-describedby="ni-m2-prefix ni-m2-help">
+      </div>
+      <p class="ds-text-field__helper" id="ni-m2-help">0 or more, in cents</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-size="sm" data-variant="plain" data-min="0" data-max="999" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-z1">Reorder level (sm, plain)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input ds-number-input__input" id="ni-z1" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="5" dir="ltr" value="25"></div>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="12" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-z2">Guests (md)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-z2" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="2">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+    </div>
+    <div class="ds-text-field ds-number-input" data-size="lg" data-variant="stepper" data-min="1" data-max="12" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-z3">Items in cart (lg)</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-z3" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="1">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="long label + helper (+40%), very large value">
+  <div class="ds-grid">
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="500" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-l1">Jumlah maksimum peserta yang dapat mendaftar untuk satu sesi pelatihan</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1" aria-label="Kurangi jumlah peserta"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-l1" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="24" aria-describedby="ni-l1-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1" aria-label="Tambah jumlah peserta"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-l1-help">Dari 1 sampai 500 peserta per sesi; kelas daring boleh lebih dari kapasitas ruangan</p>
+    </div>
+    <div class="ds-text-field ds-number-input" data-variant="plain" data-min="0" data-ds-module="number-input" style="grid-column: span 4">
+      <label class="ds-text-field__label" for="ni-l2">Ledger balance (beyond MAX_SAFE_INTEGER)</label>
+      <div class="ds-text-field__group"><input class="ds-text-field__input ds-number-input__input" id="ni-l2" name="balance" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="26" dir="ltr" value="98765432109876543210"></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <div class="ds-text-field ds-number-input" data-variant="stepper" data-min="1" data-max="99" data-ds-module="number-input">
+      <label class="ds-text-field__label" for="ni-x1">Quantity</label>
+      <div class="ds-text-field__group">
+        <button type="button" class="ds-number-input__step" data-dir="down" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-minus"/></svg></button>
+        <input class="ds-text-field__input ds-number-input__input" id="ni-x1" type="text" role="spinbutton" inputmode="numeric" autocomplete="off" size="4" dir="ltr" value="2" aria-describedby="ni-x1-help">
+        <button type="button" class="ds-number-input__step" data-dir="up" tabindex="-1"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg></button>
+      </div>
+      <p class="ds-text-field__helper" id="ni-x1-help">From 1 to 99</p>
+    </div>
+  </div>
+</section>

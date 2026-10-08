@@ -1,0 +1,115 @@
+/* PageHeader · engine 1.8.0 reference (catalog/components/PageHeader.json). Tokens only (I3); logical properties only (§12.4).
+   <header class="ds-page-header"> inside main (no banner role) holding the page's single h1 (tabindex="-1", programmatic focus
+   target after a route change). Order: back-link (phone) / breadcrumb → title → description → meta → actions
+   (secondary "More actions" first, the one primary Button last). No outer margin: page spacing comes from Stack/AppShell. */
+.ds-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  min-inline-size: 0;
+}
+.ds-page-header .ds-page-header__back { align-self: flex-start; }
+.ds-page-header__breadcrumb { display: none; }
+.ds-page-header__breadcrumb :is(ol, ul) { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ds-page-header__breadcrumb li { display: inline-flex; align-items: center; gap: var(--space-2); min-inline-size: 0; }
+.ds-page-header__separator { color: var(--color-structure-text-secondary); }
+@media (--bp-tablet-up) {
+  .ds-page-header .ds-page-header__back { display: none; }
+  .ds-page-header__breadcrumb { display: block; }
+}
+
+/* title row: heading block and actions share a row while they fit, actions drop below the title otherwise */
+.ds-page-header__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-6);
+}
+.ds-page-header__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1 1 calc(var(--layout-content-min) / 2);
+  min-inline-size: 0;
+}
+.ds-page-header__title {
+  margin: 0;
+  font-family: var(--type-h1-family);
+  font-size: var(--type-h1-size);
+  line-height: var(--type-h1-line);
+  font-weight: var(--type-h1-weight);
+  letter-spacing: var(--type-h1-tracking);
+  color: var(--color-structure-text-primary);
+  overflow-wrap: anywhere;
+  border-radius: var(--radius-xs);
+}
+/* route focus: tabindex="-1" h1; base.css draws the 2px ring outside (I4), [data-force~="focus"] is the static twin */
+.ds-page-header__description {
+  max-inline-size: var(--layout-measure);
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  color: var(--color-structure-text-secondary);
+}
+.ds-page-header__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); color: var(--color-structure-text-secondary); }
+.ds-page-header__meta .ds-icon { color: var(--color-structure-text-secondary); }
+.ds-page-header__actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-2); flex: 0 1 auto; min-inline-size: 0; }
+.ds-page-header__action-group { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1); min-inline-size: 0; }
+.ds-page-header__reason { max-inline-size: calc(var(--layout-content-min) / 2); color: var(--color-structure-text-secondary); text-align: end; }
+
+/* loading: h1 stays (VisuallyHidden "Loading…") with a one-line placeholder; no layout shift when the title arrives */
+.ds-page-header__placeholder {
+  display: block;
+  inline-size: min(100%, calc(var(--layout-content-min) / 2));
+  block-size: calc(var(--type-h1-size) * 0.75);
+  margin-block: calc((var(--type-h1-line) - var(--type-h1-size) * 0.75) / 2);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-skeleton);
+}
+
+/* compact (dense surfaces): still the h1 element, visual scale h2; actions on the title row */
+.ds-page-header[data-variant="compact"] { gap: var(--space-1); }
+.ds-page-header[data-variant="compact"] .ds-page-header__body { gap: var(--space-2) var(--space-4); }
+@media (--bp-tablet-up) { .ds-page-header[data-variant="compact"] .ds-page-header__body { align-items: center; } }
+.ds-page-header[data-variant="compact"] .ds-page-header__title {
+  font-family: var(--type-h2-family);
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  font-weight: var(--type-h2-weight);
+  letter-spacing: var(--type-h2-tracking);
+}
+.ds-page-header[data-variant="compact"] .ds-page-header__placeholder { block-size: calc(var(--type-h2-size) * 0.75); margin-block: calc((var(--type-h2-line) - var(--type-h2-size) * 0.75) / 2); }
+
+/* phone: actions below the title, full width, primary grows (thumb zone) */
+@media (--bp-tablet-down) {
+  .ds-page-header__body { flex-direction: column; align-items: stretch; }
+  .ds-page-header__heading { flex-basis: auto; }
+  .ds-page-header__actions > :last-child { flex: 1 1 0%; }
+  .ds-page-header__action-group { align-items: stretch; }
+  .ds-page-header__reason { max-inline-size: none; text-align: start; }
+}
+
+/* sticky: only when the language (L17) allows it; main needs scroll-padding equal to the header height */
+.ds-page-header[data-sticky] {
+  position: sticky;
+  inset-block-start: var(--ds-page-header-offset, 0px);
+  z-index: var(--z-sticky);
+  padding-block: var(--space-3);
+  border-block-end: var(--border-width-thin) solid transparent;
+  transition: background-color var(--motion-fast-duration) var(--motion-easing-standard), border-color var(--motion-fast-duration) var(--motion-easing-standard);
+}
+.ds-page-header[data-sticky][data-stuck] {
+  background: var(--color-structure-surface-base);
+  border-block-end-color: var(--color-structure-border);
+}
+/* PageHeader.js unsticks when the header is taller than a third of the viewport (200% text) */
+.ds-page-header[data-sticky][data-ds-unstick] { position: relative; }
+.ds-app-shell:not([data-contained]) .ds-page-header[data-sticky] { --ds-page-header-offset: var(--ds-shell-header-h, var(--layout-bar-height)); }
+
+@media (prefers-reduced-motion: reduce) { .ds-page-header[data-sticky] { transition: none; } }
+@media (forced-colors: active) {
+  .ds-page-header[data-sticky][data-stuck] { border-block-end-color: CanvasText; }
+  .ds-page-header__placeholder { background: GrayText; }
+}

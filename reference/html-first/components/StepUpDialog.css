@@ -1,0 +1,162 @@
+/* StepUpDialog · engine 1.8.0 reference (catalog/components/StepUpDialog.json). Tokens only (I3); logical properties only (§12.4).
+   A Modal (depends_on: reuses .ds-modal header/body/footer/action and the static .ds-modal-frame) opened with showModal() as
+   dialog.ds-modal.ds-step-up-dialog[role=alertdialog]: names the action and the item before asking for the credential.
+   Always layout-modal-sm wide (never fullscreen) so action, item and credential stay in one view; controls size lg.
+   Credential = PinInput when the package has it, otherwise this single one-time-code field (autocomplete="one-time-code",
+   inputmode="numeric", dir="ltr", paste and autofill allowed, SC 3.3.8). Scrim clicks are ignored; Esc = Cancel.
+   StepUpDialog.js: open/focus/return, input normalising, verify → verifying → success | error (+ attempts when the policy is
+   known) | locked, method switch, expired code resend. */
+.ds-step-up-dialog { --_w: var(--layout-modal-sm); }
+.ds-step-up-dialog .ds-modal__header { align-items: flex-start; }
+.ds-step-up-dialog__lock {
+  flex: none;
+  inline-size: var(--icon-md);
+  block-size: var(--icon-md);
+  margin-block-start: calc(var(--space-2) + (var(--type-h3-line) - var(--icon-md)) / 2);
+  color: var(--color-structure-text-primary);
+}
+.ds-step-up-dialog .ds-modal__body { gap: var(--space-4); }
+
+/* action summary: what will run, on which item, and what follows (never truncated) */
+.ds-step-up-dialog__summary {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-step-up-dialog__summary dt { color: var(--color-structure-text-secondary); overflow-wrap: anywhere; }
+.ds-step-up-dialog__summary dd { margin: 0; font-weight: var(--type-label-weight); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ds-step-up-dialog__summary dd > bdi { unicode-bidi: isolate; white-space: nowrap; } /* amounts and ids never split */
+.ds-step-up-dialog__consequence { color: var(--color-structure-text-secondary); }
+
+/* authorizer row (supervisor variant): who authorizes when it is not the signed-in user */
+.ds-step-up-dialog__authorizer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-structure-text-primary);
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+}
+.ds-step-up-dialog__authorizer .ds-icon { inline-size: var(--icon-md); block-size: var(--icon-md); color: var(--color-structure-text-secondary); }
+
+/* credential: one logical field, size lg */
+.ds-step-up-dialog__field { display: flex; flex-direction: column; gap: var(--space-1); }
+.ds-step-up-dialog__label { font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); }
+.ds-step-up-dialog__hint { color: var(--color-structure-text-secondary); }
+.ds-step-up-dialog__input {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: max(var(--control-height-lg), var(--target-min-touch), var(--target-current));
+  padding-inline: var(--space-3);
+  border: var(--border-width-thin) solid var(--control-container-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-container-background);
+  color: var(--control-value-color);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+.ds-step-up-dialog__input[data-kind="code"] {
+  max-inline-size: calc(var(--layout-modal-sm) * 0.6);
+  font-family: var(--font-mono);
+  font-size: var(--type-body-lg-size);
+  letter-spacing: var(--space-2);
+  font-variant-numeric: tabular-nums;
+  text-align: start;
+  direction: ltr; /* numeric code reads left-to-right in every locale */
+}
+.ds-step-up-dialog__input::placeholder { color: var(--control-placeholder-color); letter-spacing: normal; }
+@media (hover: hover) {
+  .ds-step-up-dialog__input:not([readonly], [aria-disabled="true"]):hover { border-color: var(--control-container-border-hover); }
+}
+.ds-step-up-dialog__input[data-force~="hover"] { border-color: var(--control-container-border-hover); }
+.ds-step-up-dialog__input[aria-invalid="true"] { border-color: var(--control-container-border-invalid); border-width: var(--border-width-thick); }
+.ds-step-up-dialog__input[readonly] { background: var(--control-container-background-readonly); }
+.ds-step-up-dialog__input[aria-disabled="true"] { background: var(--color-structure-surface-sunken); color: var(--color-structure-text-disabled); border-color: var(--color-structure-border); cursor: not-allowed; }
+
+/* error (icon + text) with remaining attempts when the policy is known; announced assertively by StepUpDialog.js */
+.ds-step-up-dialog__error { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--color-semantic-critical-strong); }
+.ds-step-up-dialog__error[hidden] { display: none; }
+.ds-step-up-dialog__error .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); flex: none; margin-block-start: calc((var(--type-body-line) - var(--icon-sm)) / 2); }
+.ds-step-up-dialog__attempts { color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); }
+
+/* locked / expired / offline notice (attention classes, icon + text) */
+.ds-step-up-dialog__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: var(--border-width-thin) solid var(--attention-c2-border);
+  border-radius: var(--radius-md);
+  background: var(--attention-c2-background);
+  color: var(--attention-c2-foreground);
+}
+.ds-step-up-dialog__notice > .ds-icon { flex: none; margin-block-start: calc((var(--type-body-line) - var(--icon-md)) / 2); color: var(--attention-c2-icon); }
+.ds-step-up-dialog__notice[data-status="neutral-negative"] { border-color: var(--attention-c3-border); background: var(--attention-c3-background); color: var(--attention-c3-foreground); }
+.ds-step-up-dialog__notice[data-status="neutral-negative"] > .ds-icon { color: var(--attention-c3-icon); }
+
+/* method switch: always visible, same place in every StepUpDialog (SC 3.2.6) */
+.ds-step-up-dialog__method {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  min-inline-size: var(--target-current);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--color-interaction-default);
+  font-family: inherit;
+  font-size: var(--type-label-size);
+  line-height: var(--type-label-line);
+  font-weight: var(--type-label-weight);
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border-width-thin);
+  text-underline-offset: var(--border-width-thick);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .ds-step-up-dialog__method:hover { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+}
+.ds-step-up-dialog__method[data-force~="hover"] { color: var(--color-interaction-hover); text-decoration-thickness: var(--border-width-thick); }
+.ds-step-up-dialog__method:active { color: var(--color-interaction-pressed); }
+.ds-step-up-dialog__methods { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ds-step-up-dialog__methods[hidden], .ds-step-up-dialog [data-method][hidden] { display: none; }
+.ds-step-up-dialog__methods .ds-modal__action { inline-size: 100%; justify-content: flex-start; }
+
+/* verifying: content busy, field read-only, the verify action keeps its width with a spinner (Modal action styles) */
+.ds-step-up-dialog .ds-modal__body[aria-busy="true"] { cursor: progress; }
+
+/* phone: centred, viewport minus margins (never fullscreen); footer stacks with the verify action last (bottom) */
+@media (--bp-tablet-down) {
+  .ds-step-up-dialog { padding-block-end: env(safe-area-inset-bottom, 0px); }
+  .ds-step-up-dialog .ds-modal__footer { flex-direction: column; align-items: stretch; }
+  .ds-step-up-dialog .ds-modal__footer .ds-modal__footer-reason { text-align: start; }
+}
+/* phone preview with the numeric keyboard open: dialog sits above it */
+.ds-step-up-dialog-keyboard {
+  display: grid;
+  place-items: center;
+  min-block-size: calc(var(--layout-row-height) * 4);
+  border-block-start: var(--border-width-thin) solid var(--color-structure-border);
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-secondary);
+}
+.ds-modal-frame[data-device="phone"]:has(.ds-step-up-dialog-keyboard) { flex-direction: column; align-items: stretch; justify-content: flex-end; padding-block-start: var(--space-4); }
+.ds-modal-frame[data-device="phone"] > .ds-step-up-dialog[data-static] { inline-size: calc(100% - 2 * var(--space-4)); margin: var(--space-4) auto; border: var(--border-width-thin) solid var(--color-structure-border); border-radius: var(--radius-lg); }
+
+@media (forced-colors: active) {
+  .ds-step-up-dialog__input { border-color: CanvasText; }
+  .ds-step-up-dialog__input[aria-disabled="true"] { color: GrayText; }
+  .ds-step-up-dialog__notice, .ds-step-up-dialog__summary { border: var(--border-width-thin) solid CanvasText; }
+}

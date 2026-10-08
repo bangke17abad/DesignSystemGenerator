@@ -1,0 +1,588 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke judul; aria-describedby ke action-summary",
+      "credential: autocomplete=\"one-time-code\" (kode) atau \"current-password\" (sandi), inputmode=\"numeric\" untuk PIN; paste tidak diblokir",
+      "aria-invalid + aria-describedby ke error dan attempts",
+      "aria-busy pada content saat verifying",
+      "konten di belakang (termasuk Modal/Sheet induk) inert",
+      "batas waktu diumumkan di ambang dan saat habis lewat LiveAnnouncer, bukan setiap detik"
+    ],
+    "focus_order": "field kredensial → method-switch → Cancel → aksi verifikasi → Close → kembali ke field",
+    "native": {
+      "compose": "AlertDialog + OutlinedTextField(keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword), modifier = Modifier.semantics { contentType = ContentType.SmsOtpCode }); BiometricPrompt (androidx.biometric) dengan setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)",
+      "flutter": "showDialog(barrierDismissible: false) + AlertDialog berisi AutofillGroup dan TextField(autofillHints: [AutofillHints.oneTimeCode], keyboardType: TextInputType.number, obscureText); biometrik lewat paket local_auth (Not verified against the pinned version); SemanticsService.announce untuk error",
+      "swiftui": ".alert/.sheet berisi SecureField atau TextField dengan .textContentType(.oneTimeCode) dan .keyboardType(.numberPad); LAContext().evaluatePolicy(.deviceOwnerAuthentication, localizedReason:) untuk biometrik/passcode; AccessibilityNotification.Announcement untuk error"
+    },
+    "politeness": "assertive",
+    "role": "alertdialog aria-modal=\"true\" (turunan Modal)",
+    "sr_label": "\"Authorize refund, alert dialog. Refund 120.00 for order 4821. Enter your 6-digit PIN\"; error \"Incorrect PIN, 2 attempts left\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "2.1.1",
+      "2.1.2",
+      "2.2.1",
+      "2.4.3",
+      "2.4.6",
+      "2.4.7",
+      "2.5.8",
+      "3.2.2",
+      "3.2.6",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.4",
+      "3.3.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "scrim",
+      "role": "seperti Modal: z-overlay-scrim, konten di belakang inert",
+      "tokens": [
+        "color-structure-scrim",
+        "z-overlay-scrim"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "alertdialog di z-modal selebar layout-modal-sm; di atas Modal/Sheet pemicunya bila bersarang",
+      "tokens": [
+        "z-modal",
+        "color-structure-surface-overlay",
+        "elevation-2",
+        "radius-lg",
+        "layout-modal-sm",
+        "space-4",
+        "space-6"
+      ]
+    },
+    {
+      "part": "header",
+      "role": "ikon gembok + judul kata kerja + objek (h2); Close berlabel",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "type-h3-size",
+        "type-h3-line",
+        "type-h3-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "action-summary",
+      "role": "ringkasan aksi dan item: nama aksi, item (nama, id, jumlah/nilai), akibat; DescriptionList ringkas",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "color-structure-text-secondary",
+        "color-structure-surface-sunken",
+        "radius-sm",
+        "space-3"
+      ]
+    },
+    {
+      "part": "authorizer",
+      "role": "baris identitas pemberi otorisasi (diri sendiri atau supervisor) bila berbeda dari pengguna aktif",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "credential",
+      "role": "PinInput (one-time-code, paste, autofill) atau PasswordInput; satu field logis",
+      "tokens": [
+        "control-height-lg"
+      ]
+    },
+    {
+      "part": "method-switch",
+      "role": "tautan/tombol \"Use another method\" (passkey/biometrik, kode dari aplikasi, minta supervisor) sebagai jalur alternatif SC 3.3.8",
+      "tokens": [
+        "type-label-size",
+        "color-interaction-default"
+      ]
+    },
+    {
+      "part": "attempts",
+      "role": "teks sisa percobaan bila kebijakan ada di brief; diumumkan bersama error",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "pesan error ikon + teks di bawah field, aria-describedby",
+      "tokens": [
+        "color-semantic-critical-strong",
+        "icon-sm",
+        "type-body-size"
+      ]
+    },
+    {
+      "part": "footer",
+      "role": "Cancel + aksi verifikasi berlabel kata kerja aksi (\"Authorize refund\"); primer di urutan baca terakhir",
+      "tokens": [
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"escape\" | \"cancel\" | \"close-button\" | \"authorized\" }",
+        "when": "dialog dibuka atau ditutup"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "isi kredensial berubah (ketik, paste, autofill)"
+      },
+      {
+        "name": "onPress",
+        "payload": "{ method: string; value: string }",
+        "when": "aksi verifikasi diaktifkan"
+      },
+      {
+        "name": "onMethodChange",
+        "payload": "string",
+        "when": "pengguna memilih metode lain"
+      }
+    ],
+    "parts": [
+      "StepUpDialog.Summary",
+      "StepUpDialog.Credential",
+      "StepUpDialog.MethodSwitch",
+      "StepUpDialog.Footer"
+    ],
+    "props": [
+      {
+        "description": "Controlled: dialog terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "self",
+        "description": "Siapa dan bagaimana otorisasi diberikan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"self\" | \"supervisor\" | \"code\""
+      },
+      {
+        "description": "Kata kerja aksi + objek; nama aksesibel.",
+        "name": "title",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Label aksi verifikasi (sama dengan pemicu).",
+        "name": "actionLabel",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Item dan nilai yang diotorisasi (nama, id, jumlah, penerima).",
+        "name": "itemSummary",
+        "required": true,
+        "type": "Array<{ label: string; value: string }>"
+      },
+      {
+        "default": "[\"pin\"]",
+        "description": "Metode yang ditawarkan; lebih dari satu menampilkan method-switch.",
+        "name": "methods",
+        "required": false,
+        "type": "Array<\"pin\" | \"password\" | \"code\" | \"passkey\" | \"biometric\" | \"supervisor\">"
+      },
+      {
+        "description": "Controlled: isi kredensial.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "",
+        "description": "Uncontrolled: isi awal kredensial.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Kredensial ditolak; memerlukan errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error dari server.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Sisa percobaan bila kebijakan ada di brief.",
+        "name": "attemptsLeft",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "false",
+        "description": "Verifikasi berjalan.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan verifikasi diblokir (locked, offline).",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "StepUpDialog terbuka; fokus ke field kredensial (field pertama); judul dan ringkasan aksi diumumkan sebagai alertdialog",
+      "trigger": "aksi berisiko dipicu (Enter pada Button/Menu item)"
+    },
+    {
+      "input": "keyboard",
+      "result": "field menerima seluruh kode sekaligus; bila panjang lengkap, verifikasi dapat dijalankan dengan Enter (tidak otomatis bila aksi destruktif)",
+      "trigger": "paste atau autofill kode"
+    },
+    {
+      "input": "keyboard",
+      "result": "verifikasi berjalan; berhasil → dialog menutup dan aksi dijalankan, fokus ke pemicu atau elemen berikutnya bila objek hilang (§9.5)",
+      "trigger": "Enter di field lengkap"
+    },
+    {
+      "input": "keyboard",
+      "result": "= Cancel: aksi tidak dijalankan; dialog menutup; fokus kembali ke pemicu (atau ke Modal/Sheet induk); \"Action not authorized\" tidak diumumkan sebagai error",
+      "trigger": "Esc"
+    },
+    {
+      "input": "keyboard",
+      "result": "konten dialog berganti ke metode alternatif tanpa menutup; fokus ke field/tombol pertama metode baru",
+      "trigger": "Enter pada \"Use another method\""
+    },
+    {
+      "input": "pointer",
+      "result": "diabaikan (mencegah pembatalan tak sengaja saat mengetik); Cancel dan Close tersedia",
+      "trigger": "klik scrim"
+    },
+    {
+      "input": "touch",
+      "result": "prompt sistem platform; gagal atau dibatalkan kembali ke dialog dengan fokus di field atau method-switch",
+      "trigger": "passkey/biometrik"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Authorize refund",
+        "Refund 120.00 for order 4821",
+        "Enter your 6-digit PIN",
+        "Incorrect PIN. 2 attempts left.",
+        "Use another method",
+        "Ask a supervisor"
+      ],
+      "id-ID": [
+        "Otorisasi pengembalian dana",
+        "Pengembalian 120,00 untuk pesanan 4821",
+        "Masukkan PIN 6 digit Anda",
+        "PIN salah. Sisa 2 percobaan.",
+        "Gunakan metode lain",
+        "Minta supervisor"
+      ]
+    },
+    "rules": [
+      "Judul = kata kerja aksi + objek (\"Authorize refund\"), bukan \"Security check\".",
+      "action-summary menyebut item spesifik (nama/id, nilai, penerima) dan akibat; nilai tidak dipotong.",
+      "Instruksi menyebut format kredensial (\"Enter your 6-digit PIN\") sebelum pengguna mengetik.",
+      "Error menyebut apa yang salah dan sisa percobaan bila kebijakan ada; tidak menyalahkan.",
+      "Aksi verifikasi berlabel kata kerja aksi yang sama dengan pemicu; Cancel berlabel \"Cancel\".",
+      "Jalur alternatif selalu terlihat (\"Use another method\"), di posisi yang sama di setiap StepUpDialog (SC 3.2.6)."
+    ]
+  },
+  "depends_on": [
+    "Modal",
+    "PinInput",
+    "Button",
+    "DescriptionList",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Sebut aksi dan item spesifik sebelum meminta kredensial.",
+    "Izinkan paste dan autofill, dan sediakan metode alternatif yang tidak bergantung ingatan.",
+    "Pertahankan isi field setelah error dan pilih seluruhnya agar mudah diganti.",
+    "Batasi otorisasi pada satu aksi; aksi berikutnya meminta step-up lagi kecuali kebijakan brief menyatakan lain."
+  ],
+  "dont": [
+    {
+      "text": "Memblokir paste atau autofill pada field kredensial (SC 3.3.8)."
+    },
+    {
+      "text": "Meminta PIN tanpa menyebut aksi dan item yang diotorisasi."
+    },
+    {
+      "text": "Menjalankan aksi berisiko otomatis saat digit terakhir diketik tanpa konfirmasi eksplisit."
+    },
+    {
+      "ref": "UB10",
+      "text": "Tombol verifikasi diblokir tanpa alasan terlihat."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menampilkan sisa percobaan atau lockout hanya dengan warna."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "judul dan ringkasan membungkus; tombol footer menumpuk dengan aksi verifikasi paling bawah di phone; nilai dan id tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "body bergulir; field kredensial dan aksi verifikasi tetap dapat dicapai; header berhenti sticky",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "PinInput tetap mendukung paste/autofill (pengelola sandi); keputusan bahwa tidak ada alternatif dicatat A-nn",
+      "case": "0 metode alternatif tersedia (brief hanya PIN)"
+    },
+    {
+      "behaviour": "state locked dengan waktu coba lagi dan jalur alternatif; dialog dapat ditutup; aksi tidak dijalankan",
+      "case": "percobaan maksimum tercapai"
+    },
+    {
+      "behaviour": "offline: verifikasi diblokir dengan reason; > 2 detik: Spinner di tombol + teks \"Verifying…\" diumumkan polite; timeout → error dengan Retry",
+      "case": "offline atau verifikasi lambat"
+    },
+    {
+      "behaviour": "membungkus penuh di action-summary; tidak ada ellipsis pada objek yang diotorisasi",
+      "case": "nama item sangat panjang"
+    },
+    {
+      "behaviour": "dialog memakai tinggi visual viewport; ringkasan menggulir di atas, field dan aksi tetap terlihat",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    },
+    {
+      "behaviour": "satu-satunya overlay bersarang yang diizinkan; Cancel/Esc kembali ke induk dengan fokus pada aksi pemicu",
+      "case": "dibuka dari Modal atau Sheet"
+    },
+    {
+      "behaviour": "state expired; isi field dipertahankan sampai pengguna meminta kode baru",
+      "case": "kode kedaluwarsa saat mengetik"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Overlays",
+  "inclusion": "Opsional: disertakan bila brief (B2/B5) memuat aksi berisiko yang memerlukan otorisasi tambahan (pola step-up §10.1: PIN, kode, kunci sandi, atau supervisor). Bila dipilih, PinInput wajib disertakan; metode dan kebijakan percobaan yang tidak ada di brief dicatat A-nn.",
+  "lint": [
+    "StepUpDialog tanpa itemSummary ditolak",
+    "Field kredensial yang memblokir paste (onpaste preventDefault) atau autocomplete=\"off\" pada kode ditolak (SC 3.3.8)",
+    "StepUpDialog hanya dengan metode berbasis ingatan tanpa A-nn ditolak (manual-review)",
+    "Proyek dengan StepUpDialog tanpa PinInput ditolak (§6.1)"
+  ],
+  "name": "StepUpDialog",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "loading+pressed (dicegah)",
+      "disabled+error (locked)",
+      "bersarang di Modal",
+      "keyboard numerik terbuka",
+      "RTL dengan PIN ltr"
+    ],
+    "states": [
+      "idle",
+      "verifying",
+      "error",
+      "locked",
+      "expired",
+      "success",
+      "offline"
+    ],
+    "variants": [
+      "self",
+      "supervisor",
+      "code"
+    ]
+  },
+  "purpose": {
+    "purpose": "Dialog konfirmasi berotorisasi tambahan sebelum satu aksi berisiko dijalankan: menamai aksi dan item, meminta bukti otorisasi (PIN, kode, passkey/biometrik, atau persetujuan supervisor), dan selalu menyediakan jalur yang tidak bergantung pada ingatan semata (SC 3.3.8).",
+    "when_not_to_use": [
+      "Untuk konfirmasi biasa tanpa otorisasi tambahan: pakai Modal variant destructive atau confirmation.",
+      "Untuk login atau sesi kedaluwarsa: pakai alur autentikasi halaman penuh.",
+      "Untuk aksi yang role tidak pernah boleh jalankan: sembunyikan atau blokir dengan reason (§10), jangan minta step-up.",
+      "Untuk persetujuan asinkron oleh orang lain di perangkatnya sendiri: pakai alur permintaan persetujuan (status C5), bukan dialog yang menunggu."
+    ]
+  },
+  "related": [
+    "Modal",
+    "PasswordInput",
+    "CountdownTimer",
+    "Toast",
+    "InlineAlert"
+  ],
+  "responsive": [
+    {
+      "behaviour": "dialog center selebar viewport − margin; naik di atas keyboard numerik dengan field dan aksi verifikasi terlihat; safe-area dihormati; biometrik platform ditawarkan bila tersedia",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "center layout-modal-sm; area klik ≥ target-min-touch; variant supervisor memakai orientasi perangkat apa pun (tanpa kunci)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "center layout-modal-sm di z-modal, di atas Modal induk bila bersarang; passkey via WebAuthn bila brief mendukung",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "step-up",
+      "when": "role boleh menjalankan aksi dengan otorisasi tambahan (diri sendiri atau supervisor)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak pernah boleh menjalankan aksi; pemicu tidak dirender, StepUpDialog tidak pernah muncul"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi sementara tidak dapat diotorisasi (locked, offline, di luar jam kebijakan); pemicu atau verifikasi aria-disabled + reason"
+    },
+    {
+      "pattern": "full",
+      "when": "role yang punya izin langsung (mis. supervisor sendiri) menjalankan aksi tanpa step-up bila kebijakan brief mengizinkan; selain itu A-nn"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Tata letak mengikuti Modal; field PIN per digit tetap kiri-ke-kanan karena kode numerik (direction: ltr pada field), label dan ringkasan mengikuti arah locale."
+  },
+  "sizes": {
+    "not_applicable": "Lebar tetap layout-modal-sm (fullscreen tidak dipakai agar aksi dan item tetap dalam satu pandangan); kontrol di dalamnya size lg."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "field invalid + ring; error dan sisa percobaan terbaca",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "aksi verifikasi tidak dapat ditekan ulang saat memverifikasi",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "rest",
+      "note": "locked: error terakhir tetap tampil bersama reason",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "idle",
+      "token_swaps": {
+        "content": "color-structure-surface-overlay"
+      },
+      "treatment": "dialog terbuka; fokus di field kredensial; aksi verifikasi aktif bila field lengkap (bila belum, aria-disabled + reason \"Enter the 6-digit code\")"
+    },
+    {
+      "name": "verifying",
+      "token_swaps": {},
+      "treatment": "aksi verifikasi loading dengan lebar terkunci; content aria-busy; field read-only; Cancel tetap aktif bila permintaan dapat dibatalkan"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "error": "color-semantic-critical-strong"
+      },
+      "treatment": "kredensial salah: ikon + teks error + sisa percobaan, aria-invalid pada field, fokus tetap/kembali ke field dengan isi terpilih (tidak dikosongkan otomatis); diumumkan assertive"
+    },
+    {
+      "name": "locked",
+      "token_swaps": {
+        "credential": "color-structure-text-disabled"
+      },
+      "treatment": "batas percobaan tercapai: field dan verifikasi aria-disabled dengan reason yang menyebut kapan dapat mencoba lagi dan jalur alternatif; dialog tetap dapat ditutup"
+    },
+    {
+      "name": "expired",
+      "token_swaps": {},
+      "treatment": "jendela otorisasi atau kode kedaluwarsa: pesan + \"Send new code\"/\"Try again\"; batas waktu diumumkan di ambang (CountdownTimer) dan dapat diperpanjang bila kebijakan mengizinkan (SC 2.2.1)"
+    },
+    {
+      "name": "success",
+      "token_swaps": {},
+      "treatment": "dialog menutup; aksi dijalankan; hasil diumumkan polite lewat Toast; otorisasi berlaku hanya untuk satu aksi ini"
+    },
+    {
+      "name": "offline",
+      "token_swaps": {},
+      "treatment": "verifikasi butuh server: aksi verifikasi aria-disabled dengan reason \"Needs connection\"; step-up tidak pernah diantrekan offline"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}StepUpDialog: AlertDialog + {Ns}PinInput + BiometricPrompt",
+    "flutter": "{ns}_step_up_dialog.dart: AlertDialog + {ns}_pin_input.dart",
+    "html": {
+      "element": "dialog[role=alertdialog] (showModal()) berisi form",
+      "notes": "input autocomplete=\"one-time-code\" inputmode=\"numeric\"; WebAuthn navigator.credentials.get untuk passkey bila brief mendukung; tanpa JS form dikirim ke halaman otorisasi"
+    },
+    "swiftui": "{Ns}StepUpDialog: sheet/alert + {Ns}PinInput + LocalAuthentication"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Pengguna aktif membuktikan ulang dirinya (PIN, sandi, passkey/biometrik).",
+      "name": "self"
+    },
+    {
+      "description": "Orang lain dengan wewenang memberi otorisasi di perangkat yang sama: field identitas + kredensial supervisor; alternatif lencana/QR atau persetujuan dari perangkat supervisor. Kredensial supervisor tidak disimpan ke autofill pengguna aktif.",
+      "name": "supervisor"
+    },
+    {
+      "description": "Kode sekali pakai yang dikirim ke kanal terverifikasi; autocomplete=\"one-time-code\", paste diizinkan, kirim ulang dengan jeda yang diumumkan.",
+      "name": "code"
+    }
+  ]
+}

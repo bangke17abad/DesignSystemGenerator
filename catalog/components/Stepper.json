@@ -1,0 +1,547 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-current=\"step\" pada langkah saat ini",
+      "teks VisuallyHidden per langkah: \"Completed\", \"Current\", \"Has errors\", \"Not started\"",
+      "nama langkah memuat posisi: \"Step 2 of 5: Address\" (lewat teks tersembunyi atau aria-label)",
+      "connector dan marker dekoratif aria-hidden",
+      "compact-summary: button aria-expanded + aria-controls ke daftar",
+      "judul dokumen diperbarui per langkah (\"Address · Step 2 of 5 · {app}\")"
+    ],
+    "focus_order": "PageHeader → Stepper (langkah interaktif) → heading langkah → field → action bar (Back, Next)",
+    "native": {
+      "compose": "tidak ada stepper alur bawaan; Column/Row kustom dengan Modifier.semantics { stateDescription = \"Completed\"; selected = isCurrent } dan LinearProgressIndicator(progress = { step / total })",
+      "flutter": "Stepper(type: StepperType.vertical / horizontal, currentStep, steps: [Step(title, state: StepState.complete / editing / error / indexed / disabled, isActive)], onStepTapped)",
+      "swiftui": "tidak ada stepper alur bawaan (Stepper SwiftUI adalah kontrol angka); VStack/HStack kustom dengan .accessibilityElement(children: .combine), .accessibilityValue(\"Completed\") dan ProgressView(value:total:)"
+    },
+    "politeness": "polite",
+    "role": "ol berisi li; langkah interaktif = a atau button; dibungkus nav aria-label=\"Progress\" bila ada langkah interaktif, selain itu div berlabel",
+    "sr_label": "\"Progress, navigation, list 5 items\"; \"Step 1 of 5: Account, completed, link\"; \"Step 2 of 5: Address, current step\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.11",
+      "2.1.1",
+      "2.4.2",
+      "2.4.3",
+      "2.4.6",
+      "2.4.7",
+      "2.5.8",
+      "3.2.3",
+      "3.3.1",
+      "3.3.7",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "list",
+      "role": "daftar berurutan langkah; horizontal di desktop, vertikal di phone; dibungkus nav berlabel bila langkah dapat dikunjungi",
+      "tokens": [
+        "space-2",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "marker",
+      "role": "penanda bulat per langkah: nomor (mendatang), centang (selesai), nomor dengan cincin tebal (saat ini), ikon error (bermasalah)",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "radius-full",
+        "border-width-thin",
+        "border-width-thick",
+        "control-height-sm",
+        "type-label-size",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "marker-current",
+      "role": "langkah saat ini: cincin tebal + isi terisi + label berbobot tebal; aria-current=\"step\"",
+      "tokens": [
+        "color-interaction-default",
+        "color-interaction-on-solid",
+        "border-width-thick",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "marker-complete",
+      "role": "langkah selesai: ikon centang di dalam marker + teks tersembunyi \"Completed\"",
+      "tokens": [
+        "color-interaction-default",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "marker-upcoming",
+      "role": "langkah mendatang: nomor di dalam lingkaran garis kontrol",
+      "tokens": [
+        "color-structure-border-control",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "marker-error",
+      "role": "langkah bermasalah: ikon error terkunci + teks \"Has errors\"",
+      "tokens": [
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "nama langkah + keterangan opsional (\"Optional\", ringkasan nilai yang dipilih)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-caption-size",
+        "color-structure-text-primary",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "connector",
+      "role": "garis antar marker; garis penuh untuk segmen selesai, putus-putus untuk mendatang (bentuk, bukan hanya warna); dekoratif",
+      "tokens": [
+        "color-structure-border-strong",
+        "color-interaction-default",
+        "border-width-thin",
+        "border-width-thick"
+      ]
+    },
+    {
+      "part": "compact-summary",
+      "role": "presentasi phone untuk > 5 langkah: \"Step 2 of 6 · Address\" + ProgressBar + tombol disclosure yang membuka daftar vertikal",
+      "tokens": [
+        "type-label-size",
+        "type-label-weight",
+        "control-height-md"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px offset 2px pada langkah yang dapat dikunjungi",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "pengguna membuka langkah lain lewat Stepper atau alur Form berpindah langkah"
+      }
+    ],
+    "parts": [
+      "Stepper.Step (value, label, description, status: \"upcoming\" | \"complete\" | \"error\", optional, disabled, reason)"
+    ],
+    "props": [
+      {
+        "description": "Controlled: id langkah saat ini.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Uncontrolled: langkah awal (default pertama).",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "linear",
+        "description": "Aturan kunjungan langkah.",
+        "name": "variant",
+        "required": false,
+        "type": "\"linear\" | \"non-linear\" | \"display\""
+      },
+      {
+        "default": "auto",
+        "description": "auto = vertikal di phone atau saat label tidak muat.",
+        "name": "orientation",
+        "required": false,
+        "type": "\"horizontal\" | \"vertical\" | \"auto\""
+      },
+      {
+        "default": "md",
+        "description": "Ukuran marker dan area klik.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "Progress",
+        "description": "Nama aksesibel daftar/nav.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "langkah yang dapat dikunjungi (selesai di linear; semua di non-linear) adalah tautan/tombol di urutan Tab; langkah mendatang linear dilewati",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "membuka langkah itu dengan data yang sudah diisi (SC 3.3.7); fokus ke heading langkah (tabindex −1); \"Step 2 of 5: Address\" diumumkan",
+      "trigger": "Enter pada langkah selesai"
+    },
+    {
+      "input": "keyboard",
+      "result": "Stepper mengikuti; fokus ke heading langkah baru; error mencegah maju dan fokus ke ErrorSummary",
+      "trigger": "Next/Back pada Form langkah"
+    },
+    {
+      "input": "pointer",
+      "result": "pindah langkah pada pelepasan; perubahan belum tersimpan dipertahankan per langkah",
+      "trigger": "klik langkah interaktif"
+    },
+    {
+      "input": "touch",
+      "result": "daftar langkah vertikal terbuka (disclosure); tap langkah selesai membukanya; daftar menutup",
+      "trigger": "tap compact-summary (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Account",
+        "Address",
+        "Payment",
+        "Review",
+        "Step 2 of 4: Address",
+        "Optional"
+      ],
+      "id-ID": [
+        "Akun",
+        "Alamat",
+        "Pembayaran",
+        "Tinjau",
+        "Langkah 2 dari 4: Alamat",
+        "Opsional"
+      ]
+    },
+    "rules": [
+      "Label langkah kata benda singkat (1-2 kata) yang menyebut isi, bukan \"Step 1\".",
+      "Langkah opsional ditandai \"Optional\" di keterangan.",
+      "Langkah selesai boleh menampilkan ringkasan nilai (\"Standard delivery\").",
+      "Jumlah langkah tetap sepanjang alur; langkah yang muncul bersyarat diumumkan saat jumlahnya berubah."
+    ]
+  },
+  "depends_on": [
+    "ProgressBar",
+    "VisuallyHidden"
+  ],
+  "do": [
+    "Bedakan langkah saat ini, lampau, dan mendatang dengan bentuk marker, centang, dan teks, bukan warna.",
+    "Pertahankan data yang sudah diisi saat pengguna kembali ke langkah sebelumnya.",
+    "Pindahkan fokus ke heading langkah baru dan perbarui judul dokumen.",
+    "Tandai langkah yang berisi error setelah submit akhir gagal."
+  ],
+  "dont": [
+    {
+      "ref": "UB2",
+      "text": "Membedakan langkah selesai dan mendatang hanya dengan warna marker."
+    },
+    {
+      "text": "Membuat langkah mendatang tampak dapat diklik di variant linear."
+    },
+    {
+      "text": "Mengosongkan isian langkah saat pengguna kembali (SC 3.3.7)."
+    },
+    {
+      "text": "Memakai Stepper untuk status entitas yang dikelola pihak lain tanpa StatusLabel."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "horizontal: label membungkus dua baris di bawah marker; bila tetap tidak muat, beralih ke vertikal; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "beralih ke vertikal di lebar berapa pun yang tidak memuat semua label",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "Stepper tidak dirender",
+      "case": "0 atau 1 langkah"
+    },
+    {
+      "behaviour": "> 7 langkah ditolak lint; kelompokkan menjadi tahap dengan sub-langkah di dalam halaman",
+      "case": "jumlah langkah maksimum"
+    },
+    {
+      "behaviour": "validasi server saat Next: tombol loading, Stepper tidak berubah; offline: Next yang butuh server diblokir dengan reason, data langkah tersimpan lokal",
+      "case": "loading atau offline"
+    },
+    {
+      "behaviour": "jumlah dan posisi dihitung ulang; perubahan diumumkan polite (\"Now 5 steps\")",
+      "case": "langkah bersyarat muncul atau hilang"
+    },
+    {
+      "behaviour": "langkah 3 kembali ke upcoming dengan teks \"Needs review\"; langkah 4 tidak dapat dibuka sampai 3 selesai",
+      "case": "kembali dari langkah 4 ke 2 lalu mengubah nilai yang memengaruhi langkah 3"
+    },
+    {
+      "behaviour": "Stepper tidak sticky; compact-summary ikut menggulir agar field fokus terlihat",
+      "case": "tinggi viewport kecil (keyboard terbuka)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan (mis. tidak ada alur multi-langkah di journey B5).",
+  "lint": [
+    "Tepat satu langkah aria-current=\"step\" per Stepper",
+    "Langkah tanpa teks status tersembunyi (completed/current/upcoming) ditolak",
+    "Stepper dengan < 2 atau > 7 langkah ditolak",
+    "Stepper horizontal di phone ditolak (manual-review)"
+  ],
+  "name": "Stepper",
+  "preview": {
+    "combinations": [
+      "selected+focus",
+      "error+focus",
+      "loading+pressed (dicegah)",
+      "read-only (display)",
+      "vertikal phone + compact-summary",
+      "RTL"
+    ],
+    "states": [
+      "upcoming",
+      "current",
+      "complete",
+      "error",
+      "hover",
+      "focus",
+      "pressed",
+      "disabled-with-reason",
+      "loading"
+    ],
+    "variants": [
+      "linear",
+      "non-linear",
+      "display"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menunjukkan posisi dan kemajuan dalam alur berurutan 3-7 langkah (pendaftaran, checkout, wizard), dengan langkah saat ini, lampau, dan mendatang yang berbeda secara non-warna.",
+    "when_not_to_use": [
+      "Untuk tampilan setara tanpa urutan: pakai Tabs.",
+      "Untuk progres proses otomatis (impor, unggah): pakai ProgressBar.",
+      "Untuk riwayat atau audit status entitas: pakai Timeline.",
+      "Untuk alur 2 langkah atau form satu halaman: judul langkah dan Button sudah cukup.",
+      "Untuk posisi hierarki: pakai Breadcrumb."
+    ]
+  },
+  "related": [
+    "Form",
+    "ProgressBar",
+    "Timeline",
+    "Tabs",
+    "Breadcrumb"
+  ],
+  "responsive": [
+    {
+      "behaviour": "vertikal; ≤ 5 langkah tampil semua dengan label; > 5 langkah memakai compact-summary + ProgressBar yang membuka daftar vertikal; size lg",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "horizontal bila semua label muat tanpa terpotong, selain itu vertikal di samping konten (landscape) atau compact-summary (portrait)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "horizontal di atas form atau vertikal di kolom inline-start untuk alur panjang; label lengkap + ringkasan nilai langkah selesai",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "langkah tidak relevan untuk role: tidak dirender dan penomoran dihitung ulang"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat alur yang sudah dikirim: variant display, semua langkah dapat dibuka sebagai tampilan baca"
+    },
+    {
+      "pattern": "step-up",
+      "when": "langkah akhir mengirim aksi berisiko: tombol submit membuka StepUpDialog; Stepper tetap di langkah Review sampai otorisasi berhasil"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Horizontal mengalir dari inline-start (kanan di RTL); connector dan panah dicerminkan; ikon centang tidak dicerminkan; nomor memakai sistem angka locale."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "langkah interaktif: baris marker + label penuh ≥ target-current; di mode sentuh ≥ target-min-touch",
+      "name": "sm",
+      "notes": "Di dalam Modal atau ContextPanel.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-md, target-current) untuk seluruh baris langkah",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "max(control-height-lg, target-min-touch, target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Phone vertikal dan surface sentuh.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "langkah current dengan fokus: cincin tebal + ring fokus di luar",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ikon error + ring; nama \"Payment, has errors\"",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "langkah current tidak interaktif (sudah dibuka)",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "langkah tidak dapat ditekan saat validasi berjalan",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": false,
+      "interaction": "rest",
+      "note": "variant display: semua langkah teks",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "upcoming",
+      "token_swaps": {
+        "label": "color-structure-text-secondary",
+        "marker": "color-structure-border-control"
+      },
+      "treatment": "marker garis + nomor; label text-secondary; connector putus-putus; tidak interaktif di linear"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "label": "color-structure-text-primary",
+        "marker": "color-interaction-default"
+      },
+      "treatment": "aria-current=\"step\"; marker cincin tebal terisi + label tebal text-primary; tidak bergantung warna"
+    },
+    {
+      "name": "complete",
+      "token_swaps": {
+        "marker": "color-interaction-default"
+      },
+      "treatment": "marker centang + teks tersembunyi \"Completed\"; connector penuh; dapat dikunjungi ulang"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "marker": "color-semantic-critical-strong"
+      },
+      "treatment": "marker ikon error + \"Has errors\" di nama; muncul setelah submit akhir gagal atau validasi lintas langkah"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "label": "color-interaction-hover"
+      },
+      "treatment": "langkah interaktif: label bergaris bawah + state-layer hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring offset 2px di sekitar marker + label"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "label": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed pada baris langkah"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "label": "color-structure-text-disabled"
+      },
+      "treatment": "non-linear: langkah belum dapat dibuka karena prasyarat; aria-disabled + reason (\"Complete Account first\") terbaca saat fokus"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {},
+      "treatment": "pindah langkah memvalidasi ke server: tombol Next di Form loading; Stepper tidak berubah sampai langkah berikut siap"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Stepper: Column/Row kustom + LinearProgressIndicator",
+    "flutter": "{ns}_stepper.dart: Stepper bawaan atau kustom dengan StepState",
+    "html": {
+      "element": "nav[aria-label] > ol > li > a | span",
+      "notes": "fallback tanpa JS: daftar statis dengan aria-current=\"step\"; disclosure compact memakai details/summary"
+    },
+    "swiftui": "{Ns}Stepper: VStack/HStack kustom + ProgressView"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default. Langkah harus diselesaikan berurutan; langkah selesai dapat dikunjungi ulang, langkah mendatang tidak interaktif (bukan disabled, hanya teks).",
+      "name": "linear"
+    },
+    {
+      "description": "Setiap langkah dapat dikunjungi dalam urutan apa pun (mis. pengaturan bertahap); semua langkah berupa tautan/tombol, status selesai dihitung per langkah.",
+      "name": "non-linear"
+    },
+    {
+      "description": "Hanya menampilkan tahap proses yang dijalankan pihak lain (mis. pesanan diproses → dikirim); tidak interaktif. Bila tahapan membawa status entitas, pakai StatusLabel di sampingnya.",
+      "name": "display"
+    }
+  ]
+}

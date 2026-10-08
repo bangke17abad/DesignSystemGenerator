@@ -1,0 +1,265 @@
+{
+  "accessibility": {
+    "attributes": [
+      "tidak menambahkan aria-*; meneruskan id, className, data-* ke akar",
+      "tidak memakai section atau main; pemanggil yang memerlukan region memakai AppShell atau heading"
+    ],
+    "focus_order": "urutan sumber anak; Container tidak mengubah urutan",
+    "native": {
+      "compose": "Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) { Box(Modifier.widthIn(max = …).padding(horizontal = …)) }",
+      "flutter": "Center + ConstrainedBox(constraints: BoxConstraints(maxWidth: …)) + Padding(padding: EdgeInsetsDirectional.symmetric(horizontal: …)); tanpa Semantics",
+      "swiftui": ".frame(maxWidth: …) + .padding(.horizontal, …) dengan .frame(maxWidth: .infinity) pada induk untuk menengahkan; readableContentGuide sebagai padanan measure di UIKit"
+    },
+    "role": "tidak ada (div generik); Container bukan landmark (landmark berasal dari AppShell)",
+    "sr_label": "tidak punya nama aksesibel",
+    "wcag": [
+      "1.4.4",
+      "1.4.10",
+      "1.4.12",
+      "1.3.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "root",
+      "role": "blok dengan max-inline-size dan margin-inline auto; tanpa latar, border, atau warna",
+      "tokens": [
+        "layout-content-max",
+        "layout-measure"
+      ]
+    },
+    {
+      "part": "inline-padding",
+      "role": "margin halaman per lebar kontainer dari tabel §8.1 (16 · 24 · 32); padding-inline logis",
+      "tokens": [
+        "space-4",
+        "space-6",
+        "space-8"
+      ]
+    },
+    {
+      "part": "content",
+      "role": "anak; tidak memberi margin luar sendiri",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [],
+    "props": [
+      {
+        "default": "content",
+        "description": "Batas lebar: layout-content-max, layout-measure, atau tanpa batas.",
+        "name": "variant",
+        "required": false,
+        "type": "\"content\" | \"measure\" | \"full\""
+      },
+      {
+        "default": "true",
+        "description": "Menerapkan padding inline §8.1; false hanya untuk Container di dalam region yang sudah berpadding.",
+        "name": "padded",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "center",
+        "description": "Posisi konten saat lebar tersedia melebihi batas; start untuk perataan kiri bila L17 menetapkannya (logis).",
+        "name": "align",
+        "required": false,
+        "type": "\"center\" | \"start\""
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Container bukan tab stop; urutan fokus anak = urutan sumber",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "pointer",
+      "result": "lebar efektif turun ke 320 CSS px; padding beralih ke nilai phone dan konten reflow tanpa gulir horizontal (SC 1.4.10)",
+      "trigger": "zoom browser 400%"
+    },
+    {
+      "input": "touch",
+      "result": "inset safe-area diterapkan oleh AppShell di luar Container; Container tidak menambah inset kedua",
+      "trigger": "rotasi ke landscape pada ponsel ber-notch"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Settings",
+        "Help center",
+        "Terms of use"
+      ],
+      "id-ID": [
+        "Pengaturan",
+        "Pusat bantuan",
+        "Ketentuan penggunaan"
+      ]
+    },
+    "rules": [
+      "Container tidak memiliki string UI sendiri.",
+      "Teks berjalan lebih dari dua paragraf memakai variant measure agar baris tidak melebihi lebar baca.",
+      "Contoh di bawah adalah judul halaman tipikal untuk uji +40% di dalam Container."
+    ]
+  },
+  "depends_on": [],
+  "do": [
+    "Pakai variant measure untuk teks berjalan dan content untuk halaman kerja.",
+    "Ambil padding inline dari tabel §8.1 berdasarkan lebar kontainer, bukan jenis perangkat.",
+    "Pakai width full untuk tabel data agar kolom identitas sticky dan gulir horizontal tetap di dalam tabel."
+  ],
+  "dont": [
+    {
+      "text": "Menumpuk Container di dalam Container sehingga padding halaman berlipat."
+    },
+    {
+      "ref": "UB1",
+      "text": "Menulis max-width atau padding dengan angka literal, atau margin-left/right fisik."
+    },
+    {
+      "text": "Memberi Container latar atau border agar tampak seperti kartu."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "teks membungkus di dalam batas; Container tidak melebar melebihi variant",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "variant measure dalam satuan ch ikut membesar sehingga jumlah karakter per baris tetap; variant content tetap pada layout-content-max dan teks membungkus",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak merender padding atau ruang kosong",
+      "case": "0 anak"
+    },
+    {
+      "behaviour": "konten ditengahkan; tidak ada peregangan teks; ruang sisa netral",
+      "case": "lebar maksimum (≥ bp-wide)"
+    },
+    {
+      "behaviour": "anak memakai max-inline-size: 100% atau gulir horizontal di dalam anak itu sendiri; Container tidak pernah menggulir",
+      "case": "konten lebih lebar dari Container (tabel, gambar, kode)"
+    },
+    {
+      "behaviour": "Skeleton memakai lebar Container yang sama sehingga tidak ada pergeseran",
+      "case": "loading"
+    },
+    {
+      "behaviour": "padding phone berlaku; tidak ada gulir dua arah",
+      "case": "zoom 400% / 320 CSS px"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Layout",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Container bersarang di dalam Container dengan padded=true ditolak (manual-review)",
+    "max-width Container hanya dari layout-content-max atau layout-measure (token-rule)",
+    "Container tidak boleh memiliki background, border, atau box-shadow (css-pattern)"
+  ],
+  "name": "Container",
+  "preview": {
+    "combinations": [
+      "measure + teks 200%",
+      "content di bp-wide",
+      "align start + RTL",
+      "zoom 400%"
+    ],
+    "states": [
+      "default",
+      "constrained",
+      "empty"
+    ],
+    "variants": [
+      "content",
+      "measure",
+      "full"
+    ]
+  },
+  "purpose": {
+    "purpose": "Membatasi lebar konten dengan layout-content-max atau layout-measure, menempatkannya di tengah, dan memberi margin inline halaman sesuai §8.1.",
+    "when_not_to_use": [
+      "Untuk jarak antar komponen di dalam halaman: pakai Stack atau Inline.",
+      "Untuk menyusun region aplikasi (nav, main, panel): pakai AppShell; Container hanya hidup di dalam region.",
+      "Untuk memberi latar, border, atau bayangan pada grup konten: pakai Card (bila L6 mengizinkan).",
+      "Untuk tabel data lebar, peta, atau diagram yang butuh lebar penuh: pakai width=\"full\", bukan Container sempit yang memaksa gulir dua arah."
+    ]
+  },
+  "related": [
+    "AppShell",
+    "Stack",
+    "Grid"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh dikurangi padding inline 16; batas lebar tidak pernah tercapai",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "padding inline 24; variant content mengikuti pola §8.3 tablet portrait (satu kolom ditengahkan)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "padding inline 32; konten ditengahkan pada layout-content-max; di atas bp-wide ruang sisa dipakai pane kedua oleh AppShell, bukan untuk melebarkan teks",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Container tidak memuat aksi atau data; perilaku per role diterapkan pada anak."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "padding-inline dan margin-inline logis sehingga simetris di kedua arah; align=\"start\" menempelkan konten ke tepi kanan di RTL."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran Container ditentukan variant (content, measure, full) dan lebar tersedia, bukan prop size."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "Tidak ada state visual; Container tidak menerima fokus dan tidak menukar token."
+    },
+    {
+      "name": "constrained",
+      "token_swaps": {},
+      "treatment": "Saat lebar tersedia melebihi batas variant, konten ditengahkan dan sisa ruang menjadi margin kosong (atau dipakai pane kedua oleh AppShell)."
+    },
+    {
+      "name": "empty",
+      "token_swaps": {},
+      "treatment": "0 anak: tidak merender padding atau ruang kosong."
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Container: Modifier.widthIn(max).padding(horizontal) di dalam Box TopCenter",
+    "flutter": "{ns}_container.dart: Center + ConstrainedBox + Padding(EdgeInsetsDirectional)",
+    "html": {
+      "element": "div",
+      "notes": "max-inline-size: var(--layout-content-max | --layout-measure); margin-inline: auto; padding-inline dari token per @container"
+    },
+    "swiftui": "{Ns}Container: .frame(maxWidth:) + .padding(.horizontal)"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Lebar maksimum layout-content-max (L17); untuk halaman aplikasi dan formulir.",
+      "name": "content"
+    },
+    {
+      "description": "Lebar maksimum layout-measure (default 72ch, §M02) untuk teks berjalan: artikel, bantuan, kebijakan, deskripsi panjang.",
+      "name": "measure"
+    },
+    {
+      "description": "Tanpa batas lebar, tetap dengan margin §8.1; untuk tabel data, peta, dan dashboard multi-pane.",
+      "name": "full"
+    }
+  ]
+}

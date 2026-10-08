@@ -1,0 +1,33 @@
+{
+  "assertions": [
+    {
+      "approx": 211.5,
+      "family_hue": "interaction",
+      "tol": 2
+    },
+    {
+      "no_semantic_shift": true
+    },
+    {
+      "on_solid_dark": "default/Dark"
+    },
+    {
+      "eq": "#22d3ee",
+      "mode": "default/Dark",
+      "token_mode": "color-interaction-default"
+    },
+    {
+      "token_gt": "material-blur-md",
+      "value": 0
+    },
+    {
+      "css_contains": "prefers-reduced-transparency"
+    },
+    {
+      "contrast_blocking": 0
+    }
+  ],
+  "fixture": "G7",
+  "run_only": [],
+  "source": "golden-briefs.md G7"
+}

@@ -1,0 +1,181 @@
+<!-- DatePicker fixture · variants, states, sizes, mandatory combinations (catalog preview) + edge cases. Text follows ui_locale en-US
+     (id-ID and RTL demos at the end). data-today pins "today" to 8 Oct 2026 so previews are stable. Open calendars in the static
+     demos are rendered in flow (data-default-open); the first demo is live: the calendar button opens a popover on tablet/desktop
+     and a Sheet on phones. Without JS every field is a plain labelled text input with the format in the helper. -->
+<section class="ds-demo" data-ds-demo="variants/input-with-calendar (live)">
+  <div class="ds-grid">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" data-min="2026-10-08" data-max="2027-01-05"
+         data-unavailable='{"weekdays":[0,6],"weekdaysReason":"Weekends can’t be selected.","dates":{"2026-10-20":"Fully booked. Choose another date.","2026-10-21":"Fully booked. Choose another date."}}'
+         data-legend="Weekends and fully booked days can’t be selected." style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-v1">Delivery date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-v1" name="delivery_date" type="text" inputmode="numeric" autocomplete="off" required aria-describedby="dp-v1-help"></div>
+      <p class="ds-date-picker__helper" id="dp-v1-help">Use MM/DD/YYYY, for example 10/14/2026. Weekdays within the next 90 days.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-v2">Start date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-v2" name="start_date" type="text" inputmode="numeric" autocomplete="off" value="10/14/2026" required aria-describedby="dp-v2-help"></div>
+      <p class="ds-date-picker__helper" id="dp-v2-help">Use MM/DD/YYYY, for example 10/08/2026.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/calendar-inline (today + selected + unavailable + legend)">
+  <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-today="2026-10-08" data-min="2026-10-08" data-heading="h3"
+       data-unavailable='{"weekdays":[0,6],"weekdaysReason":"Weekends can’t be selected.","dates":{"2026-10-15":"Fully booked. Choose another date."}}'
+       data-legend="Weekends and fully booked days can’t be selected." data-force-days="2026-10-15:focus">
+    <label class="ds-date-picker__label" for="dp-i1">Inspection date</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-i1" name="inspection_date" type="text" inputmode="numeric" autocomplete="off" value="10/13/2026" aria-describedby="dp-i1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-i1-help">Or type the date as MM/DD/YYYY.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states (field)">
+  <div class="ds-grid">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s1">Empty <span class="ds-date-picker__optional">(optional)</span></label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s1" type="text" inputmode="numeric" autocomplete="off" placeholder="MM/DD/YYYY" aria-describedby="dp-s1-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s1-help">Use MM/DD/YYYY.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s2">Hover</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s2" type="text" inputmode="numeric" autocomplete="off" data-force="hover" aria-describedby="dp-s2-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s2-help">Use MM/DD/YYYY.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s3">Focus</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s3" type="text" inputmode="numeric" autocomplete="off" value="10/08/2026" data-force="focus" aria-describedby="dp-s3-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s3-help">Use MM/DD/YYYY.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" data-force-trigger="hover" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s4">Calendar button hover</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s4" type="text" inputmode="numeric" autocomplete="off" value="11/02/2026" aria-describedby="dp-s4-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s4-help">Use MM/DD/YYYY.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" data-force-trigger="pressed focus" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s5">Calendar button pressed + focus</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s5" type="text" inputmode="numeric" autocomplete="off" value="11/02/2026" aria-describedby="dp-s5-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s5-help">Use MM/DD/YYYY.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" data-min="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s6">Start date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s6" type="text" inputmode="numeric" autocomplete="off" value="13/10/2026" aria-invalid="true" aria-describedby="dp-s6-err dp-s6-help"></div>
+      <p class="ds-date-picker__error" id="dp-s6-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a start date in the format MM/DD/YYYY</span></p>
+      <p class="ds-date-picker__helper" id="dp-s6-help">Use MM/DD/YYYY, for example 10/08/2026.</p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s7">Contract start</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s7" type="text" value="09/01/2026" readonly aria-disabled="true" aria-describedby="dp-s7-reason"></div>
+      <p class="ds-date-picker__reason" id="dp-s7-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Locked after the contract was approved.</span></p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-s8">Date of issue</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-s8" type="text" value="08/17/2026" readonly aria-readonly="true" aria-describedby="dp-s8-help"></div>
+      <p class="ds-date-picker__helper" id="dp-s8-help">Issued on <time datetime="2026-08-17">August 17, 2026</time>. Set by the registry.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/open (popover: selected, today, unavailable with reason, legend)">
+  <div class="ds-date-picker" data-ds-module="date-picker" data-default-open data-today="2026-10-08" data-min="2026-10-08" data-max="2027-01-05"
+       data-unavailable='{"weekdays":[0,6],"weekdaysReason":"Weekends can’t be selected.","dates":{"2026-10-20":"Fully booked. Choose another date.","2026-10-21":"Fully booked. Choose another date."}}'
+       data-legend="Weekends and fully booked days can’t be selected." data-force-days="2026-10-22:hover,2026-10-27:pressed">
+    <label class="ds-date-picker__label" for="dp-o1">Delivery date</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-o1" type="text" inputmode="numeric" autocomplete="off" value="10/14/2026" aria-describedby="dp-o1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-o1-help">Use MM/DD/YYYY. Weekdays within the next 90 days.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states/loading (availability, month navigation still works)">
+  <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-loading data-today="2026-10-08" data-heading="h3" data-force-days="2026-10-14:pressed">
+    <label class="ds-date-picker__label" for="dp-l1">Visit date</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-l1" type="text" inputmode="numeric" autocomplete="off" aria-describedby="dp-l1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-l1-help">Or type the date as MM/DD/YYYY. Pressing a day while loading does nothing.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations (selected+hover, selected+focus, today+selected, disabled+selected, error+focus)">
+  <div class="ds-grid">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-today="2026-10-08" data-heading="h3" data-force-days="2026-10-14:hover" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-c1">Selected + hover</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-c1" type="text" inputmode="numeric" autocomplete="off" value="10/14/2026"></div>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-today="2026-10-08" data-heading="h3" data-force-days="2026-10-14:focus" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-c2">Selected + focus</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-c2" type="text" inputmode="numeric" autocomplete="off" value="10/14/2026"></div>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-today="2026-10-08" data-heading="h3" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-c3">Today + selected</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-c3" type="text" inputmode="numeric" autocomplete="off" value="10/08/2026"></div>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-c4">Approval date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-c4" type="text" value="10/02/2026" readonly aria-disabled="true" data-force="focus" aria-describedby="dp-c4-reason"></div>
+      <p class="ds-date-picker__reason" id="dp-c4-reason"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only finance managers can change the approval date.</span></p>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" data-min="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-c5">Check-in date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-c5" type="text" inputmode="numeric" autocomplete="off" value="09/30/2026" aria-invalid="true" data-force="focus" aria-describedby="dp-c5-err dp-c5-help"></div>
+      <p class="ds-date-picker__error" id="dp-c5-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Enter a date on or after October 8, 2026</span></p>
+      <p class="ds-date-picker__helper" id="dp-c5-help">Use MM/DD/YYYY.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="Sheet phone (title, Close, Done; day cells ≥ target-min-touch)">
+  <div style="max-inline-size: calc(var(--layout-modal-sm) - var(--space-4))">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-default-open data-presentation="sheet" data-today="2026-10-08" data-size="lg"
+         data-unavailable='{"weekdays":[0],"weekdaysReason":"Closed on Sundays."}' data-legend="Closed on Sundays.">
+      <label class="ds-date-picker__label" for="dp-p1">Pickup date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-p1" type="text" inputmode="numeric" autocomplete="off" value="10/10/2026" aria-describedby="dp-p1-help"></div>
+      <p class="ds-date-picker__helper" id="dp-p1-help">Use MM/DD/YYYY.</p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes (sm, md, lg)">
+  <div class="ds-grid">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-size="sm" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-z1">From (sm)</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-z1" type="text" inputmode="numeric" autocomplete="off" value="10/01/2026"></div>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-z2">Due date (md)</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-z2" type="text" inputmode="numeric" autocomplete="off" value="10/31/2026"></div>
+    </div>
+    <div class="ds-date-picker" data-ds-module="date-picker" data-size="lg" data-today="2026-10-08" style="grid-column: span 4">
+      <label class="ds-date-picker__label" for="dp-z3">Arrival (lg)</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-z3" type="text" inputmode="numeric" autocomplete="off" value="12/24/2026"></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="edge/no dates available in the month (Next available date)">
+  <div class="ds-date-picker" data-ds-module="date-picker" data-variant="calendar-inline" data-today="2026-10-08" data-heading="h3" data-min="2026-10-08"
+       data-unavailable='{"dates":{"2026-10-08":"Fully booked.","2026-10-09":"Fully booked.","2026-10-10":"Fully booked.","2026-10-11":"Fully booked.","2026-10-12":"Fully booked.","2026-10-13":"Fully booked.","2026-10-14":"Fully booked.","2026-10-15":"Fully booked.","2026-10-16":"Fully booked.","2026-10-17":"Fully booked.","2026-10-18":"Fully booked.","2026-10-19":"Fully booked.","2026-10-20":"Fully booked.","2026-10-21":"Fully booked.","2026-10-22":"Fully booked.","2026-10-23":"Fully booked.","2026-10-24":"Fully booked.","2026-10-25":"Fully booked.","2026-10-26":"Fully booked.","2026-10-27":"Fully booked.","2026-10-28":"Fully booked.","2026-10-29":"Fully booked.","2026-10-30":"Fully booked.","2026-10-31":"Fully booked."}}'
+       data-legend="Fully booked days can’t be selected.">
+    <label class="ds-date-picker__label" for="dp-e1">Workshop date</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-e1" type="text" inputmode="numeric" autocomplete="off" aria-describedby="dp-e1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-e1-help">Or type the date as MM/DD/YYYY.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="locale id-ID (DD/MM/YYYY, Monday first) + long label">
+  <div class="ds-date-picker" data-ds-module="date-picker" lang="id-ID" data-default-open data-today="2026-10-08" data-first-day="1"
+       data-i18n-choose="Pilih tanggal" data-i18n-prev="Bulan sebelumnya" data-i18n-next="Bulan berikutnya" data-i18n-today="hari ini" data-i18n-month="Bulan" data-i18n-year="Tahun"
+       data-i18n-legend-today="Hari ini (bergaris bawah)" data-i18n-close="Tutup" data-i18n-done="Selesai" data-i18n-error-format="Masukkan tanggal dengan format {pattern}"
+       data-unavailable='{"weekdays":[0],"weekdaysReason":"Hari Minggu tidak dapat dipilih."}' data-legend="Akhir pekan dan hari libur nasional tidak dapat dipilih.">
+    <label class="ds-date-picker__label" for="dp-id1">Tanggal mulai penugasan karyawan sesuai surat keputusan direksi</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-id1" type="text" inputmode="numeric" autocomplete="off" value="12/10/2026" aria-describedby="dp-id1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-id1-help">Gunakan HH/BB/TTTT, contoh 08/10/2026.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL grid (ar: grid flows from the right, chevrons mirrored, ← = next day)">
+  <div class="ds-date-picker" data-ds-module="date-picker" dir="rtl" lang="ar" data-default-open data-today="2026-10-08" data-first-day="6"
+       data-i18n-choose="اختر التاريخ" data-i18n-prev="الشهر السابق" data-i18n-next="الشهر التالي" data-i18n-today="اليوم" data-i18n-month="الشهر" data-i18n-year="السنة"
+       data-i18n-legend-today="اليوم (مسطّر)" data-i18n-close="إغلاق" data-i18n-done="تم"
+       data-unavailable='{"weekdays":[5],"weekdaysReason":"لا يمكن اختيار يوم الجمعة."}' data-legend="لا يمكن اختيار أيام الجمعة.">
+    <label class="ds-date-picker__label" for="dp-r1">تاريخ الموعد</label>
+    <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-r1" type="text" inputmode="numeric" autocomplete="off" value="2026-10-13" aria-describedby="dp-r1-help"></div>
+    <p class="ds-date-picker__helper" id="dp-r1-help">استخدم الصيغة يوم/شهر/سنة.</p>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="text-200%">
+  <div style="zoom: 2">
+    <div class="ds-date-picker" data-ds-module="date-picker" data-today="2026-10-08">
+      <label class="ds-date-picker__label" for="dp-x1">Start date</label>
+      <div class="ds-date-picker__group"><input class="ds-date-picker__input" id="dp-x1" type="text" inputmode="numeric" autocomplete="off" value="10/14/2026" aria-describedby="dp-x1-help"></div>
+      <p class="ds-date-picker__helper" id="dp-x1-help">Use MM/DD/YYYY, for example 10/08/2026.</p>
+    </div>
+  </div>
+</section>

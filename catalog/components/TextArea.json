@@ -1,0 +1,662 @@
+{
+  "accessibility": {
+    "attributes": [
+      "label for/id sebagai nama aksesibel",
+      "aria-describedby: errorText, description, helperText, lalu counter statis (\"Up to 500 characters\")",
+      "aria-invalid saat error atau over-limit",
+      "aria-required atau required native",
+      "counter live: hanya pengumuman di 80% dan 100% lewat LiveAnnouncer polite, bukan aria-live pada counter (agar tidak diumumkan per karakter)",
+      "tanpa maxlength native (memotong paste); batas divalidasi",
+      "aria-disabled + readonly untuk diblokir; aria-readonly untuk read-only",
+      "autocomplete untuk data pribadi multi-baris (street-address)"
+    ],
+    "focus_order": "label → textarea → (counter tidak fokusabel) mengikuti DOM",
+    "native": {
+      "compose": "OutlinedTextField(value, onValueChange, singleLine = false, minLines = 3, maxLines = 8, isError = overLimit || invalid, supportingText = { Row { Text(helper/error); Text(\"$n/$max\") } }, modifier = Modifier.semantics { if (invalid) error(errorText) })",
+      "flutter": "TextFormField(keyboardType: TextInputType.multiline, minLines: 3, maxLines: 8, maxLength: limit, maxLengthEnforcement: MaxLengthEnforcement.none, buildCounter: …) agar teks tidak dipotong; pengumuman 80%/100% lewat SemanticsService.announce; label di atas dengan Semantics(label:, textField: true, multiline: true)",
+      "swiftui": "TextField(label, text: $value, axis: .vertical).lineLimit(3...8) (atau TextEditor dengan .accessibilityLabel); counter Text dengan .accessibilityHidden(true) dan AccessibilityNotification.Announcement di ambang"
+    },
+    "politeness": "polite",
+    "role": "textbox multi-baris (elemen <textarea>; aria-multiline implisit)",
+    "sr_label": "label + optional/wajib + state invalid + deskripsi (error, helper, batas); contoh: \"Reason for request, required, multi-line, Up to 500 characters\"",
+    "wcag": [
+      "1.3.1",
+      "1.3.5",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.12",
+      "2.1.1",
+      "2.1.2",
+      "2.4.7",
+      "2.4.11",
+      "2.5.3",
+      "2.5.7",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.7",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "label",
+      "role": "label tampak di atas (≥ 16), terhubung for/id",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "type-label-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "optional-marker",
+      "role": "teks \"(optional)\" dari glosarium bila tidak wajib",
+      "tokens": [
+        "type-label-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "description",
+      "role": "instruksi yang harus dibaca sebelum menulis (mis. apa yang perlu disebut)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "control",
+      "role": "area teks multi-baris; border kontrol ≥ 3:1; minRows menentukan tinggi awal, maxRows batas tumbuh sebelum gulir internal",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "space-3",
+        "space-2"
+      ]
+    },
+    {
+      "part": "value",
+      "role": "teks yang diketik; ≥ 16; line-height body",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-family",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "bantuan di bawah field; tetap tampil saat error",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary",
+        "space-1"
+      ]
+    },
+    {
+      "part": "counter",
+      "role": "penghitung \"n/maks\" di inline-end di bawah field; teks pendukung type-caption (≥ 12); di atas batas berubah ke critical-strong + ikon",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "type-caption-weight",
+        "color-structure-text-secondary",
+        "color-semantic-critical-strong"
+      ]
+    },
+    {
+      "part": "error",
+      "role": "ikon + teks error, terhubung aria-describedby",
+      "tokens": [
+        "icon-sm",
+        "color-semantic-critical-strong",
+        "type-body-size",
+        "type-body-line",
+        "space-1"
+      ]
+    },
+    {
+      "part": "resize-handle",
+      "role": "pegangan ubah ukuran vertikal (hanya pointer, desktop); bukan satu-satunya cara melihat semua teks karena tinggi tumbuh otomatis",
+      "tokens": [
+        "icon-sm",
+        "color-structure-text-tertiary"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px di luar control",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "string",
+        "when": "setiap perubahan nilai"
+      },
+      {
+        "name": "onBlur",
+        "payload": "FocusEvent",
+        "when": "kehilangan fokus; titik validasi"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "description": "Label terlihat dan nama aksesibel.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "\"\"",
+        "description": "Uncontrolled; termasuk draft yang dipulihkan.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "auto-grow",
+        "description": "Perilaku tinggi.",
+        "name": "variant",
+        "required": false,
+        "type": "\"auto-grow\" | \"fixed\""
+      },
+      {
+        "default": "3",
+        "description": "Tinggi awal dalam baris.",
+        "name": "minRows",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "8",
+        "description": "Batas tumbuh sebelum gulir internal.",
+        "name": "maxRows",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Batas karakter tervalidasi; mengaktifkan counter; tidak memotong.",
+        "name": "maxLength",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "default": "true bila maxLength ada",
+        "description": "Menampilkan counter n/maks.",
+        "name": "showCounter",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Instruksi sebelum field.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bantuan di bawah field.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Field wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "State error; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Contoh opsional; bukan label.",
+        "name": "placeholder",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Token autocomplete (mis. street-address).",
+        "name": "autoComplete",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Nama field untuk Form dan ErrorSummary.",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "md",
+        "description": "Padding dan minRows default.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "default": "false",
+        "description": "Isi kontras penuh dengan aria-readonly.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "Enter menambah baris baru (tidak mengirim Form); onValueChange per perubahan; tinggi tumbuh sampai maxRows",
+      "trigger": "mengetik, Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "mengirim Form hanya bila brief/pola menetapkannya (mis. komentar) dan pintasan disebut di helper; default tidak ada",
+      "trigger": "Ctrl/⌘+Enter"
+    },
+    {
+      "input": "keyboard",
+      "result": "memindah fokus keluar field (Tab tidak menyisipkan karakter tab; tidak ada jebakan keyboard)",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "seluruh teks diterima, tidak dipotong; bila melewati batas, state over-limit dan error",
+      "trigger": "paste teks panjang"
+    },
+    {
+      "input": "pointer",
+      "result": "mengubah tinggi secara vertikal saja; tidak wajib karena auto-grow",
+      "trigger": "seret resize-handle"
+    },
+    {
+      "input": "touch",
+      "result": "keyboard virtual muncul; field dan caret digulir di atas keyboard; gulir internal dengan satu jari tidak menggulir halaman sampai mentok",
+      "trigger": "tap"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Reason for request",
+        "Notes (optional)",
+        "Include what happened and when. Up to 500 characters.",
+        "20 characters left",
+        "12 characters too many",
+        "Shorten the reason to 500 characters or fewer",
+        "Enter a reason for the request"
+      ],
+      "id-ID": [
+        "Alasan permintaan",
+        "Catatan (opsional)",
+        "Sebutkan apa yang terjadi dan kapan. Maksimal 500 karakter.",
+        "Sisa 20 karakter",
+        "Kelebihan 12 karakter",
+        "Persingkat alasan menjadi maksimal 500 karakter",
+        "Masukkan alasan permintaan"
+      ]
+    },
+    "rules": [
+      "Semua aturan konten TextField berlaku (label kata benda, optional marker, error = apa + cara memperbaiki).",
+      "Description atau helper menyebut apa yang perlu ditulis (\"Include the order number and what went wrong\").",
+      "Counter memakai ICU plural: \"{n, plural, one {# character left} other {# characters left}}\"; lewat batas: \"# characters too many\".",
+      "Error over-limit menyebut batas dan jumlah yang harus dikurangi, tidak memotong teks pengguna."
+    ]
+  },
+  "depends_on": [
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Biarkan field tumbuh mengikuti isi agar pengguna melihat apa yang ditulis.",
+    "Sebut batas karakter di helper sebelum pengguna mulai mengetik.",
+    "Tandai kelebihan sebagai error dan biarkan pengguna memilih apa yang dihapus."
+  ],
+  "dont": [
+    {
+      "text": "Memotong teks yang diketik atau di-paste diam-diam saat mencapai batas."
+    },
+    {
+      "text": "Mengumumkan counter di setiap ketukan (aria-live pada counter)."
+    },
+    {
+      "ref": "UB10",
+      "text": "Placeholder sebagai satu-satunya instruksi atau label."
+    },
+    {
+      "ref": "UB3",
+      "text": "Counter atau error di bawah 12 / teks error di bawah 16."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus; counter dan helper berbagi baris lalu membungkus ke baris sendiri; tidak ada ellipsis",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "baris membesar; minRows tetap dalam baris, bukan piksel; maxRows dihitung ulang terhadap viewport agar field tidak melebihi tinggi layar",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "dianggap kosong saat validasi; error \"Enter …\"; nilai asli tidak diubah",
+      "case": "teks kosong / hanya spasi pada field wajib"
+    },
+    {
+      "behaviour": "seluruh teks disimpan; over-limit + error; counter menunjukkan kelebihan; Form tidak dikirim",
+      "case": "panjang maksimum terlampaui oleh paste"
+    },
+    {
+      "behaviour": "gulir internal setelah maxRows; tidak ada lag pada auto-grow (pengukuran di-throttle per frame)",
+      "case": "teks sangat panjang (puluhan ribu karakter)"
+    },
+    {
+      "behaviour": "autocomplete street-address mengisi; onValueChange terpicu; tinggi menyesuaikan",
+      "case": "autofill alamat multi-baris"
+    },
+    {
+      "behaviour": "teks tetap tersimpan lokal (draft) sesuai pola Form; tidak hilang saat koneksi kembali",
+      "case": "offline"
+    },
+    {
+      "behaviour": "counter menghitung grapheme cluster (Intl.Segmenter) agar sama dengan persepsi pengguna; aturan hitung server disebut bila berbeda (A-nn)",
+      "case": "emoji dan karakter gabungan"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "TextArea tanpa label ditolak",
+    "maxlength native pada textarea ditolak (gunakan maxLength tervalidasi)",
+    "aria-live pada counter ditolak (pengumuman hanya di 80% dan 100%)",
+    "invalid tanpa errorText ditolak",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "TextArea",
+  "preview": {
+    "combinations": [
+      "error+focus",
+      "error+hover",
+      "over-limit+focus",
+      "disabled+focus",
+      "read-only+focus",
+      "teks 200% + maxRows",
+      "RTL + counter"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "near-limit",
+      "over-limit",
+      "error",
+      "disabled-with-reason",
+      "read-only",
+      "empty"
+    ],
+    "variants": [
+      "auto-grow",
+      "fixed"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menerima teks bebas beberapa baris (catatan, alasan, deskripsi) dengan semua aturan TextField, tinggi yang tumbuh mengikuti isi sampai batas, dan penghitung karakter bila ada batas.",
+    "when_not_to_use": [
+      "Untuk nilai satu baris (nama, email, kode): pakai TextField.",
+      "Untuk teks berformat (tebal, daftar, tautan): pakai editor rich-text dari pack terpilih, bukan TextArea.",
+      "Untuk memilih alasan dari daftar baku: pakai RadioGroup atau Select, dengan TextArea opsional hanya untuk \"Other\".",
+      "Untuk kode atau data terstruktur yang harus divalidasi per baris: pakai FileDropzone (impor) atau komponen domain."
+    ]
+  },
+  "related": [
+    "TextField",
+    "Form",
+    "ErrorSummary"
+  ],
+  "responsive": [
+    {
+      "behaviour": "lebar penuh; minRows 3; maxRows dibatasi agar field + keyboard + action bar muat (≈ 5 baris), lalu gulir internal; tanpa resize-handle",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "lebar kolom form; maxRows 8; area ≥ target-min-touch di mode sentuh",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "lebar dibatasi layout-measure agar baris terbaca; resize vertikal tersedia; maxRows 12",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role boleh membaca catatan tetapi tidak mengubahnya; seluruh isi tampil kontras penuh"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "isian terkunci karena state data; reason terlihat"
+    },
+    {
+      "pattern": "hidden",
+      "when": "catatan internal yang tidak boleh diketahui role ini; tidak dirender"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Counter di inline-end; resize-handle di sudut block-end inline-end (berpindah sisi di RTL); nilai memakai dir=\"auto\" agar paragraf campuran mengikuti arah kalimat pertama."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "seluruh area teks (≥ minRows × line-height) jauh di atas target-current; label ikut memfokuskan field",
+      "name": "sm",
+      "notes": "Padding lebih rapat untuk panel padat; minRows default 2. Teks tetap ≥ 16.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "seluruh area teks ≥ target-current",
+      "name": "md",
+      "notes": "Default; minRows 3, maxRows 8.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "seluruh area teks ≥ target-min-touch (target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh; minRows 4. height_token di sini adalah tinggi satu baris + padding sebagai dasar perhitungan minRows.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "border critical tetap, ring ditambahkan; pengguna memperbaiki tanpa error hilang sebelum benar",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": false,
+      "interaction": "hover",
+      "note": "hover tidak menimpa border critical",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "tetap fokusabel agar reason dan isi terbaca",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "tanpa hover pada field diblokir",
+      "supported": false
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ring fokus; isi kontras penuh",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "dragged",
+      "note": "resize-handle diseret (pointer); alternatif: auto-grow dan gulir, sehingga drag tidak wajib (SC 2.5.7)",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "control": "color-structure-border-control",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "border-control di atas surface-raised; counter text-secondary bila ada batas"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "control": "color-structure-border-strong"
+      },
+      "treatment": "border ke border-strong; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "control": "color-interaction-default",
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "border interaction-default + outline 2px focus-ring offset 2px; baris caret selalu terlihat di dalam gulir internal dan tidak tertutup keyboard virtual"
+    },
+    {
+      "name": "near-limit",
+      "token_swaps": {
+        "counter": "color-structure-text-secondary"
+      },
+      "treatment": "pada 80% batas counter diumumkan polite (\"20 characters left\"); tampilan counter tetap text-secondary"
+    },
+    {
+      "name": "over-limit",
+      "token_swaps": {
+        "control": "color-semantic-critical",
+        "counter": "color-semantic-critical-strong"
+      },
+      "treatment": "teks tidak dipotong; counter menjadi \"n characters too many\" critical-strong + ikon; state error: border critical, errorText menyebut batas; diumumkan polite saat menyentuh 100% dan saat melewati"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "control": "color-semantic-critical",
+        "error": "color-semantic-critical-strong"
+      },
+      "treatment": "border critical + ikon + errorText critical-strong; aria-invalid=\"true\""
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "control": "color-structure-surface-sunken",
+        "value": "color-structure-text-disabled"
+      },
+      "treatment": "aria-disabled=\"true\" + readonly native; latar surface-sunken, teks text-disabled; reason di helper via aria-describedby; tetap fokusabel dan bisa digulir"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "control": "color-structure-border",
+        "value": "color-structure-text-primary"
+      },
+      "treatment": "teks kontras penuh, tanpa border kontrol aktif, tinggi menampilkan seluruh isi (tanpa gulir internal bila muat di halaman); aria-readonly=\"true\"; bisa diseleksi dan disalin"
+    },
+    {
+      "name": "empty",
+      "token_swaps": {
+        "value": "color-structure-text-placeholder"
+      },
+      "treatment": "minRows kosong; placeholder opsional berisi contoh; counter \"0/maks\" tidak diumumkan"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}TextArea membungkus OutlinedTextField(minLines, maxLines) dengan counter di supportingText",
+    "flutter": "TextFormField multiline dibungkus {ns}_text_area.dart dengan MaxLengthEnforcement.none",
+    "html": {
+      "element": "label + textarea",
+      "notes": "field-sizing: content dengan fallback modul JS untuk auto-grow; resize: vertical; tanpa maxlength native; counter di elemen terpisah dengan aria-hidden dan pengumuman lewat LiveAnnouncer"
+    },
+    "swiftui": "{Ns}TextArea membungkus TextField(axis: .vertical) + lineLimit range"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Default. Tinggi mulai dari minRows dan tumbuh mengikuti isi sampai maxRows, lalu bergulir di dalam; layout tidak melompat saat mengetik karena pertumbuhan per baris.",
+      "name": "auto-grow"
+    },
+    {
+      "description": "Tinggi tetap minRows dengan gulir internal; hanya untuk area sempit (panel samping, tabel inline). Tetap boleh diubah ukurannya secara vertikal di desktop.",
+      "name": "fixed"
+    }
+  ]
+}

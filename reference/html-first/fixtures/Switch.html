@@ -1,0 +1,109 @@
+<!-- Switch fixture · every variant × state, sizes, mandatory combinations (§6.9). Switches apply immediately (no submit); in a Form use Checkbox. -->
+<section class="ds-demo" data-ds-demo="variants/default">
+  <div class="ds-grid">
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Email alerts</span><span class="ds-switch__description" id="sw-v1-d"><span>Sends a message when a task is overdue.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-v1" checked aria-describedby="sw-v1-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Dark appearance</span></span><span class="ds-switch__state" aria-hidden="true"><span data-on>On</span><span data-off>Off</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-v2"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Weekly summary</span><span class="ds-switch__description" id="sw-v3-d"><span>Every Monday at 08:00.</span></span></span><span class="ds-switch__state" aria-hidden="true"><span data-on>On</span><span data-off>Off</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-v3" checked aria-describedby="sw-v3-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variants/standalone (table row)">
+  <div class="ds-grid">
+    <div class="ds-switch" data-variant="standalone" data-ds-module="switch">
+    <label class="ds-switch__row"><span class="ds-vh">Enable alerts for Site A</span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-v4" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-variant="standalone" data-ds-module="switch">
+    <label class="ds-switch__row"><span class="ds-vh">Enable alerts for Site B</span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-v5"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="states">
+  <div class="ds-grid">
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Off</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s1"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">On</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s2" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row" data-force="hover"><span class="ds-switch__text"><span class="ds-switch__label">Hover (off)</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s3"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row" data-force="pressed"><span class="ds-switch__text"><span class="ds-switch__label">Pressed (on)</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s4" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Focus (off)</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s5" data-force="focus"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Sync contacts</span><span class="ds-switch__description" id="sw-s6-d"><span>Saving…</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s6" checked aria-busy="true" aria-describedby="sw-s6-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-simulate="ok" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Email alerts</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s7" aria-describedby="sw-s7-err"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    <p class="ds-switch__error" id="sw-s7-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't turn on email alerts. Check your connection and try again.</span><button type="button" class="ds-switch__retry">Try again</button></p>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Two-step sign-in</span><span class="ds-switch__description" id="sw-s8-d"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Only admins can change this setting.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s8" checked aria-disabled="true" aria-describedby="sw-s8-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Data retention (read-only)</span></span><span class="ds-switch__state" aria-hidden="true"><span data-on>On</span><span data-off>Off</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-s9" checked aria-readonly="true"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="combinations">
+  <div class="ds-grid">
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row" data-force="hover"><span class="ds-switch__text"><span class="ds-switch__label">Selected + hover</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c1" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Selected + focus</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c2" checked data-force="focus"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Blocked + selected</span><span class="ds-switch__description" id="sw-c3-d"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-restricted"/></svg><span>Required by your organisation.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c3" checked aria-disabled="true" aria-describedby="sw-c3-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row" data-force="pressed"><span class="ds-switch__text"><span class="ds-switch__label">Loading + pressed (prevented)</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c4" checked aria-busy="true"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Error (rollback) + focus</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c5" data-force="focus" aria-describedby="sw-c5-err"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    <p class="ds-switch__error" id="sw-c5-err"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't turn on alerts. Check your connection.</span><button type="button" class="ds-switch__retry">Try again</button></p>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Read-only + focus</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c6" data-force="focus" aria-readonly="true"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-simulate="fail" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Try it: save fails and rolls back</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-c7" ><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    <p class="ds-switch__error" id="sw-c7-err" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Couldn't turn on backups. Check your connection.</span><button type="button" class="ds-switch__retry">Try again</button></p>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="sizes">
+  <div class="ds-grid">
+    <div class="ds-switch" data-size="sm" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Small</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-z1" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Medium</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-z2" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-size="lg" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Large</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-z3" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL on/off + long label (reduced motion: thumb jumps, no slide)">
+  <div class="ds-grid">
+    <div class="ds-switch" dir="rtl" lang="ar" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">الإشعارات عبر البريد</span><span class="ds-switch__description" id="sw-r1-d"><span>رسالة عند تأخر مهمة.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-r1" checked aria-describedby="sw-r1-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" dir="rtl" lang="ar" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">الوضع الداكن</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-r2"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+    <div class="ds-switch" data-ds-module="switch" style="grid-column: span 4">
+    <label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Tampilkan nomor telepon saya kepada semua anggota komunitas yang tergabung dalam grup yang sama</span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" id="sw-r3" checked><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label>
+    </div>
+  </div>
+</section>

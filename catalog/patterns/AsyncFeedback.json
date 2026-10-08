@@ -1,0 +1,297 @@
+{
+  "name": "AsyncFeedback",
+  "engine_version": "1.8.0",
+  "tier": "R",
+  "inclusion": "Selalu disertakan.",
+  "problem": {
+    "problem": "Setiap tunggu, proses latar, dan penyimpanan memberi tahu pengguna bahwa sistem bekerja, kira-kira berapa lama, dan apa hasilnya, dengan indikator yang dipilih dari durasi dan bentuk konten, tanpa pernah menampilkan sesuatu sebagai terkonfirmasi sebelum server mengonfirmasinya (I6). Pattern ini menerapkan §12.3.",
+    "when": [
+      "Muat pertama daftar, tabel, kartu, dan detail.",
+      "Aksi pengguna yang menunggu server (simpan, kirim, toggle).",
+      "Proses panjang: impor, ekspor, laporan, unggah.",
+      "Aksi sering dan dapat dibalik yang memakai optimistic UI.",
+      "Simpan otomatis dan sinkronisasi."
+    ],
+    "when_not": [
+      "Kegagalan yang membuat halaman tidak bisa dirender: SystemPages.",
+      "Entitas yang lama diproses pihak lain (menunggu persetujuan): state lifecycle C5 lewat StatusLabel, bukan indikator loading.",
+      "Antrean offline-first dengan konflik: OfflineSync (pattern ini hanya menyediakan penanda unconfirmed)."
+    ]
+  },
+  "composition": [
+    {
+      "component": "Skeleton",
+      "parts": [
+        "Skeleton.Text",
+        "Skeleton.Shape",
+        "Skeleton.Avatar"
+      ],
+      "role_in_pattern": "muat pertama dengan tata letak diketahui; tampil setelah ±300 ms, bertahan minimal ±500 ms"
+    },
+    {
+      "component": "Spinner",
+      "role_in_pattern": "variant in-control untuk tunggu < 2 detik di dalam Button atau baris; tidak pernah layar penuh"
+    },
+    {
+      "component": "ProgressBar",
+      "parts": [
+        "ProgressBar.Actions"
+      ],
+      "role_in_pattern": "proses > 2 detik dengan kemajuan diketahui; value-text bermakna; Cancel/Retry/View"
+    },
+    {
+      "component": "Button",
+      "role_in_pattern": "pemicu dengan state loading, lebar terkunci, klik ganda diabaikan"
+    },
+    {
+      "component": "StatusLabel",
+      "role_in_pattern": "penanda per record \"Menyimpan…\" / \"Belum terkirim\" (unconfirmed) sampai server mengonfirmasi"
+    },
+    {
+      "component": "Toast",
+      "role_in_pattern": "konfirmasi bila hasil tidak terlihat di tempat, rollback optimistic yang menjelaskan apa yang dibatalkan, \"Ekspor dimulai\""
+    },
+    {
+      "component": "InlineAlert",
+      "role_in_pattern": "gagal muat atau simpan (C1 + Retry), offline (C2), hasil sebagian (C2)"
+    },
+    {
+      "component": "ConnectionStatus",
+      "role_in_pattern": "kesegaran data, sambung ulang, dan jumlah antrean"
+    },
+    {
+      "component": "NotificationItem",
+      "role_in_pattern": "hasil proses panjang setelah pengguna meninggalkan layar"
+    },
+    {
+      "component": "EmptyState",
+      "role_in_pattern": "hasil kosong yang sudah dikonfirmasi server"
+    },
+    {
+      "component": "LiveAnnouncer",
+      "role_in_pattern": "mulai (bila > 2 detik), tonggak, selesai, gagal, dan rollback"
+    }
+  ],
+  "flow": [
+    {
+      "step": "Aksi dimulai",
+      "state_class": "C6",
+      "transition": "umpan balik tekan seketika (L16); tunggu < ±300 ms tanpa indikator apa pun agar tidak berkedip"
+    },
+    {
+      "step": "Tunggu singkat (< 2 detik)",
+      "state_class": "C5",
+      "transition": "Spinner in-control di pemicu; pemicu aria-busy dan lebarnya terkunci; konten lain tetap bisa dipakai"
+    },
+    {
+      "step": "Muat konten",
+      "state_class": "C5",
+      "transition": "Skeleton meniru layout setelah jeda ±300 ms; region aria-busy; refresh dan halaman berikut mempertahankan data lama dengan indikator kecil"
+    },
+    {
+      "step": "Proses panjang (> 2 detik)",
+      "state_class": "C5",
+      "transition": "ProgressBar determinate dengan value-text; lebih dari ±10 detik pengguna boleh meninggalkan layar dan hasilnya dikirim sebagai NotificationItem; Cancel bila server mendukung; indeterminate hanya bila total benar-benar tidak diketahui"
+    },
+    {
+      "step": "Optimistic",
+      "state_class": "C6",
+      "transition": "aksi sering dan dapat dibalik diterapkan seketika di UI dengan penanda pending non-warna sampai server mengonfirmasi; tidak dipakai untuk aksi tak terbalik atau finansial"
+    },
+    {
+      "step": "Rollback",
+      "state_class": "C2",
+      "transition": "server menolak aksi optimistic: state dikembalikan ke nilai sebelumnya dan Toast menjelaskan apa yang dibatalkan dan mengapa; bila pengguna perlu bertindak, InlineAlert C1 + Retry"
+    },
+    {
+      "step": "Gagal",
+      "state_class": "C1",
+      "transition": "InlineAlert C1 + Retry di wilayah konten atau di atas form; input dipertahankan; skeleton diganti alert di tempat yang sama; tidak memakai toast"
+    },
+    {
+      "step": "Selesai",
+      "state_class": "C4",
+      "transition": "hasil tampil di tempat aksi; Toast hanya bila hasil tidak langsung terlihat; simpan otomatis menulis \"Tersimpan · {waktu}\" setelah respons server"
+    }
+  ],
+  "variants": [
+    {
+      "device_class": "phone",
+      "behaviour": "Skeleton meniru kartu bertumpuk; ProgressBar dengan label di atas dan aksi lebar penuh di bawah; proses panjang lanjut di latar dan hasil dikirim sebagai notifikasi; status simpan di header atau action bar tanpa menutup konten; pull-to-refresh memakai indikator native dan hasilnya diumumkan"
+    },
+    {
+      "device_class": "tablet",
+      "behaviour": "Skeleton meniru tabel dengan kolom sekunder dilipat; ProgressBar di panel atau Modal; Toast tidak menutupi action bar atau rail"
+    },
+    {
+      "device_class": "desktop",
+      "behaviour": "Skeleton meniru semua kolom dan panel detail; ProgressBar sm di sel tabel untuk proses per baris; status simpan di PageHeader.Meta; beberapa proses latar dirangkum menjadi satu indikator wilayah"
+    }
+  ],
+  "states": {
+    "empty": "Muat selesai dan server mengonfirmasi kosong → EmptyState. Skeleton tidak pernah bertahan tanpa batas dan tidak pernah berganti diam-diam menjadi layar kosong.",
+    "loading": "Tangga indikator: < ±300 ms tanpa indikator; < 2 detik Spinner di kontrol; tata letak diketahui → Skeleton; kemajuan diketahui atau > 2 detik untuk proses → ProgressBar; > ±10 detik → proses latar + notifikasi.",
+    "error": "InlineAlert C1 + Retry di tempat konten atau aksi; ProgressBar gagal berstatus critical dengan Retry dan diumumkan assertive; respons kosong akibat error server dilaporkan sebagai error, bukan kosong.",
+    "partial": "Proses selesai sebagian: ProgressBar status warning dengan value-text \"950 dari 1.000 berhasil\" dan aksi Lihat; satu ringkasan gabungan, bukan satu toast per item.",
+    "success": "Hasil di tempat; Toast C4 bila tidak terlihat; simpan otomatis menampilkan waktu tersimpan terakhir; penanda pending dan unconfirmed dilepas hanya setelah konfirmasi server (I6)."
+  },
+  "accessibility": [
+    {
+      "step": "Tunggu singkat (< 2 detik)",
+      "focus": "fokus tetap di pemicu yang aria-busy; Enter/Space diabaikan selama loading; nama aksesibel tidak diganti \"Loading\"",
+      "announcement": "tidak diumumkan; hasil diumumkan polite oleh komponen pemilik"
+    },
+    {
+      "step": "Muat konten",
+      "focus": "fokus tidak dipindah saat konten tiba, kecuali setelah pindah rute (ke h1)",
+      "announcement": "\"Memuat {konten}\" polite sekali bila > 2 detik, lalu hasil (\"24 item\") atau error"
+    },
+    {
+      "step": "Proses panjang (> 2 detik)",
+      "focus": "fokus tetap; Cancel dapat dijangkau keyboard tepat setelah label",
+      "announcement": "mulai dan selesai polite; tonggak tiap 25% dan tidak lebih sering dari 10 detik; gagal assertive; tidak pernah per persen"
+    },
+    {
+      "step": "Rollback",
+      "focus": "bila fokus berada di kontrol yang dipulihkan, fokus tetap di sana dengan nilai lamanya",
+      "announcement": "polite \"{Aksi} tidak dapat dilakukan. {Objek} dikembalikan.\""
+    },
+    {
+      "step": "Gagal",
+      "focus": "fokus tidak dipindah ke alert; Retry tepat sesudah judul alert dalam urutan fokus",
+      "announcement": "assertive lewat InlineAlert role alert"
+    },
+    {
+      "step": "Selesai",
+      "focus": "fokus tetap di tempat pengguna",
+      "announcement": "polite; simpan otomatis tidak diumumkan setiap kali, hanya perubahan status (Tersimpan → Belum tersimpan)"
+    }
+  ],
+  "content": {
+    "rules": [
+      "Teks loading menyebut apa yang dimuat (\"Memuat item…\"), bukan \"Mohon tunggu\".",
+      "Kemajuan ditulis dalam satuan bermakna (\"450 dari 1.000 baris\", \"Sekitar 2 menit lagi\"), bukan persen saja.",
+      "Status simpan memakai tiga label glosarium yang konsisten: \"Menyimpan…\", \"Tersimpan\", \"Belum tersimpan\".",
+      "Rollback menyebut apa yang dibatalkan dan bahwa data dikembalikan.",
+      "Proses latar memberi tahu di mana hasil akan muncul."
+    ],
+    "examples": {
+      "en-US": [
+        "Loading items…",
+        "450 of 1,000 rows imported",
+        "Saved · 10:42",
+        "Couldn't archive the item. It was restored to the list.",
+        "Export started. You'll get a notification when the file is ready.",
+        "Saved on this device. Will send when online."
+      ],
+      "id-ID": [
+        "Memuat item…",
+        "450 dari 1.000 baris diimpor",
+        "Tersimpan · 10.42",
+        "Item tidak dapat diarsipkan. Item dikembalikan ke daftar.",
+        "Ekspor dimulai. Anda akan menerima notifikasi saat file siap.",
+        "Tersimpan di perangkat ini. Akan dikirim saat online."
+      ]
+    }
+  },
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "umpan balik sama untuk semua role; Cancel, Retry, dan Urungkan tampil hanya bila role boleh menjalankan aksi asalnya"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "proses dimulai orang lain dan role tidak boleh membatalkannya: kemajuan terlihat, Cancel aria-disabled dengan alasan"
+    }
+  ],
+  "do": [
+    "Pilih indikator dari durasi dan bentuk: Spinner di kontrol untuk < 2 detik, Skeleton untuk tata letak diketahui, ProgressBar untuk kemajuan diketahui.",
+    "Pertahankan data lama saat refresh dan paginasi; tandai wilayah dengan aria-busy.",
+    "Pakai idempotency key untuk setiap aksi yang bisa terkirim ulang (Retry, klik ganda, antrean offline).",
+    "Buang respons basi berdasarkan id permintaan agar respons lama tidak menimpa state baru."
+  ],
+  "dont": [
+    {
+      "text": "Menampilkan \"Tersimpan\" atau state baru sebagai final sebelum server mengonfirmasi.",
+      "ref": "I6"
+    },
+    {
+      "text": "Spinner layar penuh untuk tunggu lebih dari 2 detik, atau skeleton generik yang tidak meniru tata letak.",
+      "ref": "§12.3"
+    },
+    {
+      "text": "Optimistic UI untuk aksi tak terbalik atau finansial.",
+      "ref": "SC 3.3.4"
+    },
+    {
+      "text": "Mengumumkan progres per persen atau per detik.",
+      "ref": "§9.1"
+    },
+    {
+      "text": "Animasi loading yang bergerak lebih dari 5 detik atau mengabaikan reduced motion.",
+      "ref": "SC 2.2.2"
+    }
+  ],
+  "edge_cases": [
+    {
+      "case": "offline",
+      "behaviour": "aksi diantrekan dengan StatusLabel unconfirmed \"Belum terkirim\" dan jumlah antrean di ConnectionStatus bila OfflineSync dipilih; tanpa OfflineSync aksi diblokir dengan alasan; muat konten menampilkan cache bertanda waktu"
+    },
+    {
+      "case": "timeout",
+      "behaviour": "permintaan baca dibatalkan setelah batas brief (selain itu A-nn) dan InlineAlert C1 \"Memuat terlalu lama\" + Retry tampil; permintaan tulis berstatus tidak diketahui diperiksa ulang lewat idempotency key sebelum menawarkan Retry"
+    },
+    {
+      "case": "data sangat banyak",
+      "behaviour": "Skeleton hanya sebanyak yang muat di viewport; hasil streaming ditampilkan bertahap dengan aria-busy sampai lengkap; proses massal memakai ProgressBar dengan tonggak"
+    },
+    {
+      "case": "data kosong",
+      "behaviour": "EmptyState hanya setelah server mengonfirmasi kosong; tidak pernah ditampilkan saat permintaan masih berjalan atau gagal"
+    },
+    {
+      "case": "aksi ganda (klik ganda, toggle cepat berulang)",
+      "behaviour": "klik kedua diabaikan selama loading; toggle cepat di-debounce sehingga hanya state terakhir yang dikirim"
+    },
+    {
+      "case": "teks +40% (locale terpanjang)",
+      "behaviour": "teks loading dan value-text membungkus; label dan value-text ProgressBar bertumpuk di phone; tombol loading mempertahankan lebar label terpanjang"
+    },
+    {
+      "case": "respons datang tidak berurutan",
+      "behaviour": "id permintaan dicocokkan; respons lama dibuang dan tidak menimpa state terbaru"
+    },
+    {
+      "case": "pengguna meninggalkan layar saat proses berjalan",
+      "behaviour": "proses lanjut di latar; hasil sebagai NotificationItem; kembali ke layar menampilkan status terkini"
+    },
+    {
+      "case": "reduced motion",
+      "behaviour": "shimmer dan putaran berhenti; makna dibawa teks dan value-text"
+    }
+  ],
+  "wcag": [
+    "1.4.1",
+    "2.2.1",
+    "2.2.2",
+    "2.4.11",
+    "3.3.4",
+    "4.1.2",
+    "4.1.3"
+  ],
+  "related_patterns": [
+    "SystemPages",
+    "FormFlow",
+    "CrudFlow",
+    "OfflineSync",
+    "ImportExport",
+    "FileUpload",
+    "NotificationCenter"
+  ],
+  "lint": [
+    "Spinner standalone tidak menjadi satu-satunya indikator wilayah yang menunggu lebih dari 2 detik",
+    "Skeleton memakai layout yang sesuai komponen yang digantikannya",
+    "Setiap aksi optimistic punya rollback dan Toast penjelasan",
+    "ProgressBar determinate selalu punya valueText"
+  ]
+}

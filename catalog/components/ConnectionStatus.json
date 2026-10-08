@@ -1,0 +1,455 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: setiap perubahan kondisi diumumkan sekali, polite; assertive hanya offline-during-task (C1). Di web node role=status terdaftar membacakan perubahan teksnya sendiri dan LiveAnnouncer tidak dipanggil lagi untuk teks yang sama; transisi C1 dikirim ke region assertive LiveAnnouncer dan node status menahan pembaruan teksnya sampai pengumuman assertive selesai agar tidak terbaca ganda",
+      "percobaan sambung ulang berulang tidak diumumkan; hanya transisi live → reconnecting → offline → live",
+      "\"last updated\" memakai elemen time datetime ISO; teks relatif diperbarui tiap menit tanpa diumumkan",
+      "debounce transisi ±2 detik agar koneksi yang putus-sambung cepat tidak membanjiri pengumuman",
+      "ikon live dekoratif; label menyebut kondisinya"
+    ],
+    "focus_order": "berada di header atau action bar sesuai urutan DOM; tidak pernah mencuri fokus",
+    "native": {
+      "compose": "Row(Modifier.semantics { liveRegion = LiveRegionMode.Polite; contentDescription = … }); transisi C1 lewat {Ns}Announcer assertive; ConnectivityManager.NetworkCallback sebagai sumber. Not verified against the pinned version",
+      "flutter": "Semantics(liveRegion: true, label: …) pada label; transisi C1 lewat SemanticsService.announce(assertiveness: Assertiveness.assertive); status jaringan dari connectivity listener aplikasi. Not verified against the pinned version",
+      "swiftui": "Label(…) dengan .accessibilityLabel kalimat lengkap; transisi lewat AccessibilityNotification.Announcement (prioritas .high untuk C1); NWPathMonitor sebagai sumber status. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "role=\"status\" pada wadah label (node status persisten terdaftar, pengecualian V5 LiveAnnouncer); tombol bila membuka panel",
+    "sr_label": "kondisi + freshness + antrean dalam satu kalimat (\"Offline. Last updated 10:42. 3 changes waiting to send.\")",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "wadah inline ringkas di header atau action bar; perlakuan L3 per kelas untuk reconnecting/stale/offline; live tanpa wadah",
+      "tokens": [
+        "color-semantic-info-subtle",
+        "color-semantic-warning-subtle",
+        "color-semantic-critical-subtle",
+        "color-semantic-info",
+        "color-semantic-warning",
+        "color-semantic-critical",
+        "radius-sm",
+        "border-width-thin",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "indicator",
+      "role": "live: ikon/titik netral + teks \"Live\" (bukan status, tanpa warna semantik); kelas lain: ikon status terkunci §5.7",
+      "tokens": [
+        "icon-sm",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "color-semantic-info",
+        "color-semantic-warning",
+        "color-semantic-critical"
+      ]
+    },
+    {
+      "part": "label",
+      "role": "kondisi koneksi (teks isi)",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary",
+        "color-semantic-info-strong",
+        "color-semantic-warning-strong",
+        "color-semantic-critical-strong"
+      ]
+    },
+    {
+      "part": "freshness",
+      "role": "\"Last updated 2 min ago\" dalam elemen time ber-ISO; wajib pada stale dan offline; teks isi karena memengaruhi keputusan",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "queue-count",
+      "role": "jumlah pekerjaan yang antre (\"3 changes waiting to send\") saat offline atau reconnecting",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "action",
+      "role": "\"Retry now\" opsional pada reconnecting/offline; Button tertiary",
+      "tokens": [
+        "color-interaction-default",
+        "target-min-touch",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "konten di atas fill solid bila L3 memberi filled untuk C1/C2",
+      "tokens": [
+        "color-semantic-on-warning",
+        "color-semantic-on-critical",
+        "color-semantic-on-info",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "Retry now atau Review diaktifkan"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "boolean",
+        "when": "panel atau Popover detail dibuka/ditutup"
+      }
+    ],
+    "parts": [],
+    "props": [
+      {
+        "default": "compact",
+        "description": "Kepadatan tampilan.",
+        "name": "variant",
+        "required": false,
+        "type": "\"compact\" | \"detailed\""
+      },
+      {
+        "description": "Kondisi koneksi; dipetakan ke kelas C6/C5/C2/C2/C5.",
+        "name": "value",
+        "required": true,
+        "type": "\"live\" | \"reconnecting\" | \"stale\" | \"offline\" | \"syncing\""
+      },
+      {
+        "description": "Override kelas untuk kasus khusus (critical = offline-during-task, warning = sync-conflict); kosong = dari value. positive dan neutral-negative tidak dipakai: koneksi sehat = live (tenang, tanpa ikon status) dan tidak ada akhir siklus negatif untuk koneksi.",
+        "name": "status",
+        "required": false,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Waktu data terakhir; wajib untuk stale dan offline.",
+        "name": "lastUpdated",
+        "required": false,
+        "type": "Date | string (ISO 8601)"
+      },
+      {
+        "default": "0",
+        "description": "Jumlah pekerjaan yang antre.",
+        "name": "queuedCount",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Override label dari glosarium.",
+        "name": "label",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "label tidak fokusabel; fokus ke Retry/Review bila ada",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "percobaan sambung segera; label menjadi reconnecting; hasil diumumkan sekali",
+      "trigger": "Enter pada \"Retry now\""
+    },
+    {
+      "input": "pointer",
+      "result": "membuka Popover atau panel sinkronisasi berisi freshness dan antrean bila ada; label menjadi tombol dengan aria-expanded dalam kasus itu",
+      "trigger": "klik pada label (variant compact)"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan pointer; area klik ≥ target-min-touch bila label menjadi tombol",
+      "trigger": "tap pada label"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Live",
+        "Reconnecting",
+        "Last updated 2 min ago",
+        "Offline. Last updated 10:42.",
+        "3 changes waiting to send",
+        "Saved on this device. Will send when you're back online.",
+        "Sending 3 changes",
+        "2 changes need review",
+        "Retry now"
+      ],
+      "id-ID": [
+        "Live",
+        "Menyambung ulang",
+        "Terakhir diperbarui 2 menit lalu",
+        "Offline. Terakhir diperbarui 10.42.",
+        "3 perubahan menunggu dikirim",
+        "Tersimpan di perangkat ini. Akan dikirim saat kembali online.",
+        "Mengirim 3 perubahan",
+        "2 perubahan perlu ditinjau",
+        "Coba sekarang"
+      ]
+    },
+    "rules": [
+      "Label: kondisi singkat dari glosarium (\"Live\", \"Reconnecting\", \"Offline\").",
+      "Stale dan offline selalu menyebut waktu data terakhir dengan formatter locale dan zona waktu B1.",
+      "Offline menyebut apa yang terjadi pada pekerjaan pengguna (antre dan dikirim nanti), dengan jumlah ICU plural.",
+      "Tidak menyalahkan pengguna (\"Your connection is bad\"); suara sistem.",
+      "Tidak menulis \"Saved\" untuk perubahan yang hanya tersimpan lokal; tulis \"Saved on this device\"."
+    ]
+  },
+  "depends_on": [
+    "Button",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Selalu tampilkan waktu data terakhir saat stale atau offline.",
+    "Tampilkan jumlah pekerjaan yang antre dan jangan menandainya terkonfirmasi sebelum server mengonfirmasi.",
+    "Umumkan hanya transisi kondisi, sekali, dengan debounce.",
+    "Biarkan live tetap tenang (tanpa warna semantik)."
+  ],
+  "dont": [
+    {
+      "ref": "UB11",
+      "text": "Menandai live dengan warna positif yang lebih menonjol daripada stale atau offline."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai koneksi hanya dengan titik hijau/merah tanpa teks."
+    },
+    {
+      "text": "Menyembunyikan kondisi stale atau offline setelah beberapa detik."
+    },
+    {
+      "text": "Mengumumkan setiap percobaan sambung ulang ke pembaca layar."
+    },
+    {
+      "text": "Menampilkan data cache tanpa penanda waktu seolah data live (I6)."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "compact menampilkan label + freshness dalam dua baris; queue-count pindah ke Popover/Sheet di phone",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "di header sempit hanya label + freshness yang tetap; detail lewat tap; tidak terpotong",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "queue-count disembunyikan; offline tetap menyebut \"Changes will be saved on this device\"",
+      "case": "0 item antre"
+    },
+    {
+      "behaviour": "\"999+ changes waiting to send\"; batas penyimpanan lokal (dari brief, selain itu A-nn) memicu InlineAlert C2",
+      "case": "jumlah antre maksimum (ratusan perubahan)"
+    },
+    {
+      "behaviour": "kasus utama: persisten, C2, freshness + antrean; C1 hanya bila tugas berjalan tidak bisa diantrekan",
+      "case": "offline"
+    },
+    {
+      "behaviour": "transisi di-debounce ±2 detik; tampilan memakai kondisi terburuk dalam jendela itu; satu pengumuman",
+      "case": "pembaruan beruntun cepat (koneksi putus-sambung tiap detik)"
+    },
+    {
+      "behaviour": "satu indikator global dengan kelas terburuk; sumber stale disebut di panel detail",
+      "case": "beberapa status bersamaan (online tetapi sebagian sumber stale)"
+    },
+    {
+      "behaviour": "freshness dihitung dari waktu server bila tersedia; bila tidak, waktu absolut ditampilkan, bukan relatif",
+      "case": "jam perangkat salah"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Standar bersyarat: disertakan bila ada konektivitas tidak stabil atau offline (B3 input/lingkungan, B4 offline_required_surfaces) atau tampilan data live; selain itu boleh dikecualikan lewat B7 dengan alasan.",
+  "lint": [
+    "Tampilan live tanpa ConnectionStatus atau penanda kesegaran ditandai (I6, manual-review)",
+    "stale/offline tanpa lastUpdated ditolak",
+    "live memakai color-semantic-positive ditolak (UB11)"
+  ],
+  "name": "ConnectionStatus",
+  "preview": {
+    "combinations": [
+      "kelas × perlakuan L3",
+      "offline + 999+ antre",
+      "putus-sambung cepat (debounce)",
+      "teks 200% di header phone"
+    ],
+    "states": [
+      "live (C6)",
+      "reconnecting (C5 info)",
+      "stale (C2 warning)",
+      "offline (C2 warning, persisten)",
+      "offline-during-task (C1 critical)",
+      "syncing (C5 info)",
+      "sync-conflict (C2 warning)",
+      "focus (aksi)"
+    ],
+    "variants": [
+      "compact",
+      "detailed"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyatakan kesegaran data dan koneksi secara jujur (I6): live (tenang), reconnecting (C5), stale (C2, dengan \"last updated\"), dan offline (peringatan persisten dengan jumlah pekerjaan yang antre), di header surface live atau di AppShell.",
+    "when_not_to_use": [
+      "Untuk menjelaskan dampak offline pada form atau konten tertentu: pakai InlineAlert C2 offline di atas konten itu (ConnectionStatus tetap menyatakan koneksi).",
+      "Untuk pengumuman mode offline tingkat sistem yang mengubah fungsi aplikasi: pakai Banner (ConnectionStatus tetap sebagai penanda ringkas).",
+      "Untuk status perangkat atau entitas domain (mesin, kendaraan, sensor): pakai StatusLabel dengan lifecycle perangkat dari lifecycle.json.",
+      "Untuk konfirmasi \"saved\" per aksi: pakai Toast atau perubahan inline."
+    ]
+  },
+  "related": [
+    "Banner",
+    "InlineAlert",
+    "StatusLabel",
+    "Popover",
+    "Sheet"
+  ],
+  "responsive": [
+    {
+      "behaviour": "compact di header atau di atas BottomNav; offline juga memunculkan Banner tingkat sistem bila fungsi aplikasi berubah; tap membuka Sheet sinkronisasi",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "compact di header surface live; detail dalam Popover",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "compact di PageHeader atau AppShell; detailed di panel sinkronisasi ContextPanel",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Kondisi koneksi sama untuk semua role; hanya jumlah antrean yang menghitung pekerjaan milik pengguna sendiri."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Ikon koneksi dan status tidak dicerminkan; waktu dan angka diisolasi dengan bdi; urutan ikon → label mengikuti arah inline."
+  },
+  "sizes": {
+    "not_applicable": "Satu ukuran: teks isi ≥ 16 dan icon-sm; tinggi mengikuti teks. Aksi Retry mengikuti ukuran Button."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "live (C6)",
+      "token_swaps": {
+        "indicator": "color-structure-text-secondary",
+        "label": "color-structure-text-secondary"
+      },
+      "treatment": "tenang: teks \"Live\" text-secondary dengan ikon netral, tanpa wadah dan tanpa warna semantik; tidak pernah lebih keras daripada stale/offline (I7). Boleh disembunyikan bila surface tidak live, tetapi stale tidak pernah disembunyikan"
+    },
+    {
+      "name": "reconnecting (C5 info)",
+      "token_swaps": {
+        "border-outline": "color-semantic-info",
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "indicator": "color-semantic-info",
+        "label": "color-semantic-info-strong"
+      },
+      "treatment": "perlakuan C5 dari L3; ikon info + \"Reconnecting\"; percobaan ulang dengan backoff tanpa mengumumkan setiap percobaan"
+    },
+    {
+      "name": "stale (C2 warning)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "indicator": "color-semantic-warning",
+        "label": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3; data lebih tua dari ambang kesegaran (B5/B3; tanpa ambang → A-nn) ditandai \"Last updated {time}\"; angka live di layar tidak boleh tampil seolah terkini"
+    },
+    {
+      "name": "offline (C2 warning, persisten)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "indicator": "color-semantic-warning",
+        "label": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3; persisten sampai koneksi pulih; menyebut bahwa pekerjaan antre dan jumlahnya; tidak bisa ditutup"
+    },
+    {
+      "name": "offline-during-task (C1 critical)",
+      "token_swaps": {
+        "border-outline": "color-semantic-critical",
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "indicator": "color-semantic-critical",
+        "label": "color-semantic-critical-strong"
+      },
+      "treatment": "koneksi hilang saat tugas yang butuh server sedang berjalan dan tidak bisa diantrekan (lifecycle perangkat/koneksi → C1); perlakuan C1 dari L3; diumumkan assertive"
+    },
+    {
+      "name": "syncing (C5 info)",
+      "token_swaps": {
+        "indicator": "color-semantic-info",
+        "label": "color-semantic-info-strong"
+      },
+      "treatment": "kembali online dan mengirim antrean: \"Sending 3 changes\"; item tidak ditandai terkonfirmasi sampai server mengonfirmasi (I6)"
+    },
+    {
+      "name": "sync-conflict (C2 warning)",
+      "token_swaps": {
+        "indicator": "color-semantic-warning",
+        "label": "color-semantic-warning-strong"
+      },
+      "treatment": "sebagian antrean ditolak atau konflik: \"2 changes need review\" + aksi Review; detail di InlineAlert atau panel sinkronisasi"
+    },
+    {
+      "name": "focus (aksi)",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring",
+        "focus-ring-on-filled": "color-focus-ring-inverse"
+      },
+      "treatment": "ring fokus pada Retry atau Review; di atas fill solid focus-ring-inverse"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}ConnectionStatus: collectAsState dari Flow konektivitas",
+    "flutter": "{ns}_connection_status.dart: StreamBuilder dari connectivity service aplikasi",
+    "html": {
+      "element": "div",
+      "notes": "div[role=status].{ns}-connection-status dengan time[datetime]; navigator.onLine + event online/offline hanya sebagai petunjuk, kebenaran dari heartbeat server"
+    },
+    "swiftui": "{Ns}ConnectionStatus: View yang mengamati NWPathMonitor dan heartbeat"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Ikon + label (+ freshness pada stale/offline) di header atau action bar. Default.",
+      "name": "compact"
+    },
+    {
+      "description": "Ditambah queue-count, freshness penuh, dan aksi Retry; untuk panel sinkronisasi atau surface offline-first.",
+      "name": "detailed"
+    }
+  ]
+}

@@ -1,0 +1,605 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-labelledby ke judul form, aria-describedby ke deskripsi",
+      "fieldset + legend per section; field mempertahankan label sendiri",
+      "noValidate di-set oleh modul JS (pesan native diganti teks sistem); tanpa JS validasi native tetap jalan sebagai fallback",
+      "aria-busy=\"true\" saat submitting",
+      "pengumuman jumlah error assertive lewat LiveAnnouncer (bukan role=alert pada ErrorSummary agar tidak ganda)",
+      "autocomplete pada setiap field data pribadi; AutofillGroup/konteks autofill native di-commit saat submit berhasil",
+      "judul dokumen diawali penanda error glosarium saat invalid",
+      "scroll-padding-block-end = tinggi action-bar sticky"
+    ],
+    "focus_order": "judul → (ErrorSummary/InlineAlert bila ada) → section dalam urutan baca → action-bar (aksi sekunder lalu primer sesuai urutan L-bahasa); urutan visual 2 kolom = urutan DOM per baris",
+    "native": {
+      "compose": "Column(Modifier.semantics { paneTitle = judul }) dengan FocusRequester per field → requestFocus() + BringIntoViewRequester ke field invalid pertama; teks jumlah error dengan Modifier.semantics { liveRegion = LiveRegionMode.Assertive }; BackHandler(enabled = dirty) membuka AlertDialog konfirmasi",
+      "flutter": "Form(key, autovalidateMode: AutovalidateMode.disabled lalu onUserInteraction setelah submit pertama) + FormState.validate(); FocusNode.requestFocus() ke field invalid pertama + Scrollable.ensureVisible; SemanticsService.announce(jumlahError, TextDirection) (atau sendAnnouncement di versi baru); AutofillGroup + TextInput.finishAutofillContext() saat sukses; PopScope(canPop: !dirty, onPopInvokedWithResult: konfirmasi)",
+      "swiftui": "Form { Section(header: Text(legend)) { … } }; @FocusState untuk memindah fokus ke field invalid pertama; AccessibilityNotification.Announcement(teks).post() dengan prioritas tinggi; .interactiveDismissDisabled(isDirty) + .confirmationDialog untuk buang perubahan"
+    },
+    "politeness": "assertive",
+    "role": "form (<form> dengan aria-labelledby ke judul; landmark hanya karena bernama)",
+    "sr_label": "nama form = judul; jumlah error diumumkan sebagai kalimat dengan label field pertama; sukses diumumkan polite dengan kata kerja tombol",
+    "wcag": [
+      "1.3.1",
+      "1.3.2",
+      "1.3.5",
+      "1.4.10",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.6",
+      "2.4.11",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "3.3.4",
+      "3.3.7",
+      "3.3.8",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "header",
+      "role": "judul form (heading level sesuai halaman, satu-satunya h1 bila form adalah halaman) + deskripsi singkat tujuan dan apa yang dibutuhkan",
+      "tokens": [
+        "type-h2-size",
+        "type-h2-line",
+        "type-h2-weight",
+        "type-h2-family",
+        "color-structure-text-primary",
+        "type-body-size",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "alert-slot",
+      "role": "slot di atas field: ErrorSummary (validasi), InlineAlert C2 (policy, offline), atau InlineAlert C1 + Retry (system); satu pesan pada satu waktu",
+      "tokens": [
+        "space-6"
+      ]
+    },
+    {
+      "part": "section",
+      "role": "fieldset + legend untuk tiap kelompok field; jarak antar section dari space",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-weight",
+        "type-h3-line",
+        "color-structure-text-primary",
+        "space-8",
+        "space-4"
+      ]
+    },
+    {
+      "part": "field-stack",
+      "role": "Stack/Grid 1 atau 2 kolom; jarak antar field konsisten; lebar dibatasi layout-measure",
+      "tokens": [
+        "space-6",
+        "space-4",
+        "layout-measure"
+      ]
+    },
+    {
+      "part": "action-bar",
+      "role": "satu Button primer (submit) + aksi sekunder (Cancel) di urutan baca terakhir; sticky di bawah bila form melebihi viewport, dengan scroll-padding setinggi bar (SC 2.4.11)",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "border-width-thin",
+        "layout-bar-height",
+        "z-sticky",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "requirement-note",
+      "role": "kalimat di bawah deskripsi yang menjelaskan gaya penanda (\"All fields are required unless marked optional\")",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "saving-indicator",
+      "role": "status draft/autosave (\"Draft saved 2 min ago\") di action-bar, diumumkan polite hanya saat gagal",
+      "tokens": [
+        "type-caption-size",
+        "color-structure-text-secondary"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onSubmit",
+        "payload": "{ values: Record<string, unknown> } → Promise<{ errors?: Record<string, string> } | void>",
+        "when": "submit lolos validasi klien; error yang dikembalikan dipetakan ke field"
+      },
+      {
+        "name": "onValueChange",
+        "payload": "{ name: string; value: unknown; values: Record<string, unknown> }",
+        "when": "field mana pun berubah"
+      },
+      {
+        "name": "onInvalid",
+        "payload": "{ errors: Record<string, string>; firstInvalid: string }",
+        "when": "submit gagal validasi, setelah fokus dipindah"
+      }
+    ],
+    "parts": [
+      "Form.Header (title, description)",
+      "Form.Section (legend, description) → fieldset",
+      "Form.Row (kolom 1 atau 2)",
+      "Form.Actions (sticky)",
+      "Form.Submit (label) → Button primary type=submit",
+      "Form.Cancel (label)"
+    ],
+    "props": [
+      {
+        "description": "Judul form; nama aksesibel (aria-labelledby).",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Tujuan dan kebutuhan form.",
+        "name": "description",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "page",
+        "description": "Konteks form; menentukan action-bar dan guard.",
+        "name": "variant",
+        "required": false,
+        "type": "\"page\" | \"embedded\" | \"inline-edit\""
+      },
+      {
+        "description": "Controlled: nilai semua field.",
+        "name": "value",
+        "required": false,
+        "type": "Record<string, unknown>"
+      },
+      {
+        "description": "Uncontrolled: nilai awal, termasuk data yang sudah diketahui (SC 3.3.7).",
+        "name": "defaultValue",
+        "required": false,
+        "type": "Record<string, unknown>"
+      },
+      {
+        "description": "Error per name field (klien atau server); mengisi invalid/errorText field dan ErrorSummary.",
+        "name": "errors",
+        "required": false,
+        "type": "Record<string, string>"
+      },
+      {
+        "default": "1",
+        "description": "Jumlah kolom maksimum; turun ke 1 di phone dan saat ruang tidak cukup.",
+        "name": "columns",
+        "required": false,
+        "type": "1 | 2"
+      },
+      {
+        "default": "optional",
+        "description": "Gaya penanda field per form.",
+        "name": "requiredIndicator",
+        "required": false,
+        "type": "\"optional\" | \"required\""
+      },
+      {
+        "default": "true",
+        "description": "Konfirmasi sebelum membuang perubahan (Esc, Cancel, navigasi).",
+        "name": "confirmDiscard",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Submitting; mengunci input dan tombol primer.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Semua field read-only.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila form benar-benar tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan form tidak dapat dikirim; wajib bila diblokir.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "submit (native); di TextArea Enter menambah baris",
+      "trigger": "Enter di field satu baris"
+    },
+    {
+      "input": "keyboard",
+      "result": "tidak dikirim; error inline dirender; ErrorSummary muncul di atas; fokus ke field invalid pertama (urutan DOM); LiveAnnouncer assertive: \"2 errors. Email address: Enter an email address…\"",
+      "trigger": "submit dengan error validasi"
+    },
+    {
+      "input": "keyboard",
+      "result": "halaman kembali dengan ErrorSummary di atas yang menerima fokus (tabindex −1) dan judul dokumen berpenanda error; nilai yang sudah dimasukkan diisi ulang (SC 3.3.7)",
+      "trigger": "submit tanpa JS (render server ulang)"
+    },
+    {
+      "input": "keyboard",
+      "result": "Modal konfirmasi \"Discard changes?\" dengan fokus di Cancel (Esc lagi = Cancel); tidak pernah membuang data tanpa konfirmasi",
+      "trigger": "Esc di form embedded yang dirty"
+    },
+    {
+      "input": "keyboard",
+      "result": "field divalidasi ulang per perubahan; error inline hilang saat benar (diumumkan polite \"Error fixed\" tidak diwajibkan); ErrorSummary tidak berubah sampai submit berikutnya",
+      "trigger": "mengetik di field yang sudah error"
+    },
+    {
+      "input": "pointer",
+      "result": "konfirmasi sebelum membuang; draft dipulihkan saat kembali bila brief mengizinkan",
+      "trigger": "klik Cancel / navigasi keluar / tombol back saat dirty"
+    },
+    {
+      "input": "touch",
+      "result": "field digulir di atas keyboard virtual dan action-bar sticky; action-bar tidak menutup field yang fokus (SC 2.4.11)",
+      "trigger": "fokus field di phone"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Request access",
+        "Tell us which workspace you need and why. It takes about 2 minutes.",
+        "All fields are required unless marked optional.",
+        "Submit request",
+        "Request submitted",
+        "Discard unsaved changes?",
+        "Keep editing",
+        "Couldn't submit the request. Your entries are saved. Try again.",
+        "Will send when online"
+      ],
+      "id-ID": [
+        "Minta akses",
+        "Sebutkan workspace yang Anda perlukan dan alasannya. Butuh sekitar 2 menit.",
+        "Semua field wajib diisi kecuali yang bertanda opsional.",
+        "Kirim permintaan",
+        "Permintaan terkirim",
+        "Buang perubahan yang belum disimpan?",
+        "Lanjut mengedit",
+        "Permintaan belum berhasil dikirim. Isian Anda tetap tersimpan. Coba lagi.",
+        "Akan dikirim saat online"
+      ]
+    },
+    "rules": [
+      "Judul menyebut tujuan (\"Request access\"); deskripsi menyebut apa yang dibutuhkan dan berapa lama.",
+      "Satu gaya penanda per form: tandai \"(optional)\" (default) atau \"(required)\" bila sebagian besar opsional; jelaskan di requirement-note.",
+      "Tombol primer = kata kerja spesifik yang sama dengan pesan sukses (\"Submit request\" → \"Request submitted\").",
+      "Error mengikuti taksonomi §12.2: validation inline + ErrorSummary, policy InlineAlert C2, system InlineAlert C1 dengan Retry, offline InlineAlert C2 + antre.",
+      "Jangan meminta ulang data yang sudah diberikan di alur yang sama; tawarkan \"Same as …\" atau isi otomatis (SC 3.3.7).",
+      "Konfirmasi buang perubahan menyebut apa yang hilang (\"Discard unsaved changes?\") dengan aksi \"Discard\" dan \"Keep editing\"."
+    ]
+  },
+  "depends_on": [
+    "ErrorSummary",
+    "InlineAlert",
+    "Button",
+    "LiveAnnouncer",
+    "Stack",
+    "Grid"
+  ],
+  "do": [
+    "Biarkan tombol submit aktif dan tampilkan error setelah submit, bukan memblokir tombol tanpa alasan.",
+    "Pindahkan fokus ke field invalid pertama dan tampilkan ErrorSummary di atas.",
+    "Isi otomatis data yang sudah diketahui dan pertahankan semua isian saat terjadi error.",
+    "Minta konfirmasi sebelum membuang perubahan yang belum disimpan."
+  ],
+  "dont": [
+    {
+      "ref": "UB10",
+      "text": "Menonaktifkan tombol submit sampai form valid tanpa alasan terlihat."
+    },
+    {
+      "text": "Mengosongkan field setelah submit gagal atau meminta ulang data yang sudah diberikan (SC 3.3.7)."
+    },
+    {
+      "text": "Menampilkan error sistem sebagai Toast atau di ErrorSummary (gunakan InlineAlert C1 dengan Retry)."
+    },
+    {
+      "ref": "UB8",
+      "text": "Action-bar sticky yang menutup field yang sedang fokus."
+    },
+    {
+      "text": "Lebih dari satu aksi primer di action-bar."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "dua kolom turun ke satu kolom bila label membungkus lebih dari dua baris; action-bar membungkus tombol ke dua baris di phone",
+      "case": "label dan legend +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "satu kolom; action-bar sticky dilepas (menjadi statis di akhir) bila tingginya melebihi ±25% viewport agar konten tidak tertutup",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "dirender sebagai read-only/DescriptionList; tidak ada tombol submit",
+      "case": "form tanpa field yang bisa diubah (0 field untuk role)"
+    },
+    {
+      "behaviour": "> 12 field atau > 3 section: pecah dengan Stepper; ErrorSummary per langkah",
+      "case": "jumlah field maksimum"
+    },
+    {
+      "behaviour": "dipetakan ke field (errorText + invalid) dan ErrorSummary seperti validasi klien; error yang tidak bisa dipetakan → InlineAlert",
+      "case": "server mengembalikan error untuk field"
+    },
+    {
+      "behaviour": "diantrekan dengan InlineAlert C2 + \"Will send when online\"; tidak ditampilkan sebagai terkirim (I6); data tidak hilang saat aplikasi ditutup bila draft diizinkan",
+      "case": "submit saat offline"
+    },
+    {
+      "behaviour": "isian disimpan sebelum autentikasi ulang dan dipulihkan setelahnya; autentikasi ulang mendukung paste/pengelola sandi (SC 3.3.8)",
+      "case": "sesi habis saat mengisi"
+    },
+    {
+      "behaviour": "onValueChange per field; field yang sebelumnya error divalidasi ulang; form tidak dikirim otomatis",
+      "case": "autofill mengisi banyak field sekaligus"
+    },
+    {
+      "behaviour": "diabaikan selama submitting; idempotency key bila brief menyebut aksi finansial",
+      "case": "submit ganda (klik cepat atau Enter berulang)"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Form tanpa judul (label) ditolak",
+    "Form.Actions dengan lebih dari satu Button primary ditolak",
+    "Tombol submit disabled tanpa reason ditolak",
+    "Field data pribadi tanpa autocomplete ditolak (manual-review)",
+    "Error sistem yang dirender sebagai Toast di Form ditolak (manual-review)",
+    "Grup radio/checkbox tanpa fieldset ditolak"
+  ],
+  "name": "Form",
+  "preview": {
+    "combinations": [
+      "invalid + fokus field pertama",
+      "loading+pressed (dicegah)",
+      "dirty + Esc (konfirmasi)",
+      "2 kolom → 1 kolom phone",
+      "action-bar sticky + field fokus",
+      "RTL 2 kolom"
+    ],
+    "states": [
+      "default",
+      "dirty",
+      "submitting",
+      "invalid",
+      "policy-error",
+      "system-error",
+      "success",
+      "disabled-with-reason",
+      "read-only",
+      "offline"
+    ],
+    "variants": [
+      "page",
+      "embedded",
+      "inline-edit"
+    ]
+  },
+  "purpose": {
+    "purpose": "Menyusun field menjadi satu unit kirim dengan judul, deskripsi, fieldset berlegend, satu aksi primer, validasi yang memindah fokus ke field invalid pertama, ErrorSummary setelah submit gagal, dan perlindungan agar data yang sudah dimasukkan tidak hilang atau diminta ulang.",
+    "when_not_to_use": [
+      "Untuk pengaturan yang berlaku seketika (tanpa Simpan): pakai daftar Switch, bukan Form.",
+      "Untuk satu field pencarian atau filter: pakai SearchField atau FilterChip tanpa pembungkus Form berjudul.",
+      "Untuk alur panjang lebih dari ±12 field atau yang bercabang: pecah menjadi langkah dengan Stepper (setiap langkah adalah Form).",
+      "Untuk menampilkan data tanpa mengubah: pakai DescriptionList (atau field read-only bila sebagian bisa diubah)."
+    ]
+  },
+  "related": [
+    "ErrorSummary",
+    "InlineAlert",
+    "Stepper",
+    "Modal",
+    "Sheet",
+    "Button"
+  ],
+  "responsive": [
+    {
+      "behaviour": "satu kolom; action-bar sticky di bawah dengan safe-area inset, primer lebar penuh di zona jempol; section dapat dilipat hanya bila tidak menyembunyikan error (section ber-error terbuka otomatis)",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "satu kolom default; dua kolom untuk field pendek yang berpasangan (nama depan/belakang) bila lebar kontainer cukup",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "maksimal dua kolom dibatasi layout-measure; urutan DOM per baris; action-bar di akhir form, sticky hanya bila form lebih tinggi dari viewport",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "read-only",
+      "when": "role boleh melihat isian tetapi tidak mengubah: seluruh form read-only, tanpa action-bar submit"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "pengiriman tidak diizinkan saat ini; alasan di atas form dan pada tombol submit"
+    },
+    {
+      "pattern": "step-up",
+      "when": "form berisiko tinggi (finansial, legal, penghapusan): submit membuka StepUpDialog atau langkah tinjau (SC 3.3.4)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "field atau section yang tidak boleh diketahui role tidak dirender dan tidak dikirim"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right",
+      "chevron-left",
+      "chevron-right"
+    ],
+    "notes": "Dua kolom mengalir dari kanan di RTL; urutan DOM tetap logis; action-bar memakai justify-content: end logis sehingga posisi primer mengikuti arah; ikon kembali/lanjut di Stepper dicerminkan."
+  },
+  "sizes": {
+    "not_applicable": "Form tidak punya tinggi kontrol sendiri; ukuran field mengikuti prop size masing-masing komponen, dan lebar mengikuti layout-measure serta jumlah kolom."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "field invalid pertama menerima fokus dengan ring + border critical; errorText terbaca lewat aria-describedby",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "submit tidak bisa ditekan lagi saat submitting",
+      "supported": false
+    },
+    {
+      "availability": "loading",
+      "base": "error",
+      "focus": false,
+      "interaction": "rest",
+      "note": "resubmit setelah memperbaiki: ErrorSummary tetap sampai respons validasi berikutnya, lalu diperbarui atau hilang",
+      "supported": true
+    },
+    {
+      "availability": "read-only",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "field read-only fokusabel; nilai kontras penuh",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": true,
+      "interaction": "rest",
+      "note": "submit aria-disabled tetap fokusabel agar reason terbaca",
+      "supported": true
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {},
+      "treatment": "pristine: field berisi nilai awal (termasuk data yang sudah diketahui, SC 3.3.7); submit aktif (tidak diblokir menunggu validitas)"
+    },
+    {
+      "name": "dirty",
+      "token_swaps": {},
+      "treatment": "ada perubahan belum terkirim: guard navigasi aktif (konfirmasi saat meninggalkan, menutup overlay, atau Esc); draft disimpan lokal bila brief mengizinkan"
+    },
+    {
+      "name": "submitting",
+      "token_swaps": {
+        "action-bar": "color-structure-surface-raised"
+      },
+      "treatment": "Button primer loading (lebar terkunci, aria-busy); form aria-busy=\"true\"; field tetap terlihat dan terbaca, input dikunci sementara; submit ganda diabaikan"
+    },
+    {
+      "name": "invalid",
+      "token_swaps": {
+        "alert-slot": "color-semantic-critical"
+      },
+      "treatment": "submit gagal validasi: setiap field invalid menampilkan error inline (ikon + teks + aria-describedby); ErrorSummary dirender di atas; fokus ke field invalid pertama; jumlah error diumumkan assertive; judul dokumen diawali penanda error glosarium"
+    },
+    {
+      "name": "policy-error",
+      "token_swaps": {
+        "alert-slot": "color-semantic-warning"
+      },
+      "treatment": "aturan bisnis tidak terpenuhi (§12.2): InlineAlert C2 di atas form berisi aturan dan saran; field terkait ditandai bila bisa dipetakan"
+    },
+    {
+      "name": "system-error",
+      "token_swaps": {
+        "alert-slot": "color-semantic-critical"
+      },
+      "treatment": "server gagal: InlineAlert C1 di atas form dengan Retry (bukan toast, bukan ErrorSummary); semua nilai tetap utuh; fokus ke alert"
+    },
+    {
+      "name": "success",
+      "token_swaps": {},
+      "treatment": "pindah ke halaman/state hasil atau Toast dengan kata kerja yang sama dengan tombol (\"Request submitted\"); diumumkan polite; guard dirty dilepas"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {},
+      "treatment": "form tidak dapat dikirim saat ini (mis. periode ditutup): InlineAlert/helper menyebut alasan di atas; Button primer aria-disabled + reason; field menjadi read-only, bukan disabled, agar tetap terbaca"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {},
+      "treatment": "semua field read-only (kontras penuh, aria-readonly); action-bar diganti aksi Edit bila role boleh mengubah"
+    },
+    {
+      "name": "offline",
+      "token_swaps": {
+        "alert-slot": "color-semantic-warning"
+      },
+      "treatment": "InlineAlert C2 persisten; submit diantrekan dengan teks \"Will send when online\"; tidak ditampilkan sebagai terkirim sebelum server mengonfirmasi (I6)"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Form: Column + FocusRequester per field + BackHandler",
+    "flutter": "Form + GlobalKey<FormState> dibungkus {ns}_form.dart dengan AutofillGroup dan PopScope",
+    "html": {
+      "element": "form",
+      "notes": "method dan action asli agar berfungsi tanpa JS; modul JS menambah noValidate, validasi inline, fokus ke invalid pertama, ErrorSummary, guard beforeunload; Button type=\"submit\" hanya di Form.Actions"
+    },
+    "swiftui": "Form/Section dibungkus {Ns}Form dengan @FocusState dan confirmationDialog"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Form sebagai isi utama halaman: header berisi h1, action-bar sticky di bawah pada phone dan saat panjang; meninggalkan halaman dengan perubahan belum tersimpan meminta konfirmasi.",
+      "name": "page"
+    },
+    {
+      "description": "Form di dalam Modal, Sheet, atau ContextPanel: judul = judul overlay; action-bar menjadi footer overlay; Esc pada form berubah meminta konfirmasi alih-alih membuang data.",
+      "name": "embedded"
+    },
+    {
+      "description": "Satu-dua field yang diedit di tempat (mis. nama di header detail): Save/Cancel di samping field, Enter menyimpan, Esc membatalkan dengan mengembalikan nilai asli (tidak ada data lain yang hilang).",
+      "name": "inline-edit"
+    }
+  ]
+}

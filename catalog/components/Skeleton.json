@@ -1,0 +1,393 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: tunggu < 2 detik tidak diumumkan; lebih lama: \"Loading {content}\" sekali (polite), lalu hasil akhir (\"24 invoices\") atau error",
+      "aria-busy=\"true\" pada region selama loading, dilepas saat konten tiba",
+      "tampilkan skeleton hanya setelah jeda ±300 ms agar muat cepat tidak berkedip; bila sudah tampil, pertahankan minimal ±500 ms",
+      "shimmer berhenti di bawah reduced motion dan setelah 5 detik bila tidak ada kontrol jeda (SC 2.2.2)",
+      "skeleton tidak memuat teks palsu yang terbaca"
+    ],
+    "focus_order": "tidak pernah menerima fokus; saat konten tiba fokus tidak dipindah kecuali pengguna memintanya (mis. setelah navigasi rute, fokus ke h1)",
+    "native": {
+      "compose": "Modifier.clearAndSetSemantics {} pada blok + semantics { contentDescription = \"Loading invoices\" } pada region; animasi mati bila ValueAnimator.areAnimatorsEnabled() false. Not verified against the pinned version",
+      "flutter": "ExcludeSemantics pada blok skeleton + Semantics(label: 'Loading invoices') pada region; animasi mati bila MediaQuery.disableAnimationsOf(context) true. Not verified against the pinned version",
+      "swiftui": ".redacted(reason: .placeholder) pada tampilan asli + .accessibilityHidden(true) pada placeholder; animasi mati bila @Environment(\\.accessibilityReduceMotion) true. Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "blok skeleton disembunyikan (aria-hidden=\"true\"); region konten membawa aria-busy=\"true\" dan tetap berlabel",
+    "sr_label": "tidak ada (aria-hidden); nama region tetap (mis. \"Invoices\") dan status loading datang dari LiveAnnouncer",
+    "wcag": [
+      "1.3.1",
+      "2.2.2",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "region",
+      "role": "wadah konten yang sedang dimuat; membawa aria-busy dan nama aksesibel konten",
+      "tokens": []
+    },
+    {
+      "part": "block-text",
+      "role": "baris teks placeholder setinggi tinggi baris token tipe yang akan menggantikannya; baris terakhir lebih pendek",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-xs",
+        "type-body-line",
+        "type-label-line",
+        "type-h3-line",
+        "space-2"
+      ]
+    },
+    {
+      "part": "block-shape",
+      "role": "persegi atau rasio media (thumbnail, chart) dengan rasio token aspect-*",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-sm",
+        "aspect-square",
+        "aspect-photo",
+        "aspect-video"
+      ]
+    },
+    {
+      "part": "block-avatar",
+      "role": "lingkaran seukuran avatar asli",
+      "tokens": [
+        "color-structure-skeleton",
+        "radius-full",
+        "avatar-sm",
+        "avatar-md"
+      ]
+    },
+    {
+      "part": "row",
+      "role": "satu baris tabel atau item List; tinggi = layout-row-height atau tinggi item asli",
+      "tokens": [
+        "layout-row-height",
+        "color-structure-border",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "shimmer",
+      "role": "kilau bergerak opsional (hanya bila L8 dan L15 mengizinkan gradien gerak); alternatif: pulse opasitas; reduced motion: statis",
+      "tokens": [
+        "color-structure-surface-raised",
+        "motion-slow-duration",
+        "motion-easing-standard"
+      ]
+    }
+  ],
+  "api": {
+    "events": [],
+    "parts": [
+      "Skeleton.Text",
+      "Skeleton.Shape",
+      "Skeleton.Avatar"
+    ],
+    "props": [
+      {
+        "default": "text",
+        "description": "Bentuk placeholder.",
+        "name": "variant",
+        "required": false,
+        "type": "\"text\" | \"shape\" | \"avatar\" | \"composed\""
+      },
+      {
+        "description": "Untuk variant=composed: susunan diturunkan dari komponen asli.",
+        "name": "layout",
+        "required": false,
+        "type": "\"table-rows\" | \"list-items\" | \"card\" | \"description-list\""
+      },
+      {
+        "default": "3",
+        "description": "Jumlah baris untuk variant=text.",
+        "name": "lines",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Jumlah item/baris untuk composed; default = yang muat di viewport.",
+        "name": "count",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Nama konten yang dimuat; dipakai untuk pengumuman \"Loading {label}\".",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "true",
+        "description": "Saat false, children (konten asli) dirender dan aria-busy dilepas.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "300",
+        "description": "Jeda sebelum skeleton tampil.",
+        "name": "delay",
+        "required": false,
+        "type": "number (ms)"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "skeleton tidak menerima fokus; kontrol di luar region (filter, toolbar) tetap bisa dipakai",
+      "trigger": "Tab saat region loading"
+    },
+    {
+      "input": "pointer",
+      "result": "tidak ada aksi; kursor default (bukan pointer)",
+      "trigger": "klik pada blok skeleton"
+    },
+    {
+      "input": "touch",
+      "result": "diabaikan sampai muat pertama selesai atau gagal",
+      "trigger": "pull-to-refresh saat skeleton tampil"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Loading invoices",
+        "Still loading invoices. This is taking longer than usual.",
+        "24 invoices",
+        "We couldn't load invoices. Check your connection, then try again."
+      ],
+      "id-ID": [
+        "Memuat faktur",
+        "Masih memuat faktur. Ini lebih lama dari biasanya.",
+        "24 faktur",
+        "Faktur tidak dapat dimuat. Periksa koneksi Anda, lalu coba lagi."
+      ]
+    },
+    "rules": [
+      "Skeleton tidak berisi teks; status loading hanya diumumkan dan, setelah 10 detik, ditulis.",
+      "Teks tunggu lama menyebut apa yang dimuat (\"Still loading invoices\"), bukan \"Please wait\".",
+      "Hasil akhir diumumkan dengan jumlah memakai ICU plural.",
+      "Bila gagal, pesan error mengikuti §12.2 (InlineAlert C1 + Retry)."
+    ]
+  },
+  "depends_on": [
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Turunkan skeleton dari komponen asli (prop layout) agar kolom, tinggi baris, dan rasio sama.",
+    "Tunda tampil ±300 ms dan ganti dengan konten tanpa pergeseran layout.",
+    "Matikan shimmer di bawah reduced motion.",
+    "Ganti skeleton dengan InlineAlert C1 + Retry bila muat gagal atau timeout."
+  ],
+  "dont": [
+    {
+      "text": "Memakai skeleton generik (tiga bar abu-abu) yang tidak mirip tata letak asli."
+    },
+    {
+      "text": "Menganimasikan shimmer di bawah reduced motion atau tanpa batas waktu."
+    },
+    {
+      "text": "Mengganti data yang sudah tampil dengan skeleton saat refresh."
+    },
+    {
+      "text": "Memakai warna semantik atau warna interaksi untuk blok skeleton."
+    },
+    {
+      "text": "Memberi blok skeleton tinggi tetap yang tidak ikut skala teks 200%."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "baris teks skeleton memakai lebar persentase, bukan lebar string; baris ekstra tidak ditambahkan",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "tinggi blok teks dihitung dari token line-height yang sudah diskalakan sehingga konten asli tidak meloncat saat tiba",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "skeleton diganti EmptyState spesifik; jangan biarkan skeleton tetap",
+      "case": "0 item (muat selesai, kosong)"
+    },
+    {
+      "behaviour": "skeleton hanya untuk baris yang terlihat di viewport; scroll lebih jauh memakai skeleton baris per halaman virtual",
+      "case": "jumlah maksimum (ribuan baris virtual)"
+    },
+    {
+      "behaviour": "bila ada cache: tampilkan data cache + ConnectionStatus stale, tanpa skeleton; tanpa cache: InlineAlert C2 offline, bukan skeleton tak berujung",
+      "case": "offline"
+    },
+    {
+      "behaviour": "skeleton tidak berkedip ulang; permintaan lama dibatalkan dan skeleton tetap sampai permintaan terakhir selesai",
+      "case": "pembaruan beruntun cepat (filter diganti berkali-kali)"
+    },
+    {
+      "behaviour": "tiap seksi mengganti skeletonnya sendiri; urutan tidak menggeser seksi yang sudah tampil",
+      "case": "muat sebagian (beberapa seksi selesai lebih dulu)"
+    },
+    {
+      "behaviour": "teks \"Still loading\" + animasi berhenti; setelah batas timeout (dari brief, selain itu A-nn) → InlineAlert C1 + Retry",
+      "case": "loading > 10 detik"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Selalu disertakan.",
+  "lint": [
+    "Animasi skeleton tanpa aturan prefers-reduced-motion ditolak (V6)",
+    "Skeleton tanpa label ditolak",
+    "Skeleton tanpa batas waktu ke error state ditandai (manual-review)",
+    "Pergeseran layout saat konten tiba > 0.1 CLS ditandai (V9)"
+  ],
+  "name": "Skeleton",
+  "preview": {
+    "combinations": [
+      "table-rows di phone (kartu) vs desktop (baris)",
+      "skeleton → konten tanpa pergeseran (uji CLS)",
+      "teks 200%",
+      "reduced motion aktif"
+    ],
+    "states": [
+      "loading (rest)",
+      "shimmer",
+      "reduced-motion",
+      "long-wait (> 10 detik)",
+      "resolved",
+      "timeout / error",
+      "high-contrast / forced-colors"
+    ],
+    "variants": [
+      "text",
+      "shape",
+      "avatar",
+      "composed"
+    ]
+  },
+  "purpose": {
+    "purpose": "Placeholder bentuk konten saat muat pertama daftar, tabel, kartu, dan panel detail, yang meniru tata letak asli (jumlah kolom, tinggi baris, posisi avatar dan teks) sehingga tidak ada pergeseran layout saat data tiba.",
+    "when_not_to_use": [
+      "Untuk tunggu di bawah 2 detik di dalam kontrol (tombol simpan): pakai Spinner di dalam Button.",
+      "Untuk proses yang durasi atau persentasenya diketahui (impor, laporan): pakai ProgressBar.",
+      "Untuk memuat ulang data yang sudah tampil (refresh, paginasi berikutnya): pertahankan data lama + indikator kecil, jangan menghapus konten menjadi skeleton.",
+      "Untuk tata letak yang tidak diketahui bentuknya: pakai Spinner dengan teks atau ProgressBar indeterminate, bukan skeleton generik.",
+      "Untuk hasil kosong atau error: pakai EmptyState atau InlineAlert; skeleton tidak pernah tampil tanpa batas."
+    ]
+  },
+  "related": [
+    "Spinner",
+    "ProgressBar",
+    "EmptyState",
+    "Table",
+    "List",
+    "Card"
+  ],
+  "responsive": [
+    {
+      "behaviour": "meniru kartu bertumpuk (bukan baris tabel) karena Table berubah menjadi kartu di bawah breakpoint tablet; 3-5 item cukup mengisi viewport",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "meniru tabel dengan kolom sekunder dilipat sesuai Table di tablet",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "meniru semua kolom tabel terlihat dan panel detail; jumlah baris = baris yang muat di viewport, bukan ukuran halaman penuh",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": {
+    "not_applicable": "Skeleton tidak menampilkan data; bentuknya meniru tata letak yang akan dilihat role tersebut (kolom yang disembunyikan untuk role juga tidak punya skeleton)."
+  },
+  "rtl": {
+    "mirrored_icons": [],
+    "notes": "Baris terakhir yang lebih pendek berakhir di inline-end; arah shimmer mengikuti arah inline (start → end) dan dicerminkan di RTL."
+  },
+  "sizes": {
+    "not_applicable": "Ukuran tidak dipilih: setiap blok mewarisi ukuran elemen yang ditirunya (tinggi baris token tipe, avatar-*, aspect-*, layout-row-height). Non-interaktif, tanpa area klik."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "loading (rest)",
+      "token_swaps": {
+        "block": "color-structure-skeleton"
+      },
+      "treatment": "blok color-structure-skeleton statis atau dengan animasi sesuai L8; region aria-busy=\"true\""
+    },
+    {
+      "name": "shimmer",
+      "token_swaps": {
+        "block": "color-structure-skeleton",
+        "sheen": "color-structure-surface-raised"
+      },
+      "treatment": "kilau linear dari skeleton ke surface-raised dan kembali, satu siklus per motion-slow-duration × 4 (±1,2-1,6 detik), hanya bila L8 mengizinkan gerak berulang dan L15 mengizinkan gradien; selain itu pulse opasitas"
+    },
+    {
+      "name": "reduced-motion",
+      "token_swaps": {
+        "block": "color-structure-skeleton"
+      },
+      "treatment": "prefers-reduced-motion: reduce (atau Reduce Motion / Remove animations): shimmer dan pulse dimatikan; blok statis color-structure-skeleton; tidak ada informasi yang bergantung pada animasi"
+    },
+    {
+      "name": "long-wait (> 10 detik)",
+      "token_swaps": {
+        "status-text": "color-structure-text-secondary"
+      },
+      "treatment": "skeleton tetap, ditambah teks status di atasnya (\"Still loading invoices\") dan pengumuman sekali; animasi berhenti setelah 5 detik bila belum berhenti (SC 2.2.2)"
+    },
+    {
+      "name": "resolved",
+      "token_swaps": {},
+      "treatment": "diganti konten asli tanpa pergeseran layout; crossfade motion-fast-duration (reduced motion: instan); aria-busy dilepas"
+    },
+    {
+      "name": "timeout / error",
+      "token_swaps": {},
+      "treatment": "skeleton dilepas dan diganti InlineAlert C1 + Retry di tempat yang sama; tidak pernah skeleton tak berujung"
+    },
+    {
+      "name": "high-contrast / forced-colors",
+      "token_swaps": {
+        "block-border": "color-structure-border-strong"
+      },
+      "treatment": "blok memakai border-width-thin dengan warna sistem GrayText agar bentuk tetap terlihat"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Skeleton: Modifier.placeholder kustom dengan InfiniteTransition yang dimatikan bila animator nonaktif",
+    "flutter": "{ns}_skeleton.dart: widget yang menerima child asli dan membangun placeholder dari layout; animasi via AnimationController yang dinonaktifkan bila disableAnimations",
+    "html": {
+      "element": "div",
+      "notes": "div[aria-busy=true] berlabel; blok span[aria-hidden=true].{ns}-skeleton; @media (prefers-reduced-motion: reduce) { animation: none }"
+    },
+    "swiftui": "{Ns}Skeleton: ViewModifier yang menerapkan .redacted(reason: .placeholder) + shimmer opsional"
+  },
+  "tier": "R",
+  "variants": [
+    {
+      "description": "Satu atau beberapa baris teks; jumlah baris = perkiraan isi asli.",
+      "name": "text"
+    },
+    {
+      "description": "Blok media atau chart dengan rasio aspect-*.",
+      "name": "shape"
+    },
+    {
+      "description": "Lingkaran seukuran Avatar.",
+      "name": "avatar"
+    },
+    {
+      "description": "Susunan siap pakai yang meniru komponen asli: table-rows (jumlah kolom dan tinggi baris dari Table), list-items, card, description-list. Dipakai lewat prop layout, bukan digambar ulang per layar.",
+      "name": "composed"
+    }
+  ]
+}

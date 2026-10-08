@@ -1,0 +1,43 @@
+/* Stack · engine 1.8.0 reference (catalog/components/Stack.json). Extends .ds-stack from base.css (display, gap 1–12).
+   Layout primitive: no colour, no border, no padding, no margin on children; order = source order (no column-reverse/order). */
+.ds-stack[data-gap="section"] { --ds-gap: var(--space-section); }
+.ds-stack[data-gap="section-lg"] { --ds-gap: var(--space-section-lg); }
+
+/* align: inline-axis alignment, logical values (start hugs the right edge in RTL) */
+.ds-stack[data-align="start"] { align-items: flex-start; }
+.ds-stack[data-align="center"] { align-items: center; }
+.ds-stack[data-align="end"] { align-items: flex-end; }
+.ds-stack[data-align="stretch"] { align-items: stretch; }
+
+/* justify: block-axis distribution when the Stack is taller than its content */
+.ds-stack[data-justify="start"] { justify-content: flex-start; }
+.ds-stack[data-justify="center"] { justify-content: center; }
+.ds-stack[data-justify="end"] { justify-content: flex-end; }
+.ds-stack[data-justify="space-between"] { justify-content: space-between; }
+
+/* children never bring their own block margin: spacing comes only from gap (zero specificity so components keep theirs) */
+:where(.ds-stack) > :where(*) { margin-block: 0; min-inline-size: 0; }
+
+/* empty: renders no space, so a parent Stack does not get a doubled gap */
+.ds-stack:empty { display: none; }
+
+/* divider prop: decorative Dividers between children; never at the start, the end, or twice in a row (collapsed groups) */
+/* labelled dividers carry content (a section label), so they are never suppressed */
+.ds-stack > .ds-divider:not([data-variant="labelled"]):first-child,
+.ds-stack > .ds-divider:not([data-variant="labelled"]):last-child,
+.ds-stack > .ds-divider + .ds-divider:not([data-variant="labelled"]) { display: none; }
+
+/* Preview chrome (only in previews/, like .ds-demo in base.css). Lives here because Stack is always included; the layout
+   fixtures use it to make invisible primitives visible. Not part of the component API. */
+.ds-demo .ds-demo__swatch {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-thin) dashed var(--color-structure-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+}
+.ds-demo .ds-demo__swatch[data-compact] { padding-inline: 0; text-align: center; }
+.ds-demo .ds-demo__frame { outline: var(--border-width-thin) dashed var(--color-structure-border-control); outline-offset: 0; }
+.ds-demo .ds-demo__caption { display: block; }
+/* simulated 200% text/zoom for a part of a preview (whole-page zoom is covered by the 320 px reflow check) */
+.ds-demo [data-ds-zoom="200"] { zoom: 2; }

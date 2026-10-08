@@ -1,0 +1,464 @@
+{
+  "accessibility": {
+    "attributes": [
+      "Pengumuman lewat LiveAnnouncer: polite default, assertive hanya C1; di web role node terdaftar yang membacakan dan LiveAnnouncer tidak dipanggil lagi untuk teks yang sama",
+      "banner yang sudah ada saat halaman dimuat tidak diumumkan; dibaca lewat urutan baca setelah SkipLink",
+      "aria-labelledby ke message bila berisi aksi; tombol tutup \"Dismiss notice\"",
+      "bila banner sticky, scroll-padding-top ditambah tinggi banner agar fokus tidak tertutup (SC 2.4.11)",
+      "banner tidak mencuri fokus saat muncul"
+    ],
+    "focus_order": "system: sesudah global bar, sebelum main; page: sesudah PageHeader, sebelum konten halaman",
+    "native": {
+      "compose": "Surface di slot topBar Scaffold di bawah TopAppBar dengan Modifier.semantics { liveRegion = LiveRegionMode.Polite /* Assertive untuk C1 */ }. Not verified against the pinned version",
+      "flutter": "ScaffoldMessenger.of(context).showMaterialBanner(MaterialBanner(content: …, actions: […])) atau widget kustom di bawah AppBar dengan Semantics(liveRegion: true); C1 lewat SemanticsService.announce(assertiveness: Assertiveness.assertive). Not verified against the pinned version",
+      "swiftui": ".safeAreaInset(edge: .top) { BannerView } di bawah navigation bar; AccessibilityNotification.Announcement(pesan).post() saat muncul (prioritas .high untuk C1). Not verified against the pinned version"
+    },
+    "politeness": "polite",
+    "role": "role=\"alert\" untuk critical (C1), role=\"status\" untuk lainnya; di web wadah terdaftar sebagai node status persisten (pengecualian V5 LiveAnnouncer) dan dirender kosong sejak AppShell dimuat; di native pengumuman lewat LiveAnnouncer",
+    "sr_label": "message + aksi; ikon status tidak dibaca",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.10",
+      "2.4.11",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "pita selebar viewport (system) atau selebar konten (page), di dalam alur dokumen tepat di bawah global bar (system) atau di bawah PageHeader (page); mendorong konten, tidak menutupinya; perlakuan L3 per kelas",
+      "tokens": [
+        "color-semantic-critical-subtle",
+        "color-semantic-warning-subtle",
+        "color-semantic-positive-subtle",
+        "color-semantic-info-subtle",
+        "color-semantic-neutral-negative-subtle",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative",
+        "color-structure-surface-raised",
+        "color-structure-border",
+        "border-width-thin",
+        "space-3",
+        "space-4"
+      ]
+    },
+    {
+      "part": "status-icon",
+      "role": "glyph terkunci §5.7; dekoratif bagi teknologi bantu",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-semantic-critical",
+        "color-semantic-warning",
+        "color-semantic-positive",
+        "color-semantic-info",
+        "color-semantic-neutral-negative"
+      ]
+    },
+    {
+      "part": "message",
+      "role": "kondisi + dampak + (bila ada) waktu, satu-dua kalimat (teks isi)",
+      "tokens": [
+        "type-body-size",
+        "type-body-line",
+        "type-body-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "action",
+      "role": "maksimal satu aksi (Link atau Button tertiary: \"Renew subscription\", \"View status page\")",
+      "tokens": [
+        "color-interaction-default",
+        "type-label-size",
+        "type-label-weight"
+      ]
+    },
+    {
+      "part": "dismiss",
+      "role": "IconButton tutup; hanya untuk C3-C5; tidak pernah untuk C1 atau C2",
+      "tokens": [
+        "icon-md",
+        "target-min-touch",
+        "target-min-pointer"
+      ]
+    },
+    {
+      "part": "filled-content",
+      "role": "konten di atas fill solid bila L3 memberi filled untuk kelas itu",
+      "tokens": [
+        "color-semantic-on-critical",
+        "color-semantic-on-warning",
+        "color-semantic-on-positive",
+        "color-semantic-on-info",
+        "color-semantic-on-neutral-negative",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onOpenChange",
+        "payload": "boolean",
+        "when": "banner ditutup pengguna (hanya C3-C5)"
+      },
+      {
+        "name": "onPress",
+        "payload": "PressEvent",
+        "when": "aksi banner diaktifkan"
+      }
+    ],
+    "parts": [
+      "Banner.Action"
+    ],
+    "props": [
+      {
+        "default": "page",
+        "description": "Tingkat banner; satu per tingkat.",
+        "name": "variant",
+        "required": false,
+        "type": "\"system\" | \"page\""
+      },
+      {
+        "description": "Keluarga semantik dari kelas C1-C5.",
+        "name": "status",
+        "required": true,
+        "type": "\"critical\" | \"warning\" | \"positive\" | \"info\" | \"neutral-negative\""
+      },
+      {
+        "description": "Pesan kondisi dan dampaknya.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Diabaikan untuk critical dan warning.",
+        "name": "dismissible",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Controlled visibility.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Kunci kondisi untuk mengingat penutupan per pengguna.",
+        "name": "id",
+        "required": true,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "fokus ke aksi lalu tombol tutup (bila ada) sesuai urutan DOM; banner berada sebelum main sehingga SkipLink melompatinya",
+      "trigger": "Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "banner hilang tanpa menggeser fokus ke tempat tak terduga; fokus ke elemen fokusabel berikutnya",
+      "trigger": "Enter pada tutup (C3-C5)"
+    },
+    {
+      "input": "pointer",
+      "result": "onPress/navigasi; banner tetap sampai kondisinya berubah",
+      "trigger": "klik aksi"
+    },
+    {
+      "input": "touch",
+      "result": "sama dengan keyboard; area klik ≥ target-min-touch",
+      "trigger": "tap tutup"
+    }
+  ],
+  "carries_status": true,
+  "content": {
+    "examples": {
+      "en-US": [
+        "You're offline. You can keep working; changes will be sent when you're back online.",
+        "Scheduled maintenance tomorrow from 22:00 to 23:00. Saving will be unavailable during this time.",
+        "Your subscription ends in 3 days. Renew to keep access to reports.",
+        "Renew subscription",
+        "Service restored. Changes made during the outage were saved.",
+        "Payments are unavailable right now. We're working on it; check the status page for updates."
+      ],
+      "id-ID": [
+        "Anda sedang offline. Anda tetap bisa bekerja; perubahan akan dikirim saat kembali online.",
+        "Pemeliharaan terjadwal besok pukul 22.00-23.00. Penyimpanan tidak tersedia selama waktu itu.",
+        "Langganan Anda berakhir dalam 3 hari. Perpanjang untuk tetap mengakses laporan.",
+        "Perpanjang langganan",
+        "Layanan pulih. Perubahan selama gangguan sudah tersimpan.",
+        "Pembayaran sedang tidak tersedia. Kami sedang menanganinya; cek halaman status untuk pembaruan."
+      ]
+    },
+    "rules": [
+      "Kondisi + dampak bagi pengguna + waktu bila relevan (\"until 22:00 WIB\") dengan zona waktu B1.",
+      "Satu aksi dengan kata kerja spesifik; tidak ada \"Learn more\" tanpa objek.",
+      "Suara sistem; tidak menyalahkan pengguna; tanpa \"Oops\" atau tanda seru.",
+      "Offline menyebut apa yang tetap bisa dilakukan dan apa yang antre.",
+      "Banner yang dipulihkan (C4) menyebut bahwa layanan normal kembali dan apakah ada yang perlu diulang."
+    ]
+  },
+  "depends_on": [
+    "Link",
+    "Button",
+    "IconButton",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Tampilkan maksimal satu banner per tingkat; pilih kelas paling mendesak.",
+    "Biarkan banner bertahan sampai kondisinya berubah.",
+    "Izinkan tutup hanya untuk C3-C5.",
+    "Tempatkan banner di alur dokumen agar mendorong konten, tidak menutupinya."
+  ],
+  "dont": [
+    {
+      "text": "Menumpuk beberapa banner di tingkat yang sama."
+    },
+    {
+      "text": "Menyediakan tombol tutup pada banner C1 atau C2."
+    },
+    {
+      "text": "Memakai Banner untuk promosi dengan warna semantik atau merek (I1)."
+    },
+    {
+      "ref": "UB8",
+      "text": "Banner sticky yang menutup elemen yang sedang fokus."
+    },
+    {
+      "ref": "UB11",
+      "text": "Banner C4 \"Service restored\" yang lebih keras daripada banner C2 yang masih berlaku."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "pesan membungkus; aksi pindah ke baris sendiri; tidak dipotong",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "banner tumbuh; bila tingginya melebihi ±1/4 viewport di phone, banner tidak sticky dan bergulir bersama konten",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "tidak ada banner; wadah role tetap ada kosong (web) agar penyisipan berikutnya terbaca",
+      "case": "0 kondisi aktif"
+    },
+    {
+      "behaviour": "satu banner kelas terburuk + \"2 more notices\" yang membuka daftar; urutan C1 > C2 > C5 > C3 > C4",
+      "case": "jumlah maksimum (beberapa kondisi sistem bersamaan)"
+    },
+    {
+      "behaviour": "banner system C2 bila fungsi aplikasi berubah; ConnectionStatus tetap menampilkan freshness; banner hilang saat koneksi pulih dan diganti C4 \"Back online\" yang dapat ditutup atau hilang setelah antrean terkirim",
+      "case": "offline"
+    },
+    {
+      "behaviour": "perubahan di-debounce; banner diperbarui di tempat, bukan dilepas dan dipasang ulang; pengumuman hanya saat kelas berubah",
+      "case": "pembaruan beruntun cepat (kondisi naik-turun)"
+    },
+    {
+      "behaviour": "masing-masing di tingkatnya (satu per tingkat); pengumuman C1 assertive, C2 polite",
+      "case": "beberapa status bersamaan (system C2 + page C1)"
+    },
+    {
+      "behaviour": "kondisi baru dianggap kondisi berbeda dan tampil lagi",
+      "case": "banner C3-C5 sudah ditutup lalu kondisinya berubah kelas"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Feedback",
+  "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila brief punya surface offline-first, jadwal pemeliharaan, atau langganan yang bisa kedaluwarsa.",
+  "lint": [
+    "Lebih dari satu Banner per tingkat ditolak",
+    "dismissible pada critical atau warning ditolak",
+    "Banner dengan position: fixed yang menutup konten ditolak (V6)",
+    "Banner tanpa ikon status ditolak (UB2)"
+  ],
+  "name": "Banner",
+  "preview": {
+    "combinations": [
+      "kelima status × perlakuan L3",
+      "system + page bersamaan",
+      "filled + fokus (focus-ring-inverse)",
+      "teks 200% di phone",
+      "C1 tanpa tombol tutup"
+    ],
+    "states": [
+      "critical (C1)",
+      "warning (C2)",
+      "neutral-negative (C3)",
+      "positive (C4)",
+      "info (C5)",
+      "focus (aksi atau tutup)",
+      "dismissed",
+      "queued"
+    ],
+    "variants": [
+      "system",
+      "page"
+    ]
+  },
+  "purpose": {
+    "purpose": "Pesan persisten tingkat sistem (seluruh aplikasi: pemeliharaan, mode offline, langganan) atau tingkat halaman (kondisi yang berlaku untuk seluruh halaman), ditempatkan di bawah global bar; bertahan sampai kondisinya berubah, maksimal satu banner per tingkat.",
+    "when_not_to_use": [
+      "Untuk masalah yang hanya memengaruhi satu form, tabel, atau seksi: pakai InlineAlert di atas konten itu.",
+      "Untuk konfirmasi sementara atas aksi: pakai Toast.",
+      "Untuk promosi, pengumuman fitur, atau pemasaran tanpa status: bukan Banner (I1); pakai Card atau konten halaman.",
+      "Untuk event kritis (I5) yang butuh perlakuan khusus: overlay/perlakuan event kritis lebih dulu; Banner C1 boleh menyertai sebagai penanda persisten.",
+      "Untuk indikator koneksi ringkas: pakai ConnectionStatus (Banner hanya bila fungsi aplikasi berubah karena offline)."
+    ]
+  },
+  "related": [
+    "InlineAlert",
+    "Toast",
+    "ConnectionStatus",
+    "AppShell",
+    "PageHeader"
+  ],
+  "responsive": [
+    {
+      "behaviour": "di bawah global bar dengan safe-area inset; aksi pindah ke bawah pesan; tidak sticky kecuali C1 agar tidak memakan ruang vertikal",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "di bawah global bar; aksi inline di inline-end bila muat",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "system selebar viewport di bawah global bar; page selebar kontainer konten; teks dibatasi layout-content-max",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role dapat menjalankan aksi banner (mis. admin memperpanjang langganan)"
+    },
+    {
+      "pattern": "hidden",
+      "when": "aksi tidak relevan bagi role (anggota biasa tidak bisa memperpanjang): pesan tetap tampil dengan teks \"Ask your workspace admin to renew\", tanpa tombol"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "aksi terlihat tetapi diblokir sementara; alasan tertulis"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-right"
+    ],
+    "notes": "Ikon status di inline-start, tutup di inline-end; panah aksi dicerminkan; waktu dan angka diisolasi."
+  },
+  "sizes": {
+    "not_applicable": "Lebar mengikuti tingkatnya (viewport atau konten), tinggi mengikuti teks. Area klik aksi dan tutup mengikuti Link/Button/IconButton."
+  },
+  "state_combinations": [],
+  "states": [
+    {
+      "name": "critical (C1)",
+      "token_swaps": {
+        "border-outline": "color-semantic-critical",
+        "container-filled": "color-semantic-critical",
+        "container-tinted": "color-semantic-critical-subtle",
+        "content-filled": "color-semantic-on-critical",
+        "icon": "color-semantic-critical",
+        "message-quiet": "color-semantic-critical-strong"
+      },
+      "treatment": "perlakuan C1 dari L3 (quiet / outline / tinted / filled); tidak bisa ditutup; mis. layanan gagal total, data tidak tersimpan"
+    },
+    {
+      "name": "warning (C2)",
+      "token_swaps": {
+        "border-outline": "color-semantic-warning",
+        "container-filled": "color-semantic-warning",
+        "container-tinted": "color-semantic-warning-subtle",
+        "content-filled": "color-semantic-on-warning",
+        "icon": "color-semantic-warning",
+        "message-quiet": "color-semantic-warning-strong"
+      },
+      "treatment": "perlakuan C2 dari L3; tidak bisa ditutup; mis. mode offline, langganan berakhir dalam 3 hari, pemeliharaan sedang berlangsung"
+    },
+    {
+      "name": "neutral-negative (C3)",
+      "token_swaps": {
+        "border-outline": "color-semantic-neutral-negative",
+        "container-filled": "color-semantic-neutral-negative",
+        "container-tinted": "color-semantic-neutral-negative-subtle",
+        "content-filled": "color-semantic-on-neutral-negative",
+        "icon": "color-semantic-neutral-negative",
+        "message-quiet": "color-semantic-neutral-negative-strong"
+      },
+      "treatment": "perlakuan C3 dari L3; dapat ditutup; mis. fitur lama dihentikan"
+    },
+    {
+      "name": "positive (C4)",
+      "token_swaps": {
+        "border-outline": "color-semantic-positive",
+        "container-filled": "color-semantic-positive",
+        "container-tinted": "color-semantic-positive-subtle",
+        "content-filled": "color-semantic-on-positive",
+        "icon": "color-semantic-positive",
+        "message-quiet": "color-semantic-positive-strong"
+      },
+      "treatment": "perlakuan C4 dari L3; dapat ditutup; mis. \"Service restored\" setelah gangguan; tidak lebih keras daripada C1-C2 di layar yang sama"
+    },
+    {
+      "name": "info (C5)",
+      "token_swaps": {
+        "border-outline": "color-semantic-info",
+        "container-filled": "color-semantic-info",
+        "container-tinted": "color-semantic-info-subtle",
+        "content-filled": "color-semantic-on-info",
+        "icon": "color-semantic-info",
+        "message-quiet": "color-semantic-info-strong"
+      },
+      "treatment": "perlakuan C5 dari L3; dapat ditutup; mis. pemeliharaan terjadwal besok"
+    },
+    {
+      "name": "focus (aksi atau tutup)",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring",
+        "focus-ring-on-filled": "color-focus-ring-inverse"
+      },
+      "treatment": "ring fokus; di atas fill solid memakai focus-ring-inverse"
+    },
+    {
+      "name": "dismissed",
+      "token_swaps": {},
+      "treatment": "banner C3-C5 yang ditutup tidak muncul lagi untuk kondisi yang sama (diingat per pengguna per kondisi); fokus ke elemen berikutnya"
+    },
+    {
+      "name": "queued",
+      "token_swaps": {},
+      "treatment": "kondisi kedua di tingkat yang sama: banner yang tampil adalah kelas paling mendesak; sisanya ditunjukkan dengan tautan \"1 more notice\" yang membuka daftar"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}Banner: Surface di slot topBar Scaffold",
+    "flutter": "{ns}_banner.dart: widget di bawah AppBar; MaterialBanner sebagai implementasi dasar",
+    "html": {
+      "element": "div",
+      "notes": "div[role=status|alert].{ns}-banner[data-status][data-level] di alur dokumen (bukan position: fixed); system di AppShell sesudah header, page sesudah PageHeader"
+    },
+    "swiftui": "{Ns}Banner: ViewModifier .safeAreaInset(edge: .top)"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Tingkat aplikasi; di bawah global bar AppShell di semua halaman. Maksimal satu.",
+      "name": "system"
+    },
+    {
+      "description": "Tingkat halaman; di bawah PageHeader halaman terkait. Maksimal satu per halaman.",
+      "name": "page"
+    }
+  ]
+}

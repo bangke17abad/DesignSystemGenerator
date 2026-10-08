@@ -1,0 +1,82 @@
+<!-- SkipLink fixture · variants single / group × states hidden-until-focus, focus, hover, pressed; target inset focus, +40% label, RTL (catalog preview, §6.9). Each frame is a contained AppShell: the skip link is the first focusable element of the frame and is placed against it. -->
+<section class="ds-demo" data-ds-demo="variant single · state hidden-until-focus (real: Tab into the frame, Enter moves focus to main)">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#sk1-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk1-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk1-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>Tab into this box: the skip link appears at the top inline-start corner, above the sticky global bar.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state focus (revealed above the sticky header)">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk2-main" data-ds-module="skip-link" data-force="focus">Skip to main content</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk2-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk2-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>Static twin of the focused state.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state hover + focus">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk3-main" data-ds-module="skip-link" data-force="hover focus">Skip to main content</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk3-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk3-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>Hover only exists once the link is visible because of focus.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="state pressed">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk4-main" data-ds-module="skip-link" data-force="pressed focus">Skip to main content</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk4-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk4-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>Pressed: the label darkens just before focus moves to main.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="target focus inset (main after activation)">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#sk5-main" data-ds-module="skip-link">Skip to main content</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk5-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk5-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content" data-force="focus">
+      <div class="ds-container"><p>After Enter, main (tabindex="-1") holds focus; its ring is inset so it never leaves the viewport.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="variant group (max 3, same position, one visible at a time)">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk6-main" data-ds-module="skip-link" data-force="focus">Skip to main content</a><a class="ds-skip-link ds-vh" href="#sk6-search" data-ds-module="skip-link">Skip to search</a><a class="ds-skip-link ds-vh" href="#sk6-nav" data-ds-module="skip-link">Skip to navigation</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk6-help">Help</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div id="sk6-search" tabindex="-1" data-ds-focus-target class="ds-vh">Search</div><div id="sk6-nav" tabindex="-1" data-ds-focus-target class="ds-vh">Navigation</div>
+    <div class="ds-app-shell__main" id="sk6-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>The first of three links is shown focused; the others appear in the same place when they receive focus.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="label +40% (wraps within the frame)">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk7-main" data-ds-module="skip-link" data-force="focus">Lewati navigasi dan langsung ke konten utama halaman ini</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">Ledger</span></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk7-main" tabindex="-1" data-ds-focus-target role="region" aria-label="Main content">
+      <div class="ds-container"><p>Long labels wrap to two lines inside the viewport minus margins.</p></div>
+    </div>
+  </div>
+</section>
+<section class="ds-demo" data-ds-demo="RTL (inline-start corner = right)" dir="rtl" lang="ar">
+  <div class="ds-app-shell" data-contained data-variant="focused" style="min-block-size: 0">
+    <div class="ds-skip-links"><a class="ds-skip-link" href="#sk8-main" data-ds-module="skip-link" data-force="focus">تخطَّ إلى المحتوى الرئيسي</a></div>
+    <header class="ds-app-shell__header"><span class="ds-app-shell__brand">دفتر</span><div class="ds-app-shell__header-end"><a class="ds-link" data-variant="standalone" href="#sk8-help">مساعدة</a></div></header>
+    <!-- In a page: <main class="ds-app-shell__main" id="main" tabindex="-1"> -->
+    <div class="ds-app-shell__main" id="sk8-main" tabindex="-1" data-ds-focus-target role="region" aria-label="المحتوى الرئيسي">
+      <div class="ds-container"><p>اضغط Tab داخل هذا الإطار: يظهر رابط التخطي في زاوية البداية العليا فوق الشريط العلوي.</p></div>
+    </div>
+  </div>
+</section>

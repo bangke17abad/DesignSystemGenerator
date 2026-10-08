@@ -1,0 +1,840 @@
+{
+  "accessibility": {
+    "attributes": [
+      "start-field dan end-field masing-masing punya label terlihat dan aria-describedby ke helper (format) dan error-text",
+      "trigger: button \"Choose dates\" dengan aria-haspopup=\"dialog\" dan aria-expanded",
+      "dialog aria-labelledby ke judul (\"Choose dates\"); grid aria-labelledby ke heading bulan",
+      "hari: button dengan nama tanggal lengkap lisan (\"Tuesday, March 3, 2026\") + state (\"start date\", \"end date\", \"in range\", \"today\", \"unavailable: fully booked\")",
+      "aria-selected pada ujung dan hari dalam rentang; aria-current=\"date\" pada hari ini",
+      "hari tidak tersedia: aria-disabled=\"true\" (tetap fokusabel) + aria-describedby ke alasan",
+      "roving tabindex di grid: satu hari tabindex 0",
+      "grid aria-busy saat memuat ketersediaan",
+      "pengumuman pergantian bulan, pemilihan ujung, dan rentang final lewat LiveAnnouncer polite"
+    ],
+    "focus_order": "legend → start-field → end-field → trigger; di dialog: preset (bila ada) → bulan sebelumnya → bulan berikutnya → grid (satu tab stop) → Cancel → Apply; fokus terkunci di dialog dan kembali ke trigger saat menutup",
+    "native": {
+      "compose": "DateRangePicker(state = rememberDateRangePickerState(selectableDates = …, initialDisplayMode = DisplayMode.Picker), showModeToggle = true) di dalam DatePickerDialog; DisplayMode.Input memberi dua field ketik berlabel",
+      "flutter": "showDateRangePicker(context, firstDate, lastDate, initialDateRange, initialEntryMode: DatePickerEntryMode.calendar, selectableDayPredicate, locale) dengan toggle ke mode input (dua field ketik); field inline memakai dua TextField + pengurai DateFormat (package intl)",
+      "swiftui": "tidak ada picker rentang native: dua DatePicker(\"Start date\", selection: $start, in: min...max, displayedComponents: .date) dan DatePicker(\"End date\", selection: $end, in: start...max) .datePickerStyle(.compact) dalam satu Section; MultiDatePicker bukan rentang dan tidak dipakai"
+    },
+    "politeness": "polite",
+    "role": "fieldset + legend berisi dua textbox berlabel; kalender: dialog (aria-modal) berisi grid per bulan dengan gridcell berisi button; preset: radiogroup",
+    "sr_label": "field: \"Start date, edit text, {tanggal}, format {contoh}\"; hari: \"{tanggal lisan}, {state}, button\"",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.4",
+      "1.4.10",
+      "1.4.11",
+      "1.4.13",
+      "2.1.1",
+      "2.1.2",
+      "2.4.3",
+      "2.4.6",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.3",
+      "2.5.7",
+      "2.5.8",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.3.3",
+      "4.1.2",
+      "4.1.3"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "legend",
+      "role": "label kelompok (fieldset/legend) menamai periode (\"Stay dates\", \"Report period\")",
+      "tokens": [
+        "type-label-size",
+        "type-label-line",
+        "type-label-weight",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "start-field",
+      "role": "field tanggal ketik berlabel \"Start date\" dengan format locale",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "type-body-size",
+        "type-body-line",
+        "color-structure-text-primary",
+        "color-structure-text-placeholder"
+      ]
+    },
+    {
+      "part": "end-field",
+      "role": "field tanggal ketik berlabel \"End date\"; sama dengan start-field",
+      "tokens": [
+        "color-structure-surface-raised",
+        "color-structure-border-control",
+        "border-width-thin",
+        "radius-sm",
+        "control-height-md",
+        "type-body-size",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "separator",
+      "role": "penanda arah antar field (panah atau en dash) dekoratif, aria-hidden",
+      "tokens": [
+        "icon-sm",
+        "color-structure-text-secondary",
+        "space-2"
+      ]
+    },
+    {
+      "part": "trigger",
+      "role": "IconButton kalender \"Choose dates\" di inline-end; area klik ≥ target-current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke",
+        "color-structure-text-secondary",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "calendar-dialog",
+      "role": "dialog berlabel di z-popover (desktop/tablet) atau Sheet (phone) berisi preset opsional, 1-2 bulan, dan tombol aksi",
+      "tokens": [
+        "color-structure-surface-overlay",
+        "color-structure-border",
+        "border-width-thin",
+        "radius-md",
+        "elevation-2",
+        "z-popover",
+        "space-4"
+      ]
+    },
+    {
+      "part": "month-header",
+      "role": "judul bulan-tahun (heading) + tombol bulan sebelumnya/berikutnya berlabel",
+      "tokens": [
+        "type-h3-size",
+        "type-h3-weight",
+        "icon-md",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "weekday-header",
+      "role": "singkatan hari (columnheader) dengan nama lengkap sebagai abbr; hari pertama dari B1",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-weight",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "day",
+      "role": "sel hari (gridcell berisi button) ≥ target-current, ≥ target-min-touch di sentuh; angka tabular",
+      "tokens": [
+        "type-body-size",
+        "color-structure-text-primary",
+        "radius-full",
+        "target-min-pointer",
+        "target-min-touch"
+      ]
+    },
+    {
+      "part": "day-endpoint",
+      "role": "tanggal mulai/selesai: fill penuh + bentuk ujung pita (non-warna) + label tersembunyi \"start date\"/\"end date\"",
+      "tokens": [
+        "color-interaction-default",
+        "color-interaction-on-solid"
+      ]
+    },
+    {
+      "part": "day-in-range",
+      "role": "hari di antara ujung: pita latar selection; teks tetap kontras penuh",
+      "tokens": [
+        "color-structure-selection",
+        "color-structure-text-primary"
+      ]
+    },
+    {
+      "part": "day-today",
+      "role": "penanda hari ini: cincin/garis bawah + teks tersembunyi \"today\" (bukan hanya warna)",
+      "tokens": [
+        "color-structure-border-strong",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "day-unavailable",
+      "role": "hari tidak bisa dipilih: teks text-disabled + coretan; alasan tersedia lewat deskripsi dan legenda",
+      "tokens": [
+        "color-structure-text-disabled"
+      ]
+    },
+    {
+      "part": "presets",
+      "role": "daftar preset (\"Last 7 days\") pada varian with-presets; radio group berlabel",
+      "tokens": [
+        "type-body-size",
+        "layout-row-height",
+        "color-structure-selection",
+        "space-1"
+      ]
+    },
+    {
+      "part": "actions",
+      "role": "Button \"Apply\" dan \"Cancel\" (atau \"Clear\") di kaki dialog; Apply aktif bila rentang valid",
+      "tokens": [
+        "control-height-md",
+        "space-2"
+      ]
+    },
+    {
+      "part": "helper",
+      "role": "format tanggal locale + contoh, batas rentang (min/max hari), dan legenda tanggal tidak tersedia",
+      "tokens": [
+        "type-caption-size",
+        "type-caption-line",
+        "color-structure-text-secondary"
+      ]
+    },
+    {
+      "part": "error-text",
+      "role": "ikon + teks error tingkat rentang di bawah kedua field",
+      "tokens": [
+        "type-caption-size",
+        "color-semantic-critical-strong",
+        "icon-sm"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "outline 2px offset 2px pada field; ring pada hari yang fokus (offset 2px, inset bila sel bersentuhan)",
+      "tokens": [
+        "color-focus-ring",
+        "color-focus-ring-inverse"
+      ]
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "{ start: string | null; end: string | null }",
+        "when": "rentang dikomit (Apply, preset dengan requireApply false, atau blur field ketik yang valid)"
+      },
+      {
+        "name": "onOpenChange",
+        "payload": "{ open: boolean; reason: \"trigger\" | \"keyboard\" | \"escape\" | \"outside\" | \"apply\" | \"cancel\" }",
+        "when": "dialog kalender dibuka/ditutup"
+      },
+      {
+        "name": "onVisibleMonthChange",
+        "payload": "{ year: number; month: number }",
+        "when": "bulan yang tampil berubah (untuk memuat ketersediaan)"
+      }
+    ],
+    "parts": [
+      "DateRangePicker.StartField",
+      "DateRangePicker.EndField",
+      "DateRangePicker.Trigger",
+      "DateRangePicker.Content",
+      "DateRangePicker.Presets",
+      "DateRangePicker.Calendar",
+      "DateRangePicker.Actions"
+    ],
+    "props": [
+      {
+        "description": "Legend kelompok; menamai periode.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "default": "Start date",
+        "description": "Label field mulai dari glosarium.",
+        "name": "startLabel",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "End date",
+        "description": "Label field selesai dari glosarium.",
+        "name": "endLabel",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "calendar",
+        "description": "Dengan atau tanpa preset.",
+        "name": "variant",
+        "required": false,
+        "type": "\"calendar\" | \"with-presets\""
+      },
+      {
+        "default": "md",
+        "description": "Tinggi field dan ukuran hari.",
+        "name": "size",
+        "required": false,
+        "type": "\"sm\" | \"md\" | \"lg\""
+      },
+      {
+        "description": "Controlled: tanggal ISO \"YYYY-MM-DD\".",
+        "name": "value",
+        "required": false,
+        "type": "{ start: string | null; end: string | null }"
+      },
+      {
+        "description": "Uncontrolled: rentang awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "{ start: string | null; end: string | null }"
+      },
+      {
+        "description": "Controlled: dialog kalender terbuka.",
+        "name": "open",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Uncontrolled: state awal dialog.",
+        "name": "defaultOpen",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Tanggal paling awal.",
+        "name": "min",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Tanggal paling akhir.",
+        "name": "max",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "1",
+        "description": "Panjang rentang minimum (inklusif).",
+        "name": "minDays",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Panjang rentang maksimum (inklusif).",
+        "name": "maxDays",
+        "required": false,
+        "type": "number"
+      },
+      {
+        "description": "Mengembalikan alasan bila tanggal tidak tersedia.",
+        "name": "isDateUnavailable",
+        "required": false,
+        "type": "(date: string) => string | false"
+      },
+      {
+        "default": "false",
+        "description": "Mengizinkan tanggal tidak tersedia di dalam rentang (mis. laporan).",
+        "name": "allowUnavailableInRange",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Preset untuk varian with-presets; data, bukan markup.",
+        "name": "presets",
+        "required": false,
+        "type": "Array<{ id: string; label: string; range: () => { start: string; end: string } }>"
+      },
+      {
+        "default": "true",
+        "description": "Nilai dikomit saat Apply; false = saat ujung kedua dipilih.",
+        "name": "requireApply",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Kedua tanggal wajib.",
+        "name": "required",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Error dari luar; wajib bersama errorText.",
+        "name": "invalid",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Pesan error tingkat rentang.",
+        "name": "errorText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Bila kosong, dibangkitkan dari format locale dan batas.",
+        "name": "helperText",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Ketersediaan sedang dimuat.",
+        "name": "loading",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "default": "false",
+        "description": "Hanya bila field tidak relevan.",
+        "name": "disabled",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Alasan diblokir; wajib bila aria-disabled.",
+        "name": "reason",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "false",
+        "description": "Rentang terlihat tanpa kontrol.",
+        "name": "readOnly",
+        "required": false,
+        "type": "boolean"
+      },
+      {
+        "description": "Awalan nama field Form (name.start, name.end).",
+        "name": "name",
+        "required": false,
+        "type": "string"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "keyboard",
+      "result": "tanggal diurai saat blur menurut format locale (B1) dan bentuk umum lain; kalender (bila terbuka) mengikuti; tidak ada perubahan konteks",
+      "trigger": "mengetik di start-field / end-field"
+    },
+    {
+      "input": "keyboard",
+      "result": "dialog kalender terbuka dengan fokus pada hari relevan",
+      "trigger": "Enter/Space pada trigger, atau Alt+↓ di field"
+    },
+    {
+      "input": "keyboard",
+      "result": "hari ±1, minggu ±1, awal/akhir minggu, bulan ±1, tahun ±1; fokus melompati tidak ada (hari tidak tersedia tetap fokusabel agar alasannya terbaca); pergantian bulan diumumkan polite",
+      "trigger": "← → ↑ ↓, Home/End, Page Up/Down, Shift+Page Up/Down di grid"
+    },
+    {
+      "input": "keyboard",
+      "result": "pertama memilih mulai (diumumkan \"Start date {date}. Choose end date\"), kedua memilih selesai; hari sebelum mulai menjadi mulai baru; rentang lengkap mengisi kedua field",
+      "trigger": "Enter/Space pada hari"
+    },
+    {
+      "input": "keyboard",
+      "result": "dialog menutup tanpa mengubah nilai sebelumnya; fokus kembali ke trigger",
+      "trigger": "Esc atau Cancel"
+    },
+    {
+      "input": "keyboard",
+      "result": "nilai dikomit, dialog menutup, fokus kembali ke trigger, \"{start} to {end} selected\" diumumkan",
+      "trigger": "Apply (atau pemilihan ujung kedua bila brief tanpa Apply)"
+    },
+    {
+      "input": "pointer",
+      "result": "dipilih pada pelepasan (SC 2.5.2); pita pratinjau mengikuti hover; tidak ada drag untuk memilih rentang (klik-klik sudah menjadi jalur satu-pointer)",
+      "trigger": "klik dua hari"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet layar penuh: field mulai/selesai di atas (dapat diketik), satu bulan per layar dengan gulir vertikal antar bulan, hari ≥ target-min-touch, Apply di bar bawah",
+      "trigger": "tap trigger atau field (phone)"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Report period",
+        "Start date",
+        "End date",
+        "MM/DD/YYYY, e.g. 03/03/2026",
+        "Choose dates",
+        "Choose end date",
+        "End date must be on or after the start date",
+        "Mar 3 – 7, 2026",
+        "Last 7 days"
+      ],
+      "id-ID": [
+        "Periode laporan",
+        "Tanggal mulai",
+        "Tanggal selesai",
+        "DD/MM/YYYY, contoh 03/03/2026",
+        "Pilih tanggal",
+        "Pilih tanggal selesai",
+        "Tanggal selesai harus sama dengan atau setelah tanggal mulai",
+        "3–7 Mar 2026",
+        "7 hari terakhir"
+      ]
+    },
+    "rules": [
+      "Label field selalu \"Start date\" dan \"End date\" (atau istilah glosarium domain, mis. \"Check-in\"/\"Check-out\"); legend menamai periode.",
+      "Format tanggal, nama bulan, singkatan hari, dan hari pertama minggu dari B1 formats/CLDR; helper memberi contoh format.",
+      "Error rentang menyebut aturan dan perbaikan: \"End date must be on or after the start date\", \"Choose a range of 90 days or less\".",
+      "Rentang ditulis dengan formatter rentang locale (Intl.DateTimeFormat.formatRange), bukan penggabungan string.",
+      "Tanggal tidak tersedia punya alasan tertulis (legenda atau deskripsi per hari), bukan hanya coretan; preset memakai label glosarium."
+    ]
+  },
+  "depends_on": [
+    "DatePicker",
+    "Popover",
+    "Sheet",
+    "Button",
+    "IconButton",
+    "LiveAnnouncer"
+  ],
+  "do": [
+    "Sediakan dua field ketik berlabel di semua perangkat, termasuk di Sheet phone.",
+    "Tandai ujung rentang dengan bentuk dan teks tersembunyi, bukan hanya warna.",
+    "Jelaskan rentang tidak valid dan tanggal tidak tersedia dalam teks.",
+    "Kembalikan fokus ke trigger setelah dialog menutup."
+  ],
+  "dont": [
+    {
+      "text": "Kalender sebagai satu-satunya cara memasukkan tanggal."
+    },
+    {
+      "ref": "UB2",
+      "text": "Rentang atau hari tidak tersedia yang hanya dibedakan warna."
+    },
+    {
+      "ref": "UB7",
+      "text": "Memilih rentang dengan drag tanpa jalur klik-klik dan keyboard."
+    },
+    {
+      "text": "Satu field gabungan \"03/03/2026 - 03/07/2026\" sebagai input utama."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "field berdampingan pindah menjadi bertumpuk; nama bulan panjang membungkus di header tanpa mendorong tombol navigasi keluar; preset membungkus",
+      "case": "label, nama bulan, dan preset +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "dua bulan berdampingan menjadi satu bulan; dialog yang tidak muat menjadi Sheet; grid tidak memotong angka hari",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "hanya mulai: error \"Enter an end date\" saat submit (bukan saat mengetik); keduanya kosong pada field opsional = null",
+      "case": "kosong atau hanya satu ujung"
+    },
+    {
+      "behaviour": "hari di luar maxDays dari mulai ditandai tidak tersedia dengan alasan \"Up to 90 days\" selama memilih ujung kedua; navigasi bulan berhenti di batas min/max dengan tombol aria-disabled + alasan",
+      "case": "rentang maksimum dan batas min/max"
+    },
+    {
+      "behaviour": "diterima kecuali minDays > 1; sel menampilkan kedua penanda ujung",
+      "case": "rentang satu hari (mulai = selesai)"
+    },
+    {
+      "behaviour": "loading per bulan dengan aria-busy; gagal muat: \"Couldn't load availability\" + Retry di dialog; offline: tanggal ketik diterima tetapi ketersediaan divalidasi saat online, tanpa klaim tersedia (I6)",
+      "case": "ketersediaan offline atau loading"
+    },
+    {
+      "behaviour": "paste satu teks rentang (\"3/3/2026 – 3/7/2026\", \"2026-03-03/2026-03-07\") ke start-field memisahkan dan mengisi kedua field bila bisa diurai tanpa ambigu; format ambigu (03/04) mengikuti locale field",
+      "case": "paste dan autofill"
+    },
+    {
+      "behaviour": "grid dicerminkan (hari pertama minggu di kanan), tombol bulan sebelumnya/berikutnya dicerminkan, pita rentang mengalir kanan-ke-kiri; angka hari dan tanggal di field diisolasi bdi; field mulai di inline-start",
+      "case": "RTL dengan angka"
+    },
+    {
+      "behaviour": "hari ini dihitung di zona waktu yang ditetapkan brief/pengguna; nilai dikirim sebagai tanggal kalender ISO tanpa jam",
+      "case": "zona waktu dan \"hari ini\""
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Inputs",
+  "inclusion": "Opsional: disertakan bila journey atau entitas di brief memuat periode (laporan, pemesanan menginap, cuti, filter riwayat); alasan dicatat. Bergantung pada DatePicker untuk format, kalender, dan aturan tanggal tidak tersedia.",
+  "lint": [
+    "DateRangePicker tanpa dua field ketik berlabel ditolak (§6.5)",
+    "rentang tidak valid tanpa errorText ditolak",
+    "isDateUnavailable yang mengembalikan true tanpa alasan string ditolak",
+    "format tanggal hard-coded ditolak (harus dari B1 formats)",
+    "reason wajib bila aria-disabled"
+  ],
+  "name": "DateRangePicker",
+  "preview": {
+    "combinations": [
+      "selected+hover",
+      "selected+focus",
+      "error+focus",
+      "disabled+selected",
+      "loading+pressed (dicegah)",
+      "hari tidak tersedia di dalam rentang",
+      "Sheet phone",
+      "RTL + angka",
+      "label +40%"
+    ],
+    "states": [
+      "default",
+      "hover",
+      "focus",
+      "open",
+      "selecting-end",
+      "selected",
+      "error",
+      "disabled-with-reason",
+      "read-only",
+      "loading"
+    ],
+    "variants": [
+      "calendar",
+      "with-presets"
+    ]
+  },
+  "purpose": {
+    "purpose": "Dua field tanggal berlabel (mulai dan selesai) yang selalu bisa diketik, ditambah kalender untuk memilih rentang, dengan rentang tidak valid dan tanggal tidak tersedia yang dijelaskan dalam teks.",
+    "when_not_to_use": [
+      "Untuk satu tanggal: pakai DatePicker.",
+      "Untuk beberapa tanggal yang tidak berurutan: pakai DatePicker dengan mode multi atau daftar tanggal, bukan rentang.",
+      "Untuk periode baku saja (bulan ini, kuartal lalu) tanpa tanggal bebas: pakai Select atau SegmentedControl preset.",
+      "Untuk tanggal yang diketahui pasti dan jauh (tanggal lahir): dua DatePicker ketik terpisah lebih cepat daripada kalender."
+    ]
+  },
+  "related": [
+    "DatePicker",
+    "TimePicker",
+    "FilterChip",
+    "SegmentedControl",
+    "Select"
+  ],
+  "responsive": [
+    {
+      "behaviour": "field bertumpuk vertikal (mulai di atas selesai), size lg; kalender di Sheet layar penuh, satu bulan per baris dengan gulir vertikal, preset sebagai chip di atas; Apply sticky di bawah tanpa menutup fokus",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "field berdampingan; popover dialog satu bulan (dua bulan di lanskap lebar); hari ≥ target-min-touch",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "field berdampingan dengan separator; popover dua bulan berdampingan, preset di inline-start; flip/shift agar tidak keluar viewport",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "full",
+      "when": "role boleh mengubah periode"
+    },
+    {
+      "pattern": "read-only",
+      "when": "role melihat rentang terformat"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "periode terkunci (mis. laporan sudah ditutup); reason di helper"
+    },
+    {
+      "pattern": "hidden",
+      "when": "role tidak boleh tahu periode"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "chevron-left",
+      "chevron-right",
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Tombol bulan sebelumnya/berikutnya dan separator panah dicerminkan; grid hari mengalir dari kanan; ← / → di grid mengikuti arah visual (← = hari berikutnya di RTL); ikon kalender tidak dicerminkan; angka dan tanggal diisolasi bdi."
+  },
+  "sizes": [
+    {
+      "axis": "block",
+      "hit_area": "field max(control-height-sm, target-current); hari ≥ target-min-pointer; mode sentuh menaikkan hari ke target-min-touch",
+      "name": "sm",
+      "notes": "Filter padat pada pointer.",
+      "size_token": "control-height-sm"
+    },
+    {
+      "axis": "block",
+      "hit_area": "field max(control-height-md, target-current); hari ≥ target-current",
+      "name": "md",
+      "notes": "Default.",
+      "size_token": "control-height-md"
+    },
+    {
+      "axis": "block",
+      "hit_area": "field dan hari ≥ target-min-touch (target-min-extended bila ada)",
+      "name": "lg",
+      "notes": "Surface sentuh dan Sheet phone.",
+      "size_token": "control-height-lg"
+    }
+  ],
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "hover pada hari dalam rentang: pita tetap, lapisan hover di atasnya",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "ujung terpilih yang fokus: fill + ring di luar sel",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "error",
+      "focus": true,
+      "interaction": "rest",
+      "note": "field error yang fokus: border critical + ring",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "rentang tetap terbaca di field saat diblokir",
+      "supported": true
+    },
+    {
+      "availability": "loading",
+      "base": "default",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "hari tidak bisa dipilih sebelum ketersediaan bulan itu dimuat",
+      "supported": false
+    },
+    {
+      "availability": "disabled",
+      "base": "default",
+      "focus": false,
+      "interaction": "hover",
+      "note": "hari tidak tersedia tidak memberi umpan balik hover",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "end-field": "color-structure-surface-raised",
+        "start-field": "color-structure-surface-raised"
+      },
+      "treatment": "kedua field kosong; helper menyebut format"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "day": "color-structure-selection",
+        "start-field": "color-interaction-border"
+      },
+      "treatment": "field: border interaction-border; hari: latar selection ringan; selama memilih ujung kedua, pita pratinjau dari mulai ke hari yang di-hover; hanya di (hover: hover)"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px pada field atau hari yang fokus; fokus keyboard pada hari juga memperlihatkan pratinjau pita"
+    },
+    {
+      "name": "open",
+      "token_swaps": {
+        "trigger": "color-structure-text-primary"
+      },
+      "treatment": "dialog kalender terbuka; fokus ke tanggal mulai terpilih, atau hari ini, atau hari tersedia pertama; trigger aria-expanded=\"true\""
+    },
+    {
+      "name": "selecting-end",
+      "token_swaps": {
+        "day-endpoint": "color-interaction-default"
+      },
+      "treatment": "mulai sudah dipilih: instruksi \"Choose end date\" di dialog (dan diumumkan polite); hari sebelum mulai tetap bisa dipilih dan menjadi mulai baru"
+    },
+    {
+      "name": "selected",
+      "token_swaps": {
+        "day-endpoint": "color-interaction-default",
+        "day-in-range": "color-structure-selection"
+      },
+      "treatment": "rentang lengkap: ujung fill + bentuk ujung, pita in-range; kedua field terisi; aria-selected pada ujung dan hari dalam rentang"
+    },
+    {
+      "name": "error",
+      "token_swaps": {
+        "end-field": "color-semantic-critical",
+        "error-text": "color-semantic-critical-strong"
+      },
+      "treatment": "selesai sebelum mulai, rentang melebihi maxDays, rentang memuat tanggal tidak tersedia yang dilarang, atau teks tidak bisa diurai: border critical pada field terkait + teks error spesifik; nilai ketikan dipertahankan"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "end-field": "color-structure-surface-sunken",
+        "start-field": "color-structure-surface-sunken"
+      },
+      "treatment": "aria-disabled=\"true\" pada kedua field dan trigger; reason di helper"
+    },
+    {
+      "name": "read-only",
+      "token_swaps": {
+        "end-field": "color-structure-surface-base",
+        "start-field": "color-structure-surface-base"
+      },
+      "treatment": "aria-readonly; rentang berteks penuh \"3-7 Mar 2026\" tanpa border aktif dan trigger"
+    },
+    {
+      "name": "loading",
+      "token_swaps": {
+        "day": "color-structure-skeleton"
+      },
+      "treatment": "ketersediaan tanggal dimuat dari server untuk bulan yang tampil: grid aria-busy, Skeleton pada angka hari bila > 2 detik; navigasi bulan tetap bisa"
+    }
+  ],
+  "target_hints": {
+    "compose": "DateRangePicker di DatePickerDialog dibungkus {Ns}DateRangePicker",
+    "flutter": "dua TextField + showDateRangePicker dibungkus {ns}_date_range_picker.dart",
+    "html": {
+      "element": "fieldset > input[type=text] × 2 + button + dialog",
+      "notes": "tanpa JS: dua field teks berlabel dengan helper format, diurai server (fallback DatePicker); <input type=\"date\"> hanya bila brief menerima format browser (`A-nn`); modul data-{ns}-module=\"date-range-picker\" menambah dialog kalender, preset, dan validasi rentang"
+    },
+    "swiftui": "dua DatePicker(.compact) berpasangan dibungkus {Ns}DateRangePicker"
+  },
+  "tier": "O",
+  "variants": [
+    {
+      "description": "Default. Dua field ketik + trigger yang membuka kalender (2 bulan berdampingan di desktop, 1 bulan di tablet/phone).",
+      "name": "calendar"
+    },
+    {
+      "description": "Dialog yang sama dengan kolom/daftar preset di inline-start (desktop) atau di atas kalender (phone); memilih preset mengisi kedua field dan kalender.",
+      "name": "with-presets"
+    }
+  ]
+}

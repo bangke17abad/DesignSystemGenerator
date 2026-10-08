@@ -1,0 +1,92 @@
+{
+  "name": "NotificationCenter",
+  "engine_version": "1.8.0",
+  "tier": "O",
+  "inclusion": "Disertakan bila NotificationItem dipilih (M08 §11.2).",
+  "problem": {
+    "problem": "Pengguna meninjau riwayat pemberitahuan di satu tempat yang tenang: apa yang terjadi, pada objek apa, kapan, dan mana yang belum dibaca, lalu langsung menuju objeknya. Pusat notifikasi adalah arsip yang bisa ditelusuri, bukan kanal utama untuk hal yang mendesak.",
+    "when": ["Produk mengirim pemberitahuan asinkron (penugasan, permintaan persetujuan, komentar, perubahan status objek yang diikuti pengguna).", "Hasil proses latar (impor, ekspor, pembuatan laporan, unggahan besar) selesai saat pengguna sudah berada di layar lain."],
+    "when_not": ["Konfirmasi atas aksi yang baru dilakukan pengguna: pakai Toast lewat AsyncFeedback.", "Kondisi yang masih berlangsung dan harus tetap terlihat (offline, pemeliharaan, langganan berakhir): pakai Banner atau InlineAlert.", "Event kritis (I5): perlakuan event kritis (overlay, Banner C1, pengumuman assertive) lebih dulu; NotificationCenter hanya menyimpan catatan riwayatnya.", "Riwayat audit satu entitas (siapa mengubah apa): pakai Timeline di DetailView.", "Percakapan atau pesan langsung: komponen domain, bukan NotificationItem."]
+  },
+  "composition": [
+    { "component": "IconButton", "parts": ["badge"], "role_in_pattern": "pemicu di global bar; nama aksesibel memuat jumlah belum dibaca (\"Notifications, 3 unread\")" },
+    { "component": "Badge", "role_in_pattern": "variant count pada IconButton; 99+ untuk jumlah besar; hilang (bukan \"0\") saat semua terbaca" },
+    { "component": "Popover", "parts": ["Popover.Title", "Popover.Body", "Popover.Footer"], "role_in_pattern": "wadah panel di desktop dan tablet; judul panel + daftar + tautan ke halaman penuh" },
+    { "component": "Sheet", "parts": ["Sheet.Header", "Sheet.Body"], "role_in_pattern": "wadah panel di phone bila tidak memakai halaman penuh" },
+    { "component": "Tabs", "parts": ["Tabs.Tab", "Tabs.Panel"], "role_in_pattern": "tampilan Semua / Belum dibaca (opsional Mentions) dengan count; bukan filter warna" },
+    { "component": "NotificationItem", "parts": ["NotificationItem.Group", "NotificationItem.Actions"], "role_in_pattern": "satu entri per kejadian; dikelompokkan per hari dengan heading; penanda belum dibaca non-warna; status hasil proses lewat prop status" },
+    { "component": "Menu", "parts": ["Menu.Item"], "role_in_pattern": "aksi per item (Tandai belum dibaca, Bisukan tipe ini) dan menu panel (Pengaturan notifikasi); alternatif swipe (SC 2.5.7)" },
+    { "component": "Button", "role_in_pattern": "\"Tandai semua dibaca\" (tertiary), \"Tampilkan {n} baru\", dan \"Muat lagi\" untuk paginasi" },
+    { "component": "EmptyState", "role_in_pattern": "variant cleared \"Semua sudah dibaca\" tanpa CTA; variant not-found saat objek tujuan terhapus" },
+    { "component": "Skeleton", "role_in_pattern": "muat pertama: baris tiruan dengan heading hari" },
+    { "component": "InlineAlert", "role_in_pattern": "C1 dengan Retry bila daftar gagal dimuat; C2 bila sebagian (halaman lama) gagal dimuat" },
+    { "component": "ConnectionStatus", "role_in_pattern": "menandai daftar cache sebagai stale dengan \"Last updated\" saat offline (I6)" },
+    { "component": "Link", "role_in_pattern": "\"Lihat semua notifikasi\" ke halaman penuh dan \"Pengaturan notifikasi\" ke pola Settings" },
+    { "component": "Toast", "role_in_pattern": "rollback singkat bila penandaan dibaca ditolak server (§12.3)" },
+    { "component": "LiveAnnouncer", "role_in_pattern": "pengumuman polite yang digabung untuk notifikasi baru dan hasil tandai semua" }
+  ],
+  "flow": [
+    { "step": "Pemberitahuan baru masuk", "state_class": "C6", "transition": "Badge bertambah tanpa mengambil fokus; bila panel terbuka dan pengguna sedang membaca, item baru ditahan di balik tombol \"Tampilkan {n} baru\" agar gulir dan fokus tidak meloncat; event kritis sudah ditangani perlakuan I5 sebelum masuk ke daftar" },
+    { "step": "Buka panel", "state_class": "C6", "transition": "Popover (desktop/tablet) atau Sheet/halaman penuh (phone) terbuka; tab default \"Semua\"; daftar dikelompokkan Today / Yesterday / tanggal, terbaru di atas" },
+    { "step": "Memuat daftar", "state_class": "C5", "transition": "Skeleton meniru baris dan heading hari; data cache ditampilkan lebih dulu bila ada, dengan penanda kesegaran" },
+    { "step": "Buka item", "state_class": "C6", "transition": "satu aksi membuka objek tujuan dan menandai item dibaca (onReadChange); panel tertutup; posisi daftar dipulihkan bila pengguna kembali" },
+    { "step": "Tandai semua dibaca", "state_class": "C5", "transition": "optimistic: penanda belum dibaca hilang dan Badge hilang; permintaan berjalan di latar; offline = diantrekan dan tidak ditampilkan terkonfirmasi (I6)" },
+    { "step": "Server menolak atau daftar gagal dimuat", "state_class": "C1", "transition": "penandaan di-rollback disertai Toast singkat yang menyebut apa yang dibatalkan; gagal muat = InlineAlert C1 dengan Retry di dalam panel, bukan panel kosong" },
+    { "step": "Semua sudah dibaca", "state_class": "C4", "transition": "tab Belum dibaca menampilkan EmptyState cleared tanpa CTA; tombol \"Tandai semua dibaca\" tetap ada dengan aria-disabled dan alasan \"Tidak ada notifikasi belum dibaca\"" }
+  ],
+  "variants": [
+    { "device_class": "phone", "behaviour": "halaman penuh dari BottomNav atau Sheet bottom dari IconButton; heading hari sticky; swipe horizontal untuk tandai dibaca/belum dengan Menu sebagai alternatif; baris ≥ target-min-touch; hasil proses latar yang selesai juga bisa dikirim sebagai notifikasi sistem bila izin diberikan (PermissionRequest)" },
+    { "device_class": "tablet", "behaviour": "Popover lebar atau ContextPanel overlay dari IconButton di global bar; Tabs di atas daftar; aksi item lewat tombol Menu yang selalu terlihat, bukan hanya swipe" },
+    { "device_class": "desktop", "behaviour": "Popover dari IconButton berisi item terbaru (jumlah dari brief, selain itu A-nn) dan tautan \"Lihat semua\" ke halaman penuh (List dengan Tabs dan Muat lagi); aksi item muncul saat fokus maupun hover; Esc menutup panel" }
+  ],
+  "states": {
+    "empty": "Tab Semua tanpa riwayat: EmptyState first-use singkat yang menjelaskan jenis pemberitahuan yang akan muncul dan tautan ke Pengaturan notifikasi. Tab Belum dibaca kosong: EmptyState cleared \"Semua sudah dibaca\" tanpa CTA.",
+    "loading": "Skeleton baris + heading hari pada muat pertama; Muat lagi menampilkan Spinner in-control di tombolnya sendiri dan menjaga fokus di posisi yang sama.",
+    "error": "InlineAlert C1 di dalam panel dengan Retry (bukan toast, §12.2); IconButton tetap berfungsi; Badge menampilkan jumlah terakhir yang diketahui dengan ConnectionStatus stale bila jumlah itu tidak terkini.",
+    "partial": "Halaman terbaru dimuat tetapi halaman lama gagal: item yang ada tetap tampil, InlineAlert C2 di akhir daftar \"Notifikasi lama tidak dapat dimuat\" dengan Retry hanya untuk bagian itu. Daftar cache saat offline diberi \"Last updated {waktu}\".",
+    "success": "Daftar terbaca dengan penanda belum dibaca pada item baru; membuka item membawa pengguna ke objeknya; tandai semua dibaca diumumkan polite."
+  },
+  "accessibility": [
+    { "step": "Pemberitahuan baru masuk", "focus": "fokus tidak berpindah; jumlah ada di nama aksesibel IconButton, bukan hanya di Badge visual", "announcement": "polite, digabung (debounce) menjadi satu pesan \"{n} notifikasi baru\"; event kritis diumumkan assertive oleh perlakuan I5, bukan oleh pola ini" },
+    { "step": "Buka panel", "focus": "fokus ke judul panel (tabindex −1) lalu Tab ke tab dan item; Esc atau tombol tutup mengembalikan fokus ke IconButton (§9.5)", "announcement": "judul panel dan jumlah belum dibaca dibacakan dari nama dialog/region" },
+    { "step": "Menjelajah daftar", "focus": "heading hari sebagai heading (navigasi heading pembaca layar); setiap item satu tab stop, tombol Menu item tab stop sesudahnya; tidak ada aksi yang hanya muncul saat hover (UB9)", "announcement": "nama item = kalimat kejadian + status + waktu + \"Belum dibaca\" tersembunyi bila relevan" },
+    { "step": "Buka item", "focus": "fokus ke h1 halaman objek tujuan (§9.5); bila objek terhapus, fokus ke judul EmptyState not-found" },
+    { "step": "Tandai semua dibaca", "focus": "fokus tetap di tombol yang kini aria-disabled dengan alasan; tidak hilang ke body", "announcement": "polite \"Semua notifikasi ditandai dibaca\"; rollback diumumkan polite dengan pesan Toast" },
+    { "step": "Item baru ditahan", "focus": "tombol \"Tampilkan {n} baru\" muncul di atas daftar tanpa mencuri fokus; mengaktifkannya memindah fokus ke item baru pertama", "announcement": "polite satu kali per batch" }
+  ],
+  "content": {
+    "rules": ["Kalimat item: aktor + kata kerja + objek, dengan nama objek utuh (\"Dina menugaskan Anda ke Faktur 1042\"); tidak memakai \"Anda punya notifikasi baru\".", "Waktu relatif untuk < 24 jam (\"5 menit lalu\"), absolut setelahnya; heading hari \"Hari ini\", \"Kemarin\", lalu tanggal format locale.", "Jumlah memakai ICU plural; Badge 99+ tetapi nama aksesibel menyebut angka sebenarnya bila diketahui.", "Status hasil proses memakai label glosarium yang sama dengan StatusLabel objeknya (V3)."],
+    "examples": {
+      "en-US": ["Notifications", "Mark all as read", "You're all caught up", "Show 12 new notifications", "Your export is ready to download", "Couldn't load older notifications. Try again."],
+      "id-ID": ["Notifikasi", "Tandai semua dibaca", "Semua sudah dibaca", "Tampilkan 12 notifikasi baru", "Ekspor Anda siap diunduh", "Notifikasi lama tidak dapat dimuat. Coba lagi."]
+    }
+  },
+  "roles": [
+    { "pattern": "full", "when": "setiap pengguna melihat dan mengelola notifikasinya sendiri; daftar bersifat pribadi" },
+    { "pattern": "hidden", "when": "tipe notifikasi untuk modul yang tidak diizinkan role tidak dikirim dan tidak muncul di Pengaturan notifikasi; event kritis (I5) tidak pernah disaring oleh role (§10.1)" },
+    { "pattern": "disabled-with-reason", "when": "item yang objeknya tidak lagi bisa diakses pengguna (akses dicabut setelah notifikasi dikirim): item tetap ada sebagai riwayat, aktivasi membuka EmptyState restricted dengan alasan dan jalur PermissionRequest bila tersedia" }
+  ],
+  "do": ["Kelompokkan per hari dan tunjukkan belum dibaca dengan titik + bobot + teks tersembunyi, bukan warna latar saja.", "Satu aksi membuka objek sekaligus menandai dibaca; sediakan Tandai belum dibaca lewat Menu.", "Tahan item baru di balik \"Tampilkan {n} baru\" saat pengguna sedang membaca.", "Hubungkan ke Pengaturan notifikasi per tipe dan per kanal dari panel."],
+  "dont": [
+    { "text": "Menjadikan pusat notifikasi satu-satunya tempat event kritis muncul.", "ref": "I5" },
+    { "text": "Membedakan belum dibaca hanya dengan warna latar atau warna teks.", "ref": "UB2" },
+    { "text": "Menampilkan aksi item hanya saat hover atau hanya lewat swipe.", "ref": "UB9" },
+    { "text": "Menampilkan tandai dibaca sebagai terkonfirmasi saat offline sebelum server mengonfirmasi.", "ref": "I6" },
+    { "text": "Menyisipkan item baru di atas daftar yang sedang dibaca sehingga konten bergeser sendiri.", "ref": "SC 2.2.2" }
+  ],
+  "edge_cases": [
+    { "case": "offline", "behaviour": "daftar cache dengan ConnectionStatus stale \"Last updated {waktu}\"; tandai dibaca diantrekan dan item tetap bertanda belum sinkron (C5) sampai server mengonfirmasi (I6); Badge tidak diklaim terkini" },
+    { "case": "timeout saat memuat atau menandai", "behaviour": "muat: InlineAlert C1 + Retry setelah batas waktu jaringan (dari brief, selain itu A-nn); tandai: rollback + Toast, tanpa percobaan ulang otomatis berulang yang tak terlihat" },
+    { "case": "ribuan item, Badge 99+", "behaviour": "paginasi Muat lagi yang menjaga fokus pada item pertama halaman baru; riwayat lebih tua dari periode retensi (dari brief, selain itu A-nn) tidak dimuat dan disebut di akhir daftar" },
+    { "case": "0 item", "behaviour": "EmptyState first-use di tab Semua, cleared di tab Belum dibaca; Badge tidak dirender" },
+    { "case": "aksi ganda (klik ganda Tandai semua atau membuka item dua kali)", "behaviour": "permintaan kedua diabaikan selama yang pertama berjalan; operasi idempoten di server; navigasi hanya sekali" },
+    { "case": "label item +40% (locale terpanjang)", "behaviour": "kalimat membungkus sampai 3 baris lalu ellipsis; teks lengkap ada di nama aksesibel dan di objek tujuan; nama objek tidak dipotong lebih dulu daripada aktor" },
+    { "case": "teks 200%", "behaviour": "timestamp pindah ke baris bawah; Popover berubah menjadi halaman penuh bila tingginya melebihi viewport; Menu item tetap terjangkau" },
+    { "case": "banyak notifikasi masuk beruntun cepat", "behaviour": "kejadian sejenis pada objek yang sama digabung (variant grouped, \"3 komentar baru di Faktur 1042\"); pengumuman satu per batch" },
+    { "case": "dibaca di perangkat lain", "behaviour": "status dibaca disinkronkan saat panel dibuka atau saat realtime tersedia; tanpa animasi yang menarik perhatian" },
+    { "case": "objek tujuan terhapus", "behaviour": "item tetap sebagai riwayat; aktivasi membuka EmptyState not-found dengan jalan kembali ke daftar" }
+  ],
+  "wcag": ["1.3.1", "1.4.1", "2.1.1", "2.2.2", "2.4.3", "2.4.6", "2.5.7", "4.1.2", "4.1.3"],
+  "related_patterns": ["AppNavigation", "Settings", "AsyncFeedback", "DetailView", "ImportExport", "PermissionRequest"],
+  "lint": ["NotificationItem read=false punya unread-marker non-warna dan teks tersembunyi \"Unread\"", "IconButton notifikasi memuat jumlah belum dibaca di nama aksesibel", "Setiap event kritis di lifecycle.json punya perlakuan selain NotificationItem (I5)", "Setiap aksi swipe NotificationItem punya padanan di NotificationItem.Actions"]
+}

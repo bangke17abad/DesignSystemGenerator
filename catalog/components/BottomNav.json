@@ -1,0 +1,475 @@
+{
+  "accessibility": {
+    "attributes": [
+      "aria-label pada nav dari glosarium (\"Main\"); sama dengan PrimaryNav bila hanya satu yang tampil per lebar",
+      "aria-current=\"page\" pada item current",
+      "nama item = label + jumlah badge (\"Inbox, 3 new\")",
+      "item More: aria-haspopup=\"dialog\" + aria-expanded",
+      "scroll-padding-block-end pada dokumen = tinggi BottomNav + safe-area (SC 2.4.11)",
+      "aria-disabled + reason pada item diblokir"
+    ],
+    "focus_order": "header → main → BottomNav (urutan DOM = setelah main); item kiri-ke-kanan dalam arah tulisan",
+    "native": {
+      "compose": "NavigationBar + NavigationBarItem(selected, onClick, icon, label, alwaysShowLabel = true) dengan BadgedBox; Modifier.windowInsetsPadding(WindowInsets.navigationBars)",
+      "flutter": "NavigationBar + NavigationDestination(icon, selectedIcon, label) dengan labelBehavior: NavigationDestinationLabelBehavior.alwaysShow; Badge pada icon",
+      "swiftui": "TabView dengan Tab(…) / .tabItem { Label } dan .badge(n); selection binding untuk tap ulang ke akar"
+    },
+    "politeness": "polite",
+    "role": "nav berlabel berisi ul/li dan a (web); bukan tablist. Native: tab bar sistem dengan trait tab/selected",
+    "sr_label": "\"Main, navigation\" lalu \"{label}, current page, 1 of 4\"; badge sebagai teks",
+    "wcag": [
+      "1.3.1",
+      "1.4.1",
+      "1.4.3",
+      "1.4.11",
+      "2.1.1",
+      "2.4.3",
+      "2.4.7",
+      "2.4.11",
+      "2.5.2",
+      "2.5.8",
+      "3.2.3",
+      "3.2.4",
+      "4.1.2"
+    ]
+  },
+  "anatomy": [
+    {
+      "part": "container",
+      "role": "landmark navigation di bottom-bar AppShell; tinggi minimum layout-bar-height + safe-area inset bawah; sticky di z-sticky",
+      "tokens": [
+        "layout-bar-height",
+        "z-sticky",
+        "color-structure-surface-base",
+        "color-structure-surface-translucent",
+        "material-blur-md",
+        "color-structure-border",
+        "border-width-thin"
+      ]
+    },
+    {
+      "part": "item",
+      "role": "tautan tujuan: ikon di atas label; lebar dibagi rata; seluruh sel adalah area klik",
+      "tokens": [
+        "target-min-touch",
+        "type-caption-size",
+        "type-caption-line",
+        "type-label-weight",
+        "color-structure-text-secondary",
+        "space-1",
+        "space-2"
+      ]
+    },
+    {
+      "part": "item-icon",
+      "role": "ikon tujuan; varian terisi untuk item current",
+      "tokens": [
+        "icon-md",
+        "icon-stroke"
+      ]
+    },
+    {
+      "part": "current-indicator",
+      "role": "penanda non-warna item current: pill di belakang ikon + ikon terisi + label berbobot tebal",
+      "tokens": [
+        "color-structure-selection",
+        "color-interaction-default",
+        "radius-full",
+        "color-structure-text-primary",
+        "motion-fast-duration",
+        "motion-easing-standard"
+      ]
+    },
+    {
+      "part": "badge",
+      "role": "slot Badge di sudut inline-end ikon; jumlah juga masuk nama aksesibel",
+      "tokens": [
+        "space-1"
+      ]
+    },
+    {
+      "part": "more-item",
+      "role": "item \"More\" yang membuka Sheet berisi tujuan sisa; current bila tujuan aktif ada di dalamnya",
+      "tokens": [
+        "icon-md"
+      ]
+    },
+    {
+      "part": "focus-ring",
+      "role": "ring 2px inset −2px di dalam sel item",
+      "tokens": [
+        "color-focus-ring"
+      ]
+    },
+    {
+      "part": "safe-area",
+      "role": "padding block-end sebesar inset home indicator; latar container meluas ke tepi layar",
+      "tokens": []
+    }
+  ],
+  "api": {
+    "events": [
+      {
+        "name": "onValueChange",
+        "payload": "{ value: string; href: string; reselect: boolean }",
+        "when": "item diaktifkan; reselect true bila item current ditap ulang"
+      }
+    ],
+    "parts": [
+      "BottomNav.Item (value, label, href, icon, iconSelected, badge, disabled, reason)",
+      "BottomNav.More (label)"
+    ],
+    "props": [
+      {
+        "description": "Nama aksesibel landmark.",
+        "name": "label",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "description": "Controlled: id tujuan current.",
+        "name": "value",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "description": "Uncontrolled: tujuan current awal.",
+        "name": "defaultValue",
+        "required": false,
+        "type": "string"
+      },
+      {
+        "default": "labelled",
+        "description": "Perlakuan latar.",
+        "name": "variant",
+        "required": false,
+        "type": "\"labelled\" | \"translucent\""
+      },
+      {
+        "default": "true",
+        "description": "Disembunyikan selama keyboard virtual terbuka.",
+        "name": "hideOnKeyboard",
+        "required": false,
+        "type": "boolean"
+      }
+    ]
+  },
+  "behaviour": [
+    {
+      "input": "touch",
+      "result": "navigasi ke tujuan pada pelepasan; posisi gulir dan stack tiap tujuan dipertahankan saat kembali",
+      "trigger": "tap item"
+    },
+    {
+      "input": "touch",
+      "result": "gulir ke atas; tap kedua kembali ke layar akar tujuan; diumumkan polite",
+      "trigger": "tap item current"
+    },
+    {
+      "input": "touch",
+      "result": "Sheet dari bawah berisi tujuan sisa (item ≥ target-min-touch); pilih tujuan menutup Sheet lalu navigasi",
+      "trigger": "tap \"More\""
+    },
+    {
+      "input": "keyboard",
+      "result": "setiap item tautan di urutan Tab; BottomNav berada setelah main di urutan fokus",
+      "trigger": "Tab / Shift+Tab"
+    },
+    {
+      "input": "keyboard",
+      "result": "peningkatan JavaScript: fokus berpindah antar item tanpa melingkar; ditukar di RTL",
+      "trigger": "←/→, Home/End"
+    },
+    {
+      "input": "keyboard",
+      "result": "navigasi; fokus pindah ke h1 layar tujuan (§9.5)",
+      "trigger": "Enter"
+    },
+    {
+      "input": "pointer",
+      "result": "navigasi pada pelepasan (SC 2.5.2)",
+      "trigger": "klik item"
+    }
+  ],
+  "carries_status": false,
+  "content": {
+    "examples": {
+      "en-US": [
+        "Home",
+        "Search",
+        "Inbox",
+        "Account",
+        "More"
+      ],
+      "id-ID": [
+        "Beranda",
+        "Cari",
+        "Kotak masuk",
+        "Akun",
+        "Lainnya"
+      ]
+    },
+    "rules": [
+      "Label 1 kata (maksimal 2) dari glosarium, sama dengan PrimaryNav.",
+      "Label selalu terlihat; tidak ada mode ikon-saja.",
+      "Urutan dan jumlah tujuan sama di semua layar tingkat atas (SC 3.2.3).",
+      "Item More berlabel \"More\", bukan ikon tiga titik tanpa label."
+    ]
+  },
+  "depends_on": [
+    "Badge",
+    "Sheet"
+  ],
+  "do": [
+    "Tampilkan ikon dan label untuk setiap item, dengan pill dan ikon terisi untuk item current.",
+    "Pertahankan stack dan posisi gulir per tujuan saat berpindah.",
+    "Beri padding gulir sebesar tinggi BottomNav agar elemen fokus tidak tertutup."
+  ],
+  "dont": [
+    {
+      "text": "Ikon tanpa label atau label hanya pada item current."
+    },
+    {
+      "ref": "UB2",
+      "text": "Menandai item current hanya dengan warna ikon."
+    },
+    {
+      "ref": "UB8",
+      "text": "BottomNav menutup field atau tombol yang sedang fokus."
+    },
+    {
+      "text": "Menyembunyikan BottomNav saat menggulir ke bawah tanpa cara memunculkannya lewat keyboard atau pembaca layar."
+    }
+  ],
+  "edge_cases": [
+    {
+      "behaviour": "label membungkus dua baris di dalam sel; tidak dipotong; bila tetap tidak muat, jumlah item dikurangi ke 4 + More",
+      "case": "label +40% (locale terpanjang)"
+    },
+    {
+      "behaviour": "label tumbuh; tinggi bar tumbuh dari layout-bar-height; bila bar melebihi seperlima tinggi viewport, bar tidak sticky dan berada di akhir dokumen",
+      "case": "teks 200%"
+    },
+    {
+      "behaviour": "BottomNav tidak dirender; tidak ada bar kosong",
+      "case": "0 item (semua tersembunyi)"
+    },
+    {
+      "behaviour": "maksimal 5 slot; 6+ tujuan = 4 + More (Sheet); kurang dari 3 tujuan = tidak memakai BottomNav (tombol menu + drawer)",
+      "case": "jumlah item maksimum"
+    },
+    {
+      "behaviour": "item tetap aktif; layar tujuan menampilkan data tersimpan atau state offline",
+      "case": "offline"
+    },
+    {
+      "behaviour": "bar dirender setelah izin diketahui; tidak menampilkan item lalu menghapusnya",
+      "case": "loading tujuan berbasis izin"
+    },
+    {
+      "behaviour": "disembunyikan selama mengetik; di landscape phone tetap tampil dengan label di samping ikon bila tinggi < bp-tablet",
+      "case": "tinggi viewport kecil (keyboard terbuka, landscape)"
+    },
+    {
+      "behaviour": "\"99+\" visual; nama aksesibel memuat angka penuh",
+      "case": "badge jumlah sangat besar"
+    }
+  ],
+  "engine_version": "1.8.0",
+  "group": "Navigation",
+  "inclusion": "Standar bila B3 memuat surface ponsel (atau web yang dipakai di ponsel); tidak disertakan bila tidak ada surface ponsel, dengan alasan dicatat di manifest.",
+  "lint": [
+    "BottomNav dengan kurang dari 3 atau lebih dari 5 slot ditolak",
+    "Item tanpa label terlihat ditolak",
+    "role tablist pada BottomNav web ditolak",
+    "Dokumen dengan BottomNav tanpa scroll-padding-block-end ditolak (SC 2.4.11)"
+  ],
+  "name": "BottomNav",
+  "preview": {
+    "combinations": [
+      "selected+pressed (reselect)",
+      "selected+focus",
+      "selected+hover",
+      "disabled+selected (dicegah)",
+      "5 item + label +40%",
+      "RTL"
+    ],
+    "states": [
+      "default",
+      "pressed",
+      "focus",
+      "hover",
+      "current",
+      "badge",
+      "disabled-with-reason",
+      "hidden-for-keyboard"
+    ],
+    "variants": [
+      "labelled",
+      "translucent"
+    ]
+  },
+  "purpose": {
+    "purpose": "Bar navigasi tetap di tepi bawah phone untuk 3-5 tujuan tingkat atas, dalam zona jempol, dengan ikon dan label yang selalu terlihat.",
+    "when_not_to_use": [
+      "Di tablet dan desktop: pakai PrimaryNav (rail atau nav tetap).",
+      "Untuk lebih dari 5 tujuan: 4 tujuan + \"More\", atau PrimaryNav sebagai drawer.",
+      "Untuk aksi (buat, simpan, kirim): pakai action bar dengan Button; BottomNav hanya berisi tujuan.",
+      "Untuk berpindah tampilan di dalam satu halaman: pakai Tabs atau SegmentedControl.",
+      "Pada alur langkah (checkout, onboarding) dan surface kiosk: sembunyikan; pakai AppShell variant focused."
+    ]
+  },
+  "related": [
+    "PrimaryNav",
+    "AppShell",
+    "Tabs",
+    "Sheet"
+  ],
+  "responsive": [
+    {
+      "behaviour": "tampil di bawah sebagai bottom-bar AppShell; 3-5 item lebar rata; safe-area inset bawah; disembunyikan saat keyboard terbuka dan di alur langkah",
+      "device_class": "phone"
+    },
+    {
+      "behaviour": "tidak dipakai; tujuan yang sama dirender sebagai rail PrimaryNav (state dan urutan sama)",
+      "device_class": "tablet"
+    },
+    {
+      "behaviour": "tidak dipakai; tujuan dirender di PrimaryNav tetap",
+      "device_class": "desktop"
+    }
+  ],
+  "roles": [
+    {
+      "pattern": "hidden",
+      "when": "tujuan tidak boleh diketahui role; item tidak dirender dan tujuan berikutnya dari More naik mengisi slot (maks 5)"
+    },
+    {
+      "pattern": "disabled-with-reason",
+      "when": "tujuan terlihat tetapi sementara tidak tersedia; reason saat tap"
+    },
+    {
+      "pattern": "full",
+      "when": "default"
+    }
+  ],
+  "rtl": {
+    "mirrored_icons": [
+      "arrow-left",
+      "arrow-right"
+    ],
+    "notes": "Urutan item dimulai dari inline-start (kanan di RTL); badge di inline-end ikon; ikon tujuan tidak dicerminkan kecuali berarah."
+  },
+  "sizes": {
+    "not_applicable": "BottomNav hanya tampil di phone dengan tinggi tetap dari layout-bar-height; setiap item ≥ target-min-touch (target-min-extended bila B3 punya glove atau in-motion), bukan prop size."
+  },
+  "state_combinations": [
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "pressed",
+      "note": "tap ulang item current menggulir ke atas atau kembali ke akar tujuan (konvensi platform)",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": true,
+      "interaction": "rest",
+      "note": "pill + ring inset",
+      "supported": true
+    },
+    {
+      "availability": "enabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "hover",
+      "note": "hanya di pointer; pill tetap",
+      "supported": true
+    },
+    {
+      "availability": "disabled",
+      "base": "selected",
+      "focus": false,
+      "interaction": "rest",
+      "note": "tujuan yang sedang dibuka tidak diblokir",
+      "supported": false
+    }
+  ],
+  "states": [
+    {
+      "name": "default",
+      "token_swaps": {
+        "item": "color-structure-text-secondary"
+      },
+      "treatment": "ikon garis + label text-secondary"
+    },
+    {
+      "name": "pressed",
+      "token_swaps": {
+        "item": "color-interaction-pressed"
+      },
+      "treatment": "state-layer pressed pada pill; haptic-selection di native bila L14 mengizinkan"
+    },
+    {
+      "name": "focus",
+      "token_swaps": {
+        "focus-ring": "color-focus-ring"
+      },
+      "treatment": "ring 2px focus-ring inset −2px (keyboard eksternal, switch access)"
+    },
+    {
+      "name": "hover",
+      "token_swaps": {
+        "item": "color-interaction-subtle"
+      },
+      "treatment": "state-layer hover; hanya di (hover: hover), mis. web phone dengan mouse"
+    },
+    {
+      "name": "current",
+      "token_swaps": {
+        "current-indicator": "color-structure-selection",
+        "item": "color-structure-text-primary"
+      },
+      "treatment": "aria-current=\"page\"; pill + ikon terisi + label text-primary berbobot tebal"
+    },
+    {
+      "name": "badge",
+      "token_swaps": {},
+      "treatment": "Badge jumlah atau titik perhatian di ikon; jumlah > 99 ditulis \"99+\"; nama aksesibel memuat jumlah penuh"
+    },
+    {
+      "name": "disabled-with-reason",
+      "token_swaps": {
+        "item": "color-structure-text-disabled"
+      },
+      "treatment": "jarang; tujuan tidak tersedia sementara: aria-disabled + ikon gembok kecil; tap menampilkan reason sebagai Toast polite; tetap fokusabel"
+    },
+    {
+      "name": "hidden-for-keyboard",
+      "token_swaps": {},
+      "treatment": "disembunyikan selama keyboard virtual terbuka atau saat alur langkah aktif; ruangnya dilepas ke konten"
+    }
+  ],
+  "target_hints": {
+    "compose": "{Ns}BottomNav: NavigationBar di Scaffold(bottomBar)",
+    "flutter": "{ns}_bottom_nav.dart: NavigationBar di Scaffold.bottomNavigationBar",
+    "html": {
+      "element": "nav[aria-label] > ul > li > a",
+      "notes": "position: sticky di block-end dengan padding env(safe-area-inset-bottom); disembunyikan via visualViewport saat keyboard; tanpa JS tetap berupa tautan"
+    },
+    "swiftui": "{Ns}BottomNav: TabView tingkat aplikasi"
+  },
+  "tier": "S",
+  "variants": [
+    {
+      "description": "Default dan satu-satunya yang direkomendasikan: ikon + label selalu terlihat untuk semua item.",
+      "name": "labelled"
+    },
+    {
+      "description": "Latar surface-translucent dengan blur material bila bahasa desain mengizinkannya (L8); menjadi padat di prefers-reduced-transparency dan bila kontras komposit label gagal.",
+      "name": "translucent"
+    }
+  ]
+}
