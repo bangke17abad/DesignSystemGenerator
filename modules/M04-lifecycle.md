@@ -1,7 +1,7 @@
-<!-- ds-module id="M04" name="lifecycle" engine="1.9.0" sections="§7" -->
+<!-- ds-module id="M04" name="lifecycle" engine="1.9.1" sections="§7" -->
 # Modul M04 · Semantic state dan lifecycle
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §7. Dimuat di fase: 5. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §7. Dimuat di fase: 5. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

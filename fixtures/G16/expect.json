@@ -43,6 +43,49 @@
       "contrast_blocking": 0
     },
     {
+      "eq": 14,
+      "mode": "compact",
+      "token_mode": "type-body-size"
+    },
+    {
+      "eq": 22,
+      "mode": "compact",
+      "token_mode": "type-h1-size"
+    },
+    {
+      "eq": 12,
+      "mode": "compact",
+      "token_mode": "type-caption-size"
+    },
+    {
+      "eq": 32,
+      "mode": "compact",
+      "token_mode": "control-height-md"
+    },
+    {
+      "eq": 24,
+      "mode": "compact",
+      "token_mode": "control-height-sm"
+    },
+    {
+      "eq": 40,
+      "mode": "compact",
+      "token_mode": "control-height-lg"
+    },
+    {
+      "eq": 56,
+      "mode": "compact",
+      "token_mode": "layout-bar-height"
+    },
+    {
+      "eq": 16,
+      "mode": "comfortable",
+      "token_mode": "type-input-size"
+    },
+    {
+      "css_contains": "--type-input-size: 16px;"
+    },
+    {
       "status": "PASS",
       "validators": [
         "V1",

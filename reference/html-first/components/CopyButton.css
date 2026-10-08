@@ -57,7 +57,7 @@
   background: transparent;
   color: var(--control-value-color);
   font-family: var(--type-code-family);
-  font-size: var(--type-code-size);
+  font-size: var(--type-input-size); /* an input: never < 16 on touch (iOS zoom) */
   line-height: var(--type-code-line);
   overflow-wrap: anywhere;
   text-overflow: ellipsis;

@@ -42,10 +42,23 @@ function inPage({ target, ns }) {
     const el = n.parentElement;
     if (!el || seen.has(el) || !visible(el)) continue;
     seen.add(el);
-    const fs = parseFloat(getComputedStyle(el).fontSize);
+    const cs = getComputedStyle(el);
+    const fs = parseFloat(cs.fontSize);
     const supporting = !!el.closest(`[data-${ns}-text="supporting"], .${ns}-text-caption`);
+    // STD-2 floor follows the density in force: 16, or the compact body size (>= 14, STD-2c)
+    const body = parseFloat(cs.getPropertyValue('--type-body-size')) || 16;
+    const floor = Math.min(16, Math.max(14, body));
+    // code / identifiers read --type-code-size (13 in compact, STD-2c)
+    const code = parseFloat(cs.getPropertyValue('--type-code-size')) || 16;
+    const isCode = !!el.closest(`code, kbd, pre, samp, .${ns}-text-code`) && fs >= Math.min(floor, Math.max(13, code));
     if (fs < 12) out.tiny_text.push(`${where(el)} (${fs}px)`);
-    else if (fs < 16 && !supporting) out.small_text.push(`${where(el)} (${fs}px)`);
+    else if (fs < floor && !supporting && !isCode) out.small_text.push(`${where(el)} (${fs}px)`);
+  }
+  // inputs on touch viewports: < 16 px makes iOS Safari zoom the page on focus (STD-2c)
+  if (target >= 44) for (const el of document.querySelectorAll('input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="hidden"], [type="submit"], [type="button"]), select, textarea')) {
+    if (!visible(el)) continue;
+    const fs = parseFloat(getComputedStyle(el).fontSize);
+    if (fs < 16) out.small_text.push(`input ${where(el)} (${fs}px < 16 di layar sentuh)`);
   }
   // hit areas
   const sel = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="tab"], [role="checkbox"], [role="radio"], [role="switch"], [role="menuitem"], [role="option"], [role="slider"], [role="treeitem"], [tabindex]:not([tabindex="-1"])';
@@ -67,7 +80,7 @@ function inPage({ target, ns }) {
 
 export async function runQa(outDir, opts = {}) {
   const pw = await loadPlaywright();
-  const report = { engine_version: '1.9.0', status: 'NOT RUN', reason: null, pages: {}, summary: {} };
+  const report = { engine_version: '1.9.1', status: 'NOT RUN', reason: null, pages: {}, summary: {} };
   if (!pw) { report.reason = 'Playwright not installed'; return report; }
   const axePath = findAxe(opts.axe);
   const axeSrc = axePath ? readFileSync(axePath, 'utf8') : null;
@@ -87,6 +100,8 @@ export async function runQa(outDir, opts = {}) {
     const combos = [];
     for (const th of themes) for (const b of opts.quick ? [brands[0]] : brands) combos.push({ vp: 'desktop', theme: th, brand: b });
     for (const vp of ['phone', 'tablet']) for (const th of opts.quick ? [themes[0]] : themes) combos.push({ vp, theme: th, brand: brands[0] });
+    // compact density (STD-2c): desktop + phone in the default theme
+    if ((tokens.$metadata.axes.density || []).includes('compact')) for (const vp of ['desktop', 'phone']) combos.push({ vp, theme: themes[0], brand: brands[0], density: 'compact' });
     for (const c of combos) {
       const v = VIEWPORTS[c.vp];
       const ctx = await browser.newContext({ viewport: { width: v.width, height: v.height }, hasTouch: v.hasTouch, isMobile: v.isMobile, reducedMotion: 'reduce' });
@@ -96,6 +111,7 @@ export async function runQa(outDir, opts = {}) {
       p.on('pageerror', (e) => errors.push(String(e)));
       await p.goto(`${url}#theme=${encodeURIComponent(c.theme)}&brand=${encodeURIComponent(c.brand)}`);
       await p.waitForLoadState('load');
+      if (c.density) await p.evaluate((d) => document.documentElement.setAttribute('data-density', d), c.density);
       const m = await p.evaluate(inPage, { target: v.target, ns });
       let axe = [];
       if (axeSrc) {
@@ -119,7 +135,7 @@ export async function runQa(outDir, opts = {}) {
           if (!f.ring) focusMissing.push(f.name);
         }
       }
-      if (opts.screenshots) await p.screenshot({ path: join(shotsDir, `${page.replace(/[\/]/g, '_')}-${c.vp}-${c.brand}-${c.theme}.png`), fullPage: true });
+      if (opts.screenshots) await p.screenshot({ path: join(shotsDir, `${page.replace(/[\/]/g, '_')}-${c.vp}-${c.brand}-${c.theme}${c.density ? `-${c.density}` : ''}.png`), fullPage: true });
       const run = { ...c, console_errors: errors, axe, small_text: m.small_text, tiny_text: m.tiny_text, small_targets: m.small_targets, focus_missing: focusMissing, tokens_empty: m.tokens_empty };
       if (v.hasTouch) for (const t of m.small_targets) { const mm = t.match(/(\d+)×(\d+)$/); if (mm) minTouch = Math.min(minTouch, +mm[1], +mm[2]); }
       res.runs.push(run);
@@ -177,13 +193,13 @@ export function qaMarkdown(r) {
   const L = ['# Laporan QA render (V9)', ''];
   if (r.status !== 'RUN') return L.concat([`NOT RUN: ${r.reason}`]).join('\n');
   const s = r.summary;
-  L.push(`Engine 1.9.0 · ${s.pages} halaman · ${s.runs} render (brand × tema × viewport) · ${r.axe}`, '', '| Pemeriksaan | Jumlah temuan |', '|---|---|');
+  L.push(`Engine 1.9.1 · ${s.pages} halaman · ${s.runs} render (brand × tema × viewport) · ${r.axe}`, '', '| Pemeriksaan | Jumlah temuan |', '|---|---|');
   for (const [k, v] of Object.entries(s)) if (!['pages', 'runs'].includes(k)) L.push(`| ${k} | ${v ?? '-'} |`);
   L.push('', `Status: **${r.pass ? 'PASS' : 'FAIL'}**`, '');
   for (const [page, p] of Object.entries(r.pages)) {
     const issues = [];
     for (const run of p.runs) {
-      const tag = `${run.vp}/${run.brand}/${run.theme}`;
+      const tag = `${run.vp}/${run.brand}/${run.theme}${run.density ? `/${run.density}` : ''}`;
       for (const k of ['console_errors', 'small_text', 'tiny_text', 'small_targets', 'focus_missing', 'tokens_empty']) if (run[k].length) issues.push(`- ${tag} ${k}: ${run[k].slice(0, 4).join('; ')}`);
       for (const a of run.axe) issues.push(`- ${tag} axe ${a.id} (${a.impact}, ${a.nodes}): ${a.sample.join(', ')}`);
     }

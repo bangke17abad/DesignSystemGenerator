@@ -335,7 +335,7 @@
       "case": "RTL dengan angka"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Data display",
   "inclusion": "Opsional: disertakan bila journey atau entitas di brief memerlukan riwayat atau jejak audit (perubahan state, komentar, persetujuan); alasan dicatat.",
   "lint": [

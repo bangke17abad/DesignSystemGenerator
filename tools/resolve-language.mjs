@@ -7,7 +7,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readJson, writeJson } from './lib/tokens.mjs';
 
-const ENGINE = '1.9.0';
+const ENGINE = '1.9.1';
 const here = dirname(fileURLToPath(import.meta.url));
 const catalog = readJson(join(here, '..', 'catalog', 'archetypes.json'));
 

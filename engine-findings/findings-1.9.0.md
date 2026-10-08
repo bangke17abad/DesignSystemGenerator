@@ -26,3 +26,12 @@ Sumber: review pengguna atas prototipe yang dibuat engine 1.8.0. Keluhannya: has
 | EF-071 | Profil baru ada dua (antd-v6, shadcn). MUI v7 dan Material 3 belum punya profil walaupun adapter-nya ada. | Profil `mui-v7` dan `m3` di 1.10. |
 | EF-072 | Font Geist (shadcn) tidak dibundel, sehingga preview jatuh ke font sistem. | Opsi bundel Geist (OFL) bila lisensi brief mengizinkan. |
 | EF-073 | Template belum punya varian kepadatan `compact` khusus tabel AntD (`size="small"`). | Varian template `list-compact`. |
+
+## Ditutup di 1.9.1
+
+| ID | Temuan | Perbaikan |
+|---|---|---|
+| EF-074 | Density `compact` hanya mengecilkan tinggi kontrol −4 px, dan seluruhnya dibatalkan di layar sentuh. Hasilnya tidak terlihat padat seperti AntD compact / shadcn `text-sm`: teks tetap 16, H1 28–30, header 64. | STD-2c: skala tipe compact (14/12/13, H1 22), kontrol 24/32/40, header 56, padding sel dan chip per density. Di pointer kasar hanya input (≥ 16) dan tinggi kontrol/baris yang kembali comfortable. |
+| EF-075 | Input di layar sentuh bisa < 16 px, sehingga iOS Safari memperbesar halaman saat input difokus. | Token `type-input-size`, reset base `:where()`, editor sel Table, dan pemeriksaan QA "input < 16 di layar sentuh". |
+| EF-076 | V11, VB1, VB7, VB11, dan QA hanya memeriksa density default, sehingga density kedua tidak pernah diverifikasi. | Semua validator itu memeriksa setiap density; QA menambah run compact (desktop + ponsel). |
+| EF-077 | Di compact, track Switch (34 px) lebih tinggi dari baris (32 px), sehingga tombol "Try again" di bawahnya tumpang tindih 1 px dengan target switch (axe target-size). Code 13 px di input CopyButton dan select bulan/tahun DatePicker juga < 16 di layar sentuh. | Baris Switch = max(kontrol, target, track) dan margin tombol retry tidak pernah negatif. Input CopyButton dan select DatePicker memakai `type-input-size`. |

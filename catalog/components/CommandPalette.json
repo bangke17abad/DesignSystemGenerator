@@ -352,7 +352,7 @@
       "case": "komposisi IME (CJK)"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Actions",
   "inclusion": "Opsional: wajib untuk archetype dense-console atau bila L1 memuat prinsip keyboard-first; selain itu disertakan bila journey, entitas, atau surface di brief memerlukannya (alasan dicatat).",
   "lint": [

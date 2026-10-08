@@ -235,7 +235,7 @@
       "case": "EmptyState di dalam sel Table"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Feedback",
   "inclusion": "Selalu disertakan.",
   "lint": [

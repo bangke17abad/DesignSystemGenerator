@@ -1,6 +1,6 @@
 {
   "$comment": "Normative machine-readable form of M01 §4.5. If this file and the M01 tables disagree, this file wins (engine 1.8.0). Values are consumed by tools/resolve-language.mjs and tools/derive-tokens.mjs.",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "icon_sets": {
     "lucide": {
       "license": "ISC",

@@ -1,7 +1,7 @@
-<!-- ds-module id="M09" name="content" engine="1.9.0" sections="§12" -->
+<!-- ds-module id="M09" name="content" engine="1.9.1" sections="§12" -->
 # Modul M09 · Konten, error, loading, lokalisasi, glosarium
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §12. Dimuat di fase: 4, 8. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §12. Dimuat di fase: 4, 8. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

@@ -561,7 +561,7 @@
       "case": "nilai controlled tidak ada di daftar saat ini (opsi asinkron belum dimuat)"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Inputs",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila ada field yang memilih dari daftar panjang (> ±15 opsi) atau daftar yang dimuat dari server.",
   "lint": [

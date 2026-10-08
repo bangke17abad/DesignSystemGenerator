@@ -1,7 +1,7 @@
-<!-- ds-module id="M12" name="data-contracts" engine="1.9.0" sections="§16A" -->
+<!-- ds-module id="M12" name="data-contracts" engine="1.9.1" sections="§16A" -->
 # Modul M12 · Kontrak data
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §16A. Dimuat di fase: 0, dan setiap kali skema di `schemas/` belum ada. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §16A. Dimuat di fase: 0, dan setiap kali skema di `schemas/` belum ada. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

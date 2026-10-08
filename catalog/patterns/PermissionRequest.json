@@ -1,6 +1,6 @@
 {
   "name": "PermissionRequest",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "tier": "O",
   "inclusion": "Disertakan bila surface native butuh izin OS (kamera, lokasi, notifikasi, mikrofon, kontak) atau role dapat meminta akses lebih tinggi (engine 1.8.0).",
   "problem": {

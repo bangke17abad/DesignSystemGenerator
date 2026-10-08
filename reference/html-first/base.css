@@ -1,4 +1,4 @@
-/* Engine 1.8.0 · html-first reference · base layer.
+/* Engine 1.9.1 · html-first reference · base layer.
    Reads only system tokens (I3). Breakpoint placeholders (--bp-*-up) are replaced with the token values by tools/render-previews.mjs
    (which also writes the packaged assets/bundle.css), so the package contains exactly one breakpoint set (V8, R11). Class prefix "ds-" and the
    global "DS" are renamed to the project namespace when packaged. */
@@ -17,10 +17,13 @@ body {
 }
 img, svg, video { display: block; max-inline-size: 100%; }
 [hidden] { display: none !important; }
-button, input, select, textarea { font: inherit; color: inherit; }
+:where(button, input, select, textarea) { font: inherit; color: inherit; }
+/* Inputs read --type-input-size: the body size, re-raised to >= 16 px on coarse pointers in compact density (STD-2c; iOS Safari
+   zooms the page when a focused input is under 16 px). Zero specificity: a component's own size still wins. */
+:where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="submit"], [type="button"], [type="reset"]), select, textarea) { font-size: var(--type-input-size); }
 :where(h1, h2, h3, h4, p, ul, ol, dl, figure) { margin: 0; }
 
-/* Typography roles (STD-2: everything except .ds-text-caption is body text >= 16) */
+/* Typography roles (STD-2: everything except .ds-text-caption is body text >= 16; compact density 14, STD-2c) */
 .ds-text-display { font-family: var(--type-display-family); font-size: var(--type-display-size); line-height: var(--type-display-line); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-tracking); }
 .ds-text-h1 { font-family: var(--type-h1-family); font-size: var(--type-h1-size); line-height: var(--type-h1-line); font-weight: var(--type-h1-weight); letter-spacing: var(--type-h1-tracking); }
 .ds-text-h2 { font-family: var(--type-h2-family); font-size: var(--type-h2-size); line-height: var(--type-h2-line); font-weight: var(--type-h2-weight); letter-spacing: var(--type-h2-tracking); }

@@ -332,7 +332,7 @@
       "case": "item terhapus sehingga halaman current kosong"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Navigation",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; wajib bila ada Table data operasional (paginasi default, §6.5).",
   "lint": [

@@ -298,7 +298,7 @@
       "case": "Popover di dalam Modal"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Overlays",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
   "lint": [

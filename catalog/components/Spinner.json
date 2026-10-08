@@ -205,7 +205,7 @@
       "case": "tunggu > 2 detik"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Feedback",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; Button, IconButton, dan CopyButton bergantung padanya untuk state loading.",
   "lint": [

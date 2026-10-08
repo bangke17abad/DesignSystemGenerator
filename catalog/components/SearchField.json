@@ -426,7 +426,7 @@
       "case": "karakter khusus atau diakritik"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Inputs",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila surface punya banyak halaman (SC 2.4.5) atau daftar/tabel yang bisa melebihi satu layar.",
   "lint": [

@@ -68,7 +68,7 @@
   color: var(--control-value-color);
   box-shadow: inset 0 0 0 var(--_inner) var(--_border);
   font-family: var(--type-body-family);
-  font-size: var(--type-body-size);
+  font-size: var(--type-input-size);
   line-height: var(--type-body-line);
   font-weight: var(--type-body-weight);
   letter-spacing: var(--type-body-tracking);

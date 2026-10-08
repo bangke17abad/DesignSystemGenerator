@@ -1,7 +1,7 @@
-<!-- ds-module id="M01" name="design-language" engine="1.9.0" sections="§4.5-4.8" -->
+<!-- ds-module id="M01" name="design-language" engine="1.9.1" sections="§4.5-4.8" -->
 # Modul M01 · Perpustakaan archetype dan lapisan bahasa desain
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §4.5-4.8. Dimuat di fase: 0A, 0B, 2. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §4.5-4.8. Dimuat di fase: 0A, 0B, 2. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

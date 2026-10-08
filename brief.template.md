@@ -86,7 +86,7 @@ Satu baris per surface (portal web, aplikasi mobile, kios, tablet, halaman publi
 
 - `input_modality` boleh beberapa nilai. Surface yang memuat `touch`, `glove`, atau `in-motion` memakai aturan sentuh (≥ 44×44) **di semua lebar layar**; `glove` atau `in-motion` menaikkan area klik menjadi 48×48.
 - `surface_type: operational` mengaktifkan aturan decision-first (I9, §13.3 prompt). `consumer`, `content`, dan `public` membaca I9 sebagai hierarki informasi.
-- `density_modes`: `compact` tidak pernah aktif pada mode sentuh; tuliskan hanya untuk surface pointer.
+- `density_modes`: `compact` (engine 1.9.1, STD-2c) = layar padat. Teks isi 14, caption 12, H1 22, kontrol 24/32/40, header 56, sel tabel dan status lebih rapat. Di layar sentuh, input tetap ≥ 16 (iOS zoom), dan tinggi kontrol serta area klik kembali ke ukuran sentuh. Pilih hanya bila pengguna memang butuh kepadatan data (back-office, tabel besar).
 - `min_version` kosong = usulan generator, dicatat `A-nn`.
 - Kunci orientasi hanya untuk perangkat yang secara fisik terpasang tetap.
 

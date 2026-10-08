@@ -28,7 +28,7 @@ export function build(outDir, opts = {}) {
     writeText(join(outDir, rel), files[rel]);
     manifest[rel] = createHash('sha256').update(files[rel]).digest('hex');
   }
-  writeJson(join(outDir, 'reports', 'build-manifest.json'), { engine_version: '1.9.0', files: manifest });
+  writeJson(join(outDir, 'reports', 'build-manifest.json'), { engine_version: '1.9.1', files: manifest });
   return manifest;
 }
 
@@ -105,9 +105,11 @@ function tokensCss(model) {
   }
   const dens = list.filter((t) => t.varies.includes('density'));
   for (const d of axes.density) blocks.push(`[data-density="${d}"] {\n${decl(dens.map((t) => [t.name, t.byDensity[d]]))}\n}`);
-  // Touch mode (STD-4): minimum hit area and no compact density on coarse pointers
+  // Touch mode (STD-4, STD-2c): minimum hit area; compact keeps its type and paddings on coarse pointers, but control and row
+  // heights return to comfortable and inputs return to the comfortable size (>= 16 px: iOS Safari zooms smaller inputs)
   const comfy = axes.density.includes('comfortable') ? 'comfortable' : axes.density[0];
-  blocks.push(`@media (any-pointer: coarse) {\n  :root { --target-current: 44px; }\n  [data-density="compact"] {\n${dens.map((t) => `    --${t.name}: ${t.byDensity[comfy]};`).join('\n')}\n  }\n}`);
+  const touchBack = dens.filter((t) => /^(control-height-|layout-row-height$|type-input-size$)/.test(t.name));
+  blocks.push(`@media (any-pointer: coarse) {\n  :root { --target-current: 44px; }${touchBack.length ? `\n  ${d0 === 'compact' ? ':root,\n  ' : ''}[data-density="compact"] {\n${touchBack.map((t) => `    --${t.name}: ${t.byDensity[comfy]};`).join('\n')}\n  }` : ''}\n}`);
   if (model.byName['target-min-extended']) blocks.push(`[data-modality~="glove"],\n[data-modality~="in-motion"] { --target-current: var(--target-min-extended); }`);
   blocks.push(`@media (prefers-reduced-motion: reduce) {\n  :root { --motion-fast-duration: 0ms; --motion-base-duration: 0ms; --motion-slow-duration: 0ms; --motion-stagger-max: 0ms; --state-press-transform: none; }\n}`);
   if (model.byName['material-blur-md'] && Object.values(model.byName['material-blur-md'].byColor).some((v) => v !== '0px')) {

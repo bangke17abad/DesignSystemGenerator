@@ -3,7 +3,7 @@ name: design-system-generator
 description: Generate a complete, verified design system package (tokens, components, patterns, docs site, library adapters) from a product brief. Use when asked to create, regenerate or extend a design system, design tokens, or a component library for a product.
 ---
 
-# Design System Generator 1.9.0
+# Design System Generator 1.9.1
 
 Engine untuk menghasilkan paket design system dari brief: token tiga lapis (primitive → semantic → component), 74 komponen kanonis, 21 pattern dasar, situs dokumentasi, preview, adapter (AntD, MUI, shadcn/Tailwind, Flutter, SwiftUI, Compose, Figma), dan bukti verifikasi. Prioritas aturan: **BASELINE > INVARIANT > BRIEF > PACK > LANGUAGE > ENGINE**.
 
@@ -48,7 +48,7 @@ Bila pengguna ingin hasil "seperti Ant Design" atau "seperti shadcn", isi `langu
 
 - **Jangan edit file hasil generate dengan tangan** (`tokens.css`, `tokens.json`, adapter, preview). Ubah brief atau engine, lalu generate ulang. V16 menangkap edit tangan.
 - **Warna merek hanya untuk aksi primer dan link (A1)**; tombol tertiary/ghost selalu netral.
-- **Baseline**: WCAG 2.2 AA; teks isi ≥ 16 px (caption ≥ 12); semua teks ≥ 4.5:1; target sentuh ≥ 44 px (48 untuk glove/in-motion). Tidak ada pengecualian "teks besar 3:1".
+- **Baseline**: WCAG 2.2 AA; teks isi ≥ 16 px (caption ≥ 12), kecuali density `compact` yang dipilih eksplisit: 14 px (STD-2c), dengan input tetap ≥ 16 di layar sentuh; semua teks ≥ 4.5:1; target sentuh ≥ 44 px (48 untuk glove/in-motion). Tidak ada pengecualian "teks besar 3:1".
 - **Semantik selalu alias primitif**; tidak ada hex di lapis semantic/component.
 - **Jujur soal bukti (R4, R10)**: validator yang tidak bisa jalan ditulis NOT RUN, bukan PASS. Klaim tier hanya dari `reports/verification.json`.
 - **Gerbang blocking**: V1, V2, V4, V5, V11, V14, V16, VP, VB1, VB2, VB4, VB5, VB8. Jangan kirim paket dengan FAIL blocking.

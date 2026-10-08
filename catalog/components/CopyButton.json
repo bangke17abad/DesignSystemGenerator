@@ -276,7 +276,7 @@
       "case": "nilai berformat (pemisah ribuan, spasi grup) atau campuran arah"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Actions",
   "inclusion": "Opsional: disertakan bila journey, entitas, atau surface di brief memerlukannya (mis. identifier, kode, atau tautan berbagi yang harus disalin); alasan dicatat. §6.1 tidak memberi kondisi wajib.",
   "lint": [

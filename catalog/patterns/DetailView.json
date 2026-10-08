@@ -1,6 +1,6 @@
 {
   "name": "DetailView",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "tier": "S",
   "inclusion": "Disertakan bila ada entitas yang bisa dilihat satu per satu, kecuali B7 pattern_exclusions memberi alasan.",
   "problem": {

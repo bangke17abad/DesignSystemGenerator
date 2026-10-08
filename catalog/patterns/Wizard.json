@@ -1,6 +1,6 @@
 {
   "name": "Wizard",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "tier": "O",
   "inclusion": "Disertakan bila brief memiliki form lebih dari satu layar atau lebih dari 12 field.",
   "problem": {

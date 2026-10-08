@@ -269,7 +269,7 @@
       "case": "beberapa proses bersamaan"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Feedback",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila journey memuat impor, unggah, ekspor, atau pembuatan laporan (§12.3).",
   "lint": [

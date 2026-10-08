@@ -14,7 +14,7 @@ import { checkPairs, ADVISORY_GROUPS } from './lib/pairs.mjs';
 import { validate as schemaValidate } from './lib/schema.mjs';
 import { findStripes } from './lib/stripes.mjs';
 
-const ENGINE = '1.9.0';
+const ENGINE = '1.9.1';
 import { CORE_INDEX } from './check-catalog.mjs';
 const CORE_NAMES = new Set(Object.keys(CORE_INDEX));
 import { PATTERN_INDEX } from './check-patterns.mjs';
@@ -266,9 +266,20 @@ export function validatePackage(dir, opts = {}) {
   // ---------------- V11 ----------------
   run('V11', (r) => {
     if (!tokens) { r.failures.push('tokens.json tidak ada'); return; }
-    for (const k of ['body', 'label', 'code', 'body-lg', 'h3', 'h2', 'h1', 'display']) { r.checks++; const v = sem(`type-${k}-size`); if (!(v >= 16)) r.failures.push(`type-${k}-size = ${v} < 16 (STD-2)`); }
-    const cap = sem('type-caption-size');
-    r.checks++; if (!(cap >= 12 && cap < 16)) r.failures.push(`type-caption-size = ${cap} (harus 12..15)`);
+    // STD-2 per density: comfortable/spacious body text >= 16; compact (opt-in, STD-2c) body/label >= 14, code >= 13, headings >= 16
+    for (const d of modeKeys(tokens).density) {
+      const compact = d === 'compact';
+      const floor = { body: compact ? 14 : 16, label: compact ? 14 : 16, code: compact ? 13 : 16, 'body-lg': 16, h3: 16, h2: 16, h1: 16, display: 16 };
+      for (const [k, min] of Object.entries(floor)) { r.checks++; const v = sem(`type-${k}-size`, d); if (!(v >= min)) r.failures.push(`${d}: type-${k}-size = ${v} < ${min} (${compact ? 'STD-2c' : 'STD-2'})`); }
+      const cap = sem('type-caption-size', d);
+      r.checks++; if (!(cap >= 12 && cap < sem('type-body-size', d))) r.failures.push(`${d}: type-caption-size = ${cap} (harus 12 ≤ caption < body)`);
+      if (!compact && tokens.semantic['type-input-size']) { r.checks++; const iv = sem('type-input-size', d); if (!(iv >= 16)) r.failures.push(`${d}: type-input-size = ${iv} < 16 (input di layar sentuh memicu zoom iOS)`); }
+    }
+    if (modeKeys(tokens).density.includes('compact') && tokens.semantic['type-input-size']) {
+      const comfy = modeKeys(tokens).density.find((x) => x !== 'compact');
+      r.checks++; if (comfy && !(sem('type-input-size', comfy) >= 16)) r.failures.push('type-input-size comfortable < 16: tidak ada nilai aman untuk input compact di pointer kasar');
+      r.checks++; if (!comfy && !(sem('type-input-size', 'compact') >= 16)) r.failures.push('hanya density compact: type-input-size harus ≥ 16 (STD-2c)');
+    }
     r.checks++; if (sem('target-min-touch') !== 44) r.failures.push('target-min-touch ≠ 44 (STD-4)');
     r.checks++; if (sem('target-min-pointer') !== 24) r.failures.push('target-min-pointer ≠ 24 (SC 2.5.8)');
     if ((brief?.surfaces || []).some((s) => (s.input_modality || []).some((m) => m === 'glove' || m === 'in-motion'))) { r.checks++; if (!(sem('target-min-extended') >= 48)) r.failures.push('target-min-extended < 48 untuk surface glove/in-motion'); }
@@ -278,7 +289,8 @@ export function validatePackage(dir, opts = {}) {
       const s = readFileSync(f, 'utf8');
       r.checks++;
       if (/teks besar\s*3[.,]?0?\s*:\s*1|large text\s*3:1/i.test(s)) r.failures.push(`${rel(f)}: menyebut pengecualian teks besar 3:1 (STD-3)`);
-      if (/(teks isi|body text)[^.]{0,40}\b(1[0-5]|[0-9])\s*px/i.test(s)) r.failures.push(`${rel(f)}: menyebut teks isi < 16px`);
+      // a body size under 16 is allowed only where the text is about the opt-in compact density (STD-2c)
+      for (const m of s.matchAll(/(teks isi|body text)[^.]{0,40}\b(1[0-5]|[0-9])\s*px/gi)) { const ctx = s.slice(Math.max(0, m.index - 300), m.index + 100); if (!/compact|STD-2c/i.test(ctx)) { r.failures.push(`${rel(f)}: menyebut teks isi < 16px`); break; } }
     }
   });
 
@@ -457,11 +469,13 @@ export function validatePackage(dir, opts = {}) {
   run('VB1', (r) => {
     if (!tokens) return 'NOT RUN';
     const order = ['caption', 'body', 'body-lg', 'h3', 'h2', 'h1', 'display'];
-    const v = order.map((k) => sem(`type-${k}-size`));
-    for (let i = 1; i < v.length; i++) { r.checks++; if (!(v[i] > v[i - 1])) r.failures.push(`type-${order[i]}-size (${v[i]}) ≤ type-${order[i - 1]}-size (${v[i - 1]})`); }
-    const ratio = v[6] / v[1];
-    r.checks++; if (ratio < 1.6) r.failures.push(`kontras skala display/body ${ratio.toFixed(2)} < 1.6 (hierarki lemah)`);
-    r.checks++; if (sem('type-label-size') < sem('type-body-size')) r.failures.push('type-label-size < type-body-size');
+    for (const d of modeKeys(tokens).density) {
+      const v = order.map((k) => sem(`type-${k}-size`, d));
+      for (let i = 1; i < v.length; i++) { r.checks++; if (!(v[i] > v[i - 1])) r.failures.push(`${d}: type-${order[i]}-size (${v[i]}) ≤ type-${order[i - 1]}-size (${v[i - 1]})`); }
+      const ratio = v[6] / v[1];
+      r.checks++; if (ratio < 1.6) r.failures.push(`${d}: kontras skala display/body ${ratio.toFixed(2)} < 1.6 (hierarki lemah)`);
+      r.checks++; if (sem('type-label-size', d) < sem('type-body-size', d)) r.failures.push(`${d}: type-label-size < type-body-size`);
+    }
     const w = ['h1', 'h2', 'h3'].map((k) => sem(`type-${k}-weight`));
     r.checks++; if (w.some((x) => x < sem('type-body-weight')) ) r.failures.push('bobot heading lebih ringan dari body');
   });
@@ -504,11 +518,11 @@ export function validatePackage(dir, opts = {}) {
   });
   run('VB7', (r) => {
     if (!tokens) return 'NOT RUN';
-    for (const k of ['caption', 'body', 'body-lg', 'label', 'code', 'h3', 'h2', 'h1', 'display']) {
-      const ratio = sem(`type-${k}-line`) / sem(`type-${k}-size`);
+    for (const d of modeKeys(tokens).density) for (const k of ['caption', 'body', 'body-lg', 'label', 'code', 'h3', 'h2', 'h1', 'display']) {
+      const ratio = sem(`type-${k}-line`, d) / sem(`type-${k}-size`, d);
       const [lo, hi] = ['body', 'body-lg', 'label', 'code', 'caption'].includes(k) ? [1.3, 1.75] : [1.05, 1.5];
-      r.checks++; if (ratio < lo || ratio > hi) r.failures.push(`type-${k}: tinggi baris ${ratio.toFixed(2)} di luar ${lo}–${hi}`);
-      r.checks++; if (sem(`type-${k}-line`) % 2) r.failures.push(`type-${k}-line ganjil (${sem(`type-${k}-line`)}); grid 2 px`);
+      r.checks++; if (ratio < lo || ratio > hi) r.failures.push(`${d}: type-${k}: tinggi baris ${ratio.toFixed(2)} di luar ${lo}–${hi}`);
+      r.checks++; if (sem(`type-${k}-line`, d) % 2) r.failures.push(`${d}: type-${k}-line ganjil (${sem(`type-${k}-line`, d)}); grid 2 px`);
     }
   });
   run('VB8', (r) => {
@@ -543,9 +557,11 @@ export function validatePackage(dir, opts = {}) {
   });
   run('VB11', (r) => {
     if (!tokens) return 'NOT RUN';
-    const icon = sem('icon-md'), line = sem('type-body-line'), body = sem('type-body-size');
-    r.checks++; if (icon > line) r.failures.push(`icon-md ${icon} > tinggi baris body ${line}`);
-    r.checks++; if (icon < body) r.failures.push(`icon-md ${icon} < ukuran body ${body} (ikon terlihat kecil di samping teks)`);
+    for (const d of modeKeys(tokens).density) {
+      const icon = sem('icon-md'), line = sem('type-body-line', d), body = sem('type-body-size', d);
+      r.checks++; if (icon > line) r.failures.push(`${d}: icon-md ${icon} > tinggi baris body ${line}`);
+      r.checks++; if (icon < body) r.failures.push(`${d}: icon-md ${icon} < ukuran body ${body} (ikon terlihat kecil di samping teks)`);
+    }
   });
   run('VB12', (r) => {
     if (!tokens) return 'NOT RUN';

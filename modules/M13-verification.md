@@ -1,7 +1,7 @@
-<!-- ds-module id="M13" name="verification" engine="1.9.0" sections="§17" -->
+<!-- ds-module id="M13" name="verification" engine="1.9.1" sections="§17" -->
 # Modul M13 · Verifikasi (kriteria lulus lengkap)
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §17. Dimuat di fase: setiap fase yang gerbangnya menyebut validator yang belum ada di `tools/validate.mjs`, dan Phase 14. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §17. Dimuat di fase: setiap fase yang gerbangnya menyebut validator yang belum ada di `tools/validate.mjs`, dan Phase 14. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

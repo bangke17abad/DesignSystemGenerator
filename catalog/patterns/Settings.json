@@ -1,6 +1,6 @@
 {
   "name": "Settings",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "tier": "S",
   "inclusion": "Disertakan bila ada preferensi pengguna atau organisasi, kecuali B7 pattern_exclusions memberi alasan.",
   "problem": {

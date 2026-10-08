@@ -278,7 +278,7 @@
       "case": "jam perangkat salah"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Feedback",
   "inclusion": "Standar bersyarat: disertakan bila ada konektivitas tidak stabil atau offline (B3 input/lingkungan, B4 offline_required_surfaces) atau tampilan data live; selain itu boleh dikecualikan lewat B7 dengan alasan.",
   "lint": [

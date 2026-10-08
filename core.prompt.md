@@ -1,6 +1,6 @@
 # Universal Design System Generator · Core
 
-**Engine `1.9.0`** · **Brief schema `1.5`** · Core selalu dimuat; modul di `modules/` dimuat per fase (§0). Engine membawa alat referensi di `tools/`, katalog kanonis di `catalog/`, implementasi referensi di `reference/`, skema di `schemas/`, dan adapter library di `adapters/` (§0.1). Panduan pakai dan riwayat engine ada di `README.md`.
+**Engine `1.9.1`** · **Brief schema `1.5`** · Core selalu dimuat; modul di `modules/` dimuat per fase (§0). Engine membawa alat referensi di `tools/`, katalog kanonis di `catalog/`, implementasi referensi di `reference/`, skema di `schemas/`, dan adapter library di `adapters/` (§0.1). Panduan pakai dan riwayat engine ada di `README.md`.
 
 ---
 
@@ -248,7 +248,8 @@ Empat standar berlaku untuk **semua surface di B3 dan semua tema** pada setiap p
 - **Teks isi** = semua teks yang dibaca pengguna untuk memahami atau menyelesaikan tugas: paragraf, nilai field, isi sel dan header tabel, item daftar, teks status dan badge, pesan error/warning, helper, isi alert, toast, dan dialog, label tombol/tab/navigasi/chip/opsi/field, angka (harga, waktu, jarak, skor), kode dan identifier.
 - Minimum **16 px** (web) dan **16 dp/pt logis** (native), di semua kelas perangkat dan tema, sebelum pengguna memperbesar teks sistem. Token teks isi: `type-body`, `type-label`, `type-code`, `type-body-lg`, semua heading, dan token tampilan angka besar.
 - **Teks pendukung** adalah satu-satunya teks yang boleh di bawah 16, dengan lantai mutlak 12, dan hanya lewat satu token: `type-caption` (metadata sekunder, label sumbu chart, meta tooltip, penghitung karakter). **Uji penentu:** bila teks itu hilang, apakah pengguna bisa salah mengambil keputusan atau gagal menyelesaikan tugas? Bila ya, itu teks isi dan wajib ≥ 16.
-- Kepadatan dicapai lewat ruang dan susunan, bukan dengan mengecilkan huruf (I8).
+- Kepadatan dicapai lewat ruang dan susunan, bukan dengan mengecilkan huruf (I8), **kecuali STD-2c** di bawah.
+- **STD-2c Density compact (engine 1.9.1, opt-in).** Bila B3 `density_modes` memuat `compact`, mode `[data-density="compact"]` memakai skala layar padat: `type-body` dan `type-label` 14, `type-code` 13, `type-caption` 12, `type-body-lg` 16, h3/h2/h1/display 18/20/22/28. Setiap langkah = min(archetype, compact). Mode `comfortable`/`spacious` tetap ≥ 16. Tiga pengaman: (1) **input** (`type-input-size`) kembali ke ukuran comfortable (≥ 16) di pointer kasar, karena iOS Safari memperbesar halaman saat input < 16 difokus; (2) tinggi kontrol dan baris kembali comfortable di pointer kasar, dan area klik tetap `target-current` (STD-4); (3) kontras tetap ≥ 4.5:1 (STD-3) dan teks tetap bisa diperbesar 200%. Paket mencatatnya di dokumen 40 sebagai keputusan sadar, bukan pengecualian diam-diam.
 - Semua teks mengikuti ukuran teks sistem sampai 200% tanpa terpotong (SC 1.4.4); tidak ada wadah teks dengan tinggi tetap yang memotong status, harga, waktu, atau skor.
 
 ## 3A.3 STD-3 Kontras teks minimal 4,5:1
@@ -293,7 +294,7 @@ Berlaku untuk bahasa apa pun. Bahasa boleh menafsirkan caranya, tidak boleh memb
 | I5 | **Jalur kritis menang.** Bila brief mendeklarasikan event kritis (keselamatan, finansial, hukum), perlakuannya lebih keras daripada semua aturan estetika bahasa dan tidak dibatasi izin peran. |
 | I6 | **Data jujur.** Tampilan live menyebut kesegaran data; yang tersimpan lokal tetap bertanda sampai server mengonfirmasi; tidak ada yang tampil terkonfirmasi sebelum benar-benar terkonfirmasi. |
 | I7 | **Urutan intensitas perhatian.** Intensitas visual mengikuti C1 ≥ C2 ≥ C3 ≥ {C4, C5, C6} (§4.4): kondisi sehat tidak pernah lebih keras daripada yang meminta tindakan. |
-| I8 | **Kepadatan lewat ruang dan susunan,** bukan huruf di bawah baseline. |
+| I8 | **Kepadatan lewat ruang dan susunan,** bukan huruf di bawah baseline; satu-satunya pengecualian adalah density `compact` yang dipilih eksplisit (STD-2c). |
 | I9 | **Layar operasional mengutamakan keputusan.** Setiap elemen menjawab salah satu: state, attention, evidence, decision, action, outcome; selebihnya pindah ke panel detail. (Berlaku untuk surface dengan `surface_type: operational` di B3; surface konsumen atau konten boleh menafsirkannya sebagai hierarki informasi.) |
 
 ## 4.3 Tujuh belas keputusan bahasa (L1-L17)
@@ -349,7 +350,7 @@ Dokumen 80. Setiap layar lolos gerbang ini sebelum berstatus `Stable`. Setiap la
 |---|---|---|
 | UB1 | Hex mentah, nilai ramp primitif, atau ukuran/jarak ajaib di dalam komponen | I3 |
 | UB2 | Status atau seleksi yang hanya dibedakan lewat warna | I2 |
-| UB3 | Teks isi di bawah 16 px/dp; teks pendukung di bawah 12 | STD-2 |
+| UB3 | Teks isi di bawah 16 px/dp (14 di density compact, STD-2c); input di bawah 16 di layar sentuh; teks pendukung di bawah 12 | STD-2 |
 | UB4 | Kontras teks di bawah 4.5:1 (termasuk teks besar, placeholder, hover, di atas fill) | STD-3 |
 | UB5 | Area klik di bawah 44×44 pada sentuh (atau 24×24 pada pointer) | STD-4 |
 | UB6 | Tautan di teks berjalan tanpa penanda non-warna | SC 1.4.1 |

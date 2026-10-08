@@ -37,6 +37,12 @@ Konten fixture domain-netral (booking venue, tim, dokumen, pesanan generik). Jan
 
 Token yang boleh dipakai ada di `catalog/token-names.json` (`always` dan `component_always`).
 
+## Density compact (engine 1.9.1)
+
+- Teks mengikuti token tipe, jadi otomatis 14 di `[data-density="compact"]`. Jangan menulis ukuran khusus compact di komponen.
+- **Input teks** (`input`, `select`, `textarea`, editor sel) memakai `font-size: var(--type-input-size)`, bukan `--type-body-size`, supaya tetap ≥ 16 di layar sentuh (iOS zoom). Jangan pakai `font: inherit` pada input tanpa menulis ulang `font-size` sesudahnya.
+- Padding baris/sel memakai `--space-cell-block/inline`, chip/status memakai `--space-chip-block/inline`.
+
 ## Profil visual dan template (engine 1.9.0)
 
 - `profiles/<id>.css` (antd-v6, shadcn) dimuat **setelah** semua CSS komponen dan hanya mengubah anatomi lewat token yang sama. Aturan larangannya sama dengan komponen: tanpa hex, tanpa px ajaib, tanpa garis samping, `:hover` di dalam `@media (hover: hover)` dengan kembaran `[data-force~="hover"]`. Jangan menaruh nilai pustaka (mis. `#1677ff`) di sini; nilainya masuk lewat `catalog/profiles/<id>.json`.

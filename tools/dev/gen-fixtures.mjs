@@ -114,7 +114,11 @@ const F = {
       domain: { entities: [{ name: 'Project', states: ['draft', 'active', 'at-risk', 'done', 'cancelled'] }] } }),
     expect: [{ lang: 'profile.id', eq: 'antd-v6' }, { lang: 'profile.icon_set', eq: 'antd' }, { lang: 'decisions.L9.value.set', eq: 'antd' }, { lang: 'decisions.L16.value.strategy', eq: 'token-swap' },
       { token: 'radius-sm', eq: 6 }, { token: 'radius-md', eq: 8 }, { token: 'control-height-md', eq: 36 }, { token: 'type-body-size', eq: 16 }, { token: 'layout-bar-height', eq: 64 },
-      { file_exists: 'adapters/antd/theme.g.ts' }, { contrast_blocking: 0 }, { validators: ['V1', 'V2', 'V11', 'V13', 'V14', 'VP', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8'], status: 'PASS' }],
+      { file_exists: 'adapters/antd/theme.g.ts' }, { contrast_blocking: 0 },
+      // engine 1.9.1 compact density (STD-2c)
+      { token_mode: 'type-body-size', mode: 'compact', eq: 14 }, { token_mode: 'type-h1-size', mode: 'compact', eq: 22 }, { token_mode: 'type-caption-size', mode: 'compact', eq: 12 },
+      { token_mode: 'control-height-md', mode: 'compact', eq: 32 }, { token_mode: 'control-height-sm', mode: 'compact', eq: 24 }, { token_mode: 'control-height-lg', mode: 'compact', eq: 40 },
+      { token_mode: 'layout-bar-height', mode: 'compact', eq: 56 }, { token_mode: 'type-input-size', mode: 'comfortable', eq: 16 }, { css_contains: '--type-input-size: 16px;' }, { validators: ['V1', 'V2', 'V11', 'V13', 'V14', 'VP', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8'], status: 'PASS' }],
     run_only: ['Template dashboard/list/detail/settings/wizard/auth dirender dengan profil antd-v6 (render-previews)'] },
   G17: { brief: base({ product_name: 'Kelola Proyek', namespace: 'KLP', surfaces: [S('web-admin', 'desktop', 'web', ['pointer', 'keyboard'], 'operational', 'Light', ['comfortable']), S('mobile', 'ponsel', 'iOS', ['touch'], 'consumer', 'Light', ['comfortable'])],
       targets: { primary_web_reference: 'react' }, language: { mode: 'archetype', archetype: 'soft-friendly', visual_profile: 'shadcn', neutral_temperature: 'neutral', themes: [{ name: 'Light' }, { name: 'Dark' }], brands: [{ id: 'default' }] },

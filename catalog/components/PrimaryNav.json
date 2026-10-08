@@ -353,7 +353,7 @@
       "case": "tinggi viewport kecil (keyboard terbuka atau landscape phone)"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Navigation",
   "inclusion": "Selalu disertakan. Surface kiosk atau berbasis state memakai AppShell variant kiosk dan tidak merender PrimaryNav (alasan dicatat di manifest).",
   "lint": [

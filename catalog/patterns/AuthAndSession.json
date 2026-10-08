@@ -1,6 +1,6 @@
 {
   "name": "AuthAndSession",
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "tier": "S",
   "inclusion": "Disertakan bila ada akun (M08 §11.2), kecuali B7 pattern_exclusions memberi alasan. Kebijakan sesi (durasi, ambang peringatan, batas percobaan) dari brief; selain itu dicatat A-nn.",
   "problem": {

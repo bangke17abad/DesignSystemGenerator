@@ -1,6 +1,6 @@
 # Universal Design System Generator
 
-**Engine `1.9.0`** · **Brief schema `1.5`**
+**Engine `1.9.1`** · **Brief schema `1.5`**
 
 > Engine untuk menghasilkan design system yang lengkap, terstruktur, dan matang untuk **proyek apa pun**. Fakta proyek masuk lewat *brief*. **Bahasa desain** (prinsip, warna, bentuk, kepadatan, gerak, suara, platform, material, layout) dipilih atau diturunkan per proyek. Mesin (proses, aturan, gerbang mutu, verifikasi) tidak berubah antar proyek.
 >
@@ -18,7 +18,7 @@
 | `tools/` | alat engine (lihat tabel di bawah) |
 | `schemas/` | 17 JSON Schema 2020-12 (kontrak §16A + brief, katalog, verifikasi) |
 | `adapters/` | A01 Ant Design v6, A02 MUI v7, A03 shadcn/ui + Tailwind 4, A04 Flutter Material 3 |
-| `fixtures/` | 15 golden brief dalam bentuk mesin + `expect.json` (130 asersi; G16/G17 = profil antd-v6 / shadcn) |
+| `fixtures/` | 15 golden brief dalam bentuk mesin + `expect.json` (139 asersi; G16/G17 = profil antd-v6 / shadcn, G16 juga density compact) |
 | `engine-findings/` | register temuan engine (45 ditutup di 1.8.0, 12 di 1.9.0; sisa terbuka di `findings-1.9.0.md`) dan template |
 | `rubric/` | rubrik kematangan paket dan daftar tinjauan visual |
 | `SKILL.md` | pemakaian engine sebagai skill (progressive disclosure) |
@@ -168,6 +168,13 @@ Pola-pola ini sering muncul pada paket design system hasil generate, termasuk pa
 - **Bahasa kustom per organisasi:** simpan `design-language.json` yang sudah disetujui sebagai lapis org berversi, lalu pakai `language_mode: inherit` dengan `inherits_from` di brief proyek-proyek berikutnya (§4.8) agar konsisten antar produk.
 
 ## Riwayat engine
+
+**1.9.1**
+
+- Ditambahkan: **density `compact`** (STD-2c, opt-in lewat B3 `density_modes`). Skala layar padat: teks isi dan label 14, code 13, caption 12, body-lg 16, h3/h2/h1/display 18/20/22/28 (H1 22, sebelumnya 28–30). Kontrol 24/32/40, baris tabel = md + 8, header 56, sel tabel 4 × 8, status label dan chip 0 × 6. Setiap langkah = min(archetype, compact) · token baru `type-input-size`, `space-cell-block/inline`, `space-chip-block/inline`; `layout-bar-height` dan `type-*-size/line` sekarang bisa bervariasi per density · dokumen 40 mencatat density compact bila dipilih.
+- Pengaman: di pointer kasar, compact mempertahankan tipe dan padding, tetapi input kembali ≥ 16 px (iOS Safari zoom bila input < 16), dan tinggi kontrol/baris kembali comfortable. Area klik tetap `target-current` (44). Mode comfortable/spacious tetap ≥ 16 (STD-2).
+- Validator: V11, VB1, VB7, dan VB11 sekarang memeriksa setiap density. QA merender desktop + ponsel di density compact, memakai lantai teks sesuai density (16, atau 14 di compact), dan menolak input < 16 px di layar sentuh. Fixture G16 ditambah 9 asersi compact (139 asersi total).
+- Diperbaiki: `font: inherit` di reset base dan editor sel Table menimpa ukuran input. Reset sekarang `:where()` dan input membaca `type-input-size` · baris Switch di compact lebih pendek dari track-nya (target tumpang tindih) · input CopyButton dan select DatePicker < 16 di layar sentuh. QA 74 komponen + 6 template di 4 archetype + 2 profil, termasuk run compact: PASS.
 
 **1.9.0**
 

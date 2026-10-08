@@ -8,7 +8,7 @@
   --_inset: calc(var(--border-width-thick) + var(--border-width-thin));
   --_track-b: calc(var(--_thumb) + 2 * var(--_inset));
   --_track-i: calc(var(--_thumb) * 1.8 + 2 * var(--_inset));
-  --_row: max(var(--control-height-md), var(--target-current));
+  --_row: max(var(--control-height-md), var(--target-current), var(--_track-b)); /* compact: the row never shorter than the track */
   display: flex;
   flex-direction: column;
   max-inline-size: var(--layout-measure);
@@ -151,7 +151,7 @@
   align-items: center;
   min-block-size: var(--target-current);
   min-inline-size: var(--target-current);
-  margin-block: calc((var(--type-body-line) - var(--target-current)) / 2);
+  margin-block: calc(max(0px, var(--type-body-line) - var(--target-current)) / 2); /* never negative: compact lines (22) are shorter than the 24 target, an overlap fails SC 2.5.8 */
   padding-inline: var(--space-1);
   border: 0;
   border-radius: var(--radius-xs);

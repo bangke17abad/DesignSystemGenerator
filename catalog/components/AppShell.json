@@ -258,7 +258,7 @@
       "case": "landscape pada ponsel ber-notch"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Layout",
   "inclusion": "Selalu disertakan.",
   "lint": [

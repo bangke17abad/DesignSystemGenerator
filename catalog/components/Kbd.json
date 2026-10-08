@@ -189,7 +189,7 @@
       "case": "RTL"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Data display",
   "inclusion": "Opsional: disertakan bila produk punya pintasan keyboard yang ditampilkan (Menu, Tooltip, CommandPalette, halaman bantuan); wajib bila CommandPalette disertakan. Alasan dicatat.",
   "lint": [

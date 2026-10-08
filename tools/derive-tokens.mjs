@@ -8,7 +8,7 @@ import { oklchToHex, hexToOklch, contrast, hueDistance, oklabDistance, round } f
 import { checkPairs, STATUSES, ADVISORY_GROUPS } from './lib/pairs.mjs';
 import { readJson, writeJson, writeText } from './lib/tokens.mjs';
 
-const ENGINE = '1.9.0';
+const ENGINE = '1.9.1';
 const STEPS = 12;
 // Two ramps per family (engine 1.8.0): fine resolution near white for light themes and near black for dark themes.
 // Step 1 is always the lightest, step 12 the darkest.
@@ -503,14 +503,37 @@ function addScales(T, D, brief, themes, brands, assign, densities, profile) {
     label: [sc.label, evenRound(sc.label * rb), L4.label_weight, 'body'], code: [sc.code, evenRound(sc.code * rb), 400, 'body'],
     h3: [sc.h3, evenRound(sc.h3 * rh), L4.heading_weight, 'body'], h2: [sc.h2, evenRound(sc.h2 * rh), L4.heading_weight, 'body'], h1: [sc.h1, evenRound(sc.h1 * rh), L4.heading_weight, 'body'], display: [sc.display, evenRound(sc.display * rh), L4.heading_weight, 'body'],
   };
+  // engine 1.9.1: compact density = dense desktop scale (AntD compact / shadcn text-sm). Body 14, caption 12, code 13, H1 22.
+  // Each step is min(archetype, compact) so compact is never larger than comfortable and the scale stays strictly increasing.
+  // STD-2c: the 16 px body floor applies to comfortable/spacious; compact is opt-in (B3 density_modes) and inputs never go
+  // below 16 px on coarse pointers (type-input-size, build.mjs), because iOS Safari zooms inputs under 16 px.
+  const COMPACT = { caption: [12, 16], body: [14, 22], 'body-lg': [16, 24], label: [14, 20], code: [13, 20], h3: [18, 26], h2: [20, 28], h1: [22, 30], display: [28, 36] };
+  const hasCompact = densities.includes('compact');
+  const byDensity = (k, comfy, compact) => Object.fromEntries(densities.map((d) => [d, d === 'compact' ? compact : comfy]));
+  const dtok = (name, $type, modes, ds) => { T[name] = { $type, $value: modes[densities[0]], $extensions: { ds: { varies_by: ['density'], modes, source: 'archetype', ...ds } } }; };
   for (const [k, [size, line, weight, cls]] of Object.entries(spec)) {
     const ds = { role: `tipe ${k}`, text_class: cls, source: src('L4'), trace: cls === 'body' ? 'L4, STD-2' : 'L4' };
-    tok(`type-${k}-size`, 'dimension', size, ds);
-    tok(`type-${k}-line`, 'dimension', line, ds);
+    const [cs, cl] = COMPACT[k][0] < size ? COMPACT[k] : [size, line];
+    if (hasCompact && cs !== size) {
+      dtok(`type-${k}-size`, 'dimension', byDensity(k, size, cs), { ...ds, trace: `${ds.trace}, STD-2c (compact)` });
+      dtok(`type-${k}-line`, 'dimension', byDensity(k, line, cl), ds);
+    } else {
+      tok(`type-${k}-size`, 'dimension', size, ds);
+      tok(`type-${k}-line`, 'dimension', line, ds);
+    }
     tok(`type-${k}-weight`, 'fontWeight', weight, ds);
     const familyTok = k === 'code' ? 'font-mono' : (['display', 'h1', 'h2'].includes(k) && L4.families.display ? 'font-display' : 'font-sans');
     tok(`type-${k}-family`, 'fontFamily', `{semantic.${familyTok}}`, ds);
     tok(`type-${k}-tracking`, 'dimension', ['h3', 'h2', 'h1', 'display'].includes(k) && size >= 24 ? L4.tracking_heading.replace(/^0$/, '0em') : '0em', ds);
+  }
+  // input text: body size, but compact inputs are re-raised to the comfortable size on coarse pointers by build.mjs (STD-2c)
+  if (hasCompact) dtok('type-input-size', 'dimension', byDensity('input', spec.body[0], Math.min(spec.body[0], COMPACT.body[0])), { role: 'ukuran teks input (min 16 di pointer kasar)', text_class: 'body', source: src('L4'), trace: 'STD-2c, iOS input zoom' });
+  else tok('type-input-size', 'dimension', spec.body[0], { role: 'ukuran teks input', text_class: 'body', source: src('L4'), trace: 'STD-2' });
+  // density paddings for dense rows and chips (table cells, status labels, tags)
+  const pad = { 'space-cell-block': [8, 4], 'space-cell-inline': [12, 8], 'space-chip-block': [2, 0], 'space-chip-inline': [8, 6] };
+  for (const [n, [c, k]] of Object.entries(pad)) {
+    if (hasCompact) dtok(n, 'dimension', Object.fromEntries(densities.map((d) => [d, d === 'compact' ? k : d === 'spacious' ? c + 4 : c])), { role: n.replace(/-/g, ' '), source: 'derived', trace: 'L5, density' });
+    else tok(n, 'dimension', densities[0] === 'spacious' ? c + 4 : c, { role: n.replace(/-/g, ' '), source: 'derived', trace: 'L5' });
   }
   // space
   for (const k of L5.space.steps) tok(k === 0.5 ? 'space-half' : `space-${k}`, 'dimension', k * 4, { role: `spasi ${k}×4`, source: src('L5'), trace: 'L5' });
@@ -558,11 +581,15 @@ function addScales(T, D, brief, themes, brands, assign, densities, profile) {
   for (const [k, v] of Object.entries({ square: '1/1', photo: '4/3', video: '16/9' })) tok(`aspect-${k}`, 'string', v, { role: `rasio ${k}`, source: 'baseline', trace: '§5.2' });
   const densDelta = { comfortable: 0, compact: -4, spacious: 4 };
   const ch = L5.control_height;
+  // compact control heights 24 / 32 / 40 (never taller than comfortable); spacious +4
+  const COMPACT_CH = { sm: 24, md: 32, lg: 40 };
+  const chFor = (k, d) => (d === 'compact' ? Math.min(COMPACT_CH[k], ch[k]) : ch[k] + densDelta[d]);
   for (const k of ['sm', 'md', 'lg']) {
-    const m = Object.fromEntries(densities.map((d) => [d, ch[k] + densDelta[d]]));
+    const m = Object.fromEntries(densities.map((d) => [d, chFor(k, d)]));
     T[`control-height-${k}`] = { $type: 'dimension', $value: m[densities[0]], $extensions: { ds: { role: `tinggi kontrol ${k} (pointer)`, varies_by: ['density'], modes: m, source: src('L5'), trace: 'L5, STD-4' } } };
   }
-  const row = Object.fromEntries(densities.map((d) => [d, Math.max(44, ch.md + 8 + densDelta[d])]));
+  // rows: 44 minimum except compact (pointer only: build.mjs restores the comfortable row on coarse pointers)
+  const row = Object.fromEntries(densities.map((d) => [d, d === 'compact' ? chFor('md', d) + 8 : Math.max(44, ch.md + 8 + densDelta[d])]));
   T['layout-row-height'] = { $type: 'dimension', $value: row[densities[0]], $extensions: { ds: { role: 'tinggi baris daftar/tabel', varies_by: ['density'], modes: row, source: 'derived', trace: 'L5, STD-4' } } };
   for (const [k, v] of Object.entries({ sm: 24, md: 32, lg: 48, xl: 64 })) tok(`avatar-${k}`, 'dimension', v, { role: `avatar ${k}`, source: 'derived', trace: '§5.2' });
   tok('target-min-pointer', 'dimension', 24, { role: 'area klik minimum pointer', source: 'baseline', trace: 'STD-4, SC 2.5.8' });
@@ -597,7 +624,10 @@ function addScales(T, D, brief, themes, brands, assign, densities, profile) {
   const bp = { mobile: 0, tablet: 600, desktop: 1024, wide: 1440, ...(brief.breakpoints || {}) };
   for (const [k, v] of Object.entries(bp)) tok(`bp-${k}`, 'dimension', v, { role: `breakpoint ${k}`, source: brief.breakpoints ? 'brief' : 'baseline', trace: '§8.1, R11' });
   const lay = { 'layout-bar-height': 56, 'layout-nav-width': 256, 'layout-rail-width': 72, 'layout-panel-width': 400, 'layout-content-min': 480, 'layout-modal-sm': 400, 'layout-modal-md': 560, 'layout-modal-lg': 800, ...((profile && profile.layout) || {}) };
-  for (const [k, v] of Object.entries(lay)) tok(k, 'dimension', v, { role: k.replace('layout-', 'layout '), source: 'derived', trace: '§8.2' });
+  for (const [k, v] of Object.entries(lay)) {
+    if (k === 'layout-bar-height' && hasCompact && v > 56) dtok(k, 'dimension', Object.fromEntries(densities.map((d) => [d, d === 'compact' ? 56 : v])), { role: 'layout bar height', source: 'derived', trace: '§8.2, density' });
+    else tok(k, 'dimension', v, { role: k.replace('layout-', 'layout '), source: 'derived', trace: '§8.2' });
+  }
   tok('layout-measure', 'dimension', '72ch', { role: 'lebar baca maksimum', source: 'baseline', trace: 'L17' });
   tok('layout-content-max', 'dimension', L17.content_max_px ? L17.content_max_px : '100%', { role: 'lebar konten maksimum', source: src('L17'), trace: 'L17' });
   tok('space-section', 'dimension', L17.section, { role: 'jarak antar seksi', source: src('L17'), trace: 'L17' });

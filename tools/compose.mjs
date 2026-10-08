@@ -11,7 +11,7 @@ import { readJson, writeJson, writeText, resolveToken, modeKeys } from './lib/to
 import { CORE_INDEX } from './check-catalog.mjs';
 import { PATTERN_INDEX } from './check-patterns.mjs';
 
-const ENGINE = '1.9.0';
+const ENGINE = '1.9.1';
 const engine = join(dirname(fileURLToPath(import.meta.url)), '..');
 const cat = (n) => readJson(join(engine, 'catalog', 'components', `${n}.json`));
 const pcat = (n) => readJson(join(engine, 'catalog', 'patterns', `${n}.json`));

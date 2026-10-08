@@ -1,7 +1,7 @@
-<!-- ds-module id="M02" name="tokens" engine="1.9.0" sections="§5" -->
+<!-- ds-module id="M02" name="tokens" engine="1.9.1" sections="§5" -->
 # Modul M02 · Arsitektur token
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §5. Dimuat di fase: 0A, 1, 9. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §5. Dimuat di fase: 0A, 1, 9. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 
@@ -119,7 +119,7 @@ Setiap token mendeklarasikan sumbu yang memengaruhi nilainya di `$extensions.ds.
 |---|---|---|---|---|
 | `theme` | nama tema di B6 `themes` | L12 | semua warna, `elevation-*` | semua tema lolos V2 |
 | `brand` | `id` di B6 `brands` (default `default`) | §4.8 | `color-interaction-*`, `color-focus-ring*`, `color-brand-*`, ramp netral beserta token struktur turunannya, `font-sans` bila brand menyediakannya | token semantik tidak pernah bervariasi per brand |
-| `density` | subset `compact`, `comfortable`, `spacious` dari B3 `density_modes` | L5 | `control-height-*`, `layout-row-height` | `comfortable` = nilai §4.5(c4); `compact` = −4 px, `spacious` = +4 px; tipe dan skala spasi **tidak** berubah (I8); `compact` tidak pernah aktif di mode sentuh (STD-4) |
+| `density` | subset `compact`, `comfortable`, `spacious` dari B3 `density_modes` | L5 | `control-height-*`, `layout-row-height`, `layout-bar-height`, `space-cell-*`, `space-chip-*`, `type-*-size/line`, `type-input-size` | `comfortable` = nilai §4.5(c4); `spacious` = +4 px. `compact` (engine 1.9.1, STD-2c): kontrol 24/32/40, baris = md + 8, header 56, sel tabel 4 × 8, chip/status 0 × 6, tipe body/label 14, code 13, caption 12, h3/h2/h1/display 18/20/22/28 (masing-masing min dengan archetype). Di pointer kasar, compact mempertahankan tipe dan padding, tetapi `control-height-*`, `layout-row-height`, dan `type-input-size` kembali ke comfortable (input ≥ 16 agar iOS tidak zoom; target tetap `target-current`). Skala spasi `space-1..` tidak berubah. |
 
 - Kunci mode: warna `"<brand>/<theme>"`; ukuran `"<density>"`.
 - Modalitas pointer vs sentuh **bukan** sumbu token. Area klik dihitung saat runtime = max(ukuran visual, `target-min-touch` atau `target-min-pointer`) sesuai STD-4.

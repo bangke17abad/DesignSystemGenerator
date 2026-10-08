@@ -275,7 +275,7 @@
       "case": "badge jumlah sangat besar"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Navigation",
   "inclusion": "Standar bila B3 memuat surface ponsel (atau web yang dipakai di ponsel); tidak disertakan bila tidak ada surface ponsel, dengan alasan dicatat di manifest.",
   "lint": [

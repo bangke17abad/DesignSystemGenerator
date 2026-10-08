@@ -597,7 +597,7 @@
       "case": "nilai ekstrem (negatif, sangat besar, desimal panjang)"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Data display",
   "inclusion": "Selalu disertakan.",
   "lint": [

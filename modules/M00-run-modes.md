@@ -1,7 +1,7 @@
-<!-- ds-module id="M00" name="run-modes" engine="1.9.0" sections="§2.6-2.7" -->
+<!-- ds-module id="M00" name="run-modes" engine="1.9.1" sections="§2.6-2.7" -->
 # Modul M00 · Mode jalan dan migrasi brief
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §2.6-2.7. Dimuat di fase: 0R, 0, 0A bila `run_mode` bukan `greenfield` atau skema brief lebih lama dari 1.3. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §2.6-2.7. Dimuat di fase: 0R, 0, 0A bila `run_mode` bukan `greenfield` atau skema brief lebih lama dari 1.3. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

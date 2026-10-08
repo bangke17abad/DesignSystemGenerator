@@ -1,7 +1,7 @@
-<!-- ds-module id="M03" name="components" engine="1.9.0" sections="§6" -->
+<!-- ds-module id="M03" name="components" engine="1.9.1" sections="§6" -->
 # Modul M03 · Komponen
 
-> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §6. Dimuat di fase: 3, 4, 11, 12. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.1`. Berisi §6. Dimuat di fase: 3, 4, 11, 12. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

@@ -408,7 +408,7 @@
       "case": "emoji dan karakter gabungan"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Inputs",
   "inclusion": "Selalu disertakan.",
   "lint": [

@@ -273,7 +273,7 @@
       "case": "banner C3-C5 sudah ditutup lalu kondisinya berubah kelas"
     }
   ],
-  "engine_version": "1.9.0",
+  "engine_version": "1.9.1",
   "group": "Feedback",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila brief punya surface offline-first, jadwal pemeliharaan, atau langganan yang bisa kedaluwarsa.",
   "lint": [

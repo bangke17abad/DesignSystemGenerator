@@ -87,7 +87,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     summary.push({ id, pass: !bad.length, assertions: r.results.length, failed: bad.length, tier: r.tier });
     if (!args.includes('--keep')) rmSync(r.dir, { recursive: true, force: true });
   }
-  writeJson(join(engine, 'fixtures', 'last-run.json'), { engine_version: '1.9.0', summary });
+  writeJson(join(engine, 'fixtures', 'last-run.json'), { engine_version: '1.9.1', summary });
   console.log(`fixtures: ${total - failed}/${total} asersi lolos`);
   process.exitCode = failed ? 1 : 0;
 }

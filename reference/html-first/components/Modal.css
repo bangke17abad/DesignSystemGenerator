@@ -212,7 +212,7 @@
   border-radius: var(--radius-sm);
   background: var(--control-container-background);
   color: var(--control-value-color);
-  font-size: var(--type-body-size);
+  font-size: var(--type-input-size);
   line-height: var(--type-body-line);
 }
 .ds-modal__input[aria-invalid="true"] { border-color: var(--control-container-border-invalid); border-width: var(--border-width-thick); }
