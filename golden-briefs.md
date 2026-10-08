@@ -766,3 +766,41 @@ pack_config:
 8. Pattern R P03 (BrowseFeed, ContentDetail, CreatePost, ReportBlockMute, PrivacyControls, ContentPreferences) dan pattern R P02 sama-sama ada; CreatorSupport tidak dipilih (`monetization` kosong).
 9. Varian negatif: ubah `member-web` menjadi `surface_type: public` lalu tambahkan `P04-b2g-public-service`. Phase 0 bertanya karena P03 dan P04 bertentangan di surface `public` (feed tak berujung), dan P02 juga bertentangan dengan P04 (penggantian CrudFlow).
 10. Varian negatif: hapus deklarasi `shares` dari header P03. Phase 0 bertanya karena ChatThread didefinisikan dua pack tanpa deklarasi (§0 aturan 8).
+
+## G16. Kelola Proyek · profil visual antd-v6 (engine 1.9.0)
+
+```yaml
+brief_schema_version: "1.5"
+run_mode: greenfield
+product_name: Kelola Proyek
+namespace: KLP
+surfaces:
+  - { name: web-admin, device: desktop, os_runtime: web, input_modality: [pointer, keyboard], surface_type: operational, default_theme: Light, density_modes: [comfortable, compact] }
+  - { name: mobile, device: ponsel, os_runtime: Android, input_modality: [touch], surface_type: operational, default_theme: Light, density_modes: [comfortable] }
+targets: { primary_web_reference: react }
+language:
+  mode: archetype
+  archetype: ink-graphite
+  visual_profile: antd-v6
+  themes: [{ name: Light }, { name: Dark }]
+domain: { entities: [{ name: Project, states: [draft, active, at-risk, done, cancelled] }] }
+```
+
+Yang harus terjadi:
+
+1. `design-language.json` `profile.id = antd-v6`, set ikon `antd`, L16 `token-swap`; keputusan yang ditimpa bertanda `source: profile`.
+2. Radius 6/8/8, tinggi kontrol 28/36/44, `layout-bar-height` 64. Teks isi tetap 16 (AntD 14 → 16, tercatat di `profile.baseline_adjustments`).
+3. Adapter A01 ikut dibuat walau `targets.adapters` kosong (`adapters/antd/theme.g.ts`).
+4. Ban ink-graphite soal bayangan dan radius ditandai `suspended_by: antd-v6`; V13 tetap PASS.
+5. VP PASS: tertiary netral, item nav terpilih berlabel primer, `src/profile/antd-v6.css` ikut dipaketkan, 6 template dirender dengan profil ini.
+
+## G17. Kelola Proyek · profil visual shadcn di atas soft-friendly (engine 1.9.0)
+
+Sama dengan G16, kecuali `archetype: soft-friendly`, `visual_profile: shadcn`, `neutral_temperature: neutral`.
+
+Yang harus terjadi:
+
+1. Radius 8/12/12 (bukan radius bulat soft-friendly), tinggi kontrol md 36, `layout-nav-width` 256, set ikon Lucide.
+2. Adapter A03 + Tailwind ikut dibuat (`adapters/shadcn/shadcn.css`).
+3. `neutral_temperature: neutral` dari brief diterapkan di atas profil.
+4. VP PASS. Item sidebar terpilih memakai latar selection + label teks utama (bukan warna merek).

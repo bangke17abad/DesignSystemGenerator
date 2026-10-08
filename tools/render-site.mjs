@@ -3,7 +3,7 @@
 // (18 sections, §6.3), patterns/<Name>.html (10 sections, §11.3), assets/search-index.json, assets/site.css, assets/site.js.
 // Zero network requests; works offline from index.html; the site obeys STD-1..4 because it uses the system's own tokens.
 // Usage: node tools/render-site.mjs <packageDir>
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readJson, writeJson, writeText, flatten, resolveToken, modeKeys } from './lib/tokens.mjs';
@@ -116,6 +116,7 @@ ${table(['Token', 'Size', 'Line', 'Weight', code === 'id' ? 'Kelas' : 'Class'], 
 ${table(['Token', code === 'id' ? 'Nilai' : 'Value'], Object.keys(tokens.semantic).filter((n) => /^(space|radius|border-width|motion|elevation|control-height|icon|layout|focus-ring|shape|timing)-/.test(n)).sort().map((n) => [`<code>${esc(n)}</code>`, `<code>${esc(JSON.stringify(sem(n)))}</code>`]))}`,
     '10': () => `
 ${table([T.components, 'Tier', 'Group', 'Status', T.preview], comps.map((c) => [`<a href="../components/${c.name}.html">${esc(c.name)}</a>`, c.tier, esc(c.group), c.status, existsSync(join(dir, 'previews', `${c.name}.html`)) ? '✓' : '—']))}
+${(() => { const tdir = join(dir, 'templates'); const ts = existsSync(tdir) ? readdirSync(tdir).filter((f) => f.endsWith('.html')).sort() : []; return ts.length ? `<h2>${code === 'id' ? 'Template halaman' : 'Page templates'}</h2><p class="site-note">${code === 'id' ? 'Profil visual' : 'Visual profile'}: <code>${esc(lang.profile?.id || 'engine')}</code>${lang.profile?.library ? ` (${esc(lang.profile.library)})` : ''}</p>${list(ts.map((f) => `<a href="../templates/${esc(f)}">${esc(f.slice(0, -5))}</a>`))}` : ''; })()}
 <h2>${code === 'id' ? 'Pengecualian' : 'Exclusions'}</h2>${list((manifest.core_exclusions.length ? manifest.core_exclusions : [{ component: '—', reason: '—' }]).map((e) => `${esc(e.component)}: ${esc(e.reason)}`))}
 <h2>${code === 'id' ? 'Model state (§6.9)' : 'State model (§6.9)'}</h2>
 ${list([code === 'id' ? 'Empat lapisan: dasar (default/selected/error) · interaksi (rest/hover/pressed/dragged) · fokus · ketersediaan (enabled/disabled/loading/read-only).' : 'Four layers: base · interaction · focus · availability.', `${code === 'id' ? 'Strategi' : 'Strategy'} L16: <code>${esc(D.L16.value.strategy)}</code>; state-layer hover ${sem('state-layer-hover-opacity')}, pressed ${sem('state-layer-pressed-opacity')}.`, code === 'id' ? 'Aksi diblokir memakai aria-disabled + alasan terlihat, bukan disabled native (UB10).' : 'Blocked actions use aria-disabled + a visible reason (UB10).'])}`,

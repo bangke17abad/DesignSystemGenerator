@@ -1,0 +1,75 @@
+<!-- template: detail · shell: app · current: list · title: Project detail
+     Breadcrumb + page header with status and actions + tabs + description card + side summary + activity timeline.
+     Patterns: AntD Pro "Basic profile" (Descriptions in a card) / shadcn detail layout (cards in a 2/1 grid). -->
+<header class="ds-page-header">
+  <a class="ds-link ds-page-header__back" data-variant="standalone" href="list.html"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Projects</span></a>
+  <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="list.html">Projects</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#current" aria-current="page">Data migration</a></li></ol></nav>
+  <div class="ds-page-header__body">
+    <div class="ds-page-header__heading">
+      <h1 class="ds-page-header__title" tabindex="-1">Data migration</h1>
+      <div class="ds-page-header__meta"><span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>At risk</span></span></span><span>Owner: Budi Santoso</span><span>Due 14 Oct 2026</span></div>
+    </div>
+    <div class="ds-page-header__actions">
+      <button type="button" class="ds-button ds-target" aria-label="More actions" aria-haspopup="menu"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button>
+      <a class="ds-button ds-target" href="#edit"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-edit"/></svg><span>Edit</span></a>
+      <button type="button" class="ds-button ds-target" data-variant="primary">Mark complete</button>
+    </div>
+  </div>
+</header>
+
+<div class="ds-banner ds-template__banner" data-status="warning" data-level="section" role="status"><svg class="ds-icon ds-banner__icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><div class="ds-banner__content"><p class="ds-banner__message">2 tasks are blocked by the vendor export. The due date may move.</p><a class="ds-banner__action" href="#blocked">View blocked tasks<svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></a></div></div>
+
+<div class="ds-tabs ds-template__tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Project sections" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#dt-p0" id="dt-t0" data-selected><span>Summary</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#dt-p1" id="dt-t1"><span>Tasks</span><span class="ds-tabs__count" data-ds-text="supporting">18</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#dt-p2" id="dt-t2"><span>Files</span><span class="ds-tabs__count" data-ds-text="supporting">7</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#dt-p3" id="dt-t3"><span>Activity</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="dt-p0" aria-labelledby="dt-t0">
+    <div class="ds-template__split" data-ratio="2-1">
+      <div class="ds-stack" data-gap="4">
+        <article class="ds-card ds-template__panel" aria-labelledby="dt-info">
+          <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="dt-info">Project details</h2></div></div>
+          <dl class="ds-description-list ds-template__dl" data-variant="grid" aria-labelledby="dt-info">
+            <div class="ds-description-list__group"><dt class="ds-description-list__term">Reference</dt><dd class="ds-description-list__description"><bdi class="ds-description-list__value">PRJ-2026-0412</bdi></dd></div>
+            <div class="ds-description-list__group"><dt class="ds-description-list__term">Client</dt><dd class="ds-description-list__description">Internal · Finance</dd></div>
+            <div class="ds-description-list__group"><dt class="ds-description-list__term">Start</dt><dd class="ds-description-list__description"><time datetime="2026-08-01">1 Aug 2026</time></dd></div>
+            <div class="ds-description-list__group"><dt class="ds-description-list__term">Budget</dt><dd class="ds-description-list__description"><span>Rp <bdi>240.000.000</bdi> <span class="ds-description-list__secondary">86% used</span></span></dd></div>
+            <div class="ds-description-list__group"><dt class="ds-description-list__term">Tags</dt><dd class="ds-description-list__description"><ul class="ds-tag-list" aria-label="Tags"><li><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Internal</span></span></li><li><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Q4</span></span></li></ul></dd></div>
+          </dl>
+        </article>
+        <!-- requires: Timeline -->
+        <article class="ds-card ds-template__panel" aria-labelledby="dt-act">
+          <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="dt-act">Activity</h2></div></div>
+          <section class="ds-timeline" aria-labelledby="dt-act">
+            <ol class="ds-timeline__list" aria-label="Activity, this week">
+              <li class="ds-timeline__entry"><span class="ds-timeline__marker" data-kind="avatar" aria-hidden="true">BS</span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Budi Santoso</span> changed the status</p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-08T09:12:00+07:00">Today, 09:12</time></div><p class="ds-timeline__change"><span>from</span> <span class="ds-status-label" data-status="positive"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>On track</span></span></span> <span>to</span> <span class="ds-status-label" data-status="warning"><span class="ds-status-label__container"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>At risk</span></span></span></p></div></li>
+              <li class="ds-timeline__entry"><span class="ds-timeline__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg></span><div class="ds-timeline__content"><div class="ds-timeline__head"><p class="ds-timeline__sentence"><span class="ds-timeline__actor">Rina Wijaya</span> uploaded <a href="#file">mapping-v3.xlsx</a></p><time class="ds-timeline__time" data-ds-text="supporting" datetime="2026-10-07T16:40:00+07:00">Yesterday, 16:40</time></div></div></li>
+            </ol>
+          </section>
+        </article>
+        <!-- /requires -->
+      </div>
+      <aside class="ds-stack" data-gap="4" aria-label="Summary">
+        <article class="ds-card ds-template__panel" aria-labelledby="dt-prog">
+          <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="dt-prog">Progress</h2></div></div>
+          <div class="ds-progress-bar" data-status="info"><span class="ds-progress-bar__label" id="dt-prog-l">Tasks done</span><span class="ds-progress-bar__value" aria-hidden="true"><bdi>11 of 18</bdi></span><div class="ds-progress-bar__track" role="progressbar" aria-labelledby="dt-prog-l" aria-valuemin="0" aria-valuemax="18" aria-valuenow="11" aria-valuetext="11 of 18" style="--ds-progress: 61%"><span class="ds-progress-bar__indicator"></span></div></div>
+        </article>
+        <article class="ds-card ds-template__panel" aria-labelledby="dt-team">
+          <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="dt-team">Team</h2></div><a class="ds-button" data-variant="link" href="#team">Manage</a></div>
+          <ul class="ds-list" aria-labelledby="dt-team">
+            <li class="ds-list__item"><div class="ds-list__content"><span class="ds-list__leading"><span class="ds-list__avatar" aria-hidden="true">BS</span></span><span class="ds-list__text"><span class="ds-list__title">Budi Santoso</span><span class="ds-list__supporting">Owner</span></span></div></li>
+            <li class="ds-list__item"><div class="ds-list__content"><span class="ds-list__leading"><span class="ds-list__avatar" aria-hidden="true">RW</span></span><span class="ds-list__text"><span class="ds-list__title">Rina Wijaya</span><span class="ds-list__supporting">Analyst</span></span></div></li>
+            <li class="ds-list__item"><div class="ds-list__content"><span class="ds-list__leading"><span class="ds-list__avatar" aria-hidden="true">AP</span></span><span class="ds-list__text"><span class="ds-list__title">Agus Pratama</span><span class="ds-list__supporting">Engineer</span></span></div></li>
+          </ul>
+        </article>
+      </aside>
+    </div>
+  </section>
+  <section class="ds-tabs__panel" id="dt-p1" aria-labelledby="dt-t1" hidden><p>18 tasks.</p></section>
+  <section class="ds-tabs__panel" id="dt-p2" aria-labelledby="dt-t2" hidden><p>7 files.</p></section>
+  <section class="ds-tabs__panel" id="dt-p3" aria-labelledby="dt-t3" hidden><p>Full activity log.</p></section>
+</div>

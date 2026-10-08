@@ -67,7 +67,7 @@ function inPage({ target, ns }) {
 
 export async function runQa(outDir, opts = {}) {
   const pw = await loadPlaywright();
-  const report = { engine_version: '1.8.0', status: 'NOT RUN', reason: null, pages: {}, summary: {} };
+  const report = { engine_version: '1.9.0', status: 'NOT RUN', reason: null, pages: {}, summary: {} };
   if (!pw) { report.reason = 'Playwright not installed'; return report; }
   const axePath = findAxe(opts.axe);
   const axeSrc = axePath ? readFileSync(axePath, 'utf8') : null;
@@ -144,7 +144,9 @@ export async function runQa(outDir, opts = {}) {
       res.reflow_320 = ov; if (ov.overflow > 1) totals.reflow++;
       await p.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
       res.forced_colors_focus = await p.evaluate(() => {
-        const b = [...document.querySelectorAll('main button, main a[href], main input, main select, main textarea, main [tabindex="0"]')].find((el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'; });
+        // an open modal makes main inert; the focus check then runs inside the dialog that owns focus
+        const modal = document.querySelector('dialog[open]');
+        const b = [...(modal ? modal.querySelectorAll('button, a[href], input, select, textarea, [tabindex="0"]') : document.querySelectorAll('main button, main a[href], main input, main select, main textarea, main [tabindex="0"]'))].find((el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden'; });
         if (!b) return 'no-focusable';
         b.focus({ focusVisible: true });
         const s = getComputedStyle(b);
@@ -175,7 +177,7 @@ export function qaMarkdown(r) {
   const L = ['# Laporan QA render (V9)', ''];
   if (r.status !== 'RUN') return L.concat([`NOT RUN: ${r.reason}`]).join('\n');
   const s = r.summary;
-  L.push(`Engine 1.8.0 · ${s.pages} halaman · ${s.runs} render (brand × tema × viewport) · ${r.axe}`, '', '| Pemeriksaan | Jumlah temuan |', '|---|---|');
+  L.push(`Engine 1.9.0 · ${s.pages} halaman · ${s.runs} render (brand × tema × viewport) · ${r.axe}`, '', '| Pemeriksaan | Jumlah temuan |', '|---|---|');
   for (const [k, v] of Object.entries(s)) if (!['pages', 'runs'].includes(k)) L.push(`| ${k} | ${v ?? '-'} |`);
   L.push('', `Status: **${r.pass ? 'PASS' : 'FAIL'}**`, '');
   for (const [page, p] of Object.entries(r.pages)) {

@@ -1,7 +1,7 @@
-<!-- ds-module id="M07" name="roles" engine="1.8.0" sections="§10" -->
+<!-- ds-module id="M07" name="roles" engine="1.9.0" sections="§10" -->
 # Modul M07 · Role, permission, dan coverage
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §10. Dimuat di fase: 4, 7. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §10. Dimuat di fase: 4, 7. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

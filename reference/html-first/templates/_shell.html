@@ -1,0 +1,24 @@
+<!-- Shared app shell for page templates (engine 1.9.0). tools/render-previews.mjs fills {{nav}} (aria-current from the template's
+     "current" key), {{main}} and {{aside}}. Domain-neutral content only (R15). -->
+<div class="ds-skip-links"><a class="ds-skip-link ds-vh" href="#main" data-ds-module="skip-link">Skip to main content</a></div>
+<header class="ds-app-shell__header">
+  <button type="button" class="ds-button ds-target ds-app-shell__menu-button" data-variant="tertiary" aria-label="Open navigation" aria-expanded="false"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-menu"/></svg></button>
+  <a class="ds-app-shell__brand ds-template__brand" href="dashboard.html"><span class="ds-template__mark" aria-hidden="true">N</span><span>Northwind</span></a>
+  <div class="ds-app-shell__header-end">
+    <a class="ds-button ds-target ds-template__search" href="list.html"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-search"/></svg><span>Search</span><kbd class="ds-template__kbd" aria-hidden="true">Ctrl K</kbd></a>
+    <a class="ds-button ds-target" data-variant="tertiary" href="#notifications" aria-label="Notifications, 3 unread"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span class="ds-badge" data-status="critical" data-placement="corner" aria-hidden="true">3</span></a>
+    <a class="ds-button ds-target" data-variant="tertiary" href="#help" aria-label="Help"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-help"/></svg></a>
+    <a class="ds-button ds-target" data-variant="tertiary" href="settings.html" aria-label="Account: Dana Pratama"><span class="ds-avatar" data-size="sm" aria-hidden="true"><span class="ds-avatar__initials" data-ds-text="supporting">D</span></span></a>
+  </div>
+</header>
+<nav class="ds-app-shell__nav" id="nav" aria-label="Main navigation">
+  <div class="ds-app-shell__nav-close"><button type="button" class="ds-button ds-target" data-variant="tertiary" aria-label="Close navigation"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-close"/></svg></button></div>
+  {{nav}}
+</nav>
+<main class="ds-app-shell__main" id="main" tabindex="-1">
+  <div class="ds-container ds-template__content">
+{{main}}
+  </div>
+</main>
+<div class="ds-app-shell__scrim"></div>
+<div class="ds-toast-region" data-ds-module="toast-region"></div>

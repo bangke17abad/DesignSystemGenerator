@@ -138,6 +138,9 @@ language_mode: archetype        # archetype | derive | custom | inherit
 archetype:                      # bila archetype: ink-graphite | brand-led-tonal | soft-friendly
                                 #                 | editorial-contrast | dense-console | quiet-luxury
                                 #                 | playful-vivid | immersive-glass | neo-brutalist
+visual_profile: engine          # [engine 1.9.0] engine | antd-v6 | shadcn. Tampilan pustaka yang dituju: token, anatomi
+                                # komponen, ikon, dan template halaman mengikuti Ant Design v6 atau shadcn/ui. Baseline tetap
+                                # menang (teks isi >= 16, target sentuh). Tidak bisa digabung dengan language_mode: inherit.
 personality:                    # bila derive: skala 1-5
   formality:                    # 1 santai ... 5 formal
   warmth:                       # 1 dingin ... 5 hangat

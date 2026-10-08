@@ -1,0 +1,15 @@
+{
+  "$comment": "Primary navigation shared by the app templates; 'current' in a template marks one item with aria-current=page.",
+  "groups": [
+    { "items": [
+      { "id": "dashboard", "label": "Overview", "icon": "dashboard", "href": "dashboard.html" },
+      { "id": "list", "label": "Projects", "icon": "folder", "href": "list.html" },
+      { "id": "invoices", "label": "Invoices", "icon": "file", "href": "list.html#invoices" },
+      { "id": "team", "label": "Team", "icon": "users", "href": "detail.html#team" }
+    ]},
+    { "label": "Workspace", "items": [
+      { "id": "reports", "label": "Reports", "icon": "chart", "href": "dashboard.html#reports" },
+      { "id": "settings", "label": "Settings", "icon": "settings", "href": "settings.html" }
+    ]}
+  ]
+}

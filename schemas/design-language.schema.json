@@ -29,6 +29,7 @@
                   "baseline",
                   "invariant",
                   "archetype",
+                  "profile",
                   "brief",
                   "derived",
                   "org",
@@ -56,6 +57,7 @@
             "baseline",
             "invariant",
             "archetype",
+            "profile",
             "brief",
             "derived",
             "org",
@@ -236,6 +238,66 @@
       ],
       "type": "object"
     },
+    "profile": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "baseline_adjustments": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "components": {
+          "type": "object"
+        },
+        "icon_set": {
+          "enum": [
+            "engine",
+            "lucide",
+            "antd"
+          ]
+        },
+        "id": {
+          "enum": [
+            "engine",
+            "antd-v6",
+            "shadcn"
+          ]
+        },
+        "layout": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "type": "object"
+        },
+        "library": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reference_css": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "icon_set",
+        "reference_css"
+      ],
+      "type": "object"
+    },
     "scores": {
       "additionalProperties": {
         "type": "number"
@@ -269,7 +331,8 @@
     "mode",
     "decisions",
     "baseline_adjustments",
-    "adr"
+    "adr",
+    "profile"
   ],
   "title": "design-language",
   "type": "object"

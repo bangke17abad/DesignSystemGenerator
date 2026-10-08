@@ -1,7 +1,7 @@
-<!-- ds-module id="M10" name="targets" engine="1.8.0" sections="§14" -->
+<!-- ds-module id="M10" name="targets" engine="1.9.0" sections="§14" -->
 # Modul M10 · Target implementasi
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §14. Dimuat di fase: 9, 11. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §14. Dimuat di fase: 9, 11. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

@@ -1,0 +1,185 @@
+{
+  "$comment": "Visual profile: shadcn/ui (new-york, Tailwind 4) look on engine tokens. Overrides visual primitives like antd-v6. Baseline still wins: shadcn's text-sm (14 px) body is raised to text-base (16 px).",
+  "id": "shadcn",
+  "name": "shadcn/ui",
+  "engine_min": "1.9.0",
+  "library": "shadcn/ui new-york v4 on Tailwind CSS 4",
+  "adapter": "A03-shadcn-tailwind4",
+  "icon_set": "lucide",
+  "reference_css": "profiles/shadcn.css",
+  "baseline_adjustments": [
+    "text-sm 14 → text-base 16 for body and controls (STD-2)",
+    "h-9 (36 px) controls; 24 px pointer / 44 px touch targets still apply (STD-4)"
+  ],
+  "overlay": {
+    "L2": {
+      "neutral": {
+        "h": 0,
+        "c": 0
+      },
+      "interaction": {
+        "source": "brand",
+        "h": 0,
+        "c": 0,
+        "l": 0.21,
+        "l_dark": 0.92,
+        "default_is_assumption": true
+      }
+    },
+    "L3": {
+      "attention": {
+        "C1": "tinted",
+        "C2": "tinted",
+        "C3": "outline",
+        "C4": "outline",
+        "C5": "outline",
+        "C6": "outline"
+      }
+    },
+    "L4": {
+      "families": {
+        "ui": "Geist",
+        "display": null,
+        "mono": "Geist Mono"
+      },
+      "weights": [
+        400,
+        500,
+        600
+      ],
+      "heading_weight": 600,
+      "label_weight": 500,
+      "line_ratio": {
+        "body": 1.5,
+        "heading": 1.25
+      },
+      "tracking_heading": "-0.025em",
+      "scale": {
+        "caption": 12,
+        "body": 16,
+        "label": 16,
+        "code": 16,
+        "body_lg": 18,
+        "h3": 20,
+        "h2": 24,
+        "h1": 30,
+        "display": 36
+      },
+      "caption_line": 16
+    },
+    "L5": {
+      "control_height": {
+        "sm": 32,
+        "md": 36,
+        "lg": 40
+      }
+    },
+    "L6": {
+      "radius": {
+        "control": 8,
+        "container": 12,
+        "overlay": 12,
+        "full": 9999
+      },
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      }
+    },
+    "L7": {
+      "levels": {
+        "1": [
+          [
+            0,
+            1,
+            2,
+            0.05
+          ]
+        ],
+        "2": [
+          [
+            0,
+            4,
+            6,
+            0.1
+          ],
+          [
+            0,
+            2,
+            4,
+            0.1
+          ]
+        ]
+      },
+      "usage": "1 card, input, outline button (shadow-xs/sm); 2 popover, dropdown, dialog (shadow-md/lg)",
+      "light_strategy": "shadow",
+      "dark_strategy": "border",
+      "shadow_color": "neutral-12",
+      "flat": false
+    },
+    "L9": {
+      "set": "lucide",
+      "style": "stroke 2",
+      "stroke": 2,
+      "sizes": [
+        16,
+        16,
+        20
+      ]
+    },
+    "L16": {
+      "strategy": "token-swap",
+      "press_transform": "none"
+    }
+  },
+  "components": {
+    "button": {
+      "variants": {
+        "primary": "default: solid primary, hover primary/90",
+        "secondary": "outline: border + background + shadow-xs, hover accent",
+        "tertiary": "ghost: neutral text, hover accent",
+        "link": "link: primary text, underline on hover",
+        "destructive": "destructive"
+      },
+      "tertiary_label": "neutral",
+      "secondary_hover": "neutral"
+    },
+    "nav": {
+      "pattern": "Sidebar menu: h-8 items, rounded-md",
+      "selected_background": "selection",
+      "selected_label": "text-primary",
+      "item_height": "control-height-sm",
+      "item_radius": "radius-sm"
+    },
+    "tabs": {
+      "pattern": "segmented: muted track, selected trigger = background + shadow-sm"
+    },
+    "table": {
+      "header_background": "none",
+      "header_weight": 500,
+      "row_divider": "border",
+      "row_hover": "surface-sunken"
+    },
+    "card": {
+      "border": "border",
+      "shadow": "elevation-1",
+      "head_divider": false,
+      "padding": "space-6"
+    },
+    "status": {
+      "pattern": "Badge: outline for most states, soft fill for critical/warning"
+    },
+    "page_header": {
+      "pattern": "h1 30 px semibold tracking-tight + muted description; actions on the end"
+    },
+    "form": {
+      "pattern": "vertical labels (font-medium); focus = ring 3 px at 50% + ring border",
+      "hover_border": "neutral"
+    }
+  },
+  "layout": {
+    "layout-bar-height": 56,
+    "layout-nav-width": 256
+  },
+  "ban_policy": "Archetype bans on radius, shadow and elevation are suspended (the profile owns them); other bans stay."
+}

@@ -1,0 +1,25 @@
+<!-- template: auth · shell: none · title: Sign in
+     Centered card on the base surface: brand, title, form, secondary links. Patterns: AntD Pro "Login" / shadcn "login-01". -->
+<main class="ds-template__auth" id="main" tabindex="-1">
+  <div class="ds-template__auth-card ds-card">
+    <div class="ds-template__auth-head">
+      <span class="ds-template__mark" aria-hidden="true">N</span>
+      <h1 class="ds-text-h2">Sign in to Northwind</h1>
+      <p class="ds-text-secondary">Use your work email.</p>
+    </div>
+    <form class="ds-stack" data-gap="4" method="post" action="#" onsubmit="return false">
+      <div class="ds-text-field"><label class="ds-text-field__label" for="au-email">Work email</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="au-email" name="username" type="email" autocomplete="username" dir="ltr" spellcheck="false" autocapitalize="off" required placeholder="name@example.com"></div></div>
+      <div class="ds-text-field ds-password-input" data-variant="current" data-ds-module="password-input">
+        <label class="ds-text-field__label" for="au-pw">Password</label>
+        <div class="ds-text-field__group"><input class="ds-text-field__input ds-password-input__input" id="au-pw" name="password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false" dir="ltr" required aria-describedby="au-pw-help"><button type="button" class="ds-password-input__toggle" aria-label="Show password"><svg class="ds-icon ds-icon-show" aria-hidden="true"><use href="#ds-i-eye"/></svg><svg class="ds-icon ds-icon-hide" aria-hidden="true"><use href="#ds-i-eye-off"/></svg></button></div>
+        <p class="ds-password-input__caps" hidden><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>Caps Lock is on</span></p>
+        <div class="ds-text-field__helper ds-password-input__links" id="au-pw-help"><a class="ds-link" data-variant="standalone" href="#forgot">Forgot password?</a></div>
+      </div>
+      <label class="ds-checkbox"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" name="remember"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon ds-checkbox__mark" data-mark="mixed" aria-hidden="true"><use href="#ds-i-minus"/></svg></span><span class="ds-checkbox__text"><span class="ds-checkbox__label">Keep me signed in on this device</span></span></label>
+      <button type="submit" class="ds-button ds-target ds-template__block" data-variant="primary" data-size="lg">Sign in</button>
+      <div class="ds-template__or" role="separator"><span data-ds-text="supporting">or</span></div>
+      <a class="ds-button ds-target ds-template__block" href="#sso" data-size="lg"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-shield"/></svg><span>Continue with SSO</span></a>
+    </form>
+    <p class="ds-template__auth-foot ds-text-secondary">New to Northwind? <a href="#request">Request access</a></p>
+  </div>
+</main>

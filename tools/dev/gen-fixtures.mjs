@@ -108,6 +108,20 @@ const F = {
       domain: { entities: [{ name: 'Post' }, { name: 'Order' }] }, components: { packs: ['P03-b2c-media-social', 'P02-b2c-commerce'] } }),
     expect: [{ file_exists: 'adapters/shadcn/shadcn.css' }, { file_exists: 'assets/tailwind.theme.css' }, { contrast_blocking: 0 }, { validators: ['V22'], status: 'PASS' }],
     run_only: ['Komponen P03 + P02; shares antar pack'] },
+  // engine 1.9.0: visual profiles (catalog/profiles) — the package must look like the library it names
+  G16: { brief: base({ product_name: 'Kelola Proyek', namespace: 'KLP', surfaces: [S('web-admin', 'desktop', 'web', ['pointer', 'keyboard'], 'operational', 'Light', ['comfortable', 'compact']), S('mobile', 'ponsel', 'Android', ['touch'], 'operational', 'Light', ['comfortable'])],
+      targets: { primary_web_reference: 'react' }, language: { mode: 'archetype', archetype: 'ink-graphite', visual_profile: 'antd-v6', themes: [{ name: 'Light' }, { name: 'Dark' }], brands: [{ id: 'default' }] },
+      domain: { entities: [{ name: 'Project', states: ['draft', 'active', 'at-risk', 'done', 'cancelled'] }] } }),
+    expect: [{ lang: 'profile.id', eq: 'antd-v6' }, { lang: 'profile.icon_set', eq: 'antd' }, { lang: 'decisions.L9.value.set', eq: 'antd' }, { lang: 'decisions.L16.value.strategy', eq: 'token-swap' },
+      { token: 'radius-sm', eq: 6 }, { token: 'radius-md', eq: 8 }, { token: 'control-height-md', eq: 36 }, { token: 'type-body-size', eq: 16 }, { token: 'layout-bar-height', eq: 64 },
+      { file_exists: 'adapters/antd/theme.g.ts' }, { contrast_blocking: 0 }, { validators: ['V1', 'V2', 'V11', 'V13', 'V14', 'VP', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8'], status: 'PASS' }],
+    run_only: ['Template dashboard/list/detail/settings/wizard/auth dirender dengan profil antd-v6 (render-previews)'] },
+  G17: { brief: base({ product_name: 'Kelola Proyek', namespace: 'KLP', surfaces: [S('web-admin', 'desktop', 'web', ['pointer', 'keyboard'], 'operational', 'Light', ['comfortable']), S('mobile', 'ponsel', 'iOS', ['touch'], 'consumer', 'Light', ['comfortable'])],
+      targets: { primary_web_reference: 'react' }, language: { mode: 'archetype', archetype: 'soft-friendly', visual_profile: 'shadcn', neutral_temperature: 'neutral', themes: [{ name: 'Light' }, { name: 'Dark' }], brands: [{ id: 'default' }] },
+      domain: { entities: [{ name: 'Project' }] } }),
+    expect: [{ lang: 'profile.id', eq: 'shadcn' }, { lang: 'profile.icon_set', eq: 'lucide' }, { token: 'radius-sm', eq: 8 }, { token: 'radius-md', eq: 12 }, { token: 'control-height-md', eq: 36 },
+      { token: 'layout-nav-width', eq: 256 }, { file_exists: 'adapters/shadcn/shadcn.css' }, { contrast_blocking: 0 }, { validators: ['V1', 'V2', 'V11', 'V13', 'V14', 'VP', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8'], status: 'PASS' }],
+    run_only: ['Profil menimpa archetype soft-friendly: radius, bayangan, dan elevation mengikuti shadcn; ban archetype terkait ditandai suspended_by'] },
 };
 for (const [id, f] of Object.entries(F)) {
   writeJson(join(root, 'fixtures', id, 'brief.normalized.json'), f.brief);

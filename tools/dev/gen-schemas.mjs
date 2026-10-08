@@ -21,7 +21,7 @@ const obj = (props, required = Object.keys(props).filter((k) => !k.endsWith('?')
 const rec = (v) => ({ type: 'object', additionalProperties: v });
 const NA = obj({ not_applicable: nstr });
 const orNA = (s) => ({ anyOf: [s, { $ref: '#/$defs/NA' }] });
-const Source = en('baseline', 'invariant', 'archetype', 'brief', 'derived', 'org', 'adr');
+const Source = en('baseline', 'invariant', 'archetype', 'profile', 'brief', 'derived', 'org', 'adr');
 const Status = en('Draft', 'Reviewed', 'Stable');
 const AC = en('C1', 'C2', 'C3', 'C4', 'C5', 'C6');
 const Tier = en('R', 'S', 'O', 'domain', 'pack');
@@ -76,6 +76,9 @@ schemas['design-language'] = doc('design-language', obj({
   decisions: obj(Object.fromEntries(Array.from({ length: 17 }, (_, i) => [`L${i + 1}`, D()]))),
   baseline_adjustments: arr(obj({ decision: str({ pattern: '^L(1[0-7]|[1-9])$' }), from: {}, to: {}, rule: en('STD-1', 'STD-2', 'STD-3', 'STD-4') })),
   adr: arr(nstr), 'manual_notes?': str(),
+  // engine 1.9.0: visual profile (catalog/profiles/<id>.json) applied over the archetype; id 'engine' = the engine's own reference look
+  profile: obj({ id: en('engine', 'antd-v6', 'shadcn'), name: nstr, 'library?': nstr, 'adapter?': nstr, icon_set: en('engine', 'lucide', 'antd'), reference_css: { type: ['string', 'null'] },
+    'components?': { type: 'object' }, 'layout?': rec(num), 'baseline_adjustments?': arr(nstr) }),
 }), { decision: obj({ value: { type: 'object' }, rationale: nstr, source: Source, testable_consequence: arr(nstr, { minItems: 1 }), 'overrides?': arr(obj({ from: {}, to: {}, reason: str(), source: Source })) }) });
 
 const content = rec(obj({ rules: arr(nstr, { minItems: 1 }), examples: arr(nstr, { minItems: 1 }) }));
@@ -154,7 +157,7 @@ schemas['brief.normalized'] = doc('brief.normalized', obj({
     'design_tool?': nstr, 'design_tool_limits?': { type: 'object' }, 'package_registry?': { type: ['string', 'null'] }, 'ci_platform?': { type: ['string', 'null'] } }),
   language: obj({ mode: en('archetype', 'derive', 'custom', 'inherit'), 'archetype?': nstr,
     'personality?': obj({ formality: { type: 'integer', minimum: 1, maximum: 5 }, warmth: { type: 'integer', minimum: 1, maximum: 5 }, expressiveness: { type: 'integer', minimum: 1, maximum: 5 }, density: { type: 'integer', minimum: 1, maximum: 5 }, risk_criticality: { type: 'integer', minimum: 1, maximum: 5 } }),
-    'neutral_temperature?': en('warm', 'cool', 'neutral'), 'themes?': arr(obj({ name: nstr, 'base?': en('light', 'dark', 'hc-light', 'hc-dark'), 'purpose?': str() })),
+    'neutral_temperature?': en('warm', 'cool', 'neutral'), 'visual_profile?': en('engine', 'antd-v6', 'shadcn'), 'themes?': arr(obj({ name: nstr, 'base?': en('light', 'dark', 'hc-light', 'hc-dark'), 'purpose?': str() })),
     'brands?': arr(obj({ id: str({ pattern: '^[a-z0-9-]+$' }), 'interaction_hex?': { type: ['string', 'null'], pattern: '^#[0-9a-fA-F]{6}$' }, 'accent_hexes?': arr(str({ pattern: '^#[0-9a-fA-F]{6}$' })), 'font_ui?': { type: ['string', 'null'] } })),
     'overrides?': arr(obj({ decision: str({ pattern: '^L(1[0-7]|[1-9])$' }), path: nstr, value: {}, 'reason?': str() })),
     'must_not_look_like?': arr(nstr), 'dislikes?': arr(nstr), 'likes?': arr(nstr), 'pack_vetoes?': arr(nstr), 'inherits_from?': nstr }),

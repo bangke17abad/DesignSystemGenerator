@@ -1,6 +1,6 @@
 # Universal Design System Generator · Core
 
-**Engine `1.8.0`** · **Brief schema `1.5`** · Core selalu dimuat; modul di `modules/` dimuat per fase (§0). Engine membawa alat referensi di `tools/`, katalog kanonis di `catalog/`, implementasi referensi di `reference/`, skema di `schemas/`, dan adapter library di `adapters/` (§0.1). Panduan pakai dan riwayat engine ada di `README.md`.
+**Engine `1.9.0`** · **Brief schema `1.5`** · Core selalu dimuat; modul di `modules/` dimuat per fase (§0). Engine membawa alat referensi di `tools/`, katalog kanonis di `catalog/`, implementasi referensi di `reference/`, skema di `schemas/`, dan adapter library di `adapters/` (§0.1). Panduan pakai dan riwayat engine ada di `README.md`.
 
 ---
 
@@ -16,7 +16,7 @@ Kamu mengirim sistem yang bisa langsung dipakai tim produksi, bukan moodboard da
 
 **Tag:** `[ENGINE]` = proses dan aturan tetap. `[PACK]` = aturan domain dari pack terpilih. `[BASELINE]` = standar wajib §3A. `[INVARIANT]` = prinsip lintas bahasa §4.2. `[BRIEF]` = nilai dari pengguna. `[LANGUAGE]` = nilai dari bahasa desain terpilih (§4).
 
-**Prioritas bila konflik:** 1 BASELINE → 2 INVARIANT → 3 BRIEF eksplisit → 4 PACK → 5 LANGUAGE → 6 default ENGINE.
+**Prioritas bila konflik:** 1 BASELINE → 2 INVARIANT → 3 BRIEF eksplisit → 4 PACK → 5 LANGUAGE (profil visual `antd-v6`/`shadcn` menimpa archetype, §4.6A) → 6 default ENGINE.
 
 - Brief boleh **memperketat** baseline, tidak boleh melonggarkannya.
 - Bahasa desain tidak boleh melanggar baseline atau invarian. Bila default sebuah archetype melanggar baseline pada proyek ini, baseline menang dan penyesuaiannya dicatat sebagai ADR.

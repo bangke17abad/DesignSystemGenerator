@@ -8,7 +8,7 @@ import { oklchToHex, hexToOklch, contrast, hueDistance, oklabDistance, round } f
 import { checkPairs, STATUSES, ADVISORY_GROUPS } from './lib/pairs.mjs';
 import { readJson, writeJson, writeText } from './lib/tokens.mjs';
 
-const ENGINE = '1.8.0';
+const ENGINE = '1.9.0';
 const STEPS = 12;
 // Two ramps per family (engine 1.8.0): fine resolution near white for light themes and near black for dark themes.
 // Step 1 is always the lightest, step 12 the darkest.
@@ -381,8 +381,8 @@ export function deriveTokens(brief, lang) {
   }
   primitive.color.alpha = Object.fromEntries(Object.keys(alphaPrims).sort().map((k) => [k, { $type: 'color', $value: alphaPrims[k], $extensions: { ds: { role: `alpha primitive ${k}`, varies_by: [], source: 'derived', trace: '§5.2' } } }]));
 
-  addScales(semantic, D, brief, themes, brands, assign, densities);
-  const component = componentTokens(D);
+  addScales(semantic, D, brief, themes, brands, assign, densities, lang.profile);
+  const component = componentTokens(D, lang.profile);
   const tokens = {
     $metadata: { engine_version: ENGINE, package_version: brief.package_version || '0.1.0', dtcg_reference: 'W3C DTCG format (Not verified against the pinned version)', axes },
     primitive, semantic, component,
@@ -392,8 +392,9 @@ export function deriveTokens(brief, lang) {
 
 // Component layer (§5.1 lapis 3, §6.8 naming): aliases to semantic tokens, resolved from L3 (attention treatment) and L16 (state strategy).
 // Components read these, never raw semantic choices, so the same reference CSS renders every design language correctly.
-function componentTokens(D) {
+function componentTokens(D, profile) {
   const C = {};
+  const pc = (profile && profile.components) || {};
   const sem = (n) => `{semantic.${n}}`;
   const add = (name, $type, $value, trace, role) => { C[name] = { $type, $value, $extensions: { ds: { role: role || name.replace(/-/g, ' '), varies_by: [], source: 'derived', trace } } }; };
   const layer = D.L16.value.strategy === 'state-layer';
@@ -408,9 +409,14 @@ function componentTokens(D) {
   add('button-secondary-container-background-pressed', 'color', sem(swap('color-structure-selection', 'color-structure-surface-raised')), 'L16');
   add('button-secondary-container-border', 'color', sem('color-structure-border-control'), 'L6, SC 1.4.11');
   add('button-secondary-label-color', 'color', sem('color-structure-text-primary'), 'L2');
-  add('button-tertiary-container-background-hover', 'color', sem(swap('color-interaction-subtle', 'color-structure-surface-base')), 'L16');
-  add('button-tertiary-container-background-pressed', 'color', sem(swap('color-interaction-subtle', 'color-structure-surface-base')), 'L16');
-  add('button-tertiary-label-color', 'color', sem('color-interaction-default'), 'L2');
+  // engine 1.9.0: secondary hover follows the profile (AntD default button turns primary on hover; shadcn outline stays neutral)
+  const secHoverPrimary = pc.button?.secondary_hover === 'interaction';
+  add('button-secondary-container-border-hover', 'color', sem(secHoverPrimary ? 'color-interaction-default' : 'color-structure-border-control'), 'L16, profile');
+  add('button-secondary-label-color-hover', 'color', sem(secHoverPrimary ? 'color-interaction-default' : 'color-structure-text-primary'), 'L16, profile');
+  // engine 1.9.0: tertiary (text / ghost) buttons are neutral; brand colour is reserved for primary actions and links (A1)
+  add('button-tertiary-container-background-hover', 'color', sem(swap('color-structure-surface-sunken', 'color-structure-surface-base')), 'L16');
+  add('button-tertiary-container-background-pressed', 'color', sem(swap('color-structure-selection', 'color-structure-surface-base')), 'L16');
+  add('button-tertiary-label-color', 'color', sem('color-structure-text-primary'), 'L2, A1');
   add('button-destructive-container-background', 'color', sem('color-semantic-critical'), 'L3');
   add('button-destructive-container-background-hover', 'color', sem(swap('color-semantic-critical-strong', 'color-semantic-critical')), 'L16');
   add('button-destructive-container-background-pressed', 'color', sem(swap('color-semantic-critical-strong', 'color-semantic-critical')), 'L16');
@@ -421,7 +427,7 @@ function componentTokens(D) {
   add('control-container-background', 'color', sem('color-structure-surface-raised'), 'L2');
   add('control-container-background-readonly', 'color', sem('color-structure-surface-sunken'), '§6.9');
   add('control-container-border', 'color', sem('color-structure-border-control'), 'SC 1.4.11');
-  add('control-container-border-hover', 'color', sem('color-structure-text-tertiary'), 'L16');
+  add('control-container-border-hover', 'color', sem(pc.form?.hover_border === 'interaction' ? 'color-interaction-default' : 'color-structure-text-tertiary'), 'L16, profile');
   add('control-container-border-invalid', 'color', sem('color-semantic-critical'), '§12.2');
   add('control-value-color', 'color', sem('color-structure-text-primary'), 'L2');
   add('control-placeholder-color', 'color', sem('color-structure-text-placeholder'), 'STD-3');
@@ -430,7 +436,10 @@ function componentTokens(D) {
   // rows, navigation, selection
   add('row-background-hover', 'color', sem(swap('color-structure-surface-sunken', 'color-structure-surface-base')), 'L16');
   add('row-background-selected', 'color', sem('color-structure-selection'), 'I2');
-  add('nav-item-background-selected', 'color', sem('color-structure-selection'), 'I2');
+  const navPrimary = pc.nav?.selected_background === 'interaction-subtle';
+  add('nav-item-background-selected', 'color', sem(navPrimary ? 'color-interaction-subtle' : 'color-structure-selection'), 'I2, profile');
+  add('nav-item-label-selected', 'color', sem(pc.nav?.selected_label === 'interaction' ? 'color-interaction-default' : 'color-structure-text-primary'), 'I2, profile');
+  add('nav-item-background-hover', 'color', sem(swap('color-structure-surface-sunken', 'color-structure-surface-base')), 'L16');
   add('nav-item-indicator', 'color', sem('color-interaction-default'), 'I2');
   // attention classes (L3): background / foreground / border / icon per class
   const fam = { C1: 'critical', C2: 'warning', C3: 'neutral-negative', C4: 'positive', C5: 'info', C6: null };
@@ -479,7 +488,7 @@ function traceOf(n) {
 }
 
 const evenRound = (x) => Math.round(x / 2) * 2;
-function addScales(T, D, brief, themes, brands, assign, densities) {
+function addScales(T, D, brief, themes, brands, assign, densities, profile) {
   const tok = (name, $type, $value, ds, desc) => { T[name] = { $type, $value, ...(desc ? { $description: desc } : {}), $extensions: { ds: { varies_by: [], source: 'archetype', ...ds } } }; };
   const L4 = D.L4.value, L5 = D.L5.value, L6 = D.L6.value, L7 = D.L7.value, L8 = D.L8.value, L9 = D.L9.value, L15 = D.L15.value, L16 = D.L16.value, L17 = D.L17.value;
   const src = (k) => (D[k].source === 'brief' ? 'brief' : D[k].source === 'org' ? 'org' : 'archetype');
@@ -587,7 +596,7 @@ function addScales(T, D, brief, themes, brands, assign, densities) {
   // layout and breakpoints
   const bp = { mobile: 0, tablet: 600, desktop: 1024, wide: 1440, ...(brief.breakpoints || {}) };
   for (const [k, v] of Object.entries(bp)) tok(`bp-${k}`, 'dimension', v, { role: `breakpoint ${k}`, source: brief.breakpoints ? 'brief' : 'baseline', trace: '§8.1, R11' });
-  const lay = { 'layout-bar-height': 56, 'layout-nav-width': 256, 'layout-rail-width': 72, 'layout-panel-width': 400, 'layout-content-min': 480, 'layout-modal-sm': 400, 'layout-modal-md': 560, 'layout-modal-lg': 800 };
+  const lay = { 'layout-bar-height': 56, 'layout-nav-width': 256, 'layout-rail-width': 72, 'layout-panel-width': 400, 'layout-content-min': 480, 'layout-modal-sm': 400, 'layout-modal-md': 560, 'layout-modal-lg': 800, ...((profile && profile.layout) || {}) };
   for (const [k, v] of Object.entries(lay)) tok(k, 'dimension', v, { role: k.replace('layout-', 'layout '), source: 'derived', trace: '§8.2' });
   tok('layout-measure', 'dimension', '72ch', { role: 'lebar baca maksimum', source: 'baseline', trace: 'L17' });
   tok('layout-content-max', 'dimension', L17.content_max_px ? L17.content_max_px : '100%', { role: 'lebar konten maksimum', source: src('L17'), trace: 'L17' });

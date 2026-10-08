@@ -14,20 +14,20 @@ import { checkPairs, ADVISORY_GROUPS } from './lib/pairs.mjs';
 import { validate as schemaValidate } from './lib/schema.mjs';
 import { findStripes } from './lib/stripes.mjs';
 
-const ENGINE = '1.8.0';
+const ENGINE = '1.9.0';
 import { CORE_INDEX } from './check-catalog.mjs';
 const CORE_NAMES = new Set(Object.keys(CORE_INDEX));
 import { PATTERN_INDEX } from './check-patterns.mjs';
 const BASE_PATTERN_NAMES = new Set(Object.keys(PATTERN_INDEX));
 const engine = join(dirname(fileURLToPath(import.meta.url)), '..');
-const BLOCKING = new Set(['V1', 'V2', 'V4', 'V5', 'V11', 'V14', 'V16', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8']);
-const GATES = { P0B: ['V13', 'V14'], P1: ['V1', 'V2', 'V11', 'V14', 'VB1', 'VB2', 'VB3', 'VB4', 'VB5', 'VB6', 'VB7', 'VB8', 'VB9', 'VB10', 'VB11', 'VB12'], P6: ['V8'], P7: ['V12'], P12: ['V5', 'V11', 'V17'], P13: ['V4', 'V16', 'V20', 'V21'] };
+const BLOCKING = new Set(['V1', 'V2', 'V4', 'V5', 'V11', 'V14', 'V16', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8', 'VP']);
+const GATES = { P0B: ['V13', 'V14'], P1: ['V1', 'V2', 'V11', 'V14', 'VB1', 'VB2', 'VB3', 'VB4', 'VB5', 'VB6', 'VB7', 'VB8', 'VB9', 'VB10', 'VB11', 'VB12'], P6: ['V8'], P7: ['V12'], P12: ['V5', 'V11', 'V17', 'VP'], P13: ['V4', 'V16', 'V20', 'V21'] };
 
 const NAMES = {
   V1: 'integritas token', V2: 'kontras', V3: 'dokumen ↔ token dan kontaminasi', V4: 'tautan dan aset', V5: 'kelengkapan komponen', V6: 'lint visual dan kode',
   V7: 'bahasa', V8: 'breakpoint', V9: 'render smoke test', V10: 'parity', V11: 'baseline STD', V12: 'cakupan WCAG 2.2', V13: 'kesetiaan bahasa desain',
   V14: 'kontrak data', V15: 'integritas mode jalan', V16: 'determinisme', V17: 'kelengkapan pattern', V18: 'paritas alat desain', V19: 'regresi visual dan interaksi',
-  V20: 'anggaran dan dukungan', V21: 'distribusi', V22: 'aturan domain pack',
+  V20: 'anggaran dan dukungan', V21: 'distribusi', V22: 'aturan domain pack', VP: 'kesesuaian profil visual',
   VB1: 'skala tipe naik ketat', VB2: 'elevasi naik ketat', VB3: 'skala spasi grid 4 px', VB4: 'urutan radius', VB5: 'urutan durasi gerak', VB6: 'urutan tinggi kontrol',
   VB7: 'rasio tinggi baris', VB8: 'hierarki teks terbedakan', VB9: 'border-strong terlihat lebih kuat', VB10: 'jumlah keluarga dan bobot font', VB11: 'ikon selaras teks', VB12: 'kategori data-viz terbedakan',
 };
@@ -299,6 +299,7 @@ export function validatePackage(dir, opts = {}) {
   });
 
   // ---------------- V13 ----------------
+  const x_profile = (b) => String(b.suspended_by).replace(/^profile:/, '');
   run('V13', (r) => {
     if (!lang) { r.failures.push('design-language.json tidak ada'); return; }
     for (let i = 1; i <= 17; i++) { r.checks++; const d = lang.decisions[`L${i}`]; if (!d || !d.source || !d.testable_consequence?.length) r.failures.push(`L${i} tidak lengkap (value/source/testable_consequence)`); }
@@ -314,9 +315,12 @@ export function validatePackage(dir, opts = {}) {
     for (const [n, v] of expect) { r.checks++; const got = sem(n); if (got !== v) r.failures.push(`${n} = ${JSON.stringify(got)}, bahasa desain menetapkan ${JSON.stringify(v)} (tanpa ADR)`); }
     for (const k of D.L5.value.space.steps) { r.checks++; if (!tokens.semantic[k === 0.5 ? 'space-half' : `space-${k}`]) r.failures.push(`space-${k} dari L5 tidak ada di tokens.json`); }
     const lint = json('assets', 'lint-rules.json');
-    for (const b of D.L13.value.bans) { r.checks++; if (!lint?.rules.some((x) => x.id === b.id)) r.failures.push(`${b.id} dari L13 tidak ada di lint-rules.json`); }
+    // engine 1.9.0: bans suspended by the visual profile (radius / shadow / elevation of the archetype) are recorded, not enforced
+    const activeBans = D.L13.value.bans.filter((b) => !b.suspended_by);
+    for (const b of activeBans) { r.checks++; if (!lint?.rules.some((x) => x.id === b.id)) r.failures.push(`${b.id} dari L13 tidak ada di lint-rules.json`); }
+    for (const b of D.L13.value.bans.filter((x) => x.suspended_by)) { r.checks++; if (lang.profile?.id !== x_profile(b)) r.failures.push(`${b.id} ditangguhkan oleh ${b.suspended_by}, tetapi profil paket = ${lang.profile?.id || 'engine'}`); }
     // token-rule bans that can be evaluated on tokens
-    for (const b of D.L13.value.bans.filter((x) => x.kind === 'token-rule' && x.check)) {
+    for (const b of activeBans.filter((x) => x.kind === 'token-rule' && x.check)) {
       r.checks++;
       const c = b.check;
       const num = (n) => { const v = sem(n); return typeof v === 'number' ? v : parseFloat(v); };
@@ -552,6 +556,44 @@ export function validatePackage(dir, opts = {}) {
     }
   });
 
+  // ---------------- VP (engine 1.9.0): visual profile conformance ----------------
+  // The package must look like the profile it declares: profile tokens applied (radius, control height, icon set, nav),
+  // the profile CSS layer shipped, brand colour reserved for primary actions and links (A1), and page templates rendered
+  // with one h1 and one current nav item each.
+  run('VP', (r) => {
+    if (!lang || !tokens) return 'NOT RUN';
+    const want = brief?.language?.visual_profile || 'engine';
+    const pid = lang.profile?.id || 'engine';
+    r.checks++; if (pid !== want) r.failures.push(`profil paket ${pid} ≠ brief language.visual_profile ${want}`);
+    // A1: tertiary (text / ghost) buttons are neutral in every profile
+    r.checks++; if (tokens.component['button-tertiary-label-color']?.$value !== '{semantic.color-structure-text-primary}') r.failures.push('button-tertiary-label-color bukan color-structure-text-primary (A1: warna merek hanya untuk primary dan link)');
+    if (pid === 'engine') { r.notes.push('profil engine: tidak ada overlay pustaka'); }
+    else {
+      const prof = readJson(join(dirname(fileURLToPath(import.meta.url)), '..', 'catalog', 'profiles', `${pid}.json`));
+      const ov = prof.overlay || {};
+      const L6 = ov.L6?.radius, L5 = ov.L5;
+      if (L6) for (const [tok, k] of [['radius-sm', 'control'], ['radius-md', 'container'], ['radius-lg', 'overlay']]) { r.checks++; if (L6[k] != null && sem(tok) !== L6[k]) r.failures.push(`${tok} = ${sem(tok)}, profil ${pid} menetapkan ${L6[k]}`); }
+      const ch = L5?.control_height || L5?.control_heights;
+      if (ch) for (const k of ['sm', 'md', 'lg']) { r.checks++; if (ch[k] != null && sem(`control-height-${k}`) !== ch[k]) r.failures.push(`control-height-${k} = ${sem(`control-height-${k}`)}, profil ${pid} menetapkan ${ch[k]}`); }
+      const navSel = prof.components?.nav?.selected_label === 'interaction' ? '{semantic.color-interaction-default}' : '{semantic.color-structure-text-primary}';
+      r.checks++; if (tokens.component['nav-item-label-selected']?.$value !== navSel) r.failures.push(`nav-item-label-selected ≠ ${navSel} (profil ${pid})`);
+      r.checks++; if (lang.decisions.L9?.value?.set !== prof.icon_set && lang.profile?.icon_set !== prof.icon_set) r.failures.push(`set ikon ${lang.profile?.icon_set} ≠ ${prof.icon_set}`);
+      if (has('assets', 'bundle.css')) {
+        r.checks++; if (!has('src', 'profile', `${pid}.css`)) r.failures.push(`src/profile/${pid}.css tidak ada: lapisan CSS profil tidak ikut dipaketkan`);
+        const firstPreview = has('previews') ? readdirSync(P('previews')).find((f) => f.endsWith('.html')) : null;
+        if (firstPreview && prof.icon_set === 'antd') { r.checks++; if (!/data-fill/.test(readFileSync(P('previews', firstPreview), 'utf8'))) r.failures.push('sprite ikon tidak memuat glyph Ant Design (fill)'); }
+      } else r.notes.push('bundle.css belum ada: cek lapisan CSS dan sprite NOT RUN');
+    }
+    // templates: one h1, at most one aria-current="page" in the main nav
+    if (has('templates')) for (const f of readdirSync(P('templates')).filter((x) => x.endsWith('.html'))) {
+      const t = readFileSync(P('templates', f), 'utf8');
+      r.checks++; const h1 = (t.match(/<h1\b/g) || []).length; if (h1 !== 1) r.failures.push(`templates/${f}: ${h1} h1 (harus tepat 1)`);
+      const nav = t.match(/<nav class="[a-z]+-app-shell__nav"[\s\S]*?<\/nav>/)?.[0] || '';
+      r.checks++; const cur = (nav.match(/aria-current="page"/g) || []).length; if (cur > 1) r.failures.push(`templates/${f}: ${cur} item nav aria-current (maks 1)`);
+      r.checks++; if (!new RegExp(`data-[a-z]+-profile="${pid}"`).test(t)) r.failures.push(`templates/${f}: dirender dengan profil lain`);
+    }
+  });
+
   // ---------------- tier ----------------
   const st = (id) => results.find((x) => x.id === id)?.status;
   const ok = (ids) => ids.every((id) => ['PASS', 'NOT APPLICABLE'].includes(st(id)));
@@ -559,7 +601,7 @@ export function validatePackage(dir, opts = {}) {
   const v14 = results.find((x) => x.id === 'V14');
   const v14Foundation = !v14 || v14.failures.every((f) => !/^(assets\/(tokens|design-language|lint-rules)\.json|brief\.normalized\.json)/.test(f));
   if (ok(['V1', 'V2', 'V11', 'V13', 'VB1', 'VB2', 'VB4', 'VB5', 'VB8']) && v14Foundation) tier = 'T0';
-  if (tier === 'T0' && manifest && ok(['V5', 'V9', 'V17', 'V4', 'V6', 'V14'])) {
+  if (tier === 'T0' && manifest && ok(['V5', 'V9', 'V17', 'V4', 'V6', 'V14', 'VP'])) {
     const r = manifest.components.filter((c) => c.tier === 'R').length >= 32 && manifest.patterns.filter((p) => p.tier === 'R').length >= 6;
     if (r) tier = 'T1';
     const all = manifest.components.every((c) => has(c.page) && has(c.preview));

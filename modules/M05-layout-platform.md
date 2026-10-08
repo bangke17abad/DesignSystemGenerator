@@ -1,7 +1,7 @@
-<!-- ds-module id="M05" name="layout-platform" engine="1.8.0" sections="§8" -->
+<!-- ds-module id="M05" name="layout-platform" engine="1.9.0" sections="§8" -->
 # Modul M05 · Layout, responsive, dan platform
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §8. Dimuat di fase: 6, 9. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §8. Dimuat di fase: 6, 9. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

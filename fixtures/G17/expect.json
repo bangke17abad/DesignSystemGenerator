@@ -1,0 +1,55 @@
+{
+  "assertions": [
+    {
+      "eq": "shadcn",
+      "lang": "profile.id"
+    },
+    {
+      "eq": "lucide",
+      "lang": "profile.icon_set"
+    },
+    {
+      "eq": 8,
+      "token": "radius-sm"
+    },
+    {
+      "eq": 12,
+      "token": "radius-md"
+    },
+    {
+      "eq": 36,
+      "token": "control-height-md"
+    },
+    {
+      "eq": 256,
+      "token": "layout-nav-width"
+    },
+    {
+      "file_exists": "adapters/shadcn/shadcn.css"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V1",
+        "V2",
+        "V11",
+        "V13",
+        "V14",
+        "VP",
+        "VB1",
+        "VB2",
+        "VB4",
+        "VB5",
+        "VB8"
+      ]
+    }
+  ],
+  "fixture": "G17",
+  "run_only": [
+    "Profil menimpa archetype soft-friendly: radius, bayangan, dan elevation mengikuti shadcn; ban archetype terkait ditandai suspended_by"
+  ],
+  "source": "golden-briefs.md G17"
+}

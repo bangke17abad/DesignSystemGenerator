@@ -1,0 +1,43 @@
+<!-- template: wizard · shell: app · current: list · title: New project
+     Stepper + one card per step + sticky footer actions (Back / Continue). Patterns: AntD "Steps form" / shadcn multi-step card. -->
+<header class="ds-page-header" data-variant="compact">
+  <a class="ds-link ds-page-header__back" data-variant="standalone" href="list.html"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span class="ds-link__label">Projects</span></a>
+  <nav class="ds-page-header__breadcrumb" aria-label="Breadcrumb"><ol role="list"><li><a class="ds-link" data-variant="standalone" href="list.html">Projects</a><svg class="ds-icon ds-page-header__separator" data-size="sm" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></li><li><a class="ds-link" data-variant="standalone" href="#current" aria-current="page">New project</a></li></ol></nav>
+  <div class="ds-page-header__body">
+    <div class="ds-page-header__heading"><h1 class="ds-page-header__title" tabindex="-1">New project</h1></div>
+  </div>
+</header>
+
+<div class="ds-template__narrow ds-stack" data-gap="6">
+  <nav class="ds-stepper" aria-label="Progress" data-ds-module="stepper">
+    <ol class="ds-stepper__list">
+      <li class="ds-stepper__step" data-status="complete" data-done><a class="ds-stepper__target" href="#wz-1"><span class="ds-stepper__marker" aria-hidden="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-check"/></svg></span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 1 of 3: </span><span data-name>Basics</span><span class="ds-vh" data-status-text>, completed</span></span></span></a></li>
+      <li class="ds-stepper__step" data-status="current"><span class="ds-stepper__target" aria-current="step"><span class="ds-stepper__marker" aria-hidden="true">2</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 2 of 3: </span><span data-name>Team &amp; budget</span><span class="ds-vh" data-status-text>, current step</span></span></span></span></li>
+      <li class="ds-stepper__step" data-status="upcoming"><span class="ds-stepper__target"><span class="ds-stepper__marker" aria-hidden="true">3</span><span class="ds-stepper__text"><span class="ds-stepper__label"><span class="ds-vh">Step 3 of 3: </span><span data-name>Review</span><span class="ds-vh" data-status-text>, not started</span></span></span></span></li>
+    </ol>
+  </nav>
+
+  <form class="ds-card ds-template__panel ds-template__form-card" aria-labelledby="wz-2-t" method="post" action="#" onsubmit="return false">
+    <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="wz-2-t">Team &amp; budget</h2><p class="ds-card__meta">You can change these later in project settings.</p></div></div>
+    <div class="ds-form__fields" data-columns="2">
+      <div class="ds-select"><label class="ds-select__label" for="wz-owner">Owner</label><div class="ds-select__group"><select class="ds-select__input" id="wz-owner"><option>Budi Santoso</option><option>Rina Wijaya</option><option>Siti Rahmawati</option></select><svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></div></div>
+      <div class="ds-text-field"><label class="ds-text-field__label" for="wz-budget">Budget (Rp)</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="wz-budget" inputmode="numeric" dir="ltr" value="240.000.000"></div><p class="ds-text-field__helper">Excluding tax.</p></div>
+      <fieldset class="ds-radio-group" role="radiogroup" aria-labelledby="wz-bill-l" data-span="full" data-variant="inline">
+        <legend class="ds-radio-group__legend" id="wz-bill-l">Billing</legend>
+        <div class="ds-radio-group__items">
+          <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="wz-bill" value="fixed" checked></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Fixed price</span></span></label>
+          <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="wz-bill" value="hourly"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Hourly</span></span></label>
+          <label class="ds-radio-group__item"><span class="ds-radio-group__control"><input class="ds-radio-group__input" type="radio" name="wz-bill" value="internal"></span><span class="ds-radio-group__text"><span class="ds-radio-group__label">Internal (not billed)</span></span></label>
+        </div>
+      </fieldset>
+      <fieldset class="ds-checkbox-group" data-span="full">
+        <legend class="ds-checkbox-group__legend">Notify</legend>
+        <div class="ds-checkbox-group__items">
+          <label class="ds-checkbox"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox" checked><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon ds-checkbox__mark" data-mark="mixed" aria-hidden="true"><use href="#ds-i-minus"/></svg></span><span class="ds-checkbox__text"><span class="ds-checkbox__label">Team members when the project starts</span></span></label>
+          <label class="ds-checkbox"><span class="ds-checkbox__control"><input class="ds-checkbox__input" type="checkbox"><svg class="ds-icon ds-checkbox__mark" data-mark="check" aria-hidden="true"><use href="#ds-i-check"/></svg><svg class="ds-icon ds-checkbox__mark" data-mark="mixed" aria-hidden="true"><use href="#ds-i-minus"/></svg></span><span class="ds-checkbox__text"><span class="ds-checkbox__label">Finance when 80% of the budget is used</span></span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="ds-card__footer ds-template__form-footer"><a class="ds-button ds-target" data-variant="tertiary" href="#wz-1"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-left"/></svg><span>Back</span></a><button type="submit" class="ds-button ds-target" data-variant="primary"><span>Continue</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-arrow-right"/></svg></button></div>
+  </form>
+</div>

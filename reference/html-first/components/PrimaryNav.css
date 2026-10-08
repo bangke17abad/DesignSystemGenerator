@@ -183,7 +183,7 @@ li + .ds-primary-nav__group { margin-block-start: var(--space-3); }
 /* current: selection background + heavier primary label (never colour alone, UB2; no side stripe, VR-16) */
 .ds-primary-nav__item[aria-current="page"] {
   background: var(--nav-item-background-selected);
-  color: var(--color-structure-text-primary);
+  color: var(--nav-item-label-selected);
   font-weight: var(--type-h3-weight);
 }
 /* ancestor-current: heavier label, no background; hidden text "contains current page" carries it to AT */

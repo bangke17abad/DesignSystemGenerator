@@ -1,6 +1,6 @@
 {
   "name": "ImportExport",
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "tier": "O",
   "inclusion": "Disertakan bila brief menyebut impor atau ekspor data (M08 §11.2).",
   "problem": {

@@ -277,7 +277,7 @@
       "case": "RTL"
     }
   ],
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "group": "Data display",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan.",
   "lint": [

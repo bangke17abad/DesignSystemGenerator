@@ -242,6 +242,7 @@
 .ds-bottom-nav__sheet-item[data-force~="hover"] { background: var(--row-background-hover); }
 .ds-bottom-nav__sheet-item[aria-current="page"] {
   background: var(--nav-item-background-selected);
+  color: var(--nav-item-label-selected);
   font-weight: var(--type-h3-weight);
 }
 

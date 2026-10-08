@@ -2,12 +2,12 @@
 // Phase 0B: brief.normalized.json + catalog/archetypes.json -> assets/design-language.json, assets/lint-rules.json,
 // reports/engine-assumptions.json. Deterministic: same input, byte-identical output.
 // Usage: node tools/resolve-language.mjs <brief.normalized.json> <outDir> [--org <org design-language.json>]
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readJson, writeJson } from './lib/tokens.mjs';
 
-const ENGINE = '1.8.0';
+const ENGINE = '1.9.0';
 const here = dirname(fileURLToPath(import.meta.url));
 const catalog = readJson(join(here, '..', 'catalog', 'archetypes.json'));
 
@@ -87,6 +87,37 @@ export function resolveLanguage(brief, opts = {}) {
     if (L.themes && L.themes.length) decisions.L12.source = 'brief';
   }
 
+  // Visual profile (engine 1.9.0): a known library look (antd-v6, shadcn) owns the visual primitives; the archetype keeps
+  // personality, voice, principles and non-visual bans. Applied before brief overrides, so the brief still wins.
+  let profile = null;
+  const pid = L.visual_profile && L.visual_profile !== 'engine' ? L.visual_profile : null;
+  if (pid) {
+    const pf = join(here, '..', 'catalog', 'profiles', `${pid}.json`);
+    if (!existsSync(pf)) throw new Error(`unknown visual_profile: ${pid} (available: engine, ${listProfiles().join(', ')})`);
+    profile = readJson(pf);
+    if (mode === 'inherit') throw new Error('visual_profile cannot be combined with language.mode inherit; put the profile in the org language instead');
+    for (const [k, v] of Object.entries(profile.overlay)) {
+      const d = decisions[k];
+      if (k === 'L2') {
+        const neutral = { ...v.neutral };
+        if (L.neutral_temperature === 'warm') { neutral.h = 70; neutral.c = Math.max(neutral.c, 0.01); }
+        if (L.neutral_temperature === 'cool') { neutral.h = 250; neutral.c = Math.max(neutral.c, 0.012); }
+        if (L.neutral_temperature === 'neutral') neutral.c = 0;
+        d.value = { ...d.value, neutral, interaction: { ...v.interaction } };
+      } else if (k === 'L4') d.value = { ...d.value, ...structuredClone(v), fallbacks: d.value.fallbacks };
+      else if (k === 'L9') { const set = catalog.icon_sets[v.set] || {}; d.value = { ...d.value, ...structuredClone(v), glyphs: set.glyphs || d.value.glyphs, license: set.license || d.value.license }; }
+      else if (k === 'L3') d.value = { attention: { ...v.attention } };
+      else d.value = { ...d.value, ...structuredClone(v) };
+      d.source = 'profile';
+      d.rationale = `${d.rationale} Profil visual ${profile.id} (${profile.name}) menimpa nilai visual.`;
+    }
+    const visualBan = (b) => {
+      const c = b.check || {};
+      return /^radius/.test(c.token || '') || /^radius/.test(c.tokens || '') || ['shadow_blur_min', 'shadow_blur_max', 'shadow_alpha_max', 'elevation_levels_max', 'neutral_chroma_min', 'neutral_hue_follows'].some((k) => k in c) || /bayangan|radius|sudut/i.test(b.statement || '');
+    };
+    decisions.L13.value.bans = decisions.L13.value.bans.map((b) => (visualBan(b) ? { ...b, suspended_by: profile.id } : b));
+  }
+
   // Overrides (hybrid / custom / inherit)
   const overrides = L.overrides || [];
   const touched = new Set();
@@ -138,6 +169,7 @@ export function resolveLanguage(brief, opts = {}) {
     ...(opts.org ? { org_language: { path: opts.orgPath, version: opts.org.version || '0.0.0' } } : {}),
     ...(scores ? { scores } : {}),
     ...(vetoes.length ? { vetoes } : {}),
+    ...(profile ? { profile: { id: profile.id, name: profile.name, library: profile.library, adapter: profile.adapter, icon_set: profile.icon_set, reference_css: profile.reference_css, components: profile.components, layout: profile.layout, baseline_adjustments: profile.baseline_adjustments } } : { profile: { id: 'engine', name: 'Engine reference', icon_set: 'engine', reference_css: null } }),
     decisions,
     baseline_adjustments,
     adr: ['ADR-L1'],
@@ -165,7 +197,7 @@ function lintRules(decisions) {
   const rules = universal.map(([id, statement, kind, pattern, applies_to, source, question]) => ({
     id, statement, kind, ...(pattern ? { pattern } : {}), ...(question ? { question } : {}), applies_to, source, severity: kind === 'manual-review' ? 'review' : 'error',
   }));
-  for (const b of decisions.L13.value.bans) {
+  for (const b of decisions.L13.value.bans.filter((x) => !x.suspended_by)) {
     const kind = b.kind === 'css-pattern' && !b.pattern ? 'manual-review' : b.kind;
     rules.push({
       id: b.id, statement: b.statement, kind,
@@ -190,6 +222,7 @@ function defaultPurpose(name) {
   return { Light: 'tema terang standar', Dark: 'tema gelap; luminans dibalik, chroma dikurangi', 'High-contrast': 'kontras tinggi: teks mendekati hitam, border kuat, bayangan diganti border', Outdoor: 'sinar matahari langsung: diturunkan dari High-contrast' }[name] || name;
 }
 const uniq = (a) => [...new Set(a)];
+function listProfiles() { return readdirSync(join(here, '..', 'catalog', 'profiles')).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort(); }
 function getPath(o, p) { return p.split('.').reduce((n, k) => (n == null ? undefined : n[k]), o); }
 function setPath(o, p, v) { const ks = p.split('.'); let n = o; for (const k of ks.slice(0, -1)) n = n[k] ??= {}; n[ks.at(-1)] = v; }
 
@@ -203,5 +236,5 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   writeJson(join(outDir, 'assets', 'design-language.json'), language);
   writeJson(join(outDir, 'assets', 'lint-rules.json'), lint);
   writeJson(join(outDir, 'reports', 'engine-assumptions.json'), { entries: assumptions });
-  console.log(`OK design-language: mode=${language.mode} archetype=${language.archetype || '-'} themes=${language.decisions.L12.value.themes.map((t) => t.name).join(',')} lint=${lint.rules.length} assumptions=${assumptions.length}`);
+  console.log(`OK design-language: mode=${language.mode} archetype=${language.archetype || '-'} profile=${language.profile.id} themes=${language.decisions.L12.value.themes.map((t) => t.name).join(',')} lint=${lint.rules.length} assumptions=${assumptions.length}`);
 }

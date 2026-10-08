@@ -1,0 +1,112 @@
+/* Visual profile · antd-v6 (catalog/profiles/antd-v6.json) · engine 1.9.0.
+   Loaded after every component CSS: re-skins anatomy toward Ant Design v6 conventions with the SAME tokens (I3) — no hex, no
+   magic px, logical properties only, no side stripes (VR-16). The baseline still wins: body text >= 16, hit areas from
+   --target-current, focus ring from base.css. Reference anatomy (AntD v6): Layout (white header + sider, grey content), Menu
+   (rounded items, primary-tinted selection), Card (1px border, head divider, 24 padding, no shadow), Table (grey header row,
+   semibold labels, row hover), line Tabs (primary ink bar + label), Segmented (grey track, raised white thumb), Tag, Badge
+   count (solid), Statistic. */
+
+/* Layout: grey content area, white bars */
+.ds-app-shell { background: var(--color-structure-surface-raised); }
+.ds-app-shell__header,
+.ds-app-shell__nav { background: var(--color-structure-surface-raised); }
+.ds-app-shell__main { background: var(--color-structure-surface-sunken); }
+
+/* Menu: no underline on hover, item = control-height-lg, rounded, primary-tinted selection */
+.ds-app-shell__nav-list { gap: var(--space-1); }
+.ds-app-shell__nav-item.ds-link { align-items: center; gap: var(--space-3); min-block-size: max(var(--control-height-lg), var(--target-current)); padding-inline: var(--space-4); border-radius: var(--radius-md); }
+.ds-app-shell__nav-item.ds-link .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) {
+  .ds-app-shell__nav-item.ds-link:hover { text-decoration-line: none; }
+  .ds-app-shell__nav-item.ds-link[aria-current="page"]:hover { background: var(--nav-item-background-selected); }
+}
+.ds-app-shell__nav-item.ds-link[data-force~="hover"] { text-decoration-line: none; }
+.ds-app-shell__nav-item.ds-link[aria-current="page"][data-force~="hover"] { background: var(--nav-item-background-selected); }
+.ds-app-shell__nav-item.ds-link[aria-current="page"] { font-weight: var(--type-h3-weight); }
+.ds-app-shell__nav-group { padding-inline: var(--space-4); }
+
+/* Card: border, no shadow, head divider, 24 padding */
+.ds-card { --_pad: var(--space-6); padding: var(--_pad); gap: var(--space-4); border-color: var(--color-structure-border); border-radius: var(--radius-md); box-shadow: none; }
+.ds-card > .ds-card__header:has(.ds-card__title) {
+  align-items: center;
+  margin: calc(-1 * var(--_pad)) calc(-1 * var(--_pad)) 0;
+  padding: var(--space-4) var(--_pad);
+  border-block-end: var(--border-width-thin) solid var(--color-structure-border);
+}
+.ds-card__title { font-size: var(--type-body-lg-size); line-height: var(--type-body-lg-line); font-weight: var(--type-h3-weight); }
+.ds-card__footer { margin-inline: calc(-1 * var(--_pad)); margin-block-end: calc(-1 * var(--_pad)); padding: var(--space-3) var(--_pad); }
+.ds-card[data-flush] { --_pad: 0; }
+
+/* Table: no frame inside a card, grey semibold header row, row hover, links without underline until hover */
+.ds-card .ds-table__scroll,
+.ds-table__scroll { border-color: var(--color-structure-border); }
+.ds-card .ds-table__scroll { border: 0; border-radius: 0; background: transparent; }
+.ds-card .ds-table__table :is(th, td) { --_row-bg-cell: var(--_row-bg, var(--color-structure-surface-raised)); }
+.ds-table__table thead th {
+  background: var(--color-structure-surface-sunken);
+  color: var(--color-structure-text-primary);
+  font-weight: var(--type-h3-weight);
+  border-block-end-color: var(--color-structure-border);
+  vertical-align: middle;
+}
+.ds-table__table thead th:first-child { border-start-start-radius: var(--radius-md); }
+.ds-table__table thead th:last-child { border-start-end-radius: var(--radius-md); }
+.ds-card[data-flush] .ds-table__table thead th { border-radius: 0; }
+.ds-table__link { text-decoration-line: none; }
+@media (hover: hover) {
+  .ds-table__table tbody tr:hover > :is(th, td) { --_row-bg-cell: var(--row-background-hover); }
+  .ds-table__link:hover { text-decoration-line: underline; }
+}
+.ds-table__table tbody tr[data-force~="hover"] > :is(th, td) { --_row-bg-cell: var(--row-background-hover); }
+.ds-table__link[data-force~="hover"] { text-decoration-line: underline; }
+
+/* Button link variant and standalone links: primary text, underline on hover only */
+.ds-button[data-variant="link"] { text-decoration-line: none; }
+@media (hover: hover) { .ds-button[data-variant="link"]:hover { text-decoration-line: underline; } }
+.ds-button[data-variant="link"][data-force~="hover"] { text-decoration-line: underline; }
+
+/* line Tabs: primary ink bar + primary label, no hover fill */
+.ds-tabs__list { gap: var(--space-8); }
+.ds-tabs__tab { padding-inline: 0; border-radius: 0; }
+.ds-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--color-interaction-default); }
+@media (hover: hover) {
+  .ds-tabs__tab:not([aria-disabled="true"]):hover { background: transparent; color: var(--color-interaction-hover); }
+}
+.ds-tabs__tab[data-force~="hover"] { background: transparent; color: var(--color-interaction-hover); }
+.ds-tabs__count { color: inherit; }
+
+/* Segmented: grey track without border, raised white thumb with a soft shadow, no check */
+.ds-segmented-control__track { gap: 0; padding: var(--border-width-thick); border-color: transparent; border-radius: var(--radius-sm); }
+.ds-segmented-control__segment { border-radius: var(--radius-xs); font-weight: var(--type-body-weight); }
+.ds-segmented-control__segment:has(> input:checked),
+.ds-segmented-control__segment:has(> input:checked)[data-force~="hover"] { box-shadow: var(--elevation-1); font-weight: var(--type-body-weight); }
+.ds-segmented-control__segment:has(> input:checked) .ds-segmented-control__check { display: none; }
+@media (hover: hover) {
+  .ds-segmented-control__segment:not(:has(> input[aria-disabled="true"])):not(:has(> input:checked)):hover { background: var(--color-structure-selection); }
+}
+.ds-segmented-control__segment:not(:has(> input:checked))[data-force~="hover"] { background: var(--color-structure-selection); }
+
+/* Chart inside a card: no inner frame; first series = primary (G2 default) */
+.ds-card .ds-chart { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.ds-chart [data-series="1"] { --_c: var(--color-interaction-default); }
+
+/* Badge count: solid */
+.ds-badge[data-status="critical"] { --_bg: var(--color-semantic-critical); --_fg: var(--color-semantic-on-critical); --_border: var(--color-semantic-critical); }
+
+/* Pagination: bordered current page in primary */
+.ds-pagination__page[aria-current="page"] { background: var(--color-structure-surface-raised); color: var(--color-interaction-default); border-color: var(--color-interaction-default); }
+
+/* Page header: AntD PageContainer title scale */
+.ds-page-header__title { font-weight: var(--type-h3-weight); }
+
+/* Lists inside cards: no row frame */
+.ds-card .ds-list { border: 0; background: transparent; }
+
+/* Breadcrumb: secondary links without underline, current item in primary text */
+.ds-page-header__breadcrumb .ds-link { color: var(--color-structure-text-secondary); text-decoration-line: none; }
+.ds-page-header__breadcrumb .ds-link[aria-current="page"] { color: var(--color-structure-text-primary); font-weight: var(--type-body-weight); }
+@media (hover: hover) { .ds-page-header__breadcrumb .ds-link:hover { color: var(--color-structure-text-primary); background: var(--row-background-hover); } }
+.ds-page-header__breadcrumb .ds-link[data-force~="hover"] { color: var(--color-structure-text-primary); background: var(--row-background-hover); }
+
+/* Alert-style banners inside the page: rounded like Alert */
+.ds-banner[data-status]:not([data-level="system"]) { border-radius: var(--radius-md); }

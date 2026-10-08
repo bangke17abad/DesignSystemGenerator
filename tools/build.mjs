@@ -28,7 +28,7 @@ export function build(outDir, opts = {}) {
     writeText(join(outDir, rel), files[rel]);
     manifest[rel] = createHash('sha256').update(files[rel]).digest('hex');
   }
-  writeJson(join(outDir, 'reports', 'build-manifest.json'), { engine_version: '1.8.0', files: manifest });
+  writeJson(join(outDir, 'reports', 'build-manifest.json'), { engine_version: '1.9.0', files: manifest });
   return manifest;
 }
 
@@ -42,7 +42,11 @@ function defaultTargets(brief) {
     if (k === 'shadcn') out.push('tailwind');
   }
   if (t.design_tool && t.design_tool !== 'none') out.push('figma');
-  return out;
+  // engine 1.9.0: a visual profile ships its library's theme adapter (antd ConfigProvider theme, shadcn CSS variables)
+  const vp = brief.language?.visual_profile;
+  if (vp === 'antd-v6' && !out.includes('antd')) out.push('antd');
+  if (vp === 'shadcn' && !out.includes('shadcn')) out.push('shadcn', 'tailwind');
+  return [...new Set(out)];
 }
 
 /** Normalised view used by every generator: per-mode literal values, ordered names, axes. */

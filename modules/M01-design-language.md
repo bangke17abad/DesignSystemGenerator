@@ -1,7 +1,7 @@
-<!-- ds-module id="M01" name="design-language" engine="1.8.0" sections="§4.5-4.8" -->
+<!-- ds-module id="M01" name="design-language" engine="1.9.0" sections="§4.5-4.8" -->
 # Modul M01 · Perpustakaan archetype dan lapisan bahasa desain
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §4.5-4.8. Dimuat di fase: 0A, 0B, 2. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §4.5-4.8. Dimuat di fase: 0A, 0B, 2. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 
@@ -223,6 +223,28 @@ Transformasi saat ditekan tidak memengaruhi layout (I4: hanya `transform`), tida
 4. **Hybrid:** archetype dasar + override per keputusan. Bila override mengubah lebih dari **4** keputusan di antara L2-L12 dan L14-L17, perlakukan sebagai `custom`. Bila hybrid menggabungkan keputusan yang berlawanan (mis. radius lembut dengan kepadatan konsol), jalankan **pemeriksaan koherensi**: tulis tiap ketegangan beserta cara meredamnya di ADR-L1.
 5. **Brand seed:** untuk setiap entri B6 `brands`, bila brief memberi warna merek, gunakan sebagai seed warna interaksi atau aksen sesuai L2. **Warna merek tidak diubah diam-diam**: bila tidak lolos kontras di salah satu peran, turunkan varian terdekat yang lolos (tahap solver §5.3), catat ΔE dan alasan di register, dan pakai warna asli hanya di peran non-teks yang lolos 3:1.
 6. **`language_mode: inherit`** → muat `design-language.json` lapis org dari `inherits_from` (§4.8). Nilai warisan bertanda `source: org`; override brief dibatasi aturan §4.8.
+
+## 4.6A Profil visual pustaka (engine 1.9.0)
+
+Archetype menentukan *karakter*; **profil visual** menentukan *pustaka yang ditiru*. Bila brief mengisi `language.visual_profile` = `antd-v6` atau `shadcn`, engine memuat `catalog/profiles/<id>.json` dan menimpa nilai visual archetype. Default `engine` berarti tampilan referensi engine sendiri.
+
+| Lapisan | Isi profil | Contoh antd-v6 | Contoh shadcn |
+|---|---|---|---|
+| Token (L2-L9, L16) | warna interaksi default, perlakuan perhatian C1-C6, skala tipe, tinggi kontrol, radius, elevasi, set ikon, strategi state | biru primer, kontrol 28/36/44, radius 6/8/8, bayangan tiga lapis, Ant Design Icons, token-swap | primer netral gelap, kontrol 32/36/40, radius 8/12/12, shadow-sm, Lucide stroke 2 |
+| Anatomi (`components`) | token komponen yang mengikuti pustaka | hover tombol default = primer; item menu terpilih = latar primer muda + label primer; hover input = border primer | hover outline netral; item sidebar terpilih = latar accent + label teks utama |
+| CSS profil | `reference/html-first/profiles/<id>.css`, dimuat setelah semua CSS komponen, hanya token | Card ber-head divider, header Table abu-abu semibold, Tabs line + ink bar, Segmented, Badge count solid | Card rounded-xl + shadow-sm, Table tanpa fill header, Tabs bergaya segmented, sidebar muted |
+| Layout | `layout-bar-height`, `layout-nav-width` | 64 / 224 | 56 / 256 |
+| Adapter | adapter pustaka ikut dibuat walau `targets.adapters` kosong | A01 (`adapters/antd/theme.g.ts`) | A03 (`adapters/shadcn/shadcn.css` + Tailwind) |
+
+Aturan:
+
+1. **Prioritas tidak berubah:** 1 BASELINE → 2 INVARIANT → 3 BRIEF → 4 PACK → 5 LANGUAGE → 6 ENGINE; di dalam LANGUAGE, profil menimpa archetype. Profil tidak pernah menurunkan teks isi di bawah 16 px, area klik, atau ring fokus; penyesuaiannya dicatat di `profile.baseline_adjustments` (mis. AntD `fontSize 14 → 16`).
+2. Keputusan yang ditimpa profil bertanda `source: profile`. `neutral_temperature` dari brief tetap diterapkan di atas profil.
+3. Larangan L13 archetype yang bertentangan dengan profil (radius, bayangan, elevasi) **ditangguhkan**, bukan dihapus: `suspended_by: <id>`. V13 tidak menegakkannya dan mencatatnya.
+4. Warna merek hanya untuk aksi primer dan link (A1). Tombol tertiary (text/ghost) selalu netral di semua profil.
+5. `language_mode: inherit` + `visual_profile` = galat: lapis org sudah menentukan tampilan.
+6. **Template halaman** (`reference/html-first/templates/`: dashboard, list, detail, settings, wizard, auth) dirender per profil ke `templates/<nama>.html`. Bagian opsional (`<!-- requires: Chart -->`) hilang bila komponennya di luar `{N}`; template yang butuh komponen inti di luar `{N}` dilewati dan dilaporkan.
+7. **VP (kesesuaian profil)**, blocking, syarat T1: profil paket = brief; radius dan tinggi kontrol = profil; token nav terpilih = profil; set ikon = profil; `src/profile/<id>.css` ikut dipaketkan; tertiary netral; setiap template tepat satu `h1` dan maksimal satu item nav `aria-current`.
 
 ## 4.7 Keluaran bahasa desain
 

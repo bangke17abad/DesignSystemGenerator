@@ -399,7 +399,7 @@
       "case": "RTL dengan angka"
     }
   ],
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "group": "Data display",
   "inclusion": "Selalu disertakan.",
   "lint": [

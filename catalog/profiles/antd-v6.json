@@ -1,0 +1,184 @@
+{
+  "$comment": "Visual profile: Ant Design v6 look on engine tokens. Overrides the archetype's visual primitives (L4 type, L5 control size, L6 shape, L7 elevation, L9 icons, L16 feedback, L3 attention, L2 neutral/default seed); the archetype keeps personality, voice, principles and non-visual bans. Baseline still wins: AntD's 14 px body is raised to 16 px (AntD 'large' text sizing).",
+  "id": "antd-v6",
+  "name": "Ant Design v6",
+  "engine_min": "1.9.0",
+  "library": "antd@6 (theme seeds of the default algorithm)",
+  "adapter": "A01-antd-v6",
+  "icon_set": "antd",
+  "reference_css": "profiles/antd-v6.css",
+  "baseline_adjustments": [
+    "fontSize 14 → 16 (STD-2); headings follow AntD Typography at fontSizeLG",
+    "controlHeight 32 → 36 to fit 16 px text; 24 px pointer / 44 px touch targets still apply (STD-4)"
+  ],
+  "overlay": {
+    "L2": {
+      "neutral": {
+        "h": 0,
+        "c": 0
+      },
+      "interaction": {
+        "source": "brand",
+        "h": 259,
+        "c": 0.2,
+        "l": 0.6,
+        "l_dark": 0.68,
+        "default_is_assumption": true
+      }
+    },
+    "L3": {
+      "attention": {
+        "C1": "tinted",
+        "C2": "tinted",
+        "C3": "tinted",
+        "C4": "tinted",
+        "C5": "tinted",
+        "C6": "outline"
+      }
+    },
+    "L4": {
+      "families": {
+        "ui": "system-ui",
+        "display": null,
+        "mono": "SFMono-Regular"
+      },
+      "weights": [
+        400,
+        500,
+        600
+      ],
+      "heading_weight": 600,
+      "label_weight": 400,
+      "line_ratio": {
+        "body": 1.5,
+        "heading": 1.3
+      },
+      "tracking_heading": "0",
+      "scale": {
+        "caption": 12,
+        "body": 16,
+        "label": 16,
+        "code": 16,
+        "body_lg": 18,
+        "h3": 20,
+        "h2": 24,
+        "h1": 30,
+        "display": 38
+      },
+      "caption_line": 20
+    },
+    "L5": {
+      "control_height": {
+        "sm": 28,
+        "md": 36,
+        "lg": 44
+      }
+    },
+    "L6": {
+      "radius": {
+        "control": 6,
+        "container": 8,
+        "overlay": 8,
+        "full": 9999
+      },
+      "border_width": {
+        "thin": 1,
+        "thick": 2
+      }
+    },
+    "L7": {
+      "levels": {
+        "1": "border",
+        "2": [
+          [
+            0,
+            6,
+            16,
+            0.08
+          ],
+          [
+            0,
+            3,
+            6,
+            0.12
+          ],
+          [
+            0,
+            9,
+            28,
+            0.05
+          ]
+        ]
+      },
+      "usage": "1 card/table bordered; 2 dropdown, popover, modal",
+      "light_strategy": "shadow",
+      "dark_strategy": "border",
+      "shadow_color": "neutral-12",
+      "flat": false
+    },
+    "L9": {
+      "set": "antd",
+      "style": "fill (Ant Design Icons outlined)",
+      "stroke": 0,
+      "sizes": [
+        14,
+        16,
+        20
+      ]
+    },
+    "L16": {
+      "strategy": "token-swap",
+      "press_transform": "none"
+    }
+  },
+  "components": {
+    "button": {
+      "variants": {
+        "primary": "solid primary",
+        "secondary": "default: bordered, neutral text; hover border + text = primary",
+        "tertiary": "text: neutral text, hover fill",
+        "link": "link: primary text",
+        "destructive": "danger"
+      },
+      "tertiary_label": "neutral",
+      "secondary_hover": "interaction"
+    },
+    "nav": {
+      "pattern": "Menu (inline, light)",
+      "selected_background": "interaction-subtle",
+      "selected_label": "interaction",
+      "item_height": "control-height-lg",
+      "item_radius": "radius-md"
+    },
+    "tabs": {
+      "pattern": "line tabs: 2 px ink bar under the selected tab, selected label = primary"
+    },
+    "table": {
+      "header_background": "surface-sunken",
+      "header_weight": 600,
+      "row_divider": "border",
+      "row_hover": "surface-sunken"
+    },
+    "card": {
+      "border": "border",
+      "shadow": "none",
+      "head_divider": true,
+      "padding": "space-6"
+    },
+    "status": {
+      "pattern": "Tag without border (bordered=false): tinted background, strong text, coloured icon"
+    },
+    "page_header": {
+      "pattern": "breadcrumb above an h-level title (20 px semibold), extra actions on the end"
+    },
+    "form": {
+      "pattern": "vertical labels; hover border = primary; focus border = primary + 2 px ring",
+      "hover_border": "interaction"
+    }
+  },
+  "layout": {
+    "layout-bar-height": 64,
+    "layout-nav-width": 224
+  },
+  "ban_policy": "Archetype bans on radius, shadow and elevation are suspended (the profile owns them); other bans stay."
+}

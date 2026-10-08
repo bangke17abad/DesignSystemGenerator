@@ -1,7 +1,7 @@
-<!-- ds-module id="M11" name="ecosystem" engine="1.8.0" sections="§14A-14C, §15" -->
+<!-- ds-module id="M11" name="ecosystem" engine="1.9.0" sections="§14A-14C, §15" -->
 # Modul M11 · Alat desain, regresi, performa, governance, distribusi
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §14A-14C, §15. Dimuat di fase: 9, 10, 13. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §14A-14C, §15. Dimuat di fase: 9, 10, 13. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

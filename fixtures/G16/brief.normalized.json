@@ -1,0 +1,78 @@
+{
+  "brief_schema_version": "1.5",
+  "doc_language": "Indonesia",
+  "domain": {
+    "entities": [
+      {
+        "name": "Project",
+        "states": [
+          "draft",
+          "active",
+          "at-risk",
+          "done",
+          "cancelled"
+        ]
+      }
+    ]
+  },
+  "language": {
+    "archetype": "ink-graphite",
+    "brands": [
+      {
+        "id": "default"
+      }
+    ],
+    "mode": "archetype",
+    "themes": [
+      {
+        "name": "Light"
+      },
+      {
+        "name": "Dark"
+      }
+    ],
+    "visual_profile": "antd-v6"
+  },
+  "namespace": "KLP",
+  "product_name": "Kelola Proyek",
+  "report_language": "Indonesia",
+  "run_mode": "greenfield",
+  "surfaces": [
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable",
+        "compact"
+      ],
+      "device": "desktop",
+      "input_modality": [
+        "pointer",
+        "keyboard"
+      ],
+      "name": "web-admin",
+      "os_runtime": "web",
+      "surface_type": "operational"
+    },
+    {
+      "connectivity": "online",
+      "default_theme": "Light",
+      "density_modes": [
+        "comfortable"
+      ],
+      "device": "ponsel",
+      "input_modality": [
+        "touch"
+      ],
+      "name": "mobile",
+      "os_runtime": "Android",
+      "surface_type": "operational"
+    }
+  ],
+  "targets": {
+    "primary_web_reference": "react"
+  },
+  "ui_locales": [
+    "id-ID"
+  ]
+}

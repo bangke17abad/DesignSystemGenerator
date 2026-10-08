@@ -1,0 +1,90 @@
+/* Visual profile · shadcn (catalog/profiles/shadcn.json) · engine 1.9.0.
+   Loaded after every component CSS: re-skins anatomy toward shadcn/ui (new-york, v4) conventions with the SAME tokens (I3) —
+   no hex, no magic px, logical properties only, no side stripes (VR-16). The baseline still wins: body text >= 16, hit areas
+   from --target-current, focus ring from base.css. Reference anatomy: Sidebar (muted panel, compact rounded items, accent
+   selection, font-medium), Card (rounded-xl, border, shadow-sm, 24 padding, no head divider), Table (no header fill, muted
+   medium header labels, row hover muted), Tabs (muted track, raised trigger with shadow-sm), Badge (rounded-md), Button
+   (font-medium, outline with shadow-xs, ghost neutral). */
+
+/* Layout: white page, muted sidebar, thin borders */
+.ds-app-shell { background: var(--color-structure-surface-base); }
+.ds-app-shell__nav { background: var(--color-structure-surface-sunken); }
+
+/* Sidebar menu: compact rounded items, accent selection, no underline */
+.ds-app-shell__nav-list { gap: var(--space-half); }
+.ds-app-shell__nav-item.ds-link { align-items: center; gap: var(--space-2); padding-inline: var(--space-2); border-radius: var(--radius-sm); font-size: var(--type-label-size); line-height: var(--type-label-line); }
+.ds-app-shell__nav-item.ds-link .ds-icon { inline-size: var(--icon-sm); block-size: var(--icon-sm); }
+@media (hover: hover) { .ds-app-shell__nav-item.ds-link:hover { text-decoration-line: none; background: var(--nav-item-background-selected); } }
+.ds-app-shell__nav-item.ds-link[data-force~="hover"] { text-decoration-line: none; background: var(--nav-item-background-selected); }
+.ds-app-shell__nav-item.ds-link[aria-current="page"] { font-weight: var(--type-label-weight); }
+.ds-app-shell__nav-group { padding-inline: var(--space-2); font-weight: var(--type-label-weight); }
+
+/* Card: rounded-xl, border, shadow-sm, 24 padding, gap 24 */
+.ds-card { --_pad: var(--space-6); padding: var(--_pad); gap: var(--space-6); border-color: var(--color-structure-border); border-radius: var(--radius-lg); box-shadow: var(--elevation-1); }
+.ds-card > .ds-card__header { align-items: flex-start; }
+.ds-card__title { font-size: var(--type-body-lg-size); line-height: var(--type-body-lg-line); font-weight: var(--type-h3-weight); letter-spacing: var(--type-h3-tracking); }
+.ds-card__meta { color: var(--color-structure-text-secondary); }
+.ds-card[data-flush] { --_pad: 0; gap: 0; }
+
+/* Table: no frame inside a card, no header fill, muted medium header labels, row hover */
+.ds-card .ds-table__scroll { border: 0; border-radius: 0; background: transparent; }
+.ds-table__table thead th {
+  background: var(--color-structure-surface-raised);
+  color: var(--color-structure-text-secondary);
+  font-weight: var(--type-label-weight);
+  border-block-end-color: var(--color-structure-border);
+  vertical-align: middle;
+}
+.ds-card .ds-table__table :is(th, td) { --_row-bg-cell: var(--_row-bg, var(--color-structure-surface-raised)); }
+.ds-table__link { color: var(--color-structure-text-primary); font-weight: var(--type-label-weight); text-decoration-line: none; }
+@media (hover: hover) {
+  .ds-table__table tbody tr:hover > :is(th, td) { --_row-bg-cell: var(--row-background-hover); }
+  .ds-table__link:hover { text-decoration-line: underline; }
+}
+.ds-table__table tbody tr[data-force~="hover"] > :is(th, td) { --_row-bg-cell: var(--row-background-hover); }
+.ds-table__link[data-force~="hover"] { text-decoration-line: underline; }
+
+/* Buttons: link variant underlines on hover only */
+.ds-button[data-variant="link"] { text-decoration-line: none; }
+@media (hover: hover) { .ds-button[data-variant="link"]:hover { text-decoration-line: underline; } }
+.ds-button[data-variant="link"][data-force~="hover"] { text-decoration-line: underline; }
+
+/* Tabs: muted track, raised trigger with shadow-sm, no ink bar */
+.ds-tabs__bar { border-block-end: 0; }
+.ds-tabs__list { flex: 0 1 auto; gap: 0; padding: var(--space-half); border-radius: var(--radius-md); background: var(--color-structure-selection); }
+.ds-tabs__tab { --_tab-h: var(--control-height-sm); padding-inline: var(--space-3); border-radius: var(--radius-sm); color: var(--color-structure-text-secondary); }
+.ds-tabs__tab::after { display: none; }
+.ds-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { background: var(--color-structure-surface-raised); color: var(--color-structure-text-primary); box-shadow: var(--elevation-1); }
+@media (hover: hover) { .ds-tabs__tab:not([aria-disabled="true"]):not([aria-selected="true"]):hover { background: transparent; color: var(--color-structure-text-primary); } }
+.ds-tabs__tab:not([aria-selected="true"])[data-force~="hover"] { background: transparent; color: var(--color-structure-text-primary); }
+.ds-tabs__tab:focus-visible, .ds-tabs__tab[data-force~="focus"] { outline-offset: 0; }
+
+/* Segmented control: same track as Tabs, no check */
+.ds-segmented-control__track { gap: 0; padding: var(--space-half); border-color: transparent; border-radius: var(--radius-md); background: var(--color-structure-selection); }
+.ds-segmented-control__segment { border-radius: var(--radius-sm); font-weight: var(--type-label-weight); }
+.ds-segmented-control__segment + .ds-segmented-control__segment::after { display: none; }
+.ds-segmented-control__segment:has(> input:checked),
+.ds-segmented-control__segment:has(> input:checked)[data-force~="hover"] { box-shadow: var(--elevation-1); font-weight: var(--type-label-weight); }
+.ds-segmented-control__segment:has(> input:checked) .ds-segmented-control__check { display: none; }
+
+/* Chart inside a card: no inner frame */
+.ds-card .ds-chart { padding: 0; border: 0; border-radius: 0; background: transparent; }
+
+/* Badge, Tag and status: rounded-md, medium weight */
+.ds-badge { font-weight: var(--type-label-weight); }
+.ds-badge[data-status="critical"] { --_bg: var(--color-semantic-critical); --_fg: var(--color-semantic-on-critical); --_border: var(--color-semantic-critical); }
+.ds-tag { border-radius: var(--radius-sm); font-weight: var(--type-label-weight); }
+
+/* Pagination: ghost pages, current page = outline button */
+.ds-pagination__page[aria-current="page"] { background: var(--color-structure-surface-raised); color: var(--color-structure-text-primary); border-color: var(--color-structure-border-control); box-shadow: var(--elevation-1); }
+
+/* Page header: tight heading */
+.ds-page-header__title { letter-spacing: var(--type-h1-tracking); }
+.ds-page-header__breadcrumb .ds-link { color: var(--color-structure-text-secondary); text-decoration-line: none; }
+.ds-page-header__breadcrumb .ds-link[aria-current="page"] { color: var(--color-structure-text-primary); font-weight: var(--type-body-weight); }
+@media (hover: hover) { .ds-page-header__breadcrumb .ds-link:hover { color: var(--color-structure-text-primary); } }
+.ds-page-header__breadcrumb .ds-link[data-force~="hover"] { color: var(--color-structure-text-primary); }
+
+/* Lists inside cards: no row frame; banners rounded */
+.ds-card .ds-list { border: 0; background: transparent; }
+.ds-banner[data-status]:not([data-level="system"]) { border-radius: var(--radius-md); }

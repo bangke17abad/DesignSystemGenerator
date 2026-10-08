@@ -1,0 +1,98 @@
+/* Page templates · engine 1.9.0 (reference/html-first/templates). Layout glue only: grids, page rhythm and the few
+   template-level parts (KPI card, toolbar, settings sub-nav, auth card). Tokens only (I3); logical properties only; no side
+   stripes (VR-16). Visual identity comes from the profile layer (profiles/<id>.css), never from here. */
+.ds-template__content { display: flex; flex-direction: column; gap: var(--space-6); }
+.ds-template__content > .ds-page-header { margin-block-end: calc(-1 * var(--space-2)); }
+
+.ds-template__brand { display: inline-flex; align-items: center; gap: var(--space-2); color: inherit; text-decoration-line: none; min-block-size: var(--target-current); }
+.ds-template__mark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--control-height-sm);
+  block-size: var(--control-height-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-interaction-default);
+  color: var(--color-interaction-on-solid);
+  font-size: var(--type-label-size);
+  line-height: 1;
+  font-weight: var(--type-h3-weight);
+}
+.ds-template__search { position: relative; color: var(--color-structure-text-secondary); }
+.ds-template__kbd {
+  padding-inline: var(--space-1);
+  border: var(--border-width-thin) solid var(--color-structure-border);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  color: var(--color-structure-text-secondary);
+}
+@media (--bp-tablet-down) {
+  .ds-template__kbd { display: none; }
+  /* icon-only on phones; the label stays the accessible name (visually hidden, not display: none) */
+  .ds-template__search > span { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* KPI row */
+.ds-template__kpis { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--layout-measure) / 4.5)), 1fr)); }
+.ds-template__kpi { gap: var(--space-2); }
+.ds-template__kpi-label { color: var(--color-structure-text-secondary); font-size: var(--type-label-size); line-height: var(--type-label-line); }
+.ds-template__kpi-value { font-family: var(--type-h1-family); font-size: var(--type-h1-size); line-height: var(--type-h1-line); font-weight: var(--type-h1-weight); letter-spacing: var(--type-h1-tracking); font-variant-numeric: tabular-nums; }
+.ds-template__kpi-unit { font-size: var(--type-body-lg-size); font-weight: var(--type-body-weight); color: var(--color-structure-text-secondary); margin-inline: var(--space-1); }
+.ds-template__kpi-delta { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--color-structure-text-secondary); font-size: var(--type-caption-size); line-height: var(--type-caption-line); }
+.ds-template__kpi-delta[data-trend="up"] .ds-icon { color: var(--color-semantic-positive-strong); }
+.ds-template__kpi-delta[data-trend="down"] .ds-icon { color: var(--color-semantic-critical-strong); }
+.ds-template__kpi-progress { margin-block-start: var(--space-1); }
+
+/* two-column regions */
+.ds-template__split { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (--bp-desktop-up) {
+  .ds-template__split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .ds-template__split[data-ratio="2-1"] { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}
+.ds-template__panel { min-inline-size: 0; }
+.ds-template__panel[data-flush] { padding: 0; gap: 0; overflow: hidden; }
+.ds-template__chart { margin: 0; }
+.ds-template__activity .ds-list__item { border: 0; }
+
+/* list page: query bar + table + pager inside one card */
+.ds-template__toolbar { padding: var(--space-2) var(--space-4); }
+.ds-template__toolbar .ds-table__toolbar { gap: var(--space-3); }
+.ds-template__toolbar-search { flex: 1 1 16rem; max-inline-size: calc(var(--layout-measure) / 2); }
+.ds-template__toolbar .ds-filter-bar { flex: 1 1 auto; flex-direction: row; flex-wrap: wrap; align-items: center; }
+.ds-template__toolbar .ds-filter-bar__clear { align-self: center; }
+.ds-template__pager { padding: var(--space-3) var(--space-4); border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+.ds-template__tabs .ds-tabs__panel { padding-block-start: var(--space-4); }
+
+/* settings: in-page section nav + cards */
+.ds-template__settings { display: grid; gap: var(--space-6); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (--bp-desktop-up) { .ds-template__settings { grid-template-columns: calc(var(--layout-nav-width) * 0.9) minmax(0, 1fr); } }
+.ds-template__subnav { position: sticky; inset-block-start: calc(var(--layout-bar-height) + var(--space-4)); }
+.ds-template__subnav ul { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+@media (--bp-desktop-down) { .ds-template__subnav { position: static; } .ds-template__subnav ul { flex-direction: row; flex-wrap: wrap; } }
+.ds-template__subnav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: max(var(--control-height-md), var(--target-current));
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-structure-text-primary);
+  text-decoration-line: none;
+}
+@media (hover: hover) { .ds-template__subnav-item:hover { background: var(--nav-item-background-hover); } }
+.ds-template__subnav-item[data-force~="hover"] { background: var(--nav-item-background-hover); }
+.ds-template__subnav-item[aria-current] { background: var(--nav-item-background-selected); color: var(--nav-item-label-selected); font-weight: bolder; }
+.ds-template__form-card .ds-form__fields { display: grid; gap: var(--space-4); }
+.ds-template__form-footer { justify-content: flex-end; padding-block-start: var(--space-4); border-block-start: var(--border-width-thin) solid var(--color-structure-border); }
+.ds-template__narrow { inline-size: 100%; max-inline-size: var(--layout-measure); margin-inline: auto; }
+
+/* auth */
+.ds-template__auth { display: grid; place-items: center; min-block-size: 100dvh; padding: var(--space-6) var(--space-4); background: var(--color-structure-surface-sunken); }
+.ds-template__auth-card { inline-size: 100%; max-inline-size: calc(var(--layout-measure) * 0.62); padding: var(--space-8) var(--space-6); gap: var(--space-6); }
+.ds-template__auth-head { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); text-align: center; }
+.ds-template__auth-head .ds-template__mark { inline-size: var(--control-height-lg); block-size: var(--control-height-lg); font-size: var(--type-h3-size); }
+.ds-template__auth-foot { text-align: center; }
+.ds-template__block { inline-size: 100%; justify-content: center; }
+.ds-template__or { display: flex; align-items: center; gap: var(--space-3); color: var(--color-structure-text-secondary); font-size: var(--type-caption-size); line-height: var(--type-caption-line); }
+.ds-template__or::before, .ds-template__or::after { content: ""; flex: 1; border-block-start: var(--border-width-thin) solid var(--color-structure-border); }

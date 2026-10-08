@@ -1,6 +1,6 @@
 # Reference html-first · aturan implementasi
 
-Implementasi referensi ini dipakai ulang oleh setiap paket yang dibuat engine 1.8.0. CSS yang sama harus benar untuk kesembilan archetype, semua tema (terang, gelap, kontras tinggi), pointer dan sentuh, LTR dan RTL. Karena itu komponen hanya membaca token, tidak pernah memutuskan estetika sendiri.
+Implementasi referensi ini dipakai ulang oleh setiap paket yang dibuat engine 1.9.0. CSS yang sama harus benar untuk kesembilan archetype, semua tema (terang, gelap, kontras tinggi), pointer dan sentuh, LTR dan RTL. Karena itu komponen hanya membaca token, tidak pernah memutuskan estetika sendiri.
 
 ## Berkas per komponen
 
@@ -37,10 +37,18 @@ Konten fixture domain-netral (booking venue, tim, dokumen, pesanan generik). Jan
 
 Token yang boleh dipakai ada di `catalog/token-names.json` (`always` dan `component_always`).
 
+## Profil visual dan template (engine 1.9.0)
+
+- `profiles/<id>.css` (antd-v6, shadcn) dimuat **setelah** semua CSS komponen dan hanya mengubah anatomi lewat token yang sama. Aturan larangannya sama dengan komponen: tanpa hex, tanpa px ajaib, tanpa garis samping, `:hover` di dalam `@media (hover: hover)` dengan kembaran `[data-force~="hover"]`. Jangan menaruh nilai pustaka (mis. `#1677ff`) di sini; nilainya masuk lewat `catalog/profiles/<id>.json`.
+- Komponen tidak boleh bergantung pada profil. CSS komponen harus tetap benar tanpa lapisan profil (profil `engine`).
+- `templates/<nama>.html` adalah isi `main`. Baris komentar pertama berisi `template`, `shell` (`app` | `none`), `current` (id item nav di `_nav.json`), dan `title`. Shell bersama ada di `_shell.html`; glue layout di `templates.css` (tanpa warna identitas). Bagian yang butuh komponen opsional dibungkus `<!-- requires: Chart -->…<!-- /requires -->`.
+- Konten template domain-netral (proyek, invoice, tim). `ref-check` memeriksa `leak-terms.json` dan atribut `disabled` native di template.
+
 ## Verifikasi
 
 ```bash
 node tools/dev/ref-check.mjs <Name> [...] --screenshots
+node tools/dev/ref-check.mjs <Name> [...] --profiles --templates   # + antd-v6 dan shadcn, + 6 template halaman
 ```
 
 Perintah ini melint CSS lalu merender preview di empat archetype (ink-graphite, soft-friendly, neo-brutalist, immersive-glass) dengan pemeriksaan Chromium nyata: axe serious/critical = 0, teks isi ≥ 16px, target sentuh ≥ 44px, ring fokus di setiap Tab stop, reflow 320px, RTL, forced-colors, render tanpa JavaScript. Setelah lolos, lihat screenshot terang dan gelap minimal dua archetype; lolos pemeriksaan otomatis belum berarti rapi secara visual.

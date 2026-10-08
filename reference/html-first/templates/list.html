@@ -1,0 +1,75 @@
+<!-- template: list · shell: app · current: list · title: Projects
+     Page header + query bar (search, filters) + table card with selection, status, row actions and pagination.
+     Patterns: AntD ProTable (query form above a bordered card) / shadcn "tasks" data table (toolbar + table + pager). -->
+<header class="ds-page-header" data-variant="compact">
+  <div class="ds-page-header__body">
+    <div class="ds-page-header__heading">
+      <h1 class="ds-page-header__title" tabindex="-1">Projects</h1>
+      <p class="ds-page-header__description">24 active, 6 archived. Owners see their own projects first.</p>
+    </div>
+    <div class="ds-page-header__actions">
+      <a class="ds-button ds-target" href="#import"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-upload"/></svg><span>Import</span></a>
+      <a class="ds-button ds-target" data-variant="primary" href="wizard.html"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-plus"/></svg><span>New project</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="ds-tabs ds-template__tabs" data-ds-module="tabs">
+  <div class="ds-tabs__bar">
+    <ul class="ds-tabs__list" aria-label="Project views" data-ds-scroll="x">
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#lt-p0" id="lt-t0" data-selected><span>Active</span><span class="ds-tabs__count" data-ds-text="supporting">24</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#lt-p1" id="lt-t1"><span>Mine</span><span class="ds-tabs__count" data-ds-text="supporting">5</span></a></li>
+      <li class="ds-tabs__item"><a class="ds-tabs__tab" href="#lt-p2" id="lt-t2"><span>Archived</span><span class="ds-tabs__count" data-ds-text="supporting">6</span></a></li>
+    </ul>
+  </div>
+  <section class="ds-tabs__panel" id="lt-p0" aria-labelledby="lt-t0">
+    <div class="ds-card ds-template__panel" data-flush>
+      <div class="ds-table ds-template__table" data-ds-module="table" data-selectable>
+        <div class="ds-table__top ds-template__toolbar"><div class="ds-table__bulkbar" hidden><span class="ds-table__bulk-count">0 selected</span><button type="button" class="ds-table__button">Archive</button><button type="button" class="ds-table__button" data-variant="tertiary" data-ds-clear-selection>Clear selection</button></div><div class="ds-table__toolbar">
+        <search class="ds-template__toolbar-search" aria-label="Projects">
+          <div class="ds-text-field">
+            <label class="ds-text-field__label ds-vh" for="lt-q">Search projects</label>
+            <div class="ds-text-field__group"><svg class="ds-icon ds-text-field__icon" aria-hidden="true"><use href="#ds-i-search"/></svg><input class="ds-text-field__input" id="lt-q" type="search" placeholder="Search by name or owner" autocomplete="off"></div>
+          </div>
+        </search>
+        <div class="ds-filter-bar" data-ds-module="filter-chips">
+          <ul class="ds-filter-chips" aria-label="Filter projects">
+            <li><button type="button" class="ds-filter-chip" aria-pressed="true"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>At risk <span class="ds-filter-chip__count">3</span></button></li>
+            <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Over budget <span class="ds-filter-chip__count">1</span></button></li>
+            <li><button type="button" class="ds-filter-chip" aria-pressed="false"><svg class="ds-icon ds-filter-chip__check" aria-hidden="true"><use href="#ds-i-check"/></svg>Due this month <span class="ds-filter-chip__count">8</span></button></li>
+          </ul>
+          <button type="button" class="ds-button ds-filter-bar__clear" data-variant="tertiary">Clear filters</button>
+        </div>
+        </div></div>
+        <div class="ds-table__scroll" role="region" aria-labelledby="lt-cap" tabindex="0" data-ds-scroll="x">
+          <table class="ds-table__table">
+            <caption class="ds-table__caption ds-vh" id="lt-cap"><span class="ds-table__title">Active projects</span><span class="ds-table__summary">Filter: at risk</span></caption>
+            <thead><tr><th scope="col" class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox" class="ds-table__select-all"><span class="ds-table__check-label">Select all rows on this page</span></label></th><th scope="col"><button type="button" class="ds-table__sort">Project<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-sort"/></svg></button></th><th scope="col">Owner</th><th scope="col">Status</th><th scope="col">Tags</th><th scope="col" data-numeric><button type="button" class="ds-table__sort">Budget (Rp)<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-sort"/></svg></button></th><th scope="col" aria-sort="ascending" data-type="time"><button type="button" class="ds-table__sort">Due<svg class="ds-icon" aria-hidden="true"><use href="#ds-i-chevron-up"/></svg></button></th><th scope="col" class="ds-table__actions-cell"><span class="ds-vh">Actions</span></th></tr></thead>
+            <tbody>
+              <tr><td class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox"><span class="ds-vh">Select Data migration</span></label></td><th data-label="Project" scope="row"><a class="ds-table__link" href="detail.html">Data migration</a></th><td data-label="Owner">Budi Santoso</td><td data-label="Status"><span class="ds-table__status" data-status="warning"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-warning"/></svg><span>At risk</span></span></td><td data-label="Tags"><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Internal</span></span></td><td data-label="Budget (Rp)" data-numeric>240.000.000</td><td data-label="Due" data-type="time"><time datetime="2026-10-14">14 Oct 2026</time></td><td class="ds-table__actions-cell"><button type="button" class="ds-table__icon-button" aria-label="More actions for Data migration"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button></td></tr>
+              <tr><td class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox"><span class="ds-vh">Select Brand refresh</span></label></td><th data-label="Project" scope="row"><a class="ds-table__link" href="detail.html">Brand refresh</a></th><td data-label="Owner">Rina Wijaya</td><td data-label="Status"><span class="ds-table__status" data-status="critical"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-critical"/></svg><span>Over budget</span></span></td><td data-label="Tags"><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Client</span></span></td><td data-label="Budget (Rp)" data-numeric>185.000.000</td><td data-label="Due" data-type="time"><time datetime="2026-10-20">20 Oct 2026</time></td><td class="ds-table__actions-cell"><button type="button" class="ds-table__icon-button" aria-label="More actions for Brand refresh"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button></td></tr>
+              <tr><td class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox"><span class="ds-vh">Select Mobile onboarding</span></label></td><th data-label="Project" scope="row"><a class="ds-table__link" href="detail.html">Mobile onboarding</a></th><td data-label="Owner">Siti Rahmawati</td><td data-label="Status"><span class="ds-table__status" data-status="info"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-info"/></svg><span>In review</span></span></td><td data-label="Tags"><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Client</span></span></td><td data-label="Budget (Rp)" data-numeric>320.000.000</td><td data-label="Due" data-type="time"><time datetime="2026-11-02">2 Nov 2026</time></td><td class="ds-table__actions-cell"><button type="button" class="ds-table__icon-button" aria-label="More actions for Mobile onboarding"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button></td></tr>
+              <tr><td class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox"><span class="ds-vh">Select Partner portal</span></label></td><th data-label="Project" scope="row"><a class="ds-table__link" href="detail.html">Partner portal</a></th><td data-label="Owner">Dewi Lestari</td><td data-label="Status"><span class="ds-table__status" data-status="positive"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-positive"/></svg><span>On track</span></span></td><td data-label="Tags"><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Partner</span></span></td><td data-label="Budget (Rp)" data-numeric>410.000.000</td><td data-label="Due" data-type="time"><time datetime="2026-12-01">1 Dec 2026</time></td><td class="ds-table__actions-cell"><button type="button" class="ds-table__icon-button" aria-label="More actions for Partner portal"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button></td></tr>
+              <tr><td class="ds-table__select-cell"><label class="ds-table__check"><input type="checkbox"><span class="ds-vh">Select Finance dashboard</span></label></td><th data-label="Project" scope="row"><a class="ds-table__link" href="detail.html">Finance dashboard</a></th><td data-label="Owner">Agus Pratama</td><td data-label="Status"><span class="ds-table__status"><span>Draft</span></span></td><td data-label="Tags"><span class="ds-tag" data-size="sm"><span class="ds-tag__label">Internal</span></span></td><td data-label="Budget (Rp)" data-numeric>95.000.000</td><td data-label="Due" data-type="time"><time datetime="2026-12-15">15 Dec 2026</time></td><td class="ds-table__actions-cell"><button type="button" class="ds-table__icon-button" aria-label="More actions for Finance dashboard"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-more-horizontal"/></svg></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <nav class="ds-pagination ds-template__pager" aria-label="Projects pagination" data-total="24" data-page-size="5" data-page="1">
+        <p class="ds-pagination__summary">1–5 of 24</p>
+        <ul class="ds-pagination__list">
+          <li class="ds-pagination__item" data-kind="step"><span class="ds-pagination__step" data-step="prev" aria-disabled="true"><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-left"/></svg><span>Previous</span></span></li>
+          <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=1" aria-current="page"><span class="ds-vh">Page </span><span>1</span></a></li>
+          <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=2"><span class="ds-vh">Page </span><span>2</span></a></li>
+          <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=3"><span class="ds-vh">Page </span><span>3</span></a></li>
+          <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=4"><span class="ds-vh">Page </span><span>4</span></a></li>
+          <li class="ds-pagination__item" data-kind="page"><a class="ds-pagination__page" href="?page=5"><span class="ds-vh">Page </span><span>5</span></a></li>
+          <li class="ds-pagination__item" data-kind="status"><span class="ds-pagination__status">Page 1 of 5</span></li>
+          <li class="ds-pagination__item" data-kind="step"><a class="ds-pagination__step" data-step="next" href="?page=2"><span>Next</span><svg class="ds-icon" data-mirror aria-hidden="true"><use href="#ds-i-chevron-right"/></svg></a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+  <section class="ds-tabs__panel" id="lt-p1" aria-labelledby="lt-t1" hidden><p>Your 5 projects.</p></section>
+  <section class="ds-tabs__panel" id="lt-p2" aria-labelledby="lt-t2" hidden><p>6 archived projects.</p></section>
+</div>

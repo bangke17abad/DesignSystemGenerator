@@ -1,7 +1,7 @@
-<!-- ds-module id="M02" name="tokens" engine="1.8.0" sections="§5" -->
+<!-- ds-module id="M02" name="tokens" engine="1.9.0" sections="§5" -->
 # Modul M02 · Arsitektur token
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §5. Dimuat di fase: 0A, 1, 9. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §5. Dimuat di fase: 0A, 1, 9. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

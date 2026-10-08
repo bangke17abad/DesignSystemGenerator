@@ -90,6 +90,8 @@ html:has(> body.ds-app-shell:not([data-contained])) {
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+/* optional group label between nav lists (templates, large navs); a list with a label is aria-labelledby it */
+.ds-app-shell__nav-group { margin-block: var(--space-4) var(--space-1); padding-inline: var(--space-3); font-size: var(--type-caption-size); line-height: var(--type-caption-line); color: var(--color-structure-text-secondary); }
 .ds-app-shell__nav-list { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
 .ds-app-shell__nav-item.ds-link {
   display: flex;
@@ -103,11 +105,12 @@ html:has(> body.ds-app-shell:not([data-contained])) {
   color: var(--color-structure-text-primary);
 }
 @media (hover: hover) {
-  .ds-app-shell__nav-item.ds-link:hover { background: var(--row-background-hover); text-decoration-line: underline; }
+  .ds-app-shell__nav-item.ds-link:hover { background: var(--nav-item-background-hover); text-decoration-line: underline; }
 }
-.ds-app-shell__nav-item.ds-link[data-force~="hover"] { background: var(--row-background-hover); text-decoration-line: underline; }
+.ds-app-shell__nav-item.ds-link[data-force~="hover"] { background: var(--nav-item-background-hover); text-decoration-line: underline; }
 .ds-app-shell__nav-item.ds-link[aria-current="page"] {
   background: var(--nav-item-background-selected);
+  color: var(--nav-item-label-selected);
   font-weight: bolder;
 }
 .ds-app-shell__nav-close { display: none; }

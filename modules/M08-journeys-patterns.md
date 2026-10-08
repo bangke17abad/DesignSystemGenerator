@@ -1,7 +1,7 @@
-<!-- ds-module id="M08" name="journeys-patterns" engine="1.8.0" sections="§11" -->
+<!-- ds-module id="M08" name="journeys-patterns" engine="1.9.0" sections="§11" -->
 # Modul M08 · Journey, layar, dan pattern
 
-> Bagian dari Universal Design System Generator, engine `1.8.0`. Berisi §11. Dimuat di fase: 3, 8, 12. Core menang bila bertentangan; modul ini hanya merinci.
+> Bagian dari Universal Design System Generator, engine `1.9.0`. Berisi §11. Dimuat di fase: 3, 8, 12. Core menang bila bertentangan; modul ini hanya merinci.
 
 ---
 

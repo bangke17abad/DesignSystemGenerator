@@ -1,6 +1,6 @@
 # Universal Design System Generator
 
-**Engine `1.8.0`** · **Brief schema `1.5`**
+**Engine `1.9.0`** · **Brief schema `1.5`**
 
 > Engine untuk menghasilkan design system yang lengkap, terstruktur, dan matang untuk **proyek apa pun**. Fakta proyek masuk lewat *brief*. **Bahasa desain** (prinsip, warna, bentuk, kepadatan, gerak, suara, platform, material, layout) dipilih atau diturunkan per proyek. Mesin (proses, aturan, gerbang mutu, verifikasi) tidak berubah antar proyek.
 >
@@ -14,12 +14,12 @@
 | `modules/M00` … `M13` | 14 modul rincian yang dimuat per fase |
 | `packs/` | Domain pack opsional P01-P04 |
 | `catalog/` | `archetypes.json` (bentuk normatif §4.5), `components/*.json` (74 record kanonis), `patterns/*.json` (21 pattern), `token-names.json`, `wcag22.seed.json` |
-| `reference/html-first/` | CSS + JS referensi 74 komponen (token saja, logical properties, html-first), fixture preview, `CONTRIBUTING.md`; `reference/site/` chrome situs dokumentasi |
+| `reference/html-first/` | CSS + JS referensi 74 komponen (token saja, logical properties, html-first), fixture preview, `profiles/` (lapisan antd-v6 / shadcn), `templates/` (6 template halaman), `icons/` (Lucide, Ant Design Icons), `CONTRIBUTING.md`; `reference/site/` chrome situs dokumentasi |
 | `tools/` | alat engine (lihat tabel di bawah) |
 | `schemas/` | 17 JSON Schema 2020-12 (kontrak §16A + brief, katalog, verifikasi) |
 | `adapters/` | A01 Ant Design v6, A02 MUI v7, A03 shadcn/ui + Tailwind 4, A04 Flutter Material 3 |
-| `fixtures/` | 13 golden brief dalam bentuk mesin + `expect.json` (109 asersi) |
-| `engine-findings/` | register temuan engine (45 ditutup di 1.8.0, 15 terbuka) dan template |
+| `fixtures/` | 15 golden brief dalam bentuk mesin + `expect.json` (130 asersi; G16/G17 = profil antd-v6 / shadcn) |
+| `engine-findings/` | register temuan engine (45 ditutup di 1.8.0, 12 di 1.9.0; sisa terbuka di `findings-1.9.0.md`) dan template |
 | `rubric/` | rubrik kematangan paket dan daftar tinjauan visual |
 | `SKILL.md` | pemakaian engine sebagai skill (progressive disclosure) |
 | `brief.template.md` · `golden-briefs.md` | formulir brief (skema 1.5) · golden brief dalam prosa (sumber fixtures) |
@@ -168,6 +168,12 @@ Pola-pola ini sering muncul pada paket design system hasil generate, termasuk pa
 - **Bahasa kustom per organisasi:** simpan `design-language.json` yang sudah disetujui sebagai lapis org berversi, lalu pakai `language_mode: inherit` dengan `inherits_from` di brief proyek-proyek berikutnya (§4.8) agar konsisten antar produk.
 
 ## Riwayat engine
+
+**1.9.0**
+
+- Ditambahkan: **profil visual pustaka** `language.visual_profile` = `antd-v6` | `shadcn` (`catalog/profiles/`, M01 §4.6A). Profil membawa token, anatomi komponen, layout, set ikon, adapter, dan lapisan CSS `reference/html-first/profiles/<id>.css`, sehingga paket benar-benar terlihat seperti Ant Design v6 atau shadcn/ui · **set ikon nyata** Lucide (ISC) dan Ant Design Icons (MIT), 64 nama, `tools/dev/gen-icons.mjs` · **6 template halaman** (dashboard, list, detail, settings, wizard, auth) yang dirender per profil ke `templates/` dan ditautkan dari dokumen 10 · **validator VP** (kesesuaian profil; blocking, syarat T1) · varian Button `link` · token `button-secondary-container-border-hover`, `button-secondary-label-color-hover`, `nav-item-label-selected`, `nav-item-background-hover` · `ref-check --profiles/--profiles-only/--templates` · fixture G16 (antd-v6) dan G17 (shadcn), total 15 fixture dengan 130 asersi.
+- Diperbaiki: tombol tertiary sekarang netral, warna merek hanya untuk primary dan link (A1) · hover secondary, hover input, dan nav terpilih mengikuti pustaka · larangan archetype yang bertentangan dengan profil ditangguhkan (`suspended_by`) · domain run sebelumnya bocor di Table, List, dan Stepper (`rainbowhills`) · daftar lengkap di `engine-findings/findings-1.9.0.md`.
+- Diubah: urutan prioritas tetap; di dalam LANGUAGE, profil menimpa archetype. Profil memilih adapter pustakanya secara otomatis (A01 / A03). Brief tetap skema 1.5, karena `visual_profile` opsional.
 
 **1.8.0**
 

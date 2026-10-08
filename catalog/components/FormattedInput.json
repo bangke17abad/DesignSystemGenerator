@@ -391,7 +391,7 @@
       "case": "IME (keyboard CJK) atau digit non-ASCII"
     }
   ],
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "group": "Inputs",
   "inclusion": "Standar: disertakan kecuali brief B7 menyatakan tidak berlaku dengan alasan; tidak boleh dikecualikan bila entitas B5 punya pengenal berpola tetap (nomor identitas, rekening, telepon, kode pos, nomor kartu, kode referensi).",
   "lint": [

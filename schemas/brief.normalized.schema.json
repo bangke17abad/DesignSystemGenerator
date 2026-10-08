@@ -416,6 +416,13 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "visual_profile": {
+          "enum": [
+            "engine",
+            "antd-v6",
+            "shadcn"
+          ]
         }
       },
       "required": [

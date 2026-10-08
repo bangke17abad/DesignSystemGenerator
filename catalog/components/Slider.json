@@ -435,7 +435,7 @@
       "case": "reduced motion"
     }
   ],
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "group": "Inputs",
   "inclusion": "Opsional: disertakan bila journey memuat penyesuaian nilai dalam rentang di mana umpan balik langsung lebih penting daripada nilai pasti (volume, kecerahan, rentang harga pada filter, toleransi); alasan dicatat. Bila disertakan, input ketik pendamping wajib (SC 2.5.7).",
   "lint": [

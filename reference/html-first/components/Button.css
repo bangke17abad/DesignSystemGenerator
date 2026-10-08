@@ -5,6 +5,8 @@
   --_bg-pressed: var(--button-secondary-container-background-pressed);
   --_fg: var(--button-secondary-label-color);
   --_border: var(--button-secondary-container-border);
+  --_border-hover: var(--button-secondary-container-border-hover);
+  --_fg-hover: var(--button-secondary-label-color-hover);
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -48,6 +50,8 @@
   --_bg-pressed: var(--button-primary-container-background-pressed);
   --_fg: var(--button-primary-label-color);
   --_border: var(--button-primary-container-background);
+  --_border-hover: var(--button-primary-container-background-hover);
+  --_fg-hover: var(--button-primary-label-color);
 }
 .ds-button[data-variant="tertiary"] {
   --_bg: transparent;
@@ -55,7 +59,23 @@
   --_bg-pressed: var(--button-tertiary-container-background-pressed);
   --_fg: var(--button-tertiary-label-color);
   --_border: transparent;
+  --_border-hover: transparent;
+  --_fg-hover: var(--button-tertiary-label-color);
   box-shadow: none;
+}
+/* link (engine 1.9.0): a button that reads as a link (AntD type="link", shadcn variant="link"); brand colour, no container */
+.ds-button[data-variant="link"] {
+  --_bg: transparent;
+  --_bg-hover: transparent;
+  --_bg-pressed: transparent;
+  --_fg: var(--color-interaction-default);
+  --_border: transparent;
+  --_border-hover: transparent;
+  --_fg-hover: var(--color-interaction-hover);
+  box-shadow: none;
+  padding-inline: var(--space-1);
+  text-decoration-line: underline;
+  text-underline-offset: 0.2em;
 }
 .ds-button[data-variant="destructive"] {
   --_bg: var(--button-destructive-container-background);
@@ -63,16 +83,18 @@
   --_bg-pressed: var(--button-destructive-container-background-pressed);
   --_fg: var(--button-destructive-label-color);
   --_border: var(--button-destructive-container-background);
+  --_border-hover: var(--button-destructive-container-background-hover);
+  --_fg-hover: var(--button-destructive-label-color);
 }
 .ds-button[data-size="sm"] { min-block-size: max(var(--control-height-sm), var(--target-current)); padding-inline: var(--space-3); }
 .ds-button[data-size="lg"] { min-block-size: max(var(--control-height-lg), var(--target-current)); padding-inline: var(--space-6); }
 .ds-button[data-block] { inline-size: 100%; }
 
 @media (hover: hover) {
-  .ds-button:not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--_bg-hover); }
+  .ds-button:not([aria-disabled="true"], [aria-busy="true"]):hover { background: var(--_bg-hover); border-color: var(--_border-hover); color: var(--_fg-hover); }
   .ds-button:not([aria-disabled="true"], [aria-busy="true"]):hover::before { opacity: var(--state-layer-hover-opacity); }
 }
-.ds-button[data-force~="hover"] { background: var(--_bg-hover); }
+.ds-button[data-force~="hover"] { background: var(--_bg-hover); border-color: var(--_border-hover); color: var(--_fg-hover); }
 .ds-button[data-force~="hover"]::before { opacity: var(--state-layer-hover-opacity); }
 .ds-button:not([aria-disabled="true"], [aria-busy="true"]):active,
 .ds-button[data-force~="pressed"] { background: var(--_bg-pressed); transform: var(--state-press-transform); }

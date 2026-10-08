@@ -1,6 +1,6 @@
 {
   "name": "AppNavigation",
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "tier": "R",
   "inclusion": "Selalu disertakan. Surface kiosk atau berbasis state memakai AppShell variant kiosk tanpa nav, dan alur langkah memakai variant focused (§8.2); aturan judul halaman, fokus rute, dan SkipLink tetap berlaku di sana.",
   "problem": {

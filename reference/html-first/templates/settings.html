@@ -1,0 +1,50 @@
+<!-- template: settings · shell: app · current: settings · title: Settings
+     Section nav (in-page) + grouped form cards with a footer action row each.
+     Patterns: AntD Pro "Account settings" (left menu + form) / shadcn "forms" example (sidebar nav + separated sections). -->
+<header class="ds-page-header" data-variant="compact">
+  <div class="ds-page-header__body">
+    <div class="ds-page-header__heading">
+      <h1 class="ds-page-header__title" tabindex="-1">Settings</h1>
+      <p class="ds-page-header__description">Manage your profile, notifications and workspace.</p>
+    </div>
+  </div>
+</header>
+
+<div class="ds-template__settings">
+  <nav class="ds-template__subnav" aria-label="Settings sections">
+    <ul role="list">
+      <li><a class="ds-template__subnav-item" href="#st-profile" aria-current="true"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-user"/></svg><span>Profile</span></a></li>
+      <li><a class="ds-template__subnav-item" href="#st-notif"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-bell"/></svg><span>Notifications</span></a></li>
+      <li><a class="ds-template__subnav-item" href="#st-security"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-shield"/></svg><span>Security</span></a></li>
+      <li><a class="ds-template__subnav-item" href="#st-workspace"><svg class="ds-icon" aria-hidden="true"><use href="#ds-i-settings"/></svg><span>Workspace</span></a></li>
+    </ul>
+  </nav>
+
+  <div class="ds-stack" data-gap="6">
+    <form class="ds-card ds-template__panel ds-template__form-card" id="st-profile" aria-labelledby="st-profile-t" method="post" action="#" onsubmit="return false">
+      <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="st-profile-t">Profile</h2><p class="ds-card__meta">This is how others see you in the workspace.</p></div></div>
+      <div class="ds-form__fields" data-columns="2">
+        <div class="ds-text-field"><label class="ds-text-field__label" for="st-name">Full name</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="st-name" type="text" autocomplete="name" value="Dana Pratama"></div></div>
+        <div class="ds-text-field"><label class="ds-text-field__label" for="st-email">Work email</label><div class="ds-text-field__group"><input class="ds-text-field__input" id="st-email" type="email" autocomplete="email" dir="ltr" value="dana@example.com"></div><p class="ds-text-field__helper">Used for sign-in and receipts.</p></div>
+        <div class="ds-select"><label class="ds-select__label" for="st-lang">Language</label><div class="ds-select__group"><select class="ds-select__input" id="st-lang"><option>English</option><option selected>Bahasa Indonesia</option></select><svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></div></div>
+        <div class="ds-select"><label class="ds-select__label" for="st-tz">Time zone</label><div class="ds-select__group"><select class="ds-select__input" id="st-tz"><option selected>Asia/Jakarta (WIB)</option><option>Asia/Makassar (WITA)</option><option>Asia/Jayapura (WIT)</option></select><svg class="ds-icon ds-select__chevron" aria-hidden="true"><use href="#ds-i-chevron-down"/></svg></div></div>
+        <div class="ds-text-area" data-span="full"><label class="ds-text-area__label" for="st-bio">Bio <span class="ds-text-field__optional">(optional)</span></label><textarea class="ds-text-area__input" id="st-bio" rows="3" dir="auto">Project lead for finance systems.</textarea></div>
+      </div>
+      <div class="ds-card__footer ds-template__form-footer"><button type="button" class="ds-button ds-target" data-variant="tertiary">Cancel</button><button type="submit" class="ds-button ds-target" data-variant="primary">Save profile</button></div>
+    </form>
+
+    <form class="ds-card ds-template__panel ds-template__form-card" id="st-notif" aria-labelledby="st-notif-t" method="post" action="#" onsubmit="return false">
+      <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="st-notif-t">Notifications</h2><p class="ds-card__meta">Choose what reaches you outside the app.</p></div></div>
+      <div class="ds-stack" data-gap="2">
+        <div class="ds-switch"><label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Overdue tasks</span><span class="ds-switch__description" id="st-sw1-d"><span>Email when a task you own passes its due date.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" checked aria-describedby="st-sw1-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label></div>
+        <div class="ds-switch"><label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Invoice approvals</span><span class="ds-switch__description" id="st-sw2-d"><span>Push notification when an invoice needs you.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" checked aria-describedby="st-sw2-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label></div>
+        <div class="ds-switch"><label class="ds-switch__row"><span class="ds-switch__text"><span class="ds-switch__label">Weekly summary</span><span class="ds-switch__description" id="st-sw3-d"><span>Every Monday at 08:00.</span></span></span><span class="ds-switch__control"><input class="ds-switch__input" type="checkbox" role="switch" aria-describedby="st-sw3-d"><span class="ds-switch__thumb"><svg class="ds-icon ds-switch__icon" aria-hidden="true"><use href="#ds-i-check"/></svg><span class="ds-switch__spinner"></span></span></span></label></div>
+      </div>
+      <div class="ds-card__footer ds-template__form-footer"><button type="submit" class="ds-button ds-target" data-variant="primary">Save notifications</button></div>
+    </form>
+
+    <section class="ds-card ds-template__panel ds-template__danger" id="st-workspace" aria-labelledby="st-ws-t">
+      <div class="ds-card__header"><div class="ds-card__heading"><h2 class="ds-card__title" id="st-ws-t">Leave workspace</h2><p class="ds-card__meta">You lose access to its projects. An admin can invite you again.</p></div><button type="button" class="ds-button ds-target" data-variant="destructive">Leave workspace</button></div>
+    </section>
+  </div>
+</div>

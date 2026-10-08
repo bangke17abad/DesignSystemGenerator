@@ -1,0 +1,67 @@
+{
+  "assertions": [
+    {
+      "eq": "antd-v6",
+      "lang": "profile.id"
+    },
+    {
+      "eq": "antd",
+      "lang": "profile.icon_set"
+    },
+    {
+      "eq": "antd",
+      "lang": "decisions.L9.value.set"
+    },
+    {
+      "eq": "token-swap",
+      "lang": "decisions.L16.value.strategy"
+    },
+    {
+      "eq": 6,
+      "token": "radius-sm"
+    },
+    {
+      "eq": 8,
+      "token": "radius-md"
+    },
+    {
+      "eq": 36,
+      "token": "control-height-md"
+    },
+    {
+      "eq": 16,
+      "token": "type-body-size"
+    },
+    {
+      "eq": 64,
+      "token": "layout-bar-height"
+    },
+    {
+      "file_exists": "adapters/antd/theme.g.ts"
+    },
+    {
+      "contrast_blocking": 0
+    },
+    {
+      "status": "PASS",
+      "validators": [
+        "V1",
+        "V2",
+        "V11",
+        "V13",
+        "V14",
+        "VP",
+        "VB1",
+        "VB2",
+        "VB4",
+        "VB5",
+        "VB8"
+      ]
+    }
+  ],
+  "fixture": "G16",
+  "run_only": [
+    "Template dashboard/list/detail/settings/wizard/auth dirender dengan profil antd-v6 (render-previews)"
+  ],
+  "source": "golden-briefs.md G16"
+}

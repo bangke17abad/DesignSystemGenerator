@@ -1,6 +1,6 @@
 {
   "name": "MasterDetail",
-  "engine_version": "1.8.0",
+  "engine_version": "1.9.0",
   "tier": "S",
   "inclusion": "Disertakan bila ada daftar entitas dan surface ≥ tablet (B3), kecuali B7 pattern_exclusions memberi alasan.",
   "problem": {
