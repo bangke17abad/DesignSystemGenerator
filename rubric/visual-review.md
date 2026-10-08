@@ -21,6 +21,7 @@ Engine 1.8.0 · dirujuk core §13.4 dan DoD-21/22. Validator VB1-VB12 memeriksa 
 | VR-13 | Angka KPI tanpa konteks | Dashboard indah tapi tidak bisa diputuskan | Setiap metrik punya pembanding (periode, target) dan arah yang dijelaskan dengan teks, bukan warna saja |
 | VR-14 | Teks lorem atau "Judul di sini" tersisa | Langsung merusak kepercayaan | Konten contoh realistis per locale (V5) |
 | VR-15 | Pola latar (hatch, noise) dekoratif | Mengganggu keterbacaan teks di atasnya | Pola hanya untuk keadaan (disabled, area drop) dan tidak di bawah teks isi |
+| VR-16 | **Garis aksen satu sisi (side stripe)**: kartu dengan border atas/kiri tebal berwarna, item nav atau baris terpilih dengan bar di inline-start, alert dengan garis kiri, bar dari pseudo-element atau `box-shadow: inset` | Pola template paling umum di UI buatan mesin; garis tipis berwarna jadi satu-satunya pembeda keadaan; bertabrakan dengan radius sudut | Terpilih/current: latar selection + bobot label. Status: ikon terkunci + teks (StatusLabel) atau latar subtle penuh. Fokus atau aktif: ring di semua sisi. Dicek mesin: `tools/lib/stripes.mjs` di V6 (advisory) dan `ref-check`. Yang tetap boleh: garis bawah tab horizontal, konektor Stepper, pembatas netral tipis. |
 
 ## Cara meninjau
 

@@ -49,6 +49,7 @@ Sumber: audit 1.7.0 (run TGC 2.1.0, Unigal, AOS 2.0.1, PMS 1.1.1), pembuatan kat
 | EF-041 | 27 fixture referensi membawa konten demo klub golf dari run TGC; paket baru ketularan (V3 R15 di demo end-to-end) | fixture dinetralkan (booking venue), `leak-terms.json` + lint di `ref-check` |
 | EF-042 | Selector QA (caption, `data-ds-scroll`, demo label) tidak ikut namespace `--ns` → ribuan false positive teks kecil dan RTL | QA membaca namespace dari halaman |
 | EF-043 | Preview dan bundle selalu memuat 74 komponen walau {N} lebih kecil → 149 KB gzip > anggaran 120 KB | `render-previews` default ke {N} dari `manifest.json` |
+| EF-045 | Komponen referensi memakai garis aksen satu sisi untuk current/selected (AppShell, PrimaryNav, List, Tree, ContextPanel, CommandPalette, Combobox, BottomNav sheet, Tabs vertikal); halaman FT Admin mewarisinya dan menambah garis atas di kartu tahap | dihapus semua; ganti latar selection + bobot label atau ring penuh; VR-16 + detektor `tools/lib/stripes.mjs` di `ref-check` dan V6 |
 | EF-044 | Nav AppShell di halaman (bukan demo) berhenti setinggi daftarnya, garis tepinya terputus di tengah layar (ditemukan saat membangun halaman FT Admin) | nav sticky setinggi viewport di tablet ke atas |
 
 ## Masih terbuka (dijadwalkan 1.8.x / 1.9.0)

@@ -383,7 +383,7 @@ Baseline dan invarian menjamin aksesibilitas; VB menjamin sistem tidak terlihat 
 | VB11 | icon-md antara ukuran body dan tinggi baris body | advisory |
 | VB12 | chart-cat bertetangga berjarak OKLab ≥ 0.08 dalam penglihatan normal | advisory |
 
-Selain itu setiap layar ditinjau terhadap daftar "terlihat dibuat mesin" di `rubric/visual-review.md` (gradien tanpa fungsi, emoji sebagai ikon, grid kartu seragam tanpa hierarki, warna aksen di mana-mana, teks abu-abu di atas abu-abu, bayangan di semua wadah, ikon dekoratif di setiap heading).
+Selain itu setiap layar ditinjau terhadap daftar "terlihat dibuat mesin" di `rubric/visual-review.md` (gradien tanpa fungsi, emoji sebagai ikon, grid kartu seragam tanpa hierarki, warna aksen di mana-mana, teks abu-abu di atas abu-abu, bayangan di semua wadah, ikon dekoratif di setiap heading, garis aksen satu sisi pada kartu, item nav, baris, atau alert (VR-16; diperiksa mesin di V6)).
 
 ## 13.3 Decision-first dan kepadatan (untuk surface operasional)
 

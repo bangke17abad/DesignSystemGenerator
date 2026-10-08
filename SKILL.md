@@ -48,7 +48,7 @@ Setelah pipeline mesin, run menulis yang khas proyek (komponen dan pattern domai
 - **Jujur soal bukti (R4, R10)**: validator yang tidak bisa jalan ditulis NOT RUN, bukan PASS. Klaim tier hanya dari `reports/verification.json`.
 - **Gerbang blocking**: V1, V2, V4, V5, V11, V14, V16, VB1, VB2, VB4, VB5, VB8. Jangan kirim paket dengan FAIL blocking.
 - **Tier**: T0 fondasi, T1 komponen R + pattern R, T2 lengkap, T3 ekosistem (core §16.5). Kirim sesuai `delivery_tier_target` di brief; kalau belum tercapai, kirim tier yang tercapai dan sebutkan apa yang kurang.
-- **Tinjauan visual**: setiap halaman pattern dicek terhadap `rubric/visual-review.md` (VR-01..15) di tema terang dan gelap.
+- **Tinjauan visual**: setiap halaman pattern dicek terhadap `rubric/visual-review.md` (VR-01..16) di tema terang dan gelap.
 
 ## Saat engine yang salah
 

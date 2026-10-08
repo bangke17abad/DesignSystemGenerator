@@ -99,7 +99,7 @@
     },
     {
       "part": "selection-marker",
-      "role": "centang/Checkbox (multi) atau penanda bobot + garis inline-start (single); non-warna",
+      "role": "centang/Checkbox (multi) atau penanda bobot label (single); non-warna",
       "tokens": [
         "color-structure-selection",
         "color-interaction-default",
@@ -605,7 +605,7 @@
         "item": "color-structure-selection",
         "selection-marker": "color-interaction-default"
       },
-      "treatment": "latar selection + penanda non-warna (centang atau garis border-thick di inline-start + bobot label)"
+      "treatment": "latar selection + penanda non-warna (centang atau bobot label; tanpa garis aksen satu sisi, VR-16)"
     },
     {
       "name": "partially-selected",

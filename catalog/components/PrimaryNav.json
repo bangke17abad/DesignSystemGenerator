@@ -88,7 +88,7 @@
     },
     {
       "part": "current-indicator",
-      "role": "penanda non-warna item current: bar di inline-start setebal border-width-thick + latar selection + label berbobot lebih tebal",
+      "role": "penanda non-warna item current: latar selection + label berbobot lebih tebal (tanpa garis aksen satu sisi, VR-16)",
       "tokens": [
         "color-interaction-default",
         "border-width-thick",
@@ -488,7 +488,7 @@
       "base": "selected",
       "focus": true,
       "interaction": "rest",
-      "note": "ring inset ditambahkan di dalam latar selection; bar tetap terlihat",
+      "note": "ring inset ditambahkan di dalam latar selection; bobot label tetap terlihat",
       "supported": true
     },
     {
@@ -551,14 +551,14 @@
         "current-indicator": "color-interaction-default",
         "item": "color-structure-selection"
       },
-      "treatment": "aria-current=\"page\"; bar inline-start + latar selection + label text-primary berbobot tebal + ikon terisi; tidak pernah hanya beda warna"
+      "treatment": "aria-current=\"page\"; latar selection + label text-primary berbobot tebal + ikon terisi; tidak pernah hanya beda warna"
     },
     {
       "name": "ancestor-current",
       "token_swaps": {
         "current-indicator": "color-interaction-default"
       },
-      "treatment": "grup terlipat atau item induk yang memuat halaman current memakai bar inline-start tanpa latar, agar posisi tetap terlihat saat grup tertutup atau di rail"
+      "treatment": "grup terlipat atau item induk yang memuat halaman current memakai label berbobot tebal tanpa latar (tanpa garis aksen satu sisi, VR-16), agar posisi tetap terlihat saat grup tertutup atau di rail"
     },
     {
       "name": "group-collapsed",

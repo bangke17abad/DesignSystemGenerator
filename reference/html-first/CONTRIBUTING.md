@@ -31,6 +31,8 @@ Sumber perilaku adalah `catalog/components/<Name>.json`: anatomi, varian, ukuran
 
 Tanpa hex, tanpa fungsi warna (`rgb()`, `oklch()`, …), tanpa angka px ajaib (hanya `0`, `1px`, `-1px`), tanpa durasi literal (pakai `--motion-*` atau `--timing-*`), `font-size` hanya dari token tipe, `z-index` hanya token `--z-*` (atau -1..2 lokal), hanya properti logis (tanpa `left`, `right`, `margin-left`, `text-align: left`), tanpa `outline: none`, tanpa `!important`. Bentuk lingkaran semantik (radio, avatar bulat, spinner) memakai `--shape-circle`, bukan `--radius-full` (yang 0 di bahasa tertentu). Gradien hanya bila fungsional (shimmer Skeleton, ProgressBar indeterminate) dan tetap dari token warna; gradien dekoratif di latar, tombol, atau kartu dilarang (`rubric/visual-review.md` VR-01).
 
+Tanpa garis aksen satu sisi (VR-16): jangan pakai border atas/kiri tebal atau berwarna aksen pada kotak, bar pseudo-element di satu sisi, atau `box-shadow: inset` satu sisi untuk menandai terpilih, current, status, atau aktif. Pakai latar selection + bobot label, ring di semua sisi, atau ikon + teks. `ref-check` dan V6 menolaknya lewat `tools/lib/stripes.mjs`.
+
 Konten fixture domain-netral (booking venue, tim, dokumen, pesanan generik). Jangan memakai domain atau nama dari run proyek nyata; `ref-check` menolak istilah di `leak-terms.json` (R15).
 
 Token yang boleh dipakai ada di `catalog/token-names.json` (`always` dan `component_always`).

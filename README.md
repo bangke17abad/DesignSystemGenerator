@@ -19,7 +19,7 @@
 | `schemas/` | 17 JSON Schema 2020-12 (kontrak §16A + brief, katalog, verifikasi) |
 | `adapters/` | A01 Ant Design v6, A02 MUI v7, A03 shadcn/ui + Tailwind 4, A04 Flutter Material 3 |
 | `fixtures/` | 13 golden brief dalam bentuk mesin + `expect.json` (109 asersi) |
-| `engine-findings/` | register temuan engine (44 ditutup di 1.8.0, 15 terbuka) dan template |
+| `engine-findings/` | register temuan engine (45 ditutup di 1.8.0, 15 terbuka) dan template |
 | `rubric/` | rubrik kematangan paket dan daftar tinjauan visual |
 | `SKILL.md` | pemakaian engine sebagai skill (progressive disclosure) |
 | `brief.template.md` · `golden-briefs.md` | formulir brief (skema 1.5) · golden brief dalam prosa (sumber fixtures) |

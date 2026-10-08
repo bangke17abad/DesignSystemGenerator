@@ -114,7 +114,7 @@
 .ds-command-palette__option > .ds-kbd { flex: none; margin-inline-start: auto; }
 .ds-command-palette__match { background: var(--color-structure-highlight); color: inherit; font-weight: var(--type-label-weight); border-radius: var(--radius-xs); }
 
-/* hover makes an option active (pointer only); active = selection + inset ring + inline-start bar */
+/* hover makes an option active (pointer only); active = selection + inset ring on all sides (no side stripe, VR-16) */
 @media (hover: hover) {
   .ds-command-palette__option:not([aria-disabled="true"]):hover { background: var(--color-structure-selection); }
 }
@@ -123,15 +123,6 @@
   background: var(--color-structure-selection);
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: calc(-1 * var(--focus-ring-width));
-}
-.ds-command-palette__option[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  inset-block: var(--space-2);
-  inset-inline-start: var(--space-1);
-  inline-size: var(--space-1);
-  border-radius: var(--radius-full);
-  background: var(--color-focus-ring);
 }
 /* blocked: lock + reason in the description line; still navigable, Enter announces the reason */
 .ds-command-palette__option[aria-disabled="true"] { color: var(--color-structure-text-disabled); cursor: not-allowed; }
@@ -230,6 +221,5 @@
 @media (forced-colors: active) {
   .ds-command-palette { border: var(--border-width-thin) solid CanvasText; }
   .ds-command-palette__option[aria-selected="true"] { outline-color: Highlight; }
-  .ds-command-palette__option[aria-selected="true"]::after { background: Highlight; }
   .ds-command-palette__match { forced-color-adjust: none; background: Mark; color: MarkText; }
 }

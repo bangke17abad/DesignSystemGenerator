@@ -161,22 +161,14 @@
 .ds-list__option:focus-visible,
 :is(.ds-list__action, .ds-list__option)[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
 
-/* selected: marker (check / Checkbox) + selection background; master–detail aria-current="true" adds an inline-start bar */
+/* selected: marker (check / Checkbox) + selection background; master–detail aria-current="true" adds a heavier title (no side stripe, VR-16) */
 .ds-list__option[aria-selected="true"],
 .ds-list__action:is([aria-current="true"], [data-selected]),
 .ds-list__item:has(.ds-list__checkbox input:checked) > .ds-list__content { background: var(--row-background-selected); }
 .ds-list__option[aria-selected="true"]::before,
 .ds-list__action:is([aria-current="true"], [data-selected])::before { opacity: var(--state-layer-selected-opacity); }
 .ds-list__option[aria-selected="true"][data-force~="hover"]::before { opacity: calc(var(--state-layer-selected-opacity) + var(--state-layer-hover-opacity)); }
-.ds-list__action[aria-current="true"]::after {
-  content: "";
-  position: absolute;
-  inset-block: var(--space-2);
-  inset-inline-start: 0;
-  inline-size: var(--border-width-thick);
-  border-radius: var(--radius-full);
-  background: var(--color-interaction-default);
-}
+.ds-list__action[aria-current="true"] .ds-list__title { font-weight: var(--type-h3-weight); }
 .ds-list__check {
   flex: none;
   align-self: center;
@@ -328,6 +320,6 @@
 }
 @media (forced-colors: active) {
   .ds-list__option[aria-selected="true"], .ds-list__action[aria-current="true"] { border: var(--border-width-thin) solid Highlight; }
-  .ds-list__action[aria-current="true"]::after, .ds-list__dot { background: Highlight; forced-color-adjust: none; }
+  .ds-list__dot { background: Highlight; forced-color-adjust: none; }
   .ds-list__alert { border-color: CanvasText; }
 }

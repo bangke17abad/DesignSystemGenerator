@@ -284,15 +284,6 @@
 @media (hover: hover) { .ds-context-panel-layout__row:hover { background: var(--row-background-hover); } }
 .ds-context-panel-layout__row[data-force~="hover"] { background: var(--row-background-hover); }
 .ds-context-panel-layout__row[aria-current="true"] { background: var(--row-background-selected); font-weight: var(--type-h3-weight); }
-.ds-context-panel-layout__row[aria-current="true"]::after {
-  content: "";
-  position: absolute;
-  inset-block: var(--space-2);
-  inset-inline-start: 0;
-  inline-size: var(--border-width-thick);
-  border-radius: var(--radius-full);
-  background: var(--nav-item-indicator);
-}
 .ds-context-panel-layout > .ds-context-panel { flex: none; max-inline-size: calc(100% - var(--layout-rail-width)); }
 
 /* tablet (auto) and data-presentation="overlay": over the list at inline-end, no scrim; focused rows stay visible */
@@ -352,5 +343,5 @@
   .ds-context-panel { border-inline-start-color: CanvasText; }
   .ds-context-panel-layout[data-presentation="overlay"] > .ds-context-panel { border: var(--border-width-thin) solid CanvasText; }
   .ds-context-panel__resize::before { border-inline-start-color: CanvasText; }
-  .ds-context-panel-layout__row[aria-current="true"]::after { background: Highlight; forced-color-adjust: none; }
+  .ds-context-panel-layout__row[aria-current="true"] { outline: var(--border-width-thin) solid Highlight; outline-offset: calc(-1 * var(--border-width-thin)); }
 }

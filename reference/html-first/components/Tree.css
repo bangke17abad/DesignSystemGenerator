@@ -117,19 +117,9 @@ a.ds-tree__row:focus-visible {
 }
 [role="treeitem"][data-force~="focus"] { outline-color: transparent; }
 
-/* selected: selection background + inline-start bar + heavier label (never colour alone) */
+/* selected: selection background + heavier label (never colour alone; no side stripe, VR-16) */
 [aria-selected="true"] > .ds-tree__row { background: var(--row-background-selected); }
 [aria-selected="true"] > .ds-tree__row::before { opacity: var(--state-layer-selected-opacity); }
-[aria-selected="true"] > .ds-tree__row::after,
-a.ds-tree__row[aria-current="page"]::after {
-  content: "";
-  position: absolute;
-  inset-block: var(--space-1);
-  inset-inline-start: 0;
-  inline-size: var(--border-width-thick);
-  border-radius: var(--radius-full);
-  background: var(--color-interaction-default);
-}
 [aria-selected="true"] > .ds-tree__row .ds-tree__label,
 a.ds-tree__row[aria-current="page"] .ds-tree__label { font-weight: var(--type-h3-weight); }
 @media (hover: hover) { [aria-selected="true"] > .ds-tree__row:hover { background: var(--row-background-selected); } }
@@ -239,7 +229,7 @@ a.ds-tree__row[aria-current="page"] .ds-tree__label { font-weight: var(--type-h3
   .ds-tree__spinner { animation: none; border-inline-end-color: currentColor; opacity: 0.6; }
 }
 @media (forced-colors: active) {
-  [aria-selected="true"] > .ds-tree__row::after, a.ds-tree__row[aria-current="page"]::after { background: Highlight; forced-color-adjust: none; }
+  [aria-selected="true"] > .ds-tree__row, a.ds-tree__row[aria-current="page"] { outline: var(--border-width-thin) solid Highlight; outline-offset: calc(-1 * var(--border-width-thin)); }
   [role="treeitem"]:focus-visible > .ds-tree__row { outline-color: Highlight; }
   [role="treeitem"]:focus-visible { outline-color: Highlight; }
 }

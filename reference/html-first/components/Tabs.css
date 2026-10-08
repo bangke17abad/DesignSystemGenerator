@@ -196,7 +196,9 @@
   .ds-tabs[data-orientation="vertical"] > .ds-tabs__reason { order: 2; margin-block-start: var(--space-4); }
   .ds-tabs[data-orientation="vertical"] .ds-tabs__list { flex-direction: column; overflow: visible; padding-inline-end: var(--space-2); }
   .ds-tabs[data-orientation="vertical"] .ds-tabs__tab { justify-content: flex-start; inline-size: 100%; border-radius: var(--radius-sm); }
-  .ds-tabs[data-orientation="vertical"] .ds-tabs__tab::after { inset-inline: 0 auto; inset-block: var(--space-2); block-size: auto; inline-size: var(--border-width-thick); }
+  /* vertical: no side stripe (VR-16); selection background + heavier label */
+  .ds-tabs[data-orientation="vertical"] .ds-tabs__tab::after { content: none; }
+  .ds-tabs[data-orientation="vertical"] .ds-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { background: var(--nav-item-background-selected); }
   .ds-tabs[data-orientation="vertical"] .ds-tabs__panel { flex: 1 1 auto; padding-block: 0; }
 }
 

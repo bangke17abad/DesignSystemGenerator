@@ -243,9 +243,7 @@
 .ds-bottom-nav__sheet-item[aria-current="page"] {
   background: var(--nav-item-background-selected);
   font-weight: var(--type-h3-weight);
-  box-shadow: inset var(--border-width-thick) 0 0 var(--nav-item-indicator);
 }
-[dir="rtl"] .ds-bottom-nav__sheet-item[aria-current="page"] { box-shadow: inset calc(-1 * var(--border-width-thick)) 0 0 var(--nav-item-indicator); }
 
 /* ---------- preview frames: a phone-sized screen with the bar at its block-end edge (any viewport width) ---------- */
 .ds-bottom-nav-frame {

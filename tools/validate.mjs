@@ -12,6 +12,7 @@ import { readJson, writeJson, writeText, flatten, resolveToken, modeKeys, isAlia
 import { contrast, hexToOklab, oklabDistance } from './lib/color.mjs';
 import { checkPairs, ADVISORY_GROUPS } from './lib/pairs.mjs';
 import { validate as schemaValidate } from './lib/schema.mjs';
+import { findStripes } from './lib/stripes.mjs';
 
 const ENGINE = '1.8.0';
 import { CORE_INDEX } from './check-catalog.mjs';
@@ -209,6 +210,7 @@ export function validatePackage(dir, opts = {}) {
       const lines = readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' ')).split('\n');
       lines.forEach((l, i) => { r.checks++; for (const [id, re, msg] of builtins) if (re.test(l)) r.failures.push(`${rel(f)}:${i + 1} ${id} ${msg}: ${l.trim().slice(0, 80)}`); });
       const body = lines.join('\n');
+      for (const h of findStripes(body, rel(f))) r.failures.push(`${rel(f)}:${h.line} VR-16 garis aksen satu sisi (side stripe): ${h.selector.slice(0, 60)} → ${h.detail.slice(0, 70)}`);
       if (/backdrop-filter/.test(body) && !/prefers-reduced-transparency/.test(body)) r.failures.push(`${rel(f)}: backdrop-filter tanpa fallback prefers-reduced-transparency (§9.3)`);
     }
     for (const rule of rules?.rules || []) {

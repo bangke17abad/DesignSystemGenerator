@@ -2,6 +2,7 @@
 // Developer check for reference/html-first components: CSS lint + render + QA across four archetypes.
 // Usage: node tools/dev/ref-check.mjs <Name> [Name ...] [--full] [--screenshots]
 // Test packages are cached in $DS_REFPKGS (default /home/claude/dsg/refpkgs); delete the folder to rebuild them.
+import { findStripes } from '../lib/stripes.mjs';
 import { existsSync, readFileSync, mkdirSync, writeFileSync, cpSync, rmSync, mkdtempSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,6 +63,7 @@ function lintCss(name) {
   if (/:hover/.test(css) && !/\(hover:\s*hover\)/.test(css)) errs.push(`${name}.css: :hover must be inside @media (hover: hover) (§6.9.4)`);
   if (/:hover/.test(css) && !/data-force~?="?hover/.test(css)) errs.push(`${name}.css: every :hover style needs a [data-force~="hover"] twin for static previews`);
   if (/<(?:button|input|select|textarea|fieldset|option|optgroup)\b[^>]*\sdisabled(?:[\s>=/])/.test(readFileSync(join(engine, 'reference', 'html-first', 'fixtures', `${name}.html`), 'utf8'))) errs.push(`fixtures/${name}.html: native disabled attribute; use aria-disabled + visible reason (UB10) unless the control is truly irrelevant`);
+  for (const h of findStripes(readFileSync(p, 'utf8'), `${name}.css`)) errs.push(`${name}.css:${h.line} side stripe (VR-16): ${h.selector.slice(0, 60)} → ${h.detail.slice(0, 70)}; use selection background + weight, an all-sides ring, or icon + text`);
   const fx = readFileSync(join(engine, 'reference', 'html-first', 'fixtures', `${name}.html`), 'utf8');
   for (const t of LEAK) if (new RegExp(`\\b${t.replace(/[-]/g, '\\-')}\\b`, 'i').test(fx)) errs.push(`fixtures/${name}.html: domain term from an earlier run "${t}" (R15): fixtures stay domain-neutral`);
   return errs;

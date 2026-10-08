@@ -180,26 +180,15 @@ li + .ds-primary-nav__group { margin-block-start: var(--space-3); }
 .ds-primary-nav__group-toggle:focus-visible,
 .ds-primary-nav__group-toggle[data-force~="focus"] { outline-offset: calc(-1 * var(--focus-ring-width)); }
 
-/* current: inline-start bar + selection background + heavier primary label (never colour alone, UB2) */
+/* current: selection background + heavier primary label (never colour alone, UB2; no side stripe, VR-16) */
 .ds-primary-nav__item[aria-current="page"] {
   background: var(--nav-item-background-selected);
   color: var(--color-structure-text-primary);
   font-weight: var(--type-h3-weight);
 }
-.ds-primary-nav__item[aria-current="page"]::after,
-.ds-primary-nav__group-toggle[data-contains-current]::after,
-.ds-primary-nav__item[data-contains-current]::after {
-  content: "";
-  position: absolute;
-  inset-block: var(--space-2);
-  inset-inline-start: 0;
-  inline-size: var(--border-width-thick);
-  border-radius: var(--radius-full);
-  background: var(--nav-item-indicator);
-}
-/* ancestor-current: bar only, no background; hidden text "contains current page" carries it to AT */
+/* ancestor-current: heavier label, no background; hidden text "contains current page" carries it to AT */
 .ds-primary-nav__group-toggle[data-contains-current],
-.ds-primary-nav__item[data-contains-current] { color: var(--color-structure-text-primary); }
+.ds-primary-nav__item[data-contains-current] { color: var(--color-structure-text-primary); font-weight: var(--type-h3-weight); }
 
 /* group title: disclosure button with chevron (points inline-end when collapsed) */
 .ds-primary-nav__group-toggle {
@@ -410,8 +399,6 @@ li + .ds-primary-nav__group { margin-block-start: var(--space-3); }
 }
 @media (forced-colors: active) {
   .ds-primary-nav__item[aria-current="page"] { border: var(--border-width-thin) solid CanvasText; }
-  .ds-primary-nav__item[aria-current="page"]::after,
-  .ds-primary-nav__group-toggle[data-contains-current]::after { background: Highlight; forced-color-adjust: none; }
   .ds-primary-nav__item[aria-disabled="true"] { color: GrayText; }
   .ds-primary-nav__badge { border: var(--border-width-thin) solid CanvasText; }
   .ds-primary-nav__drawer { border-inline-end: var(--border-width-thin) solid CanvasText; }

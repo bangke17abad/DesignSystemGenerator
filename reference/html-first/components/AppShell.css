@@ -97,9 +97,8 @@ html:has(> body.ds-app-shell:not([data-contained])) {
   gap: var(--space-3);
   min-block-size: max(var(--control-height-md), var(--target-current));
   padding-inline: var(--space-3);
-  border-inline-start: var(--border-width-thick) solid transparent;
   border-radius: var(--radius-sm);
-  /* a nav landmark + icon is the non-colour marker; current page adds indicator + weight (Link: standalone exception) */
+  /* a nav landmark + icon is the non-colour marker; current page adds selection background + weight, never a side stripe (VR-16) (Link: standalone exception) */
   text-decoration-line: none;
   color: var(--color-structure-text-primary);
 }
@@ -109,7 +108,6 @@ html:has(> body.ds-app-shell:not([data-contained])) {
 .ds-app-shell__nav-item.ds-link[data-force~="hover"] { background: var(--row-background-hover); text-decoration-line: underline; }
 .ds-app-shell__nav-item.ds-link[aria-current="page"] {
   background: var(--nav-item-background-selected);
-  border-inline-start-color: var(--nav-item-indicator);
   font-weight: bolder;
 }
 .ds-app-shell__nav-close { display: none; }
@@ -295,6 +293,6 @@ html:has(> body.ds-app-shell:not([data-contained])) {
 }
 @media (forced-colors: active) {
   .ds-app-shell__header, .ds-app-shell__nav, .ds-app-shell__aside, .ds-app-shell__bottom-bar { border-color: CanvasText; }
-  .ds-app-shell__nav-item.ds-link[aria-current="page"] { border-inline-start-color: Highlight; }
+  .ds-app-shell__nav-item.ds-link[aria-current="page"] { outline: var(--border-width-thin) solid Highlight; outline-offset: calc(-1 * var(--border-width-thin)); }
   .ds-app-shell[data-nav="open"] .ds-app-shell__nav { border: var(--border-width-thin) solid CanvasText; }
 }
