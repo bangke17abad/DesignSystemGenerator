@@ -40,7 +40,7 @@
 | `run-fixtures.mjs` | regresi engine | menjalankan semua golden fixture dan memeriksa asersi |
 | `check-catalog.mjs` · `check-patterns.mjs` | pemeliharaan | memvalidasi katalog kanonis |
 | `assemble.mjs` | opsional | core + modul (+ pack) menjadi satu file |
-| `dev/` | pemeliharaan | `gen-schemas`, `gen-token-names`, `gen-fixtures`, `ref-check` (lint + QA referensi di 4 archetype) |
+| `dev/` | pemeliharaan | `gen-schemas`, `gen-token-names`, `gen-fixtures`, `ref-check` (lint + QA referensi di 4 archetype), `pack-skill` (zip skill siap upload: ≤ 200 file, folder = nama skill; sisa engine di `engine.bundle.json.gz` + `unpack.mjs`) |
 
 Semua alat: Node 18+, tanpa dependensi dan tanpa jaringan. `qa.mjs` butuh Playwright (dan axe-core bila ada); tanpa itu V9 ditulis NOT RUN.
 
